@@ -1,7 +1,7 @@
 /* ftpsigs.c -- handles signals
  *
  * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
+ * This program is Copyright (C) 1998-2001 Martin Hedenfalk
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,7 +88,17 @@ RETSIGTYPE sigint_close_handler(int signum)
 
 	gvInterrupted = true;
 
-	if(sigints >= 4) {
+	/* close connection and restart command loop after 4 interrupts
+	 *
+	 * If we're in SSH mode, the interrupt signal is intercepted by
+	 * the ssh program as well, which terminates directly. The ssh
+	 * program is started by ssh_connect() in ssh_ftp.c by forking and
+	 * execv'ing the program in the child process. I don't know if
+	 * there is a way to prevent the interrupt signal to reach the ssh
+	 * program?
+	 */
+
+	if(sigints >= 4 || ftp->ssh_pid) {
 		ftp_close();
 		sigints = 0;
 		if(gvJmpBufSet) {
@@ -117,15 +127,13 @@ RETSIGTYPE sigint_abort_handler(int signum)
 {
 	if(gvSighupReceived)
 		return;
-	
+
 	ftp_trace("Interrupt received\n");
 	sigints++;
 
 	gvInterrupted = true;
 
-	if(sigints == 2)
-		ftp_err(_("OK, one more to abort command...          \n"));
-	else if(sigints >= 3) {
+	if(sigints >= 3 || ftp->ssh_pid) {
 		sigints = 0;
 		alarm(0);
 		if(gvJmpBufSet) {
@@ -134,7 +142,8 @@ RETSIGTYPE sigint_abort_handler(int signum)
 			ftp_longjmp(gvRestartJmp, 1);
 		} else
 			exit(17);
-	}
+	} else if(sigints == 2)
+		ftp_err(_("OK, one more to abort command...          \n"));
 
 	/* re-install the signal handler */
 /*	ftp_set_signal(SIGINT, sigint_abort_handler);*/
@@ -149,6 +158,8 @@ RETSIGTYPE sigint_jmp_handler(int signum)
 	alarm(0);
 	if(gvJmpBufSet) {
 		ftp_trace("jumping to gvRestartJmp\n");
+		if(ftp->ssh_pid)
+			ftp_close();
 		ftp_longjmp(gvRestartJmp, 1);
 	} else {
 		ftp_err(_("Interrupt received, exiting...         \n"));
