@@ -272,6 +272,7 @@ description.
 * pwd::                         print working directory
 * quit::                        quit Yafc
 * quote::                       send arbitrary FTP command
+* reopen::                      reopen active connection
 * rhelp::                       remote help
 * rm::                          remove files
 * rmdir::                       remove empty directory
@@ -1198,7 +1199,7 @@ File: yafc.info,  Node: quit,  Next: quote,  Prev: pwd,  Up: Yafc commands
    documentation missing...
 
 
-File: yafc.info,  Node: quote,  Next: rhelp,  Prev: quit,  Up: Yafc commands
+File: yafc.info,  Node: quote,  Next: reopen,  Prev: quit,  Up: Yafc commands
 
 `quote'
 -------
@@ -1206,7 +1207,15 @@ File: yafc.info,  Node: quote,  Next: rhelp,  Prev: quit,  Up: Yafc commands
    documentation missing...
 
 
-File: yafc.info,  Node: rhelp,  Next: rm,  Prev: quote,  Up: Yafc commands
+File: yafc.info,  Node: reopen,  Next: rhelp,  Prev: quote,  Up: Yafc commands
+
+`reopen'
+--------
+
+   Reopen a timed out connection.
+
+
+File: yafc.info,  Node: rhelp,  Next: rm,  Prev: reopen,  Up: Yafc commands
 
 `rhelp'
 -------
@@ -1527,6 +1536,13 @@ on/off. The keywords are case insensitive.
      Setting this to true will cause yafc to attempt to login
      automatically.  Information for doing this is specified by *Note
      Bookmarks::.
+
+`autoreconnect'
+     type: boolean
+
+     If this option is true, yafc will try to reconnect the currently
+     open connection if it has timed out. The directory cache is
+     retained after a successful reconnect.
 
 `quit_on_eof'
      type: boolean
@@ -2263,74 +2279,75 @@ Node: Motivation3098
 Node: Invoking Yafc3692
 Node: The shell6265
 Node: Yafc commands6830
-Node: !10145
-Node: afslog10279
-Node: alias10406
-Node: bookmark10529
-Node: cache11538
-Node: cat12069
-Node: cd12591
-Node: cdup12946
-Node: chmod13117
-Node: close13380
-Node: copyright13511
-Node: filesize13644
-Node: filetime13787
-Node: flush13926
-Node: fxp14054
-Node: get17803
-Node: help20508
-Node: idle20629
-Node: kauth20757
-Node: kdestroy20887
-Node: klist21024
-Node: krbtkfile21156
-Node: lcd21304
-Node: list21435
-Node: lpwd21543
-Node: ls21669
-Node: ltag23308
-Node: luntag23422
-Node: mkdir23545
-Node: mv23735
-Node: nlist23853
-Node: nop23975
-Node: open24255
-Node: prot24988
-Node: put25500
-Node: pwd28020
-Node: quit28175
-Node: quote28297
-Node: rhelp28423
-Node: rm28547
-Node: rmdir29007
-Node: rstatus29133
-Node: set29264
-Node: shell29387
-Node: site29511
-Node: source29726
-Node: status29856
-Node: switch29988
-Node: system30462
-Node: tag30602
-Node: unalias31461
-Node: untag31592
-Node: url31719
-Node: user31995
-Node: version32121
-Node: warranty32256
-Node: Nohup transfers32380
-Node: Configuration33217
-Node: Keywords34613
-Node: Prompt codes43416
-Node: Transfer codes44707
-Node: Aliases45774
-Node: Alias examples46299
-Node: Colors47864
-Node: ANSI attribute codes48569
-Node: Bookmarks49566
-Node: Bookmark keywords50644
-Node: Bookmark examples52836
-Node: Kerberos54150
+Node: !10202
+Node: afslog10336
+Node: alias10463
+Node: bookmark10586
+Node: cache11595
+Node: cat12126
+Node: cd12648
+Node: cdup13003
+Node: chmod13174
+Node: close13437
+Node: copyright13568
+Node: filesize13701
+Node: filetime13844
+Node: flush13983
+Node: fxp14111
+Node: get17860
+Node: help20565
+Node: idle20686
+Node: kauth20814
+Node: kdestroy20944
+Node: klist21081
+Node: krbtkfile21213
+Node: lcd21361
+Node: list21492
+Node: lpwd21600
+Node: ls21726
+Node: ltag23365
+Node: luntag23479
+Node: mkdir23602
+Node: mv23792
+Node: nlist23910
+Node: nop24032
+Node: open24312
+Node: prot25045
+Node: put25557
+Node: pwd28077
+Node: quit28232
+Node: quote28354
+Node: reopen28481
+Node: rhelp28617
+Node: rm28742
+Node: rmdir29202
+Node: rstatus29328
+Node: set29459
+Node: shell29582
+Node: site29706
+Node: source29921
+Node: status30051
+Node: switch30183
+Node: system30657
+Node: tag30797
+Node: unalias31656
+Node: untag31787
+Node: url31914
+Node: user32190
+Node: version32316
+Node: warranty32451
+Node: Nohup transfers32575
+Node: Configuration33412
+Node: Keywords34808
+Node: Prompt codes43827
+Node: Transfer codes45118
+Node: Aliases46185
+Node: Alias examples46710
+Node: Colors48275
+Node: ANSI attribute codes48980
+Node: Bookmarks49977
+Node: Bookmark keywords51055
+Node: Bookmark examples53247
+Node: Kerberos54561
 
 End Tag Table

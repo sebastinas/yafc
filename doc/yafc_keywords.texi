@@ -19,8 +19,16 @@ address.
 @item autologin
 type: boolean
 
-Setting this to true will cause yafc to attempt to login automatically.
-Information for doing this is specified by @xref{Bookmarks}.
+Setting this to true will cause yafc to attempt to login
+automatically.  Information for doing this is specified by
+@xref{Bookmarks}.
+
+@item autoreconnect
+type: boolean
+
+If this option is true, yafc will try to reconnect the currently open
+connection if it has timed out. The directory cache is retained after
+a successful reconnect.
 
 @item quit_on_eof
 type: boolean

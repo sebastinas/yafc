@@ -46,6 +46,7 @@ short syntax description.
 * pwd::                         print working directory
 * quit::                        quit Yafc
 * quote::                       send arbitrary FTP command
+* reopen::                      reopen active connection
 * rhelp::                       remote help
 * rm::                          remove files
 * rmdir::                       remove empty directory
@@ -938,6 +939,12 @@ documentation missing...
 @node quote
 @subsection @code{quote}
 documentation missing...
+
+@c -----------------------------------------------------
+@node reopen
+@subsection @code{reopen}
+
+Reopen a timed out connection.
 
 @c -----------------------------------------------------
 @node rhelp
