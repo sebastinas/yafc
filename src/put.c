@@ -171,7 +171,9 @@ static void putfile(const char *path, struct stat *sb,
 		char *p = base_dir_xptr(path);
 		asprintf(&dest, "%s/%s/%s", output, p, base_name_ptr(path));
 		xfree(p);
-	} else
+	} else if(test(opt, PUT_OUTPUT_FILE))
+		dest = xstrdup(output);
+	else
 		asprintf(&dest, "%s/%s", output, base_name_ptr(path));
 
 	path_collapse(dest);
@@ -634,6 +636,13 @@ void cmd_put(int argc, char **argv)
 	if(test(opt, PUT_FORCE))
 		opt &= ~PUT_INTERACTIVE;
 
+	
+	if(list_numitem(gl) +
+	   (test(opt, PUT_TAGGED) ? list_numitem(gvLocalTagList) : 0) == 1)
+		{
+			opt |= PUT_OUTPUT_FILE;
+		}
+	
 	gvInTransfer = true;
 	gvInterrupted = false;
 
@@ -679,7 +688,7 @@ void cmd_put(int argc, char **argv)
 		reset_xterm_title();
 		exit(0);
 	}
-
+	
 	putfiles(gl, opt, put_output);
 	list_free(gl);
 	if(test(opt, PUT_TAGGED)) {
