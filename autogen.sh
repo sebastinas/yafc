@@ -1,19 +1,19 @@
 #!/bin/sh
 
 echo -n "Running aclocal..."
-aclocal-1.7 -I cf || exit
+aclocal -I cf || exit
 echo " done"
 
 echo -n "Running autoheader..."
-autoheader2.50 || exit
+autoheader || exit
 echo " done"
 
 echo -n "Running autoconf..."
-autoconf2.50 || exit
+autoconf || exit
 echo " done"
 
 echo -n "Running automake..."
-automake-1.7 || exit
+automake || exit
 echo " done"
 
 echo "Running configure $*..."
