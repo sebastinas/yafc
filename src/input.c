@@ -1,4 +1,4 @@
-/* $Id: input.c,v 1.4 2001/05/12 18:44:37 mhe Exp $
+/* $Id: input.c,v 1.5 2001/05/13 11:50:17 mhe Exp $
  *
  * input.c -- string input and readline stuff
  *
@@ -78,7 +78,7 @@ int input_read_args(args_t **args, const char *prompt)
 	args_destroy(*args);
 	*args = args_create();
 
-#ifdef HAVE_LIBREADLINE
+#if (HAVE_LIBREADLINE >= 210)
 	rl_completion_append_character = ' ';
 #endif
 	e = input_read_string(prompt);
@@ -129,10 +129,10 @@ void input_init(void)
 #if (HAVE_LIBREADLINE >= 210)
 	/* characters that need to be quoted when appearing in filenames. */
 	rl_filename_quote_characters = " \t\n\\\"'@<>=;|&()#$`?*[]!:";
-#endif
 	rl_filename_quoting_function = bash_quote_filename;
 	rl_filename_dequoting_function = (rl_dequote_func_t *)bash_dequote_filename;
 	rl_char_is_quoted_p = char_is_quoted;
+#endif
 
 	force_completion_type = cpUnset;
 

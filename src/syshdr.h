@@ -1,4 +1,4 @@
-/* $Id: syshdr.h,v 1.6 2001/05/12 18:44:37 mhe Exp $
+/* $Id: syshdr.h,v 1.7 2001/05/13 11:49:43 mhe Exp $
  *
  * syshdr.h -- includes global header files etc.
  *
@@ -128,6 +128,20 @@ char *strchr (), *strrchr ();
 # define rl_filename_completion_function filename_completion_function
 # define rl_compentry_func_t Function
 # define rl_dequote_func_t CPFunction
+#endif
+
+#if (HAVE_LIBREADLINE == 200)
+int rl_insert_text();
+int rl_do_undo();
+int rl_forced_update_display();
+char *filename_completion_function();
+void rl_redisplay();
+void add_history();
+void stifle_history();
+void write_history();
+void read_history();
+Function *rl_named_function();
+extern int rl_filename_completion_desired;
 #endif
 
 #include "glob.h"  /* we always use GNU glob now */

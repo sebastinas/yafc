@@ -1,4 +1,4 @@
-/* $Id: completion.c,v 1.6 2001/05/12 18:44:37 mhe Exp $
+/* $Id: completion.c,v 1.7 2001/05/13 11:51:23 mhe Exp $
  *
  * completion.c -- readline completion functions
  *
@@ -137,7 +137,6 @@ static char *remote_completion_function(const char *text, int state)
 	if(!ftp_loggedin())
 		return 0;
 
-#if (HAVE_LIBREADLINE >= 210)
 	/* this is not really true, this is for local filename completion,
 	 * but it works here too (sort of), and it looks nicer, since
 	 * the whole path is not printed by readline, ie
@@ -145,7 +144,7 @@ static char *remote_completion_function(const char *text, int state)
 	 * readline appends a class character (ie /,@,*) in _local_ filenames
 	 */
 	rl_filename_completion_desired = 1;
-
+#if (HAVE_LIBREADLINE >= 210)
 	rl_filename_quoting_desired = 1;
 #endif
 
@@ -290,8 +289,8 @@ static char *taglist_completion_function(const char *text, int state)
 		lip = ftp->taglist->first;
 	}
 
-#if (HAVE_LIBREADLINE >= 210)
 	rl_filename_completion_desired = 1;
+#if (HAVE_LIBREADLINE >= 210)
 	rl_filename_quoting_desired = 1;
 #endif
 
@@ -317,8 +316,8 @@ static char *local_taglist_completion_function(const char *text, int state)
 		lip = gvLocalTagList->first;
 	}
 
-#if (HAVE_LIBREADLINE >= 210)
 	rl_filename_completion_desired = 1;
+#if (HAVE_LIBREADLINE >= 210)
 	rl_filename_quoting_desired = 1;
 #endif
 

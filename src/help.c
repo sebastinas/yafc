@@ -1,4 +1,4 @@
-/* $Id: help.c,v 1.5 2001/05/12 18:44:37 mhe Exp $
+/* $Id: help.c,v 1.6 2001/05/13 11:50:46 mhe Exp $
  *
  * help.c -- local help and info
  *
@@ -90,8 +90,10 @@ void cmd_version(int argc, char **argv)
 #endif
 
 	printf(_("Compiled " __TIME__ " " __DATE__ " (" HOSTTYPE ")\n"));
-#ifdef HAVE_LIBREADLINE
+#if (HAVE_LIBREADLINE >= 210)
 	printf(_("Using Readline version %s\n"), rl_library_version);
+#else
+	printf(_("Using Readline version 2.0\n"));
 #endif
 }
 
