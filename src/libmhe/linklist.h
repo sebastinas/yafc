@@ -53,5 +53,6 @@ int list_numitem(list *lp);
 listitem *list_search(list *lp, listsearchfunc cmpfunc, const void *arg);
 void list_sort(list *lp, listsortfunc cmp, bool reverse);
 list *list_clone(list *lp, listclonefunc clonefunc);
+bool list_equal(list *a, list *b, listsortfunc cmpfunc);
 
 #endif

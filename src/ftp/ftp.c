@@ -801,11 +801,9 @@ int ftp_login(const char *guessed_username, const char *anonpass)
 
 				if(ret == -1) {
 					ftp_err(_("*** Using plaintext username and password ***\n"));
-# if 0
 					if(ftp->code == ctError
 					   && ftp->fullcode != 504 && ftp->fullcode != 534)
-						ftp->url->nokrb = true;
-# endif
+						url_setmech(ftp->url, "none");
 					break;
 				} else if(ret == 0) {
 					ftp_err(_("Authentication successful.\n"));

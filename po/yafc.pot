@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-10-06 18:20+0200\n"
+"POT-Creation-Date: 2000-10-07 00:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -768,7 +768,6 @@ msgid ""
 "  -m, --mechanism=MECH\n"
 "                    (*) try MECH as security mechanism(s)\n"
 "  -n, --norc            don't parse config file\n"
-"  -N, --nonetrc         don't parse ~/.netrc\n"
 "  -p, --noproxy     (*) don't connect via proxy\n"
 "  -q, --quiet           don't print the yafc welcome message\n"
 "  -r, --rcfile=FILE     use other config file instead of ~/.yafc/yafcrc\n"
@@ -786,41 +785,41 @@ msgid ""
 "\n"
 "(*) only applies for login to host specified on the command line\n"
 "\n"
-"Report bugs to <mhe@stacken.kth.se>\n"
+"Report bugs to <yafc-devel@lists.sourceforge.net>\n"
 "\n"
 msgstr ""
 
 #. printf(_("This seems to be the first time you run Yafc...\n"));
-#: src/main.c:227
+#: src/main.c:224
 #, c-format
 msgid "creating working directory %s: "
 msgstr ""
 
-#: src/main.c:234 src/main.c:244 src/main.c:255 src/main.c:273
+#: src/main.c:231 src/main.c:241 src/main.c:252 src/main.c:270
 msgid "done\n"
 msgstr ""
 
-#: src/main.c:237 src/main.c:248
+#: src/main.c:234 src/main.c:245
 #, c-format
 msgid "creating directory %s: "
 msgstr ""
 
-#: src/main.c:260
+#: src/main.c:257
 msgid "creating default config file /yafcrc: "
 msgstr ""
 
-#: src/main.c:420
+#: src/main.c:413
 msgid ""
 "No proxy host defined!\n"
 "\n"
 msgstr ""
 
-#: src/main.c:430
+#: src/main.c:423
 #, c-format
 msgid "Invalid value for --wait: %d\n"
 msgstr ""
 
-#: src/main.c:442
+#: src/main.c:435
 #, c-format
 msgid "Couldn't open tracefile '%s': %s\n"
 msgstr ""

@@ -272,8 +272,8 @@ static bool should_update_bookmark(url_t *url)
 		return true;
 	if(url->port != ftp->url->port)
 		return true;
-/*	if(xstrcmp(url->mech, ftp->url->mech) != 0)
-	return true;*/
+	if(!list_equal(url->mech, ftp->url->mech, (listsortfunc)strcasecmp) != 0)
+		return true;
 	if(xstrcmp(url->protlevel, ftp->url->protlevel) != 0)
 		return true;
 	return false;

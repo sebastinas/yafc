@@ -180,3 +180,20 @@ list *list_clone(list *lp, listclonefunc clonefunc)
 
 	return cloned;
 }
+
+bool list_equal(list *a, list *b, listsortfunc cmpfunc)
+{
+	listitem *ai, *bi;
+
+	if(a == b)
+		return true;
+
+	if(list_numitem(a) != list_numitem(b))
+		return false;
+
+	for(ai = a->first, bi = b->first; ai && bi; ai = ai->next, bi = bi->next) {
+		if(cmpfunc(ai->data, bi->data) != 0)
+			return false;
+	}
+	return true;
+}

@@ -296,7 +296,6 @@ Options:\n\
   -m, --mechanism=MECH\n\
                     (*) try MECH as security mechanism(s)\n\
   -n, --norc            don't parse config file\n\
-  -N, --nonetrc         don't parse ~/.netrc\n\
   -p, --noproxy     (*) don't connect via proxy\n\
   -q, --quiet           don't print the yafc welcome message\n\
   -r, --rcfile=FILE     use other config file instead of ~/.yafc/yafcrc\n\
@@ -314,7 +313,7 @@ Options:\n\
 \n\
 (*) only applies for login to host specified on the command line\n\
 \n\
-Report bugs to <mhe@stacken.kth.se>\n\
+Report bugs to <yafc-devel@lists.sourceforge.net>\n\
 \n", 138},
   {"creating working directory %s: ", 139},
   {"done\n", 140},
