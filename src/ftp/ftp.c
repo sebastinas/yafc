@@ -918,6 +918,8 @@ char *ftp_getcurdir(void)
 		ret = (char *)xmalloc(end-beg+1);
 		strncpy(ret, beg, end-beg);
 		stripslash(ret);
+		/* path shouldn't include any quoted chars */
+		path_dos2unix(ret);
 		return ret;
 	}
 	return xstrdup("CWD?");
@@ -928,6 +930,7 @@ static void ftp_update_curdir_x(const char *p)
 	xfree(ftp->prevdir);
 	ftp->prevdir = ftp->curdir;
 	ftp->curdir = xstrdup(p);
+	path_dos2unix(ftp->curdir);
 }
 
 static void ftp_update_curdir(void)

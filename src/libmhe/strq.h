@@ -39,6 +39,7 @@ char *tilde_expand_home(const char *str, const char *home);
 char *path_absolute(const char *path,
 					const char *curdir, const char *homedir);
 char *path_collapse(char *path);
+char *path_dos2unix(char *path);
 
 int str2bool(const char *e);
 

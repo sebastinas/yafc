@@ -352,11 +352,7 @@ char *path_collapse(char *path)
 		/* save and remove drive from path */
 		drive = path[0];
 		strpull(path, 2);
-		/* change DOS dirseparator to UNIX dirseparator, \ -> / */
-		for(i=0;path[i];i++) {
-			if(path[i] == '\\')
-				path[i] = '/';
-		}
+		path_dos2unix(path);
 	}
 
 	i = 0;
@@ -376,12 +372,25 @@ char *path_collapse(char *path)
 		strpush(path, 2);
 		path[0] = drive;
 		path[1] = ':';
+#if 0 /* they should understand '/' as well as '\' */
 		for(i=0;path[i];i++) {
 			if(path[i] == '/')
 				path[i] = '\\';
 		}
+#endif
 	}
 
+	return path;
+}
+
+/* change DOS dirseparator to UNIX dirseparator, \ -> / */
+char *path_dos2unix(char *path)
+{
+	int i;
+	for(i = 0; path[i]; i++) {
+		if(path[i] == '\\')
+			path[i] = '/';
+	}
 	return path;
 }
 
