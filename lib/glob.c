@@ -41,7 +41,7 @@
 #  if defined (HAVE_STDLIB_H)
 #    include <stdlib.h>
 #  endif
-#  if defined (HAVE_STRING_H)
+#  if defined (STDC_HEADERS) /* (HAVE_STRING_H) */
 #    include <string.h>
 #  else /* !HAVE_STRING_H */
 #    include <strings.h>

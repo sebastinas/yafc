@@ -62,7 +62,7 @@ char *alloca ();
 extern int errno;
 #endif
 
-#if HAVE_STRING_H
+#ifdef STDC_HEADERS /* HAVE_STRING_H */
 # include <string.h>
 #else
 # include <strings.h>

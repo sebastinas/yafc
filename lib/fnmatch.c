@@ -29,7 +29,7 @@
 #include "collsyms.h"
 #include <ctype.h>
 
-#if defined (HAVE_STRING_H)
+#if defined (STDC_HEADERS) /* (HAVE_STRING_H)*/
 #  include <string.h>
 #else
 #  include <strings.h>
