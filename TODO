@@ -1,21 +1,29 @@
 TODO list for Yafc
 ------------------
 
-* insgesamt 679748 (locale settings in listing -> parsing failed)
-* if the output can't be parsed, yafc should just dump it out raw.
-* yafc ssh://hostname -u ???
-* option (in bookmarks?) to control LIST parameters (-a needed for PureFTPd)
-* Ctrl-C with SSH breaks ssh program *and* yafc, anyone?
-? config option for default answers to questions (get/put/fxp/more?)
+* yafc ssh://hostname doesn't use ssh if there is an ftp:// bookmark for hostname
++ 'no-update' keyword in bookmarks
+* 'insgesamt 679748' (locale settings in LISTing -> parsing failed)
+? if the output can't be parsed, yafc should just dump it out raw.
+* 'yafc ssh://hostname -u' doesn't ask for username
++ option (in bookmarks?) to control LIST parameters (-a needed for PureFTPd)
+! Ctrl-C with SSH breaks ssh program *and* yafc, anyone?
+? config option for default answers to questions (get/put/fxp/...)
 * fix --chgrp / --chmod for directories (get)
 * ltag should ignore multiples just as tag does
-* re-implement setproctitle code
-? don't show passwd (from cmdline) in 'ps' (Ari Pollak)
-* FTP over SSL support (rfc2228)
-* IPv6 support
-* keep-alive (send NOOP or similar when idle)
-* EPSV and EPRT support (RFC2428)
+? FTP over SSL support (rfc2228)
++ IPv6 support (help highly appreciated)
+? keep-alive (send NOOP or similar when idle)
++ EPSV and EPRT support (RFC2428)
 * problems to get directories with double quotes (") in the name
 * completion doesn't work correctly with rels (need to be expanded?)
 ! improve documentation (help wanted)
 * no bugs ;)
+
+
+Legend:
+
+* fix bug
++ add feature
+? questionable
+! urgent
