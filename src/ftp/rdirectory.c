@@ -1,4 +1,4 @@
-/* $Id: rdirectory.c,v 1.4 2002/11/04 14:02:39 mhe Exp $
+/* $Id: rdirectory.c,v 1.5 2002/12/02 12:27:55 mhe Exp $
  *
  * rdirectory.c -- representation of a remote directory
  *
@@ -40,7 +40,7 @@ unsigned long int rdir_size(rdirectory *rdir)
 	return rglob_size(rdir->files);
 }
 
-int rdir_parse(rdirectory *rdir, FILE *fp, const char *path)
+int rdir_parse(rdirectory *rdir, FILE *fp, const char *path, bool is_mlsd)
 {
 	char tmp[257];
 	rfile *f;
@@ -54,7 +54,7 @@ int rdir_parse(rdirectory *rdir, FILE *fp, const char *path)
 
 	f = rfile_create();
 
-	ftp_trace("*** start parsing directory listing ***\n");
+	ftp_trace("*** start parsing directory listing of '%s' ***\n", path);
 
 	while(!feof(fp)) {
 		if(fgets(tmp, 256, fp) == 0)
@@ -64,25 +64,23 @@ int rdir_parse(rdirectory *rdir, FILE *fp, const char *path)
 			break;
 		ftp_trace("%s\n", tmp);
 
-		if(!failed) {
-			rfile_clear(f);
-			r = rfile_parse(f, tmp, path);
-			if(r == -1) {
-				ftp_err("parsing failed on '%s'\n", tmp);
-				list_clear(rdir->files);
-				failed = true;
-			} else if(r == 0)
-				list_additem(rdir->files, (void *)rfile_clone(f));
-			/* else r == 1, ie a 'total ###' line, which isn't an error */
-		}
+		rfile_clear(f);
+		r = rfile_parse(f, tmp, path, is_mlsd);
+		if(r == -1) {
+			ftp_err("parsing failed on '%s'\n", tmp);
+			list_clear(rdir->files);
+			failed = true;
+		} else if(r == 0)
+			list_additem(rdir->files, (void *)rfile_clone(f));
+		/* else r == 1, ie a 'total ###' line, which isn't an error */
 	}
 	ftp_trace("*** end parsing directory listing ***\n");
 	if(failed) {
-		ftp_err("directory parsing failed\n");
-		return -1;
+		if(list_numitem(rdir->files) == 0) {
+			ftp_err("directory parsing failed completely\n");
+			return -1;
+		}
 	}
-/*	if(list_numitem(rdir->files) == 0)
-		return -1;*/
 	rdir->path = xstrdup(path);
 	return 0;
 }

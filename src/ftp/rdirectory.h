@@ -1,4 +1,4 @@
-/* $Id: rdirectory.h,v 1.4 2002/11/04 14:02:39 mhe Exp $
+/* $Id: rdirectory.h,v 1.5 2002/12/02 12:27:55 mhe Exp $
  *
  * rdirectory.h -- representation of a remote directory
  *
@@ -27,7 +27,7 @@ typedef struct rdirectory
 
 rdirectory *rdir_create(void);
 void rdir_destroy(rdirectory *rdir);
-int rdir_parse(rdirectory *rdir, FILE *fp, const char *path);
+int rdir_parse(rdirectory *rdir, FILE *fp, const char *path, bool is_mlsd);
 rfile *rdir_get_file(rdirectory *rdir, const char *filename);
 unsigned long int rdir_size(rdirectory *rdir);
 
