@@ -1,21 +1,14 @@
-/* cmd.c -- read and execute commands, this is the main loop
- * 
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+/* $Id: cmd.c,v 1.9 2001/05/12 18:44:37 mhe Exp $
+ *
+ * cmd.c -- read and execute commands, this is the main loop
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -195,7 +188,7 @@ static void exe_cmd(cmd_t *c, args_t *args)
 			if(b)
 				return;
 		}
-		
+
 		gvInterrupted = false;
 		c->func(args->argc, args->argv);
 		gvInterrupted = false;
@@ -266,10 +259,8 @@ static void exe_cmdline(char *str, bool aliases_are_expanded)
 
 			rearrange_redirections(args);
 
-/*			fprintf(stderr, "find_func('%s')\n", args->argv[0]);*/
-			
 			c = find_func(args->argv[0], true);
-		
+
 			if(c != 0)
 				exe_cmd(c, args);
 		} else {
@@ -280,10 +271,10 @@ static void exe_cmdline(char *str, bool aliases_are_expanded)
 			/* get the command, the first word in the string */
 			cmd = xstrdup(args->argv[0]);
 			unquote(cmd);
-	
+
 			/* expand command if it's an alias */
 			expanded_cmd = expand_alias(cmd);
-		
+
 			if(expanded_cmd == 0) /* it wasn't an alias */
 				expanded_cmd = args;
 			else if(expanded_cmd == (args_t *)ALIAS_AMBIGUOUS) {

@@ -1,21 +1,14 @@
-/* commands.c -- 
+/* $Id: commands.c,v 1.10 2001/05/12 18:44:37 mhe Exp $
  *
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
+ * commands.c --
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -47,7 +40,8 @@ cmd_t cmds[] = {
 	CMD(cdup, 0,0,1, cpNone, 0),
 	CMD(chmod, 0,0,0, cpRemoteFile, 0),
 	CMD(close, 0,0,1, cpNone, 0),
-	CMD(copyright, 0,0,1, cpNone, __("show copyright notice\n usage: copyright")),
+	CMD(copyright, 0,0,1, cpNone,
+		__("show copyright notice\n usage: copyright")),
 	CMD(filesize, 0,0,1, cpRemoteFile, 0),
 	CMD(filetime, 0,0,1, cpRemoteFile, 0),
 	CMD(fxp, 0,0,0, cpRemoteFile, 0),
@@ -74,8 +68,10 @@ cmd_t cmds[] = {
 	CMD(rm, 0,0,1, cpRemoteFile, 0),
 	CMD(rmdir, 0,0,1, cpRemoteDir, 0),
 	CMD(rstatus, 0,0,1, cpRemoteFile, 0),
-	CMD(set, 0,0,1, cpVariable, __("set program variables\n usage: set [variable] [value]")),
-	CMD(shell, 0,0,0, cpLocalFile, __("execute shell command or invoke shell\n usage: shell [shell command]")),
+	CMD(set, 0,0,1, cpVariable,
+		__("set program variables\n usage: set [variable] [value]")),
+	CMD(shell, 0,0,0, cpLocalFile, __("execute shell command or invoke shell"
+									  "\n usage: shell [shell command]")),
 	CMD(site, 0,0,1, cpNone, __("Send site specific command")),
 	CMD(source, 0,0,1, cpLocalFile, 0),
 	CMD(status, 0,0,1, cpNone, 0),
@@ -133,10 +129,12 @@ int rearrange_args(args_t *args, const char *rchars)
 	for(i=0; i<args->argc; i++) {
 		char *e = args->argv[i];
 		while(*e) {
-			if(strchr(rchars, *e) != 0 && !char_is_quoted(args->argv[i], (int)(e - args->argv[i]))) {
-				r = i;
-				break;
-			}
+			if((strchr(rchars, *e) != 0) &&
+			   (!char_is_quoted(args->argv[i], (int)(e - args->argv[i]))))
+				{
+					r = i;
+					break;
+				}
 			e++;
 		}
 		if(*e && e != args->argv[i]) {
@@ -170,11 +168,11 @@ int rearrange_redirections(args_t *args)
 /* given an alias expanded args_t, ARGS, which may include
  * %-parameters (%*, %1, %2, ...), expand those parameters
  * using the arguments in alias_args
- * 
+ *
  * redirection stuff is not included in the %-parameters
- * 
+ *
  * alias_args is modified (possibly cleared)
- * 
+ *
  * modifies ARGS
  */
 
@@ -184,12 +182,12 @@ void expand_alias_parameters(args_t **args, args_t *alias_args)
 	args_t *new_args;
 	args_t *redir_args = 0;
 	args_t *deleted;
-	
+
 /*	if(alias_args->argc == 0)
 		return;*/
 
 	rearrange_args(*args, ";");
-	
+
 	/* do not include redirections in %-parameters */
 	i = rearrange_redirections(alias_args);
 	if(i != -1) {
@@ -200,7 +198,7 @@ void expand_alias_parameters(args_t **args, args_t *alias_args)
 
 	deleted = args_create();
 	args_add_args(deleted, alias_args);
-	
+
 	new_args = args_create();
 	args_add_args(new_args, *args);
 
@@ -238,7 +236,7 @@ void expand_alias_parameters(args_t **args, args_t *alias_args)
 			xfree(new_args->argv[i]);
 			new_args->argv[i] = tmp;
 		}
-		
+
 	}
 
 	args_destroy(deleted);
@@ -325,13 +323,14 @@ cmd_t *find_func(const char *cmd, bool print_error)
 	}
 	if(c == CMD_AMBIGUOUS) {
 		if(print_error)
-			fprintf(stderr, _("ambiguous command '%s' (expanded alias '%s')\n"),
+			fprintf(stderr,
+					_("ambiguous command '%s' (expanded alias '%s')\n"),
 				   a->value->argv[0], a->name);
 		return 0;
 	}
 
 /*	expand_alias_parameters(args, a->value);*/
-	
+
 	return c;
 }
 
@@ -404,7 +403,8 @@ void cmd_cat(int argc, char **argv)
 			fprintf(stderr, "Print file(s) on standard output.  Usage:\n"
 					"  cat [options] <file>...\n"
 					"Options:\n"
-					"  -t, --type=TYPE    set transfer TYPE to ascii or binary\n"
+					"  -t, --type=TYPE    set transfer TYPE to ascii"
+					" or binary\n"
 					"  -h, --help         show this help\n");
 			return;
 		case '?':
@@ -443,7 +443,8 @@ void cmd_cd(int argc, char **argv)
 			 "  cd [options] [directory]\n"
 			 "Options:\n"
 			 "  -h, --help    show this help\n"
-			 "if [directory] is '-', cd changes to the previous working directory\n"
+			 "if [directory] is '-', cd changes to the previous working"
+			 " directory\n"
 			 "if omitted, changes to home directory\n");
 
 	maxargs(optind);
@@ -529,7 +530,8 @@ void cmd_url(int argc, char **argv)
 			printf(_("Print the current URL.  Usage:\n"
 					 "  url [options]\n"
 					 "Options:\n"
-					 "  -e, --no-encoding    don't encode URL as rfc1738 says\n"
+					 "  -e, --no-encoding    don't encode URL as"
+					 " rfc1738 says\n"
 					 "  -h, --help           show this help\n"));
 			return;
 		  case 'e':
@@ -701,7 +703,8 @@ void cmd_status(int argc, char **argv)
 		sec_status();
 #endif
 	if(list_numitem(gvFtpList) > 1 || ftp_connected())
-		printf(_("There are totally %u connections open\n"), list_numitem(gvFtpList));
+		printf(_("There are totally %u connections open\n"),
+			   list_numitem(gvFtpList));
 }
 
 void cmd_site(int argc, char **argv)
@@ -808,7 +811,8 @@ void cmd_cache(int argc, char **argv)
 					 "  -c, --clear        clear whole directory cache\n"
 					 "  -l, --list         list contents of cache\n"
 					 "  -t, --touch        remove directories from cache\n"
-					 "                     if none given, remove current directory\n"
+					 "                     if none given, remove current"
+					 " directory\n"
 					 "  -h, --help         show this help\n"));
 			return;
 		  case '?':
@@ -818,7 +822,7 @@ void cmd_cache(int argc, char **argv)
 
 	need_connected();
 	need_loggedin();
-	
+
 	if(touch) {
 		if(optind < argc) {
 			int i;
@@ -949,7 +953,8 @@ void cmd_switch(int argc, char **argv)
 			 "  switch [options] [number | name]\n"
 			 "Options:\n"
 			 "  -h, --help    show this help\n"
-			 "The argument can either be the connection number, host name or its alias\n"
+			 "The argument can either be the connection number, host name"
+			 " or its alias\n"
 			 "Without argument, switch to the next active connection\n");
 
 	maxargs(optind);

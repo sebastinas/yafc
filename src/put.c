@@ -1,21 +1,14 @@
-/* put.c -- store file(s) on remote
- * 
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+/* $Id: put.c,v 1.9 2001/05/12 18:44:37 mhe Exp $
+ *
+ * put.c -- upload files
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -109,9 +102,10 @@ static int do_the_put(const char *src, const char *dest,
 		if(r == 0)
 			transfer_mail_msg(_("sent %s\n"), src);
 		else
-			transfer_mail_msg(_("failed to send %s: %s\n"), src, ftp_getreply(false));
+			transfer_mail_msg(_("failed to send %s: %s\n"),
+							  src, ftp_getreply(false));
 	}
-	
+
 	return r;
 }
 
@@ -125,9 +119,11 @@ static void putfile(const char *path, struct stat *sb,
 	bool dir_created;
 	char *dest_dir;
 
-	if((put_glob_mask && fnmatch(put_glob_mask, base_name_ptr(path), FNM_EXTMATCH) == FNM_NOMATCH)
+	if((put_glob_mask && fnmatch(put_glob_mask, base_name_ptr(path),
+								 FNM_EXTMATCH) == FNM_NOMATCH)
 #ifdef HAVE_REGEX
-	   || (put_rx_mask_set && regexec(&put_rx_mask, base_name_ptr(path), 0, 0, 0) == REG_NOMATCH)
+	   || (put_rx_mask_set && regexec(&put_rx_mask, base_name_ptr(path),
+									  0, 0, 0) == REG_NOMATCH)
 #endif
 		)
 		return;
@@ -515,7 +511,8 @@ void cmd_put(int argc, char **argv)
 		  case 'u':
 			opt |= PUT_UNIQUE;
 			if(!ftp->has_stou_command) {
-				fprintf(stderr, _("Remote doesn't support the STOU (store unique) command\n"));
+				fprintf(stderr, _("Remote doesn't support the STOU"
+								  " (store unique) command\n"));
 				return;
 			}
 			break;
@@ -555,7 +552,8 @@ void cmd_put(int argc, char **argv)
 		}
 	}
 	if(optind>=argc && !test(opt, PUT_TAGGED)) {
-/*		fprintf(stderr, _("missing argument, try 'put --help' for more information\n"));*/
+/*		fprintf(stderr, _("missing argument, try 'put --help'"*/
+/*						  " for more information\n"));*/
 		minargs(optind);
 		return;
 	}
@@ -564,7 +562,7 @@ void cmd_put(int argc, char **argv)
 		printf("Can't use --append and --skip-existing simultaneously\n");
 		return;
 	}
-	
+
 	need_connected();
 	need_loggedin();
 
@@ -602,7 +600,7 @@ void cmd_put(int argc, char **argv)
 		{
 			opt |= PUT_OUTPUT_FILE;
 		}
-	
+
 	gvInTransfer = true;
 	gvInterrupted = false;
 
@@ -648,7 +646,7 @@ void cmd_put(int argc, char **argv)
 		reset_xterm_title();
 		exit(0);
 	}
-	
+
 	putfiles(gl, opt, put_output);
 	list_free(gl);
 	if(test(opt, PUT_TAGGED)) {

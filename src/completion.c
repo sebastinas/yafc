@@ -1,21 +1,14 @@
-/* completion.c -- readline completion functions
- * 
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+/* $Id: completion.c,v 1.6 2001/05/12 18:44:37 mhe Exp $
+ *
+ * completion.c -- readline completion functions
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -112,13 +105,13 @@ static char *command_completion_function(const char *text, int state)
     static int list_index, len;
 	static int alias_state;
     char *e;
-     
+
     if(!state) {
 		list_index = 0;
 		len = strlen(text);
 		alias_state = 0;
     }
-     
+
     /* Return the next name which partially matches from the command list. */
     while((e = cmds[list_index].cmd) != 0) {
 		list_index++;
@@ -132,10 +125,10 @@ static char *command_completion_function(const char *text, int state)
 
 static char *remote_completion_function(const char *text, int state)
 {
-    static int len;             /* length of unquoted */
-	static char *dir;           /* any initial directory in text */
+    static int len;            /* length of unquoted */
+	static char *dir;          /* any initial directory in text */
     const char *name;
-	static char *unquoted = 0;  /* the unquoted filename (or beginning of it) */
+	static char *unquoted = 0; /* the unquoted filename (or beginning of it) */
 	rfile *fp = 0;
 	static listitem *lip = 0;
 	static rdirectory *rdir = 0; /* the cached remote directory */
@@ -246,7 +239,7 @@ static char *variable_completion_function(const char *text, int state)
 {
     static int list_index, len;
     char *name;
-     
+
     if(!state) {
 		list_index = 0;
 		len = strlen(text);
@@ -342,7 +335,7 @@ static char *local_taglist_completion_function(const char *text, int state)
  * region of rl_line_buffer that contains the word to complete.  TEXT is
  * the word to complete.  We can use the entire contents of rl_line_buffer
  * in case we want to do some simple parsing.  Return the array of matches,
- * or NULL if there aren't any. 
+ * or NULL if there aren't any.
  */
 char **the_complete_function(char *text, int start, int end)
 {
@@ -437,7 +430,8 @@ char **the_complete_function(char *text, int start, int end)
 		matches = rl_completion_matches(text, taglist_completion_function);
 		break;
 	  case cpLocalTaglist:
-		matches = rl_completion_matches(text, local_taglist_completion_function);
+		matches = rl_completion_matches(text,
+										local_taglist_completion_function);
 		break;
 	}
 	xfree(text);

@@ -1,21 +1,14 @@
-/* rm.c -- remove files, the 'rm' command
+/* $Id: rm.c,v 1.3 2001/05/12 18:44:37 mhe Exp $
  *
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
+ * rm.c -- remove files, the 'rm' command
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -39,7 +32,8 @@ static void print_rm_syntax(void)
 			 "Options:\n"
 			 "  -f, --force           never prompt\n"
 			 "  -i, --interactive     prompt before any removal\n"
-			 "  -r, --recursive       remove the contents of directories recursively\n"
+			 "  -r, --recursive       remove the contents of"
+			 " directories recursively\n"
 			 "                          CAREFUL!\n"
 			 "  -t, --tagged          remove tagged files\n"
 			 "  -v, --verbose         explain what is being done\n"
@@ -105,21 +99,22 @@ static void remove_files(const list *gl, unsigned opt)
 				xfree(recurs_mask);
 				ftp_rmdir(f->path);
 				if(test(opt, RM_VERBOSE)) {
-					fprintf(stderr, "%s", shortpath(f->path, 40, ftp->homedir));
+					fprintf(stderr, "%s", shortpath(f->path, 40,
+													ftp->homedir));
 					if(ftp->code != ctComplete)
 						fprintf(stderr, "%s", ftp_getreply(false));
 					fprintf(stderr, "\n");
 				}
 
 			} else
-				fprintf(stderr, _("%s  omitting directory\n"), shortpath(f->path, 40, ftp->homedir));
+				fprintf(stderr, _("%s  omitting directory\n"),
+						shortpath(f->path, 40, ftp->homedir));
 			continue;
 		}
 		remove_file(f, opt);
 	}
 }
 
-	
 void cmd_rm(int argc, char **argv)
 {
 	int c, opt=0;
@@ -179,7 +174,8 @@ void cmd_rm(int argc, char **argv)
 		rglob_destroy(gl);
 		return;
 	}
-	if(test(opt, RM_TAGGED) && (!ftp->taglist || list_numitem(ftp->taglist) == 0)) {
+	if(test(opt, RM_TAGGED)
+	   && (!ftp->taglist || list_numitem(ftp->taglist) == 0)) {
 		fprintf(stderr, _("no tagged files\n"));
 		if(list_numitem(gl) == 0) {
 			rglob_destroy(gl);

@@ -1,21 +1,14 @@
-/* utils.c -- small (generic) functions
- * 
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+/* $Id: utils.c,v 1.3 2001/05/12 18:44:37 mhe Exp $
+ *
+ * utils.c -- small (generic) functions
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -89,7 +82,7 @@ char *human_size(long size)
 	else
 		sprintf(buf, "%.2fG", (double)size/(1024*1024*1024));
 	/* they aren't transferring TB with ftp, eh? */
-	
+
 	return buf;
 }
 
@@ -214,7 +207,8 @@ void invoke_shell(char *cmdline)
 		if(cmdline)
 			execl(shell, shell, "-c", cmdline, 0);
 		else {
-			printf(_("Executing '%s', use 'exit' to exit from shell...\n"), shell);
+			printf(_("Executing '%s', use 'exit' to exit from shell...\n"),
+				   shell);
 			execl(shell, shell, 0);
 		}
 		perror(shell);

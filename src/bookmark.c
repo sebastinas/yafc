@@ -1,21 +1,14 @@
-/* bookmark.c -- create bookmark(s)
+/* $Id: bookmark.c,v 1.12 2001/05/12 18:44:37 mhe Exp $
  *
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
+ * bookmark.c -- create bookmark(s)
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -127,8 +120,10 @@ static int bookmark_save(const char *other_bmfile)
 
 	fprintf(fp,
 			"# this is an automagically created file\n"
-			"# so don't bother placing comments here, they will be overwritten\n"
-			"# make sure this file isn't world readable if passwords are stored here\n"
+			"# so don't bother placing comments here, they will be"
+			" overwritten\n"
+			"# make sure this file isn't world readable if passwords are"
+			" stored here\n"
 			"\n");
 
 	if(gvDefaultUrl)
@@ -341,7 +336,7 @@ void auto_create_bookmark(void)
 		a = guess_alias(ftp->url);
 		url_setalias(url, a);
 		xfree(a);
-		
+
 		li = list_search(gvBookmarks, (listsearchfunc)urlcmp, url);
 		if(li) {
 			/* bookmark already exist, overwrite it */
@@ -354,7 +349,7 @@ void auto_create_bookmark(void)
 					/* create a new version of the alias, since guessed alias
 					 * already exists but for another host
 					 */
-					
+
 					char *par;
 					update = false;
 					par = strrchr(url->alias, '(');
@@ -517,7 +512,7 @@ void cmd_bookmark(int argc, char **argv)
 				del_done = true;
 			}
 		}
-		
+
 		if(del_done) {
 			bookmark_save(0);
 			printf(_("bookmarks saved in %s/bookmarks\n"), gvWorkingDirectory);

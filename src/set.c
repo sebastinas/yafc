@@ -1,21 +1,14 @@
-/* set.c -- sets and shows variables from within Yafc
- * 
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+/* $Id: set.c,v 1.7 2001/05/12 18:44:37 mhe Exp $
+ *
+ * set.c -- sets and shows variables from within Yafc
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -74,7 +67,7 @@ static void set_pasvmode(void *val)
 static void set_debug(void *val)
 {
 	bool b;
-	
+
 	if(val) {
 		b = *(bool *)val;
 		ftp_set_verbosity(b ? vbDebug : vbError);
@@ -104,7 +97,8 @@ static void set_type(void *val)
 			return;
 		}
 	}
-	printf(_("default type is '%s'\n"), gvDefaultType==tmBinary ? "binary" : "ascii");
+	printf(_("default type is '%s'\n"),
+		   gvDefaultType==tmBinary ? "binary" : "ascii");
 }
 
 /* changes password used with anonymous connections */
@@ -131,7 +125,7 @@ static struct _setvar *get_variable(char *varname)
 {
 	int i;
 	struct _setvar *r = 0;
-	
+
 	for(i=0;setvariables[i].name;i++) {
 		/* compare only strlen(varname) chars, allowing variables
 		 * to be shortened, as long as they're not ambiguous
@@ -174,7 +168,8 @@ void cmd_set(int argc, char **argv)
 		else {
 			if(sp->argtype == ARG_BOOL) {
 				if((n = str2bool(argv[2])) == -1) {
-					printf(_("Expected boolean value, but got '%s'\n"), argv[2]);
+					printf(_("Expected boolean value, but got '%s'\n"),
+						   argv[2]);
 					return;
 				}
 				vp = &n;

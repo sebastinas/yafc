@@ -1,4 +1,5 @@
 ## Process this file with automake to produce Makefile.in
+## $Id: Makefile.am,v 1.4 2001/05/12 18:44:04 mhe Exp $
 
 noinst_LIBRARIES = libftp.a
 

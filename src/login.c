@@ -1,21 +1,14 @@
-/* login.c -- connect and login
- * 
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+/* $Id: login.c,v 1.13 2001/05/12 18:44:37 mhe Exp $
+ *
+ * login.c -- connect and login
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -36,7 +29,8 @@ static void print_user_syntax(void)
 	printf(_("Send new user information.  Usage:\n"
 			 "  user [options] [username]\n"
 			 "Options:\n"
-			 "  -m, --mechanism=MECH       try MECH as security mechanism(s) when logging in\n"
+			 "  -m, --mechanism=MECH       try MECH as security mechanism(s)"
+			 " when logging in\n"
 			 "      --help             display this help\n"));
 }
 

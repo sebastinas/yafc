@@ -1,21 +1,14 @@
-/* rfile.c -- representation of a remote file
+/* $Id: rfile.c,v 1.4 2001/05/12 18:44:04 mhe Exp $
  *
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
+ * rfile.c -- representation of a remote file
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -210,7 +203,7 @@ void rfile_parse_time(rfile *f, const char *m, const char *d, const char *y)
 {
 	struct tm mt;
 	int u;
-	
+
 	f->mtime = (time_t)-1;
 
 	if(!m || !d || !y)
@@ -355,29 +348,29 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 	char *saved_field[5];
 
 	/* real unix ls listing:
-	 * 
+	 *
 	 * saved_field[0] == nhl
 	 * saved_field[1] == owner
 	 * saved_field[2] == group
 	 * saved_field[3] == size
 	 * saved_field[4] == month
-	 * 
+	 *
 	 * unix w/o group listing:
-	 * 
+	 *
 	 * saved_field[0] == nhl
 	 * saved_field[1] == owner
 	 * saved_field[2] == size
 	 * saved_field[3] == month
 	 * saved_field[4] == date
-	 * 
+	 *
 	 * strange MacOS WebStar thingy:
-	 * 
+	 *
 	 * saved_field[0] == size or "folder"
 	 * saved_field[1] == zero or date if [0]=="folder"
 	 * saved_field[2] == size (again!?) or month
 	 * saved_field[3] == month or date
 	 * saved_field[4] == date or time (or year?)
-	 * 
+	 *
 	 */
 
 	if(strncmp(str, "total ", 6) == 0)
@@ -417,8 +410,8 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 	/* distinguish the different ls variants by looking
 	 * for the month field
 	 */
-	
-	if(month_number(saved_field[4]) != -1) 
+
+	if(month_number(saved_field[4]) != -1)
 	{
 		/* ls -l */
 		f->nhl = atoi(saved_field[0]);
@@ -483,9 +476,9 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 	}
 
 	/* ftp.apple.com:
-	 * 
+	 *
 	 * drwxr-xr-x   8 0        system       512 Jan  1 22:51 dts
-	 * d--x--x--x   2 0        system       512 Sep 12 1997  etc 
+	 * d--x--x--x   2 0        system       512 Sep 12 1997  etc
 	 *                                             --------^
 	 * doesn't pad year, so assume filename doesn't start with a space
 	 */
@@ -518,7 +511,7 @@ static int rfile_parse_dos(rfile *f, char *str, const char *dirpath)
 
 	if(y < 70)
 		y += 100;
-	
+
 	NEXT_FIELD;
 	if(sscanf(e, "%d:%2d%2s", &h, &mm, ampm) != 3)
 		return -1;

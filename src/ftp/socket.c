@@ -1,21 +1,14 @@
-/* socket.c -- 
- * 
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+/* $Id: socket.c,v 1.3 2001/05/12 18:44:04 mhe Exp $
+ *
+ * socket.c --
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -39,7 +32,7 @@ Socket *sock_create(void)
 	sockp->handle = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if(sockp->handle == -1)
 		return 0;
-#if 0	
+#if 0
 	/* enable local address reuse */
 	if(setsockopt(sockp->handle, SOL_SOCKET, SO_REUSEADDR,
 				  &on, sizeof(on)) == -1)
@@ -58,7 +51,7 @@ Socket *sock_create(void)
 		close(sockp->handle);
 		return 0;
 	}
-	
+
 	return sockp;
 }
 
@@ -89,7 +82,7 @@ int sock_connect_addr(Socket *sockp, struct sockaddr_in *sa)
 		return -1;
 	}
 	sockp->connected = true;
-	
+
 	return 0;
 }
 

@@ -1,21 +1,14 @@
-/* help.c -- local help and info
- * 
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+/* $Id: help.c,v 1.5 2001/05/12 18:44:37 mhe Exp $
+ *
+ * help.c -- local help and info
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -62,7 +55,8 @@ void cmd_help(int argc, char **argv)
 				printf(_("%s: no such command\n"), argv[i]);
 		}
 	} else {
-		fprintf(stderr, _("Available commands: (commands may be abbreviated)\n"));
+		fprintf(stderr,
+				_("Available commands: (commands may be abbreviated)\n"));
 #ifdef HAVE_LIBREADLINE
 		/* hack to let readline display all commands */
 		rl_point=rl_end=0;
@@ -90,7 +84,8 @@ void cmd_version(int argc, char **argv)
 	printf(FULLVER "\n");
 
 #if defined(KRB4) || defined(KRB5)
-	printf(_("This product includes software developed by the Kungliga Tekniska\n"
+	printf(_("This product includes software developed by the"
+			 " Kungliga Tekniska\n"
 			 "Högskolan and its contributors.\n\n"));
 #endif
 
@@ -110,7 +105,8 @@ void cmd_copyright(int argc, char **argv)
 	puts(COPYRIGHT);
 
 #if defined(KRB4) || defined(KRB5)
-	puts(_("This product includes software developed by the Kungliga Tekniska\n" \
+	puts(_("This product includes software developed by the"
+		   " Kungliga Tekniska\n" \
          "Högskolan and its contributors.\n"));
 #endif
 }

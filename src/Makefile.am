@@ -1,4 +1,5 @@
 ## Process this file with automake to produce Makefile.in
+## $Id: Makefile.am,v 1.8 2001/05/12 18:44:37 mhe Exp $
 
 SUBDIRS = libmhe ftp
 

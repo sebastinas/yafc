@@ -38,6 +38,7 @@ int version;
 
 int ssh_open_url(url_t *urlp)
 {
+	xfree(ftp->ssh_args);
 	ftp->ssh_args = 0;
 
 	ssh_make_args(&ftp->ssh_args, urlp->hostname);

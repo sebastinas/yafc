@@ -78,6 +78,9 @@ int ssh_connect(char **args, int *in, int *out, pid_t *sshpid)
 		close(c_in);
 		close(c_out);
 
+		if(ftp_get_verbosity() == vbDebug)
+			fprintf(stderr, "executing '%s'...\n", gvSSHProgram);
+
 		execv(gvSSHProgram, args);
 		ftp_err("exec: %s: %s\n", gvSSHProgram, strerror(errno));
 		exit(1);

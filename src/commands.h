@@ -1,21 +1,14 @@
-/* commands.h -- 
- * 
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+/* $Id: commands.h,v 1.6 2001/05/12 18:44:37 mhe Exp $
+ *
+ * commands.h --
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #ifndef _commands_h_included
@@ -30,7 +23,8 @@
   if(argc > n+1) { \
     char *fooargs; \
     fooargs = args_cat(argc, argv, n+1); \
-    fprintf(stderr, _("unexpected arguments -- '%s', try '%s --help' for more information\n"), fooargs, argv[0]); \
+    fprintf(stderr, _("unexpected arguments -- '%s', try '%s --help'" \
+					  " for more information\n"), fooargs, argv[0]); \
     xfree(fooargs); \
     return; \
   }
@@ -39,32 +33,37 @@
   if(argc > n+1) { \
     char *fooargs; \
     fooargs = args_cat(argc, argv, n+1); \
-    fprintf(stderr, _("unexpected arguments -- '%s', try 'help %s' for more information\n"), fooargs, argv[0]); \
+    fprintf(stderr, _("unexpected arguments -- '%s', try 'help %s'" \
+					  " for more information\n"), fooargs, argv[0]); \
     xfree(fooargs); \
     return; \
   }
 
 #define minargs(n) \
   if(argc <= n) { \
-    fprintf(stderr, _("missing argument, try '%s --help' for more information\n"), argv[0]); \
+    fprintf(stderr, _("missing argument, try '%s --help'" \
+					  " for more information\n"), argv[0]); \
     return; \
   }
 
 #define minargs_nohelp(n) \
   if(argc <= n) { \
-    fprintf(stderr, _("missing argument, try 'help %s' for more information\n"), argv[0]); \
+    fprintf(stderr, _("missing argument, try 'help %s'" \
+					  " for more information\n"), argv[0]); \
     return; \
   }
 
 #define need_connected() \
   if(!ftp_connected()) { \
-    fprintf(stderr, _("Not connected. Try 'open --help' for more information.\n")); \
+    fprintf(stderr, _("Not connected. Try 'open --help'" \
+					  " for more information.\n")); \
     return; \
   }
 
 #define need_loggedin() \
   if(!ftp_loggedin()) { \
-    fprintf(stderr, _("Not logged in. Try 'user --help' for more information.\n")); \
+    fprintf(stderr, _("Not logged in. Try 'user --help'" \
+					  " for more information.\n")); \
     return; \
   }
 
@@ -181,7 +180,8 @@ DEFCMD(ltaginfo);
 
 DEFCMD(flush);
 
-#define OPT_HELP(help) { opt_help(argc, argv, _(help)); if(optind == -1) return; }
+#define OPT_HELP(help) { opt_help(argc, argv, _(help)); \
+ if(optind == -1) return; }
 
 void opt_help(int argc, char **argv, char *help);
 void expand_alias_parameters(args_t **args, args_t *alias_args);

@@ -1,21 +1,14 @@
-/* rc.c -- config file parser + autologin lookup
+/* $Id: rc.c,v 1.12 2001/05/12 18:44:37 mhe Exp $
  *
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
+ * rc.c -- config file parser + autologin lookup
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -259,7 +252,8 @@ int parse_rc(const char *file, bool warn)
 
 	while(!feof(fp)) {
 		if(nerr>20) {
-			errp(_("As a computer, I find your faith in technology amusing...\nToo many errors\n"));
+			errp(_("As a computer, I find your faith in technology amusing..."
+				   "\nToo many errors\n"));
 			fclose(fp);
 			xfree(current_rcfile);
 			return -1;
@@ -312,7 +306,8 @@ int parse_rc(const char *file, bool warn)
 			else {
 				gvAutoBookmark = str2bool(e);
 				if(gvAutoBookmark == -1) {
-					errp(_("Expected boolean value or 'ask', but got '%s'\n"), e);
+					errp(_("Expected boolean value or 'ask', but got '%s'\n"),
+						 e);
 					gvAutoBookmark = 0;
 				}
 			}
@@ -324,7 +319,8 @@ int parse_rc(const char *file, bool warn)
 			else {
 				gvLoadTaglist = str2bool(e);
 				if(gvLoadTaglist == -1) {
-					errp(_("Expected boolean value or 'ask', but got '%s'\n"), e);
+					errp(_("Expected boolean value or 'ask', but got '%s'\n"),
+						 e);
 					gvLoadTaglist = 2;
 				}
 			}
@@ -335,7 +331,8 @@ int parse_rc(const char *file, bool warn)
 			else if(strcasecmp(e, "ascii") == 0 || strcasecmp(e, "A") == 0)
 				gvDefaultType = tmAscii;
 			else
-				errp(_("Unknown default_type parameter '%s'... (use 'ascii' or 'binary')\n"), e);
+				errp(_("Unknown default_type parameter '%s'..."
+					   " (use 'ascii' or 'binary')\n"), e);
 		} else if(strcasecmp(e, "default_mechanism") == 0) {
 			NEXTSTR;
 			list_free(gvDefaultMechanism);
@@ -349,14 +346,16 @@ int parse_rc(const char *file, bool warn)
 			NEXTSTR;
 			gvLongCommandTime = atoi(e);
 			if(gvLongCommandTime <= 0) {
-				errp(_("Invalid value for long_command_time: %d\n"), gvLongCommandTime);
+				errp(_("Invalid value for long_command_time: %d\n"),
+					 gvLongCommandTime);
 				gvLongCommandTime = 30;
 			}
 		} else if(strcasecmp(e, "connect_wait_time") == 0) {
 			NEXTSTR;
 			gvConnectWaitTime = atoi(e);
 			if(gvConnectWaitTime < 0) {
-				errp(_("Invalid value for connect_wait_time: %d\n"), gvConnectWaitTime);
+				errp(_("Invalid value for connect_wait_time: %d\n"),
+					 gvConnectWaitTime);
 				gvConnectWaitTime = 30;
 			}
 		} else if(strcasecmp(e, "connect_attempts") == 0) {

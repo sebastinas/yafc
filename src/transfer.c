@@ -1,21 +1,14 @@
-/* transfer.c -- 
- * 
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+/* $Id: transfer.c,v 1.8 2001/05/12 18:44:37 mhe Exp $
+ *
+ * transfer.c --
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -82,7 +75,7 @@ static int max_printf(FILE *fp, int max, const char *fmt, ...)
 }
 
 /* transfer status line codes
- * 
+ *
  * %r   - remote filename
  * %R   - remote filename w/path
  * %l   - local filename
@@ -232,7 +225,7 @@ static int print_transfer_string(char *str,
 				break;
 			case '}':
 				inescape--;
-				break;		
+				break;
 			default:
 				len += fprintf(fp, "%%%c", *e);
 				break;
@@ -319,7 +312,7 @@ int transfer_init_nohup(const char *str)
 
 	if(logfp)
 		fclose(logfp);
-	
+
 	logfp = fopen(nohup_logfile, "w");
 	if(!logfp) {
 		perror(nohup_logfile);
@@ -338,16 +331,19 @@ static RETSIGTYPE term_handler(int signum)
 {
 	time_t now = time(0);
 
-	fprintf(stderr, "%s [%sb of ", ftp->ti.remote_name, human_size(ftp->ti.size));
+	fprintf(stderr, "%s [%sb of ", ftp->ti.remote_name,
+			human_size(ftp->ti.size));
 	fprintf(stderr, "%sb]\n", human_size(ftp->ti.total_size));
 	printf(_("SIGTERM (terminate) received, exiting...\n"));
 	printf(_("Transfer aborted %s"), ctime(&now));
 	if(ftp->ti.remote_name)
-		printf(_("%s may not have transferred correctly\n"), ftp->ti.remote_name);
+		printf(_("%s may not have transferred correctly\n"),
+			   ftp->ti.remote_name);
 
 	transfer_mail_msg(_("SIGTERM (terminate) received, exiting...\n"));
 	transfer_mail_msg(_("Transfer aborted %s"), ctime(&now));
-	transfer_mail_msg(_("%s may not have transferred correctly\n"), ftp->ti.remote_name);
+	transfer_mail_msg(_("%s may not have transferred correctly\n"),
+					  ftp->ti.remote_name);
 
 	transfer_end_nohup();
 }
@@ -416,7 +412,8 @@ void transfer_mail_msg(const char *fmt, ...)
 								"\n"),
 							  gvLocalHost, gvLocalHost,
 							  ftp->url->hostname, ftp->url->username,
-							  nohup_command ? nohup_command : "(unknown, SIGHUPed)",
+							  nohup_command ? nohup_command :
+							  "(unknown, SIGHUPed)",
 							  ctime(&nohup_start_time));
 		}
 	}

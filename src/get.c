@@ -1,21 +1,14 @@
-/* get.c -- get file(s) from remote
- * 
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+/* $Id: get.c,v 1.9 2001/05/12 18:44:37 mhe Exp $
+ *
+ * get.c -- get file(s) from remote
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -169,9 +162,11 @@ static int getfile(const rfile *fi, unsigned int opt,
 	bool free_dest = false;
 	int r, ret = -1;
 
-	if((get_glob_mask && fnmatch(get_glob_mask, base_name_ptr(fi->path), FNM_EXTMATCH) == FNM_NOMATCH)
+	if((get_glob_mask && fnmatch(get_glob_mask, base_name_ptr(fi->path),
+								 FNM_EXTMATCH) == FNM_NOMATCH)
 #ifdef HAVE_REGEX
-	   || (get_rx_mask_set && regexec(&get_rx_mask, base_name_ptr(fi->path), 0, 0, 0) == REG_NOMATCH)
+	   || (get_rx_mask_set && regexec(&get_rx_mask, base_name_ptr(fi->path),
+									  0, 0, 0) == REG_NOMATCH)
 #endif
 		)
 	{
@@ -198,7 +193,8 @@ static int getfile(const rfile *fi, unsigned int opt,
 		if(destdir) {
 			r = make_path(destdir, S_IRWXU, S_IRWXU, -1, -1, 1, 0);
 			if(r != 0) {
-				transfer_mail_msg(_("failed to create directory %s\n"), destdir);
+				transfer_mail_msg(_("failed to create directory %s\n"),
+								  destdir);
 				xfree(destdir);
 				return -1;
 			}
@@ -423,7 +419,7 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
 			if(strncmp(opath, lnfp->path, strlen(lnfp->path)) == 0) {
 				ftp_trace("opath == '%s', lnfp->path == '%s'\n", opath,
 						  lnfp->path);
-				fprintf(stderr, _("%s: circular link -- skipping\n"), 
+				fprintf(stderr, _("%s: circular link -- skipping\n"),
 						shortpath(lnfp->path, 42, ftp->homedir));
 				transfer_nextfile(gl, &li, true);
 				continue;
@@ -437,7 +433,7 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
 				/* forgive me father, for I have goto'ed */
 				goto link_to_link__duh;
 		}
-		
+
 		if(risdir(fp)) {
 			if(test(opt, GET_RECURSIVE)) {
 				char *recurs_output;
@@ -445,20 +441,24 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
 				list *rgl;
 
 
-				if((get_dir_glob_mask && fnmatch(get_dir_glob_mask, base_name_ptr(fp->path), FNM_EXTMATCH) == FNM_NOMATCH)
+				if((get_dir_glob_mask && fnmatch(get_dir_glob_mask,
+												 base_name_ptr(fp->path),
+												 FNM_EXTMATCH) == FNM_NOMATCH)
 #ifdef HAVE_REGEX
-				   || (get_dir_rx_mask_set && regexec(&get_dir_rx_mask, base_name_ptr(fp->path), 0, 0, 0) == REG_NOMATCH)
+				   || (get_dir_rx_mask_set && regexec(&get_dir_rx_mask,
+													  base_name_ptr(fp->path),
+													  0, 0, 0) == REG_NOMATCH)
 #endif
 					)
 					{
-						/*printf("skipping %s\n", fp->path);*/
 					} else {
-						
+
 						if(!test(opt, GET_PARENTS))
 							asprintf(&recurs_output, "%s/%s",
 									 output ? output : ".", ofile);
 						else
-							asprintf(&recurs_output, "%s", output ? output : ".");
+							asprintf(&recurs_output, "%s",
+									 output ? output : ".");
 						rgl = rglob_create();
 						asprintf(&recurs_mask, "%s/*", opath);
 						rglob_glob(rgl, recurs_mask, true, true, 0);
@@ -735,10 +735,10 @@ void cmd_get(int argc, char **argv)
 		minargs(optind);
 		return;
 	}
-	
+
 	need_connected();
 	need_loggedin();
-	
+
 	gl = rglob_create();
 	while(optind < argc) {
 		stripslash(argv[optind]);

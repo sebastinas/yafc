@@ -1,21 +1,14 @@
-/* alias.c -- define and undefine aliases
- * 
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+/* $Id: alias.c,v 1.3 2001/05/12 18:44:37 mhe Exp $
+ *
+ * alias.c -- define and undefine aliases
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -103,17 +96,19 @@ void alias_define(const char *name, args_t *args)
 		strpull(args->argv[0], 1);
 		args_push_front(args, "!");
 	}
-	
+
 	/* warn if strange alias */
 	if(strcmp(ap->name, args->argv[0]) != 0) {
 		cp = find_cmd(ap->name);
 		if(cp && cp != CMD_AMBIGUOUS && strcmp(ap->name, cp->cmd) == 0)
-			fprintf(stderr, _("warning: alias '%s' shadows a command with the same name\n"),
+			fprintf(stderr, _("warning: alias '%s' shadows a command with"
+							  " the same name\n"),
 				   ap->name);
 	}
 	cp = find_cmd(args->argv[0]);
 	if(!cp)
-		fprintf(stderr, _("warning: alias '%s' points to a non-existing command\n"),
+		fprintf(stderr,
+				_("warning: alias '%s' points to a non-existing command\n"),
 			   ap->name);
 	else if(cp == CMD_AMBIGUOUS)
 		fprintf(stderr, _("warning: alias '%s' is ambiguous\n"), ap->name);
@@ -197,12 +192,13 @@ void cmd_unalias(int argc, char **argv)
 		fprintf(stderr, _("no aliases defined\n"));
 		return;
 	}
-	
+
 	if(strcmp(argv[optind], "*") == 0)
 		list_clear(gvAliases);
 	else {
 		for(i=optind; i<argc; i++) {
-			lip = list_search(gvAliases, (listsearchfunc)alias_searchfunc, argv[i]);
+			lip = list_search(gvAliases, (listsearchfunc)alias_searchfunc,
+							  argv[i]);
 			if(!lip) {
 				fprintf(stderr, _("no such alias '%s'\n"), argv[i]);
 				continue;
