@@ -3,43 +3,29 @@ For planned improvements/features see the file 'TODO' in this directory.
 See the file 'BUGS' for known problems.
 Read 'COPYRIGHT' for copyright information.
 
-NOTE!
-This program is in development, so comments are welcome.
-Bug reports, and other feedback, should be sent to
- <yafc-devel@lists.sourceforge.net>.
-Read the BUGS and TODO files before reporting a bug/request. Also
-make sure you're using the latest version.
-
-Being in development also means that things can change
-between versions, eg command options and configuration
-keywords; read the NEWS file.
-
-Nevertheless Yafc is quite stable now.
-
-
 WHAT IS YAFC?
 
-Yafc is yet another ftp client, similar to ftp(1).
-It is an interactive interface to the FTP protocol.
-
+Yafc is yet another ftp client.
 
 FEATURES
 
 * cached directory listings
-* uses readline (tab completion, emacs/vi editing keys, history file, etc.)
 * extensive tab completion
 * multiple connections open
-* automatic reconnect
+* automatic reconnect on timed out connections
 * aliases
 * colored ls (ie, ls --color, uses $LS_COLORS like GNU ls)
 * autologin and bookmarks
-* Kerberos4 authentication support
+* Kerberos support (version 4 and 5, heimdal, kth-krb or MIT)
 * SFTP support (SSH2)
-* recursive get/put/rm/ls
+* recursive get/put/fxp/rm/ls
 * nohup mode get and put
 * tagging (queueing) of files for later transferring
 * automatically enters nohup-mode when SIGHUP received (in get and put)
 * redirection to local command or file ('>', '>>' and '|')
-* uses autoconf and automake
 * proxy support
-* more...
+
+Bug reports, and other feedback, should be sent to
+ <yafc-devel@lists.sourceforge.net>.
+Read the BUGS and TODO files before reporting a bug/request. Also
+make sure you're using the latest version.

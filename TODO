@@ -1,23 +1,8 @@
 TODO list for Yafc
 ------------------
 
-before 1.0:
------------
-
-* make autoconf recognize kerberos on redhat 7.2 (Mark Schreiber)
-  kerb libs on RH are in /usr/kerberos/lib, includes in
-  /usr/kerberos/include/krb5 and /usr/kerberos/include/krb5/libs.
-* doesn't compile with socks5 ?
-+ fix --chgrp / --chmod for directories (get)
-* no bugs ;)
-
-
-after 1.0:
-----------
-
 * check and apply Eduard Blochs large file support patch
 * clean up source directory structure
-* update autoconf stuff to latest version
 * put/get/fxp/rm shouldn't remove tagged items that failed to transfer
   (eg, directories if -r option not given)
 * remove [l]untag: create [l]tag --remove file(s) instead
@@ -28,7 +13,9 @@ after 1.0:
   handled, and they aren't saved either, is it needed?
 * 'insgesamt 679748' (locale settings in LISTing -> parsing failed)
    I'm not sure how to fix this
+* doesn't compile with socks5 ?
 + a way of passing arguments to ssh (suggested by Tore Anderson)
++ fix --chgrp / --chmod for directories (get)
 + support HTTP proxy (eg, http://www.squid-cache.org)
    (suggested by Linder Erik)
 + use libConfuse (will break config file)
@@ -38,7 +25,8 @@ after 1.0:
 + IPv6 support, EPSV and EPRT support (RFC2428)
 ? option (in bookmarks?) to control LIST parameters (-a needed for PureFTPd)
 ? skiplist: add files/dirs which shouldn't be transfered (Marcus Schommer)
-? if the LIST output can't be parsed, yafc should just dump it out raw.
+? if the LIST output can't be parsed, yafc should just dump it out
+  raw, or pehaps use NLST
 ? config option for default answers to questions (get/put/fxp/...)
 ? FTP over SSL/TLS support (rfc2228)
 

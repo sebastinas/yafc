@@ -89,9 +89,6 @@ Yafc homepage
 Yafc SourceForge Project Page
      `http://sourceforge.net/projects/yafc/'
 
-Yafc official FTP site
-     `ftp://yafc.sourceforge.net/pub/yafc/'
-
 
 File: yafc.info,  Node: Motivation,  Prev: Obtaining Yafc,  Up: Overview
 
@@ -2368,78 +2365,78 @@ Node: Top900
 Node: Overview1329
 Node: Bugs2241
 Node: Obtaining Yafc2778
-Node: Motivation3093
-Node: Invoking Yafc3687
-Node: The shell6368
-Node: Yafc commands6933
-Node: !10249
-Node: afslog10383
-Node: alias10510
-Node: bookmark10633
-Node: cache11830
-Node: cat12361
-Node: cd12883
-Node: cdup13238
-Node: chmod13409
-Node: close13672
-Node: copyright13803
-Node: filetime13936
-Node: flush14076
-Node: fxp14204
-Node: get18031
-Node: help21070
-Node: idle21196
-Node: kauth21324
-Node: kdestroy21454
-Node: klist21591
-Node: krbtkfile21723
-Node: lcd21871
-Node: list22002
-Node: lpwd22110
-Node: ls22236
-Node: ltag23875
-Node: luntag23989
-Node: mkdir24112
-Node: mv24302
-Node: nlist24420
-Node: nop24542
-Node: open24822
-Node: prot26173
-Node: put26685
-Node: pwd29283
-Node: quit29438
-Node: quote29560
-Node: reopen29687
-Node: rhelp29823
-Node: rm29948
-Node: rmdir30408
-Node: rstatus30534
-Node: set30665
-Node: shell30788
-Node: site30912
-Node: source31127
-Node: status31257
-Node: switch31389
-Node: system31863
-Node: tag32003
-Node: unalias32862
-Node: untag32993
-Node: url33120
-Node: user33396
-Node: version33522
-Node: warranty33657
-Node: Nohup transfers33781
-Node: Configuration34618
-Node: Keywords36014
-Node: Prompt codes46490
-Node: Transfer codes47781
-Node: Aliases48848
-Node: Alias examples49373
-Node: Colors50938
-Node: ANSI attribute codes51643
-Node: Bookmarks52640
-Node: Bookmark keywords53875
-Node: Bookmark examples56363
-Node: Kerberos57677
+Node: Motivation3025
+Node: Invoking Yafc3619
+Node: The shell6300
+Node: Yafc commands6865
+Node: !10181
+Node: afslog10315
+Node: alias10442
+Node: bookmark10565
+Node: cache11762
+Node: cat12293
+Node: cd12815
+Node: cdup13170
+Node: chmod13341
+Node: close13604
+Node: copyright13735
+Node: filetime13868
+Node: flush14008
+Node: fxp14136
+Node: get17963
+Node: help21002
+Node: idle21128
+Node: kauth21256
+Node: kdestroy21386
+Node: klist21523
+Node: krbtkfile21655
+Node: lcd21803
+Node: list21934
+Node: lpwd22042
+Node: ls22168
+Node: ltag23807
+Node: luntag23921
+Node: mkdir24044
+Node: mv24234
+Node: nlist24352
+Node: nop24474
+Node: open24754
+Node: prot26105
+Node: put26617
+Node: pwd29215
+Node: quit29370
+Node: quote29492
+Node: reopen29619
+Node: rhelp29755
+Node: rm29880
+Node: rmdir30340
+Node: rstatus30466
+Node: set30597
+Node: shell30720
+Node: site30844
+Node: source31059
+Node: status31189
+Node: switch31321
+Node: system31795
+Node: tag31935
+Node: unalias32794
+Node: untag32925
+Node: url33052
+Node: user33328
+Node: version33454
+Node: warranty33589
+Node: Nohup transfers33713
+Node: Configuration34550
+Node: Keywords35946
+Node: Prompt codes46422
+Node: Transfer codes47713
+Node: Aliases48780
+Node: Alias examples49305
+Node: Colors50870
+Node: ANSI attribute codes51575
+Node: Bookmarks52572
+Node: Bookmark keywords53807
+Node: Bookmark examples56295
+Node: Kerberos57609
 
 End Tag Table

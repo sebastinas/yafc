@@ -25,6 +25,9 @@ New in 1.0
 * added config option transfer_first_mask (transfers specified files
   before other files)
 * fixed bug in ssh put: --resume truncated file (reported by Eduard Bloch)
+* upgraded to latest autoconf/automake
+* new autoconf checks for Kerberos based on code from the Arla project
+* now check for Kerberos by default
 
 
 New in 0.7.10

@@ -36,6 +36,8 @@ Yafc has been tested and compiled on the following platforms:
   * IBM AS/400 running AIX 4.3 w/ gcc 2.95.2
   * IBM AS/400 running AIX 4.3 w/ IBM C-compiler
   * Sun Ultra-250 running Solaris 2.6 w/ gcc 2.8.1
+  * Sun Ultra-60 running Solaris 5.8 w/ gcc 2.95.3 (modifying LD_LIBRARY_PATH)
+  * Debian 3.0 on a CerfCube SA1110 (StrongArm)
   * ... and probably more
 
 
