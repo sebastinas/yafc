@@ -1,4 +1,4 @@
-/* $Id: rfile.c,v 1.4 2001/05/12 18:44:04 mhe Exp $
+/* $Id: rfile.c,v 1.5 2001/05/13 13:26:32 mhe Exp $
  *
  * rfile.c -- representation of a remote file
  *
@@ -188,7 +188,7 @@ static const char *month_name[] = {
 /* returns month number if STR is a month abbreviation
  * else -1
  */
-static int month_number(const char *str)
+int month_number(const char *str)
 {
 	int i;
 
