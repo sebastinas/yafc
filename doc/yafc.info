@@ -1005,7 +1005,9 @@ File: yafc.info,  Node: open,  Next: prot,  Prev: nop,  Up: Yafc commands
    Opens a new connection to an FTP server.
 
    Usage:  open [options]
-[ftp://][user[:password]@]hostname[:port][/directory] ...
+[proto://][user[:password]@]hostname[:port][/directory] ...
+
+   proto can be either 'ftp' or 'ssh'
 
    Options:
 
@@ -1022,11 +1024,25 @@ File: yafc.info,  Node: open,  Next: prot,  Prev: nop,  Up: Yafc commands
      Disable bookmark alias lookup and abbreviation.
 
 `-m MECH'
-`--mechanism MECH'
+`--mechanism=MECH'
      Try security mechanism MECH when logging in. This will override any
      'mech' options in `yafcrc' or `bookmarks'. MECH is a
      colon-separated string, supported values are "krb4", "krb5" and
      "none". The mechanisms are tried in the order specified.
+
+`-s PATH'
+`--sftp=PATH'
+     Specify path to the remote sftp-server program. SSH starts this
+     program on the remote side when initiating an sftp connection. This
+     option is only necessary if the remote ssh server doesn't
+     understand the sftp subsystem.
+
+     Specify `--sftp=""' to disable the sftp-server path, and use sftp
+     subsystem instead.
+
+     If you don't know the remote path to the sftp-server program, the
+     default for OpenSSH is `/usr/libexec/sftp-server'. Another common
+     path is `/usr/bin/sftp-server'.
 
 `--help'
      Show a short syntax description.
@@ -1597,7 +1613,7 @@ on/off. The keywords are case insensitive.
      type: string
 
      Path to remote sftp-server program. Leave commented to use the sftp
-     subsystem.
+     subsystem. See also *Note open::.
 
 `inhibit_startup_syst'
      type: boolean
@@ -2334,42 +2350,42 @@ Node: mv23900
 Node: nlist24018
 Node: nop24140
 Node: open24420
-Node: prot25153
-Node: put25665
-Node: pwd28185
-Node: quit28340
-Node: quote28462
-Node: reopen28589
-Node: rhelp28725
-Node: rm28850
-Node: rmdir29310
-Node: rstatus29436
-Node: set29567
-Node: shell29690
-Node: site29814
-Node: source30029
-Node: status30159
-Node: switch30291
-Node: system30765
-Node: tag30905
-Node: unalias31764
-Node: untag31895
-Node: url32022
-Node: user32298
-Node: version32424
-Node: warranty32559
-Node: Nohup transfers32683
-Node: Configuration33520
-Node: Keywords34916
-Node: Prompt codes44405
-Node: Transfer codes45696
-Node: Aliases46763
-Node: Alias examples47288
-Node: Colors48853
-Node: ANSI attribute codes49558
-Node: Bookmarks50555
-Node: Bookmark keywords51633
-Node: Bookmark examples53825
-Node: Kerberos55139
+Node: prot25736
+Node: put26248
+Node: pwd28768
+Node: quit28923
+Node: quote29045
+Node: reopen29172
+Node: rhelp29308
+Node: rm29433
+Node: rmdir29893
+Node: rstatus30019
+Node: set30150
+Node: shell30273
+Node: site30397
+Node: source30612
+Node: status30742
+Node: switch30874
+Node: system31348
+Node: tag31488
+Node: unalias32347
+Node: untag32478
+Node: url32605
+Node: user32881
+Node: version33007
+Node: warranty33142
+Node: Nohup transfers33266
+Node: Configuration34103
+Node: Keywords35499
+Node: Prompt codes45011
+Node: Transfer codes46302
+Node: Aliases47369
+Node: Alias examples47894
+Node: Colors49459
+Node: ANSI attribute codes50164
+Node: Bookmarks51161
+Node: Bookmark keywords52239
+Node: Bookmark examples54431
+Node: Kerberos55745
 
 End Tag Table
