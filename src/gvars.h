@@ -1,4 +1,4 @@
-/* $Id: gvars.h,v 1.13 2002/11/06 10:31:10 mhe Exp $
+/* $Id: gvars.h,v 1.14 2002/12/02 12:38:48 mhe Exp $
  *
  * gvars.h -- global variables
  *
@@ -119,6 +119,9 @@ extern list *gvAliases;
 
 /* list of shell-glob-format filemasks to transfer in ascii mode */
 extern list *gvAsciiMasks;
+
+/* list of shell-glob-format filemasks to transfer before other files */
+extern list *gvTransferFirstMasks;
 
 /* don't include "." and ".." in completions */
 extern bool gvCompletionSkipDotdirs;

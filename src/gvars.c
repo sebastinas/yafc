@@ -1,4 +1,4 @@
-/* $Id: gvars.c,v 1.18 2002/11/06 10:31:10 mhe Exp $
+/* $Id: gvars.c,v 1.19 2002/12/02 12:38:48 mhe Exp $
  *
  * gvars.c -- global variables
  *
@@ -114,6 +114,9 @@ list *gvAliases = 0;
 
 /* list of shell-glob-format filemasks to transfer in ascii mode */
 list *gvAsciiMasks = 0;  /* list of (char *) */
+
+/* list of shell-glob-format filemasks to transfer before other files */
+list *gvTransferFirstMasks = 0;  /* list of (char *) */
 
 bool gvUseHistory = true;
 int gvHistoryMax = 128;

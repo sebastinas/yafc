@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.20 2002/05/09 12:28:36 mhe Exp $
+/* $Id: main.c,v 1.21 2002/12/02 12:38:58 mhe Exp $
  *
  * main.c -- parses command line options and starts Yafc
  *
@@ -179,6 +179,7 @@ void init_yafc(void)
 	gvBookmarks = list_new((listfunc)url_destroy);
 	gvAliases = list_new((listfunc)alias_destroy);
 	gvAsciiMasks = list_new((listfunc)xfree);
+	gvTransferFirstMasks = list_new((listfunc)xfree);
 	gvLocalTagList = list_new((listfunc)xfree);
 	gvProxyExclude = list_new((listfunc)xfree);
 
