@@ -199,8 +199,9 @@ int ftp_set_trace(const char *filename);
 void ftp_reply_timeout(unsigned int secs);
 int ftp_cmd(const char *cmd, ...);
 int ftp_open(const char *host);
+int ftp_reopen(void);
 int ftp_open_host(Host *hostp);
-int ftp_open_url(url_t *urlp);
+int ftp_open_url(url_t *urlp, bool reset_vars);
 int ftp_login(const char *guessed_username, const char *anonpass);
 
 void ftp_close();

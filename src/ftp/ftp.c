@@ -1,8 +1,8 @@
 /* ftp.c -- low(er) level FTP stuff
- * 
+ *
  * This file is part of Yafc, an ftp client.
  * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -12,7 +12,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
@@ -254,11 +254,12 @@ static RETSIGTYPE ftp_open_handler(int signum)
 	ftp_longjmp(open_timeout_jmp, 1);
 }
 
-int ftp_open_url(url_t *urlp)
+int ftp_open_url(url_t *urlp, bool reset_vars)
 {
 	bool use_proxy;
 
-	ftp_reset_vars();
+	if(reset_vars)
+		ftp_reset_vars();
 
 #ifdef HAVE_POSIX_SIGSETJMP
 	if(sigsetjmp(open_timeout_jmp, 1))
@@ -355,7 +356,27 @@ int ftp_open(const char *host)
 {
 	url_t *url;
 	url = url_init(host);
-	return ftp_open_url(ftp->url);
+	return ftp_open_url(ftp->url, true);
+}
+
+int ftp_reopen(void)
+{
+	if(ftp && ftp->url) {
+		url_t *u = url_clone(ftp->url);
+		int r;
+
+		url_setdirectory(u, ftp->curdir);
+
+		r = ftp_open_url(u, false);
+		if(r == 0) {
+			r = ftp_login(u->username, gvAnonPasswd);
+		} else
+			ftp_close();
+		url_destroy(u);
+		return r;
+	}
+
+	return -1;
 }
 
 /* reads one line from server into ftp->reply
@@ -561,12 +582,13 @@ static void ftp_print_cmd(const char *cmd, va_list ap)
 }
 
 /* sends a ftp command on the control channel
- * returns reply statuc code on success or -1 on error
+ * returns reply status code on success or -1 on error
  */
 int ftp_cmd(const char *cmd, ...)
 {
 	va_list ap;
 	int resp;
+	bool recon = false;
 
 	if(!sock_connected(ftp->ctrl)) {
 		ftp_err(_("No control connection\n"));
@@ -576,6 +598,8 @@ int ftp_cmd(const char *cmd, ...)
 	}
 
 	ftp_set_abort_handler();
+
+  ugly:
 
 	va_start(ap, cmd);
 	sock_krb_vprintf(ftp->ctrl, cmd, ap);
@@ -605,11 +629,22 @@ int ftp_cmd(const char *cmd, ...)
 	resp = ftp_read_reply();
 	ftp_set_close_handler();
 	if(resp == 421) { /* server is closing control connection! */
-		ftp_err(_("Server closed control connection?\n"));
-/*		ftp_close();*/
-		ftp->fullcode = 421;
-		ftp->code = 4;
-		return -1;
+		ftp_err(_("Server closed control connection\n"));
+		if(gvAutoReconnect && strcasecmp(cmd, "QUIT") != 0) {
+			if(recon) {
+				ftp_err(_("Reconnect failed\n"));
+			} else {
+				ftp_err(_("Automatic reconnect...\n"));
+				ftp_reopen();
+				recon = true;
+				goto ugly;
+			}
+		} else {
+			/*		ftp_close();*/
+			ftp->fullcode = 421;
+			ftp->code = 4;
+			return -1;
+		}
 	}
 	return resp;
 }
@@ -634,7 +669,7 @@ int ftp_get_verbosity(void)
 void ftp_set_verbosity(int verbosity)
 {
 	ftp->verbosity = verbosity;
-	ftp->tmp_verbosity = vbUnset; 
+	ftp->tmp_verbosity = vbUnset;
 }
 
 void ftp_set_tmp_verbosity(int verbosity)
@@ -688,7 +723,7 @@ static int get_password(url_t *url, const char *anonpass, bool isproxy)
 
 		if(url_isanon(url) && isproxy == false) {
 			char *prompt;
-			
+
 			e = 0;
 			if(ftp->getuser_hook) {
 				if(anonpass && isproxy == false)
@@ -708,7 +743,7 @@ static int get_password(url_t *url, const char *anonpass, bool isproxy)
 			e = ftp->getpass_hook(isproxy ? _("Proxy password: ")
 								  : _("password: "));
 		}
-		
+
 		if(!e) {
 			fprintf(stderr, _("You loose\n"));
 			return -1;
@@ -718,6 +753,8 @@ static int get_password(url_t *url, const char *anonpass, bool isproxy)
 	}
 	return 0;
 }
+
+#if defined(KRB4) || defined(KRB5)
 
 static const char *secext_name(const char *mech)
 {
@@ -753,6 +790,8 @@ static bool mech_unsupported(const char *mech)
 #endif
 	return false;
 }
+
+#endif /* KRB4 or KRB5 */
 
 int ftp_login(const char *guessed_username, const char *anonpass)
 {
@@ -834,7 +873,7 @@ int ftp_login(const char *guessed_username, const char *anonpass)
 					  " and password ***\n"));
 	}
 #endif
-	
+
 	if(url_isanon(ftp->url))
 		fprintf(stderr, _("logging in anonymously...\n"));
 	ftp_set_tmp_verbosity(ftp->url->password ? vbError : vbCommand);
@@ -917,7 +956,7 @@ int ftp_login(const char *guessed_username, const char *anonpass)
 		  case 5:
 			ftp_cmd("PASS %s@%s", ftp->url->password, purl->password);
 			break;
-			
+
 		}
 	}
 
@@ -1301,7 +1340,7 @@ static bool ftp_path_part_of(const char *a, const char *b)
 		return false;
 
 	alen = strlen(a);
-	
+
 	/* see if a and b are equal to the length of a */
 	if(strncmp(a, b, alen) == 0) {
 		/* see if the last directory in b is complete */
@@ -1328,7 +1367,7 @@ int ftp_mkpath(const char *path)
 
 	if(!path)
 		return 0;
-	
+
 	/* check if we already has created this path */
 	if(ftp_path_part_of(path, ftp->last_mkpath))
 		return 0;
@@ -1360,7 +1399,7 @@ int ftp_mkpath(const char *path)
 		xfree(e);
 		e = foo;
 
-	
+
 		/* check if we already has created this path */
 		if(ftp_path_part_of(e, ftp->last_mkpath))
 			continue;
