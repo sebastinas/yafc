@@ -40,7 +40,7 @@ char *no_completion_function(char *text, int state)
 	return 0;
 }
 
-static char *alias_completion_function(char *text, int state)
+static char *alias_completion_function(const char *text, int state)
 {
     static int len;
 	alias *ap;
@@ -63,7 +63,7 @@ static char *alias_completion_function(char *text, int state)
     return 0;
 }
 
-static char *bookmark_complete_internal(char *text, int state,
+static char *bookmark_complete_internal(const char *text, int state,
 										bool skip_domains)
 {
     static int len;
@@ -92,13 +92,13 @@ static char *bookmark_complete_internal(char *text, int state,
     return 0;
 }
 
-static char *bookmark_completion_function(char *text, int state)
+static char *bookmark_completion_function(const char *text, int state)
 {
 	return bookmark_complete_internal(text, state, false);
 }
 
 
-static char *hostname_completion_function(char *text, int state)
+static char *hostname_completion_function(const char *text, int state)
 {
 	return bookmark_complete_internal(text, state, true);
 }
@@ -107,7 +107,7 @@ static char *hostname_completion_function(char *text, int state)
  * to start from scratch; without any state (i.e. STATE == 0), then we
  * start at the top of the list.
  */
-static char *command_completion_function(char *text, int state)
+static char *command_completion_function(const char *text, int state)
 {
     static int list_index, len;
 	static int alias_state;
@@ -130,7 +130,7 @@ static char *command_completion_function(char *text, int state)
 	return e;
 }
 
-static char *remote_completion_function(char *text, int state)
+static char *remote_completion_function(const char *text, int state)
 {
     static int len;             /* length of unquoted */
 	static char *dir;           /* any initial directory in text */
@@ -242,7 +242,7 @@ static char *remote_completion_function(char *text, int state)
 	return 0;
 }
 
-static char *variable_completion_function(char *text, int state)
+static char *variable_completion_function(const char *text, int state)
 {
     static int list_index, len;
     char *name;
@@ -260,7 +260,7 @@ static char *variable_completion_function(char *text, int state)
     return 0;
 }
 
-static char *ftplist_completion_function(char *text, int state)
+static char *ftplist_completion_function(const char *text, int state)
 {
 	static int len;
 	static listitem *lip = 0;
@@ -284,7 +284,7 @@ static char *ftplist_completion_function(char *text, int state)
 	return 0;
 }
 
-static char *taglist_completion_function(char *text, int state)
+static char *taglist_completion_function(const char *text, int state)
 {
 	static int len;
 	static listitem *lip = 0;
@@ -311,7 +311,7 @@ static char *taglist_completion_function(char *text, int state)
 	return 0;
 }
 
-static char *local_taglist_completion_function(char *text, int state)
+static char *local_taglist_completion_function(const char *text, int state)
 {
 	static int len;
 	static listitem *lip = 0;
@@ -405,10 +405,10 @@ char **the_complete_function(char *text, int start, int end)
 	  case cpNone:
 		break;
 	  case cpCommand:
-		matches = completion_matches(text, command_completion_function);
+		matches = rl_completion_matches(text, command_completion_function);
 		break;
 	  case cpLocalFile:
-		matches = completion_matches(text, filename_completion_function);
+		matches = rl_completion_matches(text, rl_filename_completion_function);
 		break;
 	  case cpRemoteDir:
 		remote_dir_only = true;
@@ -416,28 +416,28 @@ char **the_complete_function(char *text, int start, int end)
 	  case cpRemoteFile:
 		if(!gvRemoteCompletion)
 			break;
-		matches = completion_matches(text, remote_completion_function);
+		matches = rl_completion_matches(text, remote_completion_function);
 		break;
 	  case cpHostname:
-		matches = completion_matches(text, hostname_completion_function);
+		matches = rl_completion_matches(text, hostname_completion_function);
 		break;
 	  case cpBookmark:
-		matches = completion_matches(text, bookmark_completion_function);
+		matches = rl_completion_matches(text, bookmark_completion_function);
 		break;
 	  case cpAlias:
-		matches = completion_matches(text, alias_completion_function);
+		matches = rl_completion_matches(text, alias_completion_function);
 		break;
 	  case cpVariable:
-		matches = completion_matches(text, variable_completion_function);
+		matches = rl_completion_matches(text, variable_completion_function);
 		break;
 	  case cpFtpList:
-		matches = completion_matches(text, ftplist_completion_function);
+		matches = rl_completion_matches(text, ftplist_completion_function);
 		break;
 	  case cpTaglist:
-		matches = completion_matches(text, taglist_completion_function);
+		matches = rl_completion_matches(text, taglist_completion_function);
 		break;
 	  case cpLocalTaglist:
-		matches = completion_matches(text, local_taglist_completion_function);
+		matches = rl_completion_matches(text, local_taglist_completion_function);
 		break;
 	}
 	xfree(text);
