@@ -207,7 +207,8 @@ void init_yafc(void)
 	gvTransferBeginString = 0;
 	gvTransferString = xstrdup("%-40R %s/%S ETA %e %B");
 	gvTransferEndString = xstrdup("%-40R      %s in %t @ %b\n");
-	
+	gvTransferXtermString = xstrdup("\e]0;yafc - (%p%%) %r\x07");
+
 	input_init();
 }
 

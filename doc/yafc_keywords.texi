@@ -206,32 +206,45 @@ connected and logged in
 @item transfer_begin_string
 type: string
 
-this string is printed before the actual transfer begins
+This string is printed before the actual transfer begins.
 
-transfer status string codes
-these strings are printed with the --verbose option to get/put
+These strings are printed with the @samp{--verbose} option to get/put.
 
-you can specify an (optional) max width between the '%' and
-the character code
-escape codes are recognized
-
-@ref{Transfer codes}
+@ref{Transfer codes} for special character codes that can be used in
+this string to show dynamic information.
 
 @item transfer_string
 type: string
 
-this string is printed (approx.) every second or so during the transfer
-with a trailing carriage return
+This string is printed (approx.) every second or so during the transfer
+with a trailing carriage return.
+
+@ref{Transfer codes} for special character codes that can be used in
+this string to show dynamic information.
 
 @item transfer_end_string
 type: string
 
-this string is printed when the transfer is finished
+This string is printed when the transfer is finished.
+
+@ref{Transfer codes} for special character codes that can be used in
+this string to show dynamic information.
+
+@item transfer_xterm_string
+type: string
+
+This string is printed at the same time @samp{transfer_string} is printed,
+if the current $TERM variable is defined in @samp{xterm_title_terms}. This
+string can be used to reflect dynamic information about the current transfer
+in the title bar of an Xterm.
+
+@ref{Transfer codes} for special character codes that can be used in
+this string to show dynamic information.
 
 @item tilde
 type: boolean
 
-display ~ instead of full home directory path for various commands
+Display ~ instead of full home directory path for various commands.
 
 @item xterm_title1
 type: string
@@ -277,18 +290,20 @@ keep track of information such as current working directory, username,
 hostname, etc.
 @end quotation
 
-Example: @code{xterm_title1 "\e]0Yafc\x07"} sets the xterm window title and icon name to @code{Yafc}.
+Example: @code{xterm_title1 "\e]0;Yafc\x07"} sets the xterm window title and
+icon name to @code{Yafc}.
 
 @item xterm_title2
 type: string
 
-Example: @code{xterm_title1 "\e]0Yafc - %h\x07"} sets the xterm window title and icon name to @code{Yafc - @var{hostname}}.
+Example: @code{xterm_title1 "\e]0:Yafc - %h\x07"} sets the xterm window title
+and icon name to @code{Yafc - @var{hostname}}.
 
 @item xterm_title3
 type: string
 
-Example: @code{xterm_title1 "\e]0Yafc - %u@@%h:%~\x07"} sets the xterm window title and icon
- name to @code{Yafc - @var{user}@@@var{hostname}:@var{directory}}.
+Example: @code{xterm_title1 "\e]0;Yafc - %u@@%h:%~\x07"} sets the xterm window
+title and icon name to @code{Yafc - @var{user}@@@var{hostname}:@var{directory}}.
 
 @item xterm_title_terms
 type: string

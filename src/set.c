@@ -55,13 +55,17 @@ static void set_verbose(void *val)
 
 static void set_pasvmode(void *val)
 {
+	bool b;
+
 	if(val) {
 		gvPasvmode = *(bool *)val;
 		if(ftp && ftp->url)
 			ftp->url->pasvmode = gvPasvmode;
 	}
 
-	if((ftp && ftp->url) ? ftp->url->pasvmode : gvPasvmode)
+	b = (ftp && ftp->url) ? ftp->url->pasvmode : gvPasvmode;
+	b = (b == -1) ? gvPasvmode : b;
+	if(b)
 		puts(_("passive mode is on"));
 	else
 		puts(_("passive mode is off"));

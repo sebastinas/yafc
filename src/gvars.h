@@ -139,6 +139,7 @@ extern char *gvSendmailPath;
 extern char *gvTransferBeginString;
 extern char *gvTransferString;
 extern char *gvTransferEndString;
+extern char *gvTransferXtermString;
 
 extern int gvProxyType;
 extern url_t *gvProxyUrl;

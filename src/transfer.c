@@ -65,7 +65,7 @@ char *human_time(unsigned int secs)
 	return buf;
 }
 
-static int max_printf(int max, const char *fmt, ...)
+static int max_printf(FILE *fp, int max, const char *fmt, ...)
 {
 	char *e;
 	va_list ap;
@@ -88,25 +88,25 @@ static int max_printf(int max, const char *fmt, ...)
 		/* left justified */
 		max = -max;
 		if(len >= max)
-			ret += printf("%s", e + (len-max));
+			ret += fprintf(fp, "%s", e + (len-max));
 		else {
 			int i;
-			ret += printf("%s", e);
+			ret += fprintf(fp, "%s", e);
 			for(i=len; i<max; i++, ret++)
-				putchar(' ');
+				fputc(' ', fp);
 		}
 	} else if(max > 0) {
 		/* right justified */
 		if(len >= max)
-			ret += printf("%s", e + (len-max));
+			ret += fprintf(fp, "%s", e + (len-max));
 		else {
 			int i;
 			for(i=len; i<max; i++, ret++)
-				putchar(' ');
-			ret += printf("%s", e);
+				fputc(' ', fp);
+			ret += fprintf(fp, "%s", e);
 		}
 	} else
-		ret += printf("%s", e);
+		ret += fprintf(fp, "%s", e);
 
 	xfree(e);
 	return ret;
@@ -130,6 +130,154 @@ static int max_printf(int max, const char *fmt, ...)
  * %v   - visual progress bar
  */
 
+static int print_transfer_string(char *str,
+								 FILE *fp,
+								 transfer_info *ti,
+								 float bps,
+								 unsigned int secs,
+								 unsigned int eta)
+{
+	int i;
+	int len = 0;
+	char *e = str;
+	bool leftjust;
+	int inescape = 0;
+	int minlen;
+	int number_of_dots;  /* used by visual progress bar (%v) */
+
+	while(e && *e) {
+		if(*e == '%') {
+			leftjust = false;
+			minlen = 0;
+			e++;
+			if(!*e)
+				break;
+			if(*e == '-') {
+				leftjust = true;
+				e++;
+			}
+			if(isdigit((int)*e)) {
+				minlen = atoi(e);
+				while(isdigit((int)*e))
+					e++;
+			}
+			if(leftjust)
+				minlen = -minlen;
+
+			switch(*e) {
+			case 'r':
+				len += max_printf(fp, minlen, "%s",
+								  shortpath(base_name_ptr(ti->remote_name),
+											leftjust ? -minlen : minlen,
+											ftp->homedir));
+				break;
+			case 'R':
+				len += max_printf(fp, minlen, "%s",
+								  shortpath(ti->remote_name,
+											leftjust ? -minlen : minlen,
+											ftp->homedir));
+				break;
+			case 'l':
+				len += max_printf(fp, minlen, "%s",
+								  shortpath(base_name_ptr(ti->local_name),
+											leftjust ? -minlen : minlen,
+											gvLocalHomeDir));
+				break;
+			case 'L':
+				len += max_printf(fp, minlen, "%s",
+								  shortpath(ti->local_name,
+											leftjust ? -minlen : minlen,
+											gvLocalHomeDir));
+				break;
+			case 's':
+				len += max_printf(fp, minlen, "%sb", human_size(ti->size));
+				break;
+			case 'S':
+				len += max_printf(fp, minlen, "%sb",
+								  (ti->total_size == -1L
+								   ? "??"
+								   : human_size(ti->total_size)));
+				break;
+			case 'b':
+				len += max_printf(fp, minlen < 2 ? minlen : minlen-2,
+								  "%sb/s", human_size(bps));
+				break;
+			case 'B':
+				if(ti->stalled >= 5)
+					len += max_printf(fp, minlen, "%s", _("stalled"));
+				else
+					len += max_printf(fp, minlen < 2 ? minlen : minlen-2,
+									  "%sb/s", human_size(bps));
+				break;
+			case 'e':
+				if(eta != (unsigned) -1)
+					len += max_printf(fp, minlen, "%s", human_time(eta));
+				else
+					len += max_printf(fp, minlen, "%s", "--:--");
+				break;
+			case 't':
+				len += max_printf(fp, minlen, "%s", human_time(secs));
+				break;
+			case '%':
+				len += fprintf(fp, "%%");
+				break;
+			case 'p':
+				if(ti->total_size != -1L)
+					len += max_printf(fp, minlen, "%.1f",
+									  (double)100*ti->size /
+									  (ti->total_size +
+									   (ti->total_size ? 0 : 1)));
+				else
+					len += fprintf(fp, "?");
+				break;
+			case 'v':
+				if(ti->total_size != -1L) {
+					if(ti->total_size == ti->size)
+						number_of_dots = minlen;
+					else
+						number_of_dots = (double)minlen *
+							ti->size / (ti->total_size + 1);
+					if(number_of_dots > minlen || number_of_dots < 0)
+						/* just in case */
+						number_of_dots = minlen;
+					i = minlen - number_of_dots;
+					while(number_of_dots--)
+						len += fprintf(fp, "#");
+					while(i--)
+						len += fprintf(fp, " ");
+				} else {
+					number_of_dots = minlen / 2;
+					i = minlen - number_of_dots;
+					while(number_of_dots--)
+						len += fprintf(fp, " ");
+					if(i) {
+						i--;
+						len += fprintf(fp, "?");
+						while(i--)
+							len += fprintf(fp, " ");
+					}
+				}
+				break;
+			case '{':
+				inescape++;
+				break;
+			case '}':
+				inescape--;
+				break;		
+			default:
+				len += fprintf(fp, "%%%c", *e);
+				break;
+			}
+		} else {
+			fputc(*e, fp);
+			if (inescape <= 0) len++;
+		}
+		e++;
+	}
+
+	return len;
+}
+
 void transfer(transfer_info *ti)
 {
 	static int lastlen = 0;
@@ -137,11 +285,6 @@ void transfer(transfer_info *ti)
 	unsigned int secs, eta;
 	float bps;
 	const char *e;
-	bool leftjust;
-	int minlen;
-	int number_of_dots;  /* used by visual progress bar (%v) */
-	int i;
-	int inescape = 0;
 
 	if(gvSighupReceived)
 		return;
@@ -149,8 +292,6 @@ void transfer(transfer_info *ti)
 	while(lastlen--)
 		fprintf(stderr, " ");
 	fprintf(stderr, "\r");
-
-	lastlen = 0;
 
 	if(!ti)
 		return;
@@ -176,135 +317,25 @@ void transfer(transfer_info *ti)
 	else
 		eta = (unsigned) -1;
 
-	e = (ti->finished ? gvTransferEndString
-		 : (ti->begin ? gvTransferBeginString
-			: gvTransferString));
-	while(e && *e) {
-		if(*e == '%') {
-			leftjust = false;
-			minlen = 0;
-			e++;
-			if(!*e)
-				break;
-			if(*e == '-') {
-				leftjust = true;
-				e++;
-			}
-			if(isdigit((int)*e)) {
-				minlen = atoi(e);
-				while(isdigit((int)*e))
-					e++;
-			}
-			if(leftjust)
-				minlen = -minlen;
+	lastlen = print_transfer_string(ti->finished ? gvTransferEndString
+									: (ti->begin ? gvTransferBeginString
+									   : gvTransferString),
+									stdout,
+									ti,
+									bps,
+									secs,
+									eta);
 
-			switch(*e) {
-			  case 'r':
-				lastlen += max_printf(minlen, "%s",
-						   shortpath(base_name_ptr(ti->remote_name),
-									 leftjust ? -minlen : minlen,
-									 ftp->homedir));
-				break;
-			  case 'R':
-				lastlen += max_printf(minlen, "%s",
-									  shortpath(ti->remote_name,
-												leftjust ? -minlen : minlen,
-												ftp->homedir));
-				break;
-			  case 'l':
-				lastlen += max_printf(minlen, "%s",
-									  shortpath(base_name_ptr(ti->local_name),
-												leftjust ? -minlen : minlen,
-												gvLocalHomeDir));
-				break;
-			  case 'L':
-				lastlen += max_printf(minlen, "%s",
-									  shortpath(ti->local_name,
-												leftjust ? -minlen : minlen,
-												gvLocalHomeDir));
-				break;
-			  case 's':
-				lastlen += max_printf(minlen, "%sb", human_size(ti->size));
-				break;
-			  case 'S':
-				lastlen += max_printf(minlen, "%sb",
-									  (ti->total_size == -1L
-									   ? "??"
-									   : human_size(ti->total_size)));
-				break;
-			  case 'b':
-				lastlen += max_printf(minlen < 2 ? minlen : minlen-2,
-									  "%sb/s", human_size(bps));
-				break;
-			  case 'B':
-				if(ti->stalled >= 5)
-					lastlen += max_printf(minlen, "%s", _("stalled"));
-				else
-					lastlen += max_printf(minlen < 2 ? minlen : minlen-2,
-										  "%sb/s", human_size(bps));
-				break;
-			  case 'e':
-				if(eta != (unsigned) -1)
-					lastlen += max_printf(minlen, "%s", human_time(eta));
-				else
-					lastlen += max_printf(minlen, "%s", "--:--");
-				break;
-			  case 't':
-				lastlen += max_printf(minlen, "%s", human_time(secs));
-				break;
-			  case '%':
-				lastlen += printf("%%");
-				break;
-			  case 'p':
-				if(ti->total_size != -1L)
-					lastlen += max_printf(minlen, "%.1f",
-										  (double)100*ti->size / (ti->total_size + (ti->total_size ? 0 : 1)));
-				else
-					lastlen += printf("?");
-				break;
-			  case 'v':
-				if(ti->total_size != -1L) {
-					if(ti->total_size == ti->size)
-						number_of_dots = minlen;
-					else
-						number_of_dots = (double)minlen * ti->size / (ti->total_size + 1);
-					if(number_of_dots > minlen || number_of_dots < 0)
-						/* just in case */
-						number_of_dots = minlen;
-					i = minlen - number_of_dots;
-					while(number_of_dots--)
-						lastlen += printf("#");
-					while(i--)
-						lastlen += printf(" ");
-				} else {
-					number_of_dots = minlen / 2;
-					i = minlen - number_of_dots;
-					while(number_of_dots--)
-						lastlen += printf(" ");
-					if(i) {
-						i--;
-						lastlen += printf("?");
-						while(i--)
-							lastlen += printf(" ");
-					}
-				}
-				break;
-			  case '{':
-				inescape++;
-				break;
-			  case '}':
-				inescape--;
-				break;		
-			  default:
-				lastlen += printf("%%%c", *e);
-				break;
-			}
-		} else {
-			putchar(*e);
-			if (inescape <= 0) lastlen++;
+	if(gvTransferXtermString && gvXtermTitleTerms
+	   && strstr(gvXtermTitleTerms, gvTerm) != 0)
+		{
+			print_transfer_string(gvTransferXtermString,
+								  stderr,
+								  ti,
+								  bps,
+								  secs,
+								  eta);
 		}
-		e++;
-	}
 
 	fputc('\r', stdout);
 	fflush(stdout);

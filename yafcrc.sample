@@ -234,6 +234,11 @@ transfer_string "%5p%% [%25v] %s/%S ETA %e %B"
 #transfer_end_string "%-35R   %p%% of %S in %t (%b)\n"
 transfer_end_string ""
 
+# this string is printed at the same time as transfer_string if current
+# $TERM is defined in xterm_title_terms
+# Use to show dynamic info in the xterm title bar
+transfer_xterm_string "\e]0;%p%% - %R - yafc\x07"
+
 
 #
 # Autologin entries

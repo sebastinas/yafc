@@ -64,7 +64,7 @@ static void print_ls_syntax(void)
 			 "  -F, --classify           append a character for typing each entry\n"
 			 "  -g                       (ignored)\n"
 			 "  -G, --no-group           inhibit display of group information\n"
-			 "  -h, --human-readable     print sizes in human readable format (e.g., 1K 234M 2G)\n"
+			 "  -h, --human-readable     print sizes in human readable format (e.g., 1K 234M)\n"
 			 "  -l                       use a long listing format\n"
 			 "  -N, --literal            print raw entry names (don't treat e.g. control\n"
 			 "                             characters specially)\n"

@@ -110,7 +110,7 @@ total size (if available)
 ETA (time left)
 
 @item %p
-percent transferred so fat
+percent transferred so far
 
 @item %%
 percent sign

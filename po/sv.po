@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-10-14 13:24+0200\n"
+"POT-Creation-Date: 2000-10-15 21:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -120,7 +120,7 @@ msgstr "startade om kommando-loopen, anslutningen stängd\n"
 msgid "restarted command loop, command aborted\n"
 msgstr "startade om kommando-loopen, kommandot avbrutet\n"
 
-#: src/cmd.c:131 src/commands.c:663
+#: src/cmd.c:131 src/commands.c:692
 msgid "not connected"
 msgstr "ej ansluten"
 
@@ -182,6 +182,10 @@ msgid ""
 " usage: shell [shell command]"
 msgstr ""
 
+#: src/commands.c:79
+msgid "Send site specific command"
+msgstr ""
+
 #: src/commands.c:89
 msgid "show version"
 msgstr "visa versionsnummer"
@@ -219,12 +223,17 @@ msgstr "Det finns inget kommando \"%s\" (expanderat alias \"%s\")\n"
 msgid "ambiguous command '%s' (expanded alias '%s')\n"
 msgstr "tvetydigt kommando \"%s\" (expanderat alias \"%s\")\n"
 
-#: src/commands.c:398 src/get.c:766 src/ltag.c:236 src/tag.c:269
+#: src/commands.c:399 src/get.c:734 src/put.c:579
+#, c-format
+msgid "Invalid option argument --type=%s\n"
+msgstr ""
+
+#: src/commands.c:425 src/get.c:771 src/ltag.c:236 src/tag.c:269
 #, c-format
 msgid "%s: no matches found\n"
 msgstr ""
 
-#: src/commands.c:501
+#: src/commands.c:530
 msgid ""
 "Print the current URL.  Usage:\n"
 "  url [options]\n"
@@ -233,22 +242,22 @@ msgid ""
 "  -h, --help           show this help\n"
 msgstr ""
 
-#: src/commands.c:661
+#: src/commands.c:690
 #, c-format
 msgid "connected to '%s'\n"
 msgstr "ansluten till \"%s\"\n"
 
-#: src/commands.c:665
+#: src/commands.c:694
 #, c-format
 msgid "logged in as '%s'\n"
 msgstr "loggade in som \"%s\"\n"
 
-#: src/commands.c:671
+#: src/commands.c:700
 #, c-format
 msgid "There are totally %u connections open\n"
 msgstr "Det är totalt %u anslutningar öppna\n"
 
-#: src/commands.c:764
+#: src/commands.c:796
 msgid ""
 "Control the directory cache.  Usage:\n"
 "  cache [option] [directories]\n"
@@ -260,21 +269,21 @@ msgid ""
 "  -h, --help         show this help\n"
 msgstr ""
 
-#: src/commands.c:847
+#: src/commands.c:879
 #, c-format
 msgid "%s: %lu bytes\n"
 msgstr "%s: %lu bytes\n"
 
-#: src/commands.c:891
+#: src/commands.c:923
 msgid "remote system: "
 msgstr "värddatorsystem: "
 
-#: src/commands.c:912
+#: src/commands.c:944
 #, c-format
 msgid "invalid connection number: '%d'\n"
 msgstr ""
 
-#: src/commands.c:925
+#: src/commands.c:957
 #, c-format
 msgid "no such connection open: '%s'\n"
 msgstr ""
@@ -302,7 +311,7 @@ msgid ""
 "  -m, --mask=GLOB      get only files matching GLOB pattern\n"
 "  -M, --rx-mask=REGEXP get only files matching REGEXP pattern\n"
 "  -n, --newer          get file if remote is newer than local file\n"
-"  -o, --output=DEST    store in local directory DEST\n"
+"  -o, --output=DEST    store in local file/directory DEST\n"
 "  -p, --preserve       try to preserve file attributes and timestamps\n"
 "  -P, --parents        append source path to destination\n"
 "  -q, --quiet          overrides --verbose\n"
@@ -356,105 +365,100 @@ msgstr ""
 msgid "failed to receive %s: %s\n"
 msgstr ""
 
-#: src/get.c:222 src/put.c:187
+#: src/get.c:226 src/put.c:187
 #, c-format
 msgid "failed to create directory %s\n"
 msgstr ""
 
-#: src/get.c:246
+#: src/get.c:251
 #, c-format
 msgid "Local file '%s' exists, skipping...\n"
 msgstr ""
 
-#: src/get.c:265
+#: src/get.c:270
 #, c-format
 msgid "Local file '%s' is newer than remote, skipping...\n"
 msgstr ""
 
-#: src/get.c:273
+#: src/get.c:278
 #, c-format
 msgid "Local file '%s' exists, overwrite?"
 msgstr ""
 
-#: src/get.c:305
+#: src/get.c:310
 #, c-format
 msgid "symlinking '%s' to '%s'\n"
 msgstr "länkar \"%s\" till \"%s\"\n"
 
-#: src/get.c:333
+#: src/get.c:338
 #, c-format
 msgid "Delete remote file '%s'?"
 msgstr ""
 
-#: src/get.c:349 src/put.c:285
+#: src/get.c:354 src/put.c:285
 #, c-format
 msgid "%s: deleted\n"
 msgstr ""
 
-#: src/get.c:352 src/put.c:288
+#: src/get.c:357 src/put.c:288
 #, c-format
 msgid "error deleting '%s': %s\n"
 msgstr ""
 
-#: src/get.c:400
+#: src/get.c:405
 #, c-format
 msgid "Get '%s'?"
 msgstr "Hämta \"%s\"?"
 
-#: src/get.c:446
+#: src/get.c:451
 #, c-format
 msgid "%s: circular link -- skipping\n"
 msgstr "%s: cirkulär länk -- otrevligt\n"
 
-#: src/get.c:493 src/put.c:384
+#: src/get.c:498 src/put.c:384
 #, c-format
 msgid "%s: omitting directory\n"
 msgstr ""
 
-#: src/get.c:501 src/put.c:389
+#: src/get.c:506 src/put.c:389
 #, c-format
 msgid "%s: not a regular file\n"
 msgstr "%s är ingen vanlig fil\n"
 
-#: src/get.c:515 src/put.c:400
+#: src/get.c:520 src/put.c:400
 msgid "Continue transfer?"
 msgstr "Fortsätt överföringen?"
 
 #. else a == ASKYES
-#: src/get.c:521 src/put.c:406
+#: src/get.c:526 src/put.c:406
 msgid "Excellent!!!\n"
 msgstr "Finemang!\n"
 
-#: src/get.c:610
+#: src/get.c:615
 #, c-format
 msgid "Invalid mode for --chmod: %s\n"
 msgstr ""
 
-#: src/get.c:614
+#: src/get.c:619
 msgid "virtual memory exhausted\n"
 msgstr "slut på virtuellt minne\n"
 
-#: src/get.c:622
+#: src/get.c:627
 #, c-format
 msgid "%s is not a valid group name\n"
 msgstr "%s är inte att giltigt gruppnamn\n"
 
-#: src/get.c:633
+#: src/get.c:638
 #, c-format
 msgid "you are not a member of group %s\n"
 msgstr "du tillhör inte gruppen %s\n"
 
-#: src/get.c:661 src/get.c:688 src/put.c:500 src/put.c:533
+#: src/get.c:666 src/get.c:693 src/put.c:500 src/put.c:533
 #, c-format
 msgid "Regexp '%s' failed: %s\n"
 msgstr ""
 
-#: src/get.c:729 src/put.c:579
-#, c-format
-msgid "Invalid option argument --type=%s\n"
-msgstr ""
-
-#: src/get.c:776 src/put.c:625 src/rm.c:183
+#: src/get.c:781 src/put.c:625 src/rm.c:183
 msgid "no tagged files\n"
 msgstr "inga filer är taggade\n"
 
@@ -548,7 +552,7 @@ msgid ""
 "  -g                       (ignored)\n"
 "  -G, --no-group           inhibit display of group information\n"
 "  -h, --human-readable     print sizes in human readable format (e.g., 1K "
-"234M 2G)\n"
+"234M)\n"
 "  -l                       use a long listing format\n"
 "  -N, --literal            print raw entry names (don't treat e.g. control\n"
 "                             characters specially)\n"
@@ -752,36 +756,36 @@ msgstr ""
 "Rapportera fel till <mhe@home.se>\n"
 
 #. printf(_("This seems to be the first time you run Yafc...\n"));
-#: src/main.c:224
+#: src/main.c:225
 #, c-format
 msgid "creating working directory %s: "
 msgstr ""
 
-#: src/main.c:231 src/main.c:241 src/main.c:252 src/main.c:270
+#: src/main.c:232 src/main.c:242 src/main.c:253 src/main.c:271
 msgid "done\n"
 msgstr ""
 
-#: src/main.c:234 src/main.c:245
+#: src/main.c:235 src/main.c:246
 #, c-format
 msgid "creating directory %s: "
 msgstr "skapar katalog %s: "
 
-#: src/main.c:257
+#: src/main.c:258
 msgid "creating default config file /yafcrc: "
 msgstr ""
 
-#: src/main.c:413
+#: src/main.c:414
 msgid ""
 "No proxy host defined!\n"
 "\n"
 msgstr ""
 
-#: src/main.c:423
+#: src/main.c:424
 #, c-format
 msgid "Invalid value for --wait: %d\n"
 msgstr ""
 
-#: src/main.c:435
+#: src/main.c:436
 #, c-format
 msgid "Couldn't open tracefile '%s': %s\n"
 msgstr ""
@@ -809,7 +813,7 @@ msgid ""
 "  -p, --preserve       try to preserve file attributes\n"
 "  -P, --parents        append source path to destination\n"
 "  -q, --quiet          overrides --verbose\n"
-"  -r, --recursive      get directories recursively\n"
+"  -r, --recursive      upload directories recursively\n"
 "  -R, --resume         resume broken transfer (restart at EOF)\n"
 "  -s, --skip-existing  always skip existing files\n"
 "  -t, --tagged         transfer (locally) tagged file(s)\n"
@@ -860,7 +864,7 @@ msgid "failed to send %s: %s\n"
 msgstr ""
 
 #. can't overwrite a directory
-#: src/ftp/ftpsend.c:890 src/ftp/ftpsend.c:954 src/put.c:200
+#: src/ftp/ftpsend.c:897 src/ftp/ftpsend.c:961 src/put.c:200
 #, c-format
 msgid "%s: is a directory\n"
 msgstr "%s är en katalog\n"
@@ -914,7 +918,7 @@ msgstr ""
 msgid "Unexpected end of file encountered\n"
 msgstr "Oväntat filslut\n"
 
-#: src/rc.c:130 src/set.c:170
+#: src/rc.c:130 src/set.c:177
 #, c-format
 msgid "Expected boolean value, but got '%s'\n"
 msgstr "Förväntade mig ett booleskt värde, men fick \"%s\"\n"
@@ -976,17 +980,17 @@ msgstr "Felaktigt värde på long_command_time: %d\n"
 msgid "Invalid value for connect_wait_time: %d\n"
 msgstr "Felaktigt värde på connect_wait_time: %d\n"
 
-#: src/rc.c:463
+#: src/rc.c:468
 #, c-format
 msgid "Invalid value for history_max: %d\n"
 msgstr "Felaktigt värde på history_max: %d\n"
 
-#: src/rc.c:496
+#: src/rc.c:501
 #, c-format
 msgid "Invalid value for proxy_type: %d\n"
 msgstr "Felaktigt värde på proxy_type: %d\n"
 
-#: src/rc.c:514
+#: src/rc.c:519
 #, c-format
 msgid "Config parse error: '%s'\n"
 msgstr "Fel vid tolkning: \"%s\"\n"
@@ -1057,43 +1061,43 @@ msgstr ""
 msgid "verbose is off"
 msgstr ""
 
-#: src/set.c:65
+#: src/set.c:69
 msgid "passive mode is on"
 msgstr "passivt läge är på"
 
-#: src/set.c:67
+#: src/set.c:71
 msgid "passive mode is off"
 msgstr "passivt läge är av"
 
-#: src/set.c:80
+#: src/set.c:84
 msgid "debug is on"
 msgstr "debug är på"
 
-#: src/set.c:83
+#: src/set.c:87
 msgid "debug is off"
 msgstr "debug är av"
 
-#: src/set.c:96
+#: src/set.c:102
 #, c-format
 msgid "Unknown type '%s'? Use 'ascii' or 'binary'\n"
 msgstr "Okäng överföringstyp \"%s\"? Använd \"ascii\" eller \"binary\"\n"
 
-#: src/set.c:100
-#, c-format
-msgid "type is '%s'\n"
+#: src/set.c:107
+#, fuzzy, c-format
+msgid "default type is '%s'\n"
 msgstr "överföringstyp är \"%s\"\n"
 
-#: src/set.c:110
+#: src/set.c:117
 #, c-format
 msgid "anonymous password is '%s'\n"
 msgstr "anonymt lösenord är \"%s\"\n"
 
-#: src/set.c:158
+#: src/set.c:165
 #, c-format
 msgid "No such variable '%s'\n"
 msgstr "Nä, det finns ingen variabel \"%s\"\n"
 
-#: src/set.c:161
+#: src/set.c:168
 #, c-format
 msgid "Ambiguous variable '%s'\n"
 msgstr "tvetydig variabel \"%s\"\n"
@@ -1157,59 +1161,59 @@ msgstr "%lu kataloger taggade\n"
 msgid "nothing tagged -- use 'tag' to tag files"
 msgstr "inga filer taggade -- använd \"tag\" för att tagga filer"
 
-#: src/transfer.c:160
-msgid "transfer interrupted\n"
-msgstr "överföring avbruten\n"
-
-#: src/transfer.c:162
-msgid "transfer I/O error\n"
-msgstr "överföringsfel\n"
-
-#: src/transfer.c:241
+#: src/transfer.c:207
 msgid "stalled"
 msgstr "avstannad"
 
-#: src/transfer.c:332
+#: src/transfer.c:301
+msgid "transfer interrupted\n"
+msgstr "överföring avbruten\n"
+
+#: src/transfer.c:303
+msgid "transfer I/O error\n"
+msgstr "överföringsfel\n"
+
+#: src/transfer.c:363
 #, c-format
 msgid "Redirecting output to %s\n"
 msgstr "Skriver meddelanden till %s\n"
 
-#: src/ftp/ftpsigs.c:162 src/transfer.c:344 src/transfer.c:349
+#: src/ftp/ftpsigs.c:162 src/transfer.c:375 src/transfer.c:380
 msgid "SIGTERM (terminate) received, exiting...\n"
 msgstr "Aj, jag fick en SIGTERM, avslutar...\n"
 
-#: src/transfer.c:345 src/transfer.c:350
+#: src/transfer.c:376 src/transfer.c:381
 #, c-format
 msgid "Transfer aborted %s"
 msgstr "Överföringen avbröts %s"
 
-#: src/transfer.c:347 src/transfer.c:351
+#: src/transfer.c:378 src/transfer.c:382
 #, c-format
 msgid "%s may not have transferred correctly\n"
 msgstr "%s överfördes nog inte riktigt riktigt\n"
 
-#: src/transfer.c:372
+#: src/transfer.c:403
 #, c-format
 msgid "Connected to %s as user %s\n"
 msgstr "Ansluten till %s som användare %s\n"
 
-#: src/transfer.c:376
+#: src/transfer.c:407
 #, c-format
 msgid "Transfer started %s\n"
 msgstr "Överföringen startade %s\n"
 
-#: src/transfer.c:378
+#: src/transfer.c:409
 #, c-format
 msgid "Transfer received SIGHUP %s\n"
 msgstr "Överföringen fick sig en SIGHUP %s\n"
 
-#: src/transfer.c:381
+#: src/transfer.c:412
 #, c-format
 msgid "Command: '%s'\n"
 msgstr "Kommando: \"%s\"\n"
 
 #. change buffering
-#: src/transfer.c:406
+#: src/transfer.c:437
 #, c-format
 msgid ""
 "From: yafc@%s\n"
@@ -1238,7 +1242,7 @@ msgstr ""
 "(vänligen försök inte svara på detta meddelande)\n"
 "\n"
 
-#: src/transfer.c:436
+#: src/transfer.c:467
 #, c-format
 msgid ""
 "Done\n"
@@ -1247,7 +1251,7 @@ msgstr ""
 "Klart\n"
 "Överföringen klar %s\n"
 
-#: src/transfer.c:445
+#: src/transfer.c:476
 #, c-format
 msgid "Unable to send mail (using %s)\n"
 msgstr "Kunde inte skicka epost (med %s)\n"
@@ -1385,39 +1389,39 @@ msgstr "Kan inte använda passivt läge\n"
 msgid "Error parsing PASV reply: '%s'\n"
 msgstr "Fel vid tolkning av PASV-svar: \"%s\"\n"
 
-#: src/ftp/ftpsend.c:150
+#: src/ftp/ftpsend.c:157
 msgid "Waiting for remote to finish abort...\n"
 msgstr "Väntar på att värddatorn ska avsluta...\n"
 
-#: src/ftp/ftpsend.c:275
+#: src/ftp/ftpsend.c:282
 #, c-format
 msgid "read error: %s\n"
 msgstr "läsfel: %s\n"
 
-#: src/ftp/ftpsend.c:279
+#: src/ftp/ftpsend.c:286
 #, c-format
 msgid "write error: %s\n"
 msgstr "skrivfel: %s\n"
 
-#: src/ftp/ftpsend.c:593 src/ftp/ftpsend.c:723
+#: src/ftp/ftpsend.c:600 src/ftp/ftpsend.c:730
 msgid "data connection not accepted\n"
 msgstr "överföring vägrades\n"
 
-#: src/ftp/ftpsend.c:767
+#: src/ftp/ftpsend.c:774
 msgid "FxP between same hosts\n"
 msgstr ""
 
-#: src/ftp/ftpsend.c:804 src/ftp/ftpsend.c:979
+#: src/ftp/ftpsend.c:811 src/ftp/ftpsend.c:986
 #, c-format
 msgid "unable to get remote filesize of '%s', unable to resume\n"
 msgstr ""
 
-#: src/ftp/ftpsend.c:894
+#: src/ftp/ftpsend.c:901
 #, c-format
 msgid "%s: permission denied\n"
 msgstr "%s: åtkomst nekas\n"
 
-#: src/ftp/ftpsend.c:925 src/ftp/ftpsend.c:990
+#: src/ftp/ftpsend.c:932 src/ftp/ftpsend.c:997
 #, c-format
 msgid "%s: %s, transfer cancelled\n"
 msgstr "%s: %s, överföring avslutad\n"

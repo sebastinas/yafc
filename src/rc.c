@@ -443,6 +443,11 @@ int parse_rc(const char *file, bool warn)
 			xfree(gvTransferString);
 			gvTransferString = xstrdup(e);
 			unquote_escapes(gvTransferString);
+		} else if(strcasecmp(e, "transfer_xterm_string") == 0) {
+			NEXTSTR;
+			xfree(gvTransferXtermString);
+			gvTransferXtermString = xstrdup(e);
+			unquote_escapes(gvTransferXtermString);
 		} else if(strcasecmp(e, "transfer_end_string") == 0) {
 			NEXTSTR;
 			xfree(gvTransferEndString);

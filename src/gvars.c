@@ -144,6 +144,7 @@ char *gvSendmailPath = 0;
 char *gvTransferBeginString = 0;
 char *gvTransferString = 0;
 char *gvTransferEndString = 0;
+char *gvTransferXtermString = 0;
 
 int gvProxyType = 0;
 url_t *gvProxyUrl = 0;

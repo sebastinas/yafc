@@ -1451,31 +1451,46 @@ on/off. The keywords are case insensitive.
 `transfer_begin_string'
      type: string
 
-     this string is printed before the actual transfer begins
+     This string is printed before the actual transfer begins.
 
-     transfer status string codes these strings are printed with the
-     -verbose option to get/put
+     These strings are printed with the `--verbose' option to get/put.
 
-     you can specify an (optional) max width between the '%' and the
-     character code escape codes are recognized
-
-     *Note Transfer codes::
+     *Note Transfer codes:: for special character codes that can be
+     used in this string to show dynamic information.
 
 `transfer_string'
      type: string
 
-     this string is printed (approx.) every second or so during the
-     transfer with a trailing carriage return
+     This string is printed (approx.) every second or so during the
+     transfer with a trailing carriage return.
+
+     *Note Transfer codes:: for special character codes that can be
+     used in this string to show dynamic information.
 
 `transfer_end_string'
      type: string
 
-     this string is printed when the transfer is finished
+     This string is printed when the transfer is finished.
+
+     *Note Transfer codes:: for special character codes that can be
+     used in this string to show dynamic information.
+
+`transfer_xterm_string'
+     type: string
+
+     This string is printed at the same time `transfer_string' is
+     printed, if the current $TERM variable is defined in
+     `xterm_title_terms'. This string can be used to reflect dynamic
+     information about the current transfer in the title bar of an
+     Xterm.
+
+     *Note Transfer codes:: for special character codes that can be
+     used in this string to show dynamic information.
 
 `tilde'
      type: boolean
 
-     display ~ instead of full home directory path for various commands
+     Display ~ instead of full home directory path for various commands.
 
 `xterm_title1'
      type: string
@@ -1516,20 +1531,20 @@ on/off. The keywords are case insensitive.
           you issue and can keep track of information such as current
           working directory, username, hostname, etc.
 
-     Example: `xterm_title1 "\e]0Yafc\x07"' sets the xterm window title
-     and icon name to `Yafc'.
+     Example: `xterm_title1 "\e]0;Yafc\x07"' sets the xterm window
+     title and icon name to `Yafc'.
 
 `xterm_title2'
      type: string
 
-     Example: `xterm_title1 "\e]0Yafc - %h\x07"' sets the xterm window
+     Example: `xterm_title1 "\e]0:Yafc - %h\x07"' sets the xterm window
      title and icon name to `Yafc - HOSTNAME'.
 
 `xterm_title3'
      type: string
 
-     Example: `xterm_title1 "\e]0Yafc - %u@%h:%~\x07"' sets the xterm
-     window title and icon  name to `Yafc - USER@HOSTNAME:DIRECTORY'.
+     Example: `xterm_title1 "\e]0;Yafc - %u@%h:%~\x07"' sets the xterm
+     window title and icon name to `Yafc - USER@HOSTNAME:DIRECTORY'.
 
 `xterm_title_terms'
      type: string
@@ -1648,7 +1663,7 @@ negative (start with a minus), the string is left-justified, so using
      ETA (time left)
 
 `%p'
-     percent transferred so fat
+     percent transferred so far
 
 `%%'
      percent sign
@@ -2046,17 +2061,17 @@ Node: warranty25881
 Node: Nohup transfers26005
 Node: Configuration26933
 Node: Keywords28387
-Node: Prompt codes36568
-Node: Transfer codes37789
-Node: Autologin38754
-Node: Autologin keywords39238
-Node: Autologin examples41433
-Node: Aliases42630
-Node: Alias examples43150
-Node: Colors44715
-Node: ANSI attribute codes45421
-Node: Bookmarks46418
-Node: Kerberos47141
-Node: Proxy47840
+Node: Prompt codes37205
+Node: Transfer codes38426
+Node: Autologin39391
+Node: Autologin keywords39875
+Node: Autologin examples42070
+Node: Aliases43267
+Node: Alias examples43787
+Node: Colors45352
+Node: ANSI attribute codes46058
+Node: Bookmarks47055
+Node: Kerberos47778
+Node: Proxy48477
 
 End Tag Table

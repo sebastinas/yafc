@@ -1,11 +1,11 @@
 TODO list for Yafc
 ------------------
 
-* 'get/put onefile -o othername' instead of 'get/put onefile -o otherdir'
 * fix --chgrp / --chmod for directories (get)
 * ls -r doesn't work (no sorting done)
 * ltag should ignore multiples just as tag does
 * keep-alive (send NOOP or similar when idle)
+* re-implement setproctitle code
 * SSL support
 * IPv6 support
 * EPSV and EPRT support (RFC2428)

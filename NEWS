@@ -1,7 +1,15 @@
 New in 0.6.5
 ------------
 
-* 
+* changed default for auto_bookmark to yes
+* added option --type={ascii|binary} to cat
+* forgot a fflush() in cat (cat didn't work on binary files)
+* fixed broken alias zpage in yafcrc.sample + added (b)zcat alias
+* removed arguments to site command
+* 'get/put onefile -o othername' instead of 'get/put onefile -o otherdir'
+     confused? look in the manual...
+* use_passive_mode in config file was ignored
+* new option: transfer_xterm_string
 
 
 New in 0.6.4
