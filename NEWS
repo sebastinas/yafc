@@ -13,6 +13,9 @@ New in 1.1
 * Fixed bug when pressing Ctrl-D in user input (ask), reported by Robin Breathe
 * Applied patch by Thomas Habets, fixing a file descriptor leak
 * Fixed the "-s" parameter for the "fxp" command (patch by Julien Antille)
+* Included the large file support patch by Eduard Block
+* Applied patch from Eduard Block that improved the help command
+* Applied patch from Martin Pitt that fixes the errno.h problem in makepath.c
 
 
 New in 1.0

@@ -2,6 +2,7 @@
 @c %**start of header
 @setfilename yafc.info
 @settitle Yafc
+@dircategory Internet
 @setchapternewpage odd
 @c %**end of header
 

@@ -1,4 +1,4 @@
-/* $Id: list.c,v 1.13 2003/07/12 10:25:41 mhe Exp $
+/* $Id: list.c,v 1.14 2004/05/20 11:10:52 mhe Exp $
  *
  * list.c -- the remote cached 'ls' command
  *
@@ -124,7 +124,7 @@ static void ls_long(list *gl, unsigned opt, bool doclr)
 	if(test(opt, LS_HUMAN_READABLE))
 		printf(_("total %s\n"), human_size(rglob_size(gl)));
 	else
-		printf(_("total %lu\n"), rglob_size(gl));
+		printf(_("total %llu\n"), rglob_size(gl));
 
 	for(li=gl->first; li; li=li->next) {
 
@@ -139,7 +139,7 @@ static void ls_long(list *gl, unsigned opt, bool doclr)
 		if(test(opt, LS_HUMAN_READABLE))
 			printf("%8s %s ", human_size(fi->size), fi->date);
 		else
-			printf("%8lu %s ", fi->size, fi->date);
+			printf("%8llu %s ", fi->size, fi->date);
 
 		if(rislink(fi) && fi->link) {
 			char *fipath = base_dir_xptr(fi->path);

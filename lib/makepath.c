@@ -54,13 +54,7 @@ char *alloca ();
 # include <stdlib.h>
 #endif
 
-#if HAVE_ERRNO_H
-# include <errno.h>
-#endif
-
-#ifndef errno
-extern int errno;
-#endif
+#include <errno.h>
 
 #ifdef STDC_HEADERS /* HAVE_STRING_H */
 # include <string.h>

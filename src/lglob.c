@@ -1,4 +1,4 @@
-/* $Id: lglob.c,v 1.7 2003/07/12 10:25:41 mhe Exp $
+/* $Id: lglob.c,v 1.8 2004/05/20 11:10:52 mhe Exp $
  *
  * lglob.c -- local glob functions
  *
@@ -74,7 +74,14 @@ int lglob_glob(list *gl, const char *mask, bool ignore_multiples,
 		return -1;
 	}
 
-	getcwd(tmp, PATH_MAX);
+	if (!getcwd(tmp, PATH_MAX)) {
+		if (ERANGE == errno) {
+			ftp_err("cwd too long\n");
+		} else {
+			ftp_err("getcwd(): %s\n", strerror(errno));
+		}
+		return -1;
+	}
 
 	while((de = readdir(dp)) != 0) {
 		char *path;

@@ -1,4 +1,4 @@
-/* $Id: rglob.c,v 1.7 2003/07/12 10:25:41 mhe Exp $
+/* $Id: rglob.c,v 1.8 2004/05/20 11:10:52 mhe Exp $
  *
  * rglob.c -- remote glob functions
  *
@@ -142,10 +142,10 @@ int rglob_glob(list *gl, const char *mask, bool cpifnomatch,
 }
 
 /* computes the total size (in bytes) of the files in (rglob list) GL */
-unsigned long rglob_size(list *gl)
+unsigned long long rglob_size(list *gl)
 {
 	listitem *li;
-	unsigned long size = 0;
+	unsigned long long size = 0;
 
 	li = gl->first;
 	while(li) {
@@ -156,10 +156,10 @@ unsigned long rglob_size(list *gl)
 }
 
 /* returns number of directories in GL */
-unsigned long rglob_numdirs(list *gl)
+unsigned long long rglob_numdirs(list *gl)
 {
 	listitem *li;
-	unsigned long n = 0;
+	unsigned long long n = 0;
 
 	li = gl->first;
 	while(li) {

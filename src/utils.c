@@ -1,4 +1,4 @@
-/* $Id: utils.c,v 1.5 2003/08/05 09:05:08 mhe Exp $
+/* $Id: utils.c,v 1.6 2004/05/20 11:10:52 mhe Exp $
  *
  * utils.c -- small (generic) functions
  *
@@ -53,7 +53,10 @@ char *stringify_list(list *lp)
 
 char *make_unique_filename(const char *path)
 {
-	char *f = (char *)xmalloc(strlen(path)+10);
+	int maxistr = (sizeof(unsigned) * 8) / 3;
+
+	/* one for dot, one for NULL, and three just in case :P */
+	char *f = (char *)xmalloc(strlen(path) + maxistr + 5);
 	char *ext;
 	unsigned n = 0;
 
@@ -68,12 +71,12 @@ char *make_unique_filename(const char *path)
 	return f;
 }
 
-char *human_size(long size)
+char *human_size(long long int size)
 {
 	static char buf[17];
 
 	if(size < 1024)
-		sprintf(buf, "%lu", size);
+		sprintf(buf, "%llu", size);
 	else if(size < 999.5*1024) /* kilobinary */
 		sprintf(buf, "%.1fKi", (double)size/1024);
 	else if(size < 999.5*1024*1024) /* megabinary */

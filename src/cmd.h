@@ -1,4 +1,4 @@
-/* $Id: cmd.h,v 1.4 2001/07/01 11:28:26 mhe Exp $
+/* $Id: cmd.h,v 1.5 2004/05/20 11:10:52 mhe Exp $
  *
  * cmd.h -- read and execute commands, this is the main loop
  *
@@ -35,6 +35,7 @@ int rearrange_redirections(args_t *args);
 
 void command_loop(void);
 void exit_yafc(void);
+extern void exe_cmdline(char *str, bool aliases_are_expanded);
 
 extern cmd_t cmds[];
 

@@ -1,4 +1,4 @@
-/* $Id: rglob.h,v 1.3 2001/05/12 18:44:04 mhe Exp $
+/* $Id: rglob.h,v 1.4 2004/05/20 11:10:52 mhe Exp $
  *
  * rglob.h -- remote glob functions
  *
@@ -28,7 +28,7 @@ void rglob_destroy(list *gl);
 bool rglob_exclude_dotdirs(rfile *f);
 int rglob_glob(list *gl, const char *mask, bool cpifnomatch,
 			   bool ignore_multiples, rglobfunc exclude_func);
-unsigned long rglob_size(list *gl);
-unsigned long rglob_numdirs(list *gl);
+unsigned long long rglob_size(list *gl);
+unsigned long long rglob_numdirs(list *gl);
 
 #endif

@@ -1,4 +1,4 @@
-/* $Id: tag.c,v 1.6 2003/07/12 10:25:41 mhe Exp $
+/* $Id: tag.c,v 1.7 2004/05/20 11:10:52 mhe Exp $
  *
  * tag.c -- tag files
  *
@@ -164,7 +164,7 @@ static void show_taglist_info(void)
 	tlsize = rglob_size(ftp->taglist);
 	printf(_("%lu bytes (%s) in %u files tagged\n"),
 		   tlsize, human_size(tlsize), list_numitem(ftp->taglist));
-	printf(_("%lu directories tagged\n"), rglob_numdirs(ftp->taglist));
+	printf(_("%llu directories tagged\n"), rglob_numdirs(ftp->taglist));
 }
 
 void cmd_tag(int argc, char **argv)

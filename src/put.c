@@ -1,4 +1,4 @@
-/* $Id: put.c,v 1.15 2003/07/12 10:25:41 mhe Exp $
+/* $Id: put.c,v 1.16 2004/05/20 11:10:52 mhe Exp $
  *
  * put.c -- upload files
  *
@@ -217,9 +217,9 @@ static void putfile(const char *path, struct stat *sb,
 				e = xstrdup(ctime(&sb->st_mtime));
 				a = ask(ASKYES|ASKNO|ASKUNIQUE|ASKCANCEL|ASKALL|ASKRESUME,
 						ASKRESUME,
-						_("Remote file '%s' exists\nLocal: %ld bytes, %sRemote: %ld bytes, %sOverwrite?"),
+						_("Remote file '%s' exists\nLocal: %lld bytes, %sRemote: %lld bytes, %sOverwrite?"),
 						shortpath(dest, 42, ftp->homedir),
-						sb->st_size, e ? e : "unknown date",
+						(unsigned long long) sb->st_size, e ? e : "unknown size",
 						ftp_filesize(f->path), ctime(&ft));
 				free(e);
 				if(a == ASKCANCEL) {

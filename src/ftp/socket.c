@@ -1,4 +1,4 @@
-/* $Id: socket.c,v 1.6 2003/10/15 21:37:31 mhe Exp $
+/* $Id: socket.c,v 1.7 2004/05/20 11:10:52 mhe Exp $
  *
  * socket.c --
  *
@@ -22,6 +22,7 @@ Socket *sock_create(void)
 #if 0
 	int on = 1;
 #endif
+	int tfd;
 	Socket *sockp;
 
 	sockp = (Socket *)xmalloc(sizeof(Socket));
@@ -40,17 +41,36 @@ Socket *sock_create(void)
 		goto err1;
 	}
 #endif
-	sockp->sin = fdopen(sockp->handle, "r");
+	if (-1 == (tfd = dup(sockp->handle))) {
+		goto err1;
+ 	}
+/*	sockp->sin = fdopen(sockp->handle, "r");
 	if(sockp->sin == 0) {
 		goto err1;
-	}
-	sockp->sout = fdopen(sockp->handle, "w");
+	}*/
+
+	if(0 == (sockp->sin = fdopen(tfd, "r"))) {
+		close(tfd);
+		goto err1;
+ 	}
+
+/*	sockp->sout = fdopen(sockp->handle, "w");
 	if(sockp->sout == 0) {
 		goto err1;
-	}
+	}*/
 
+	if (-1 == (tfd = dup(sockp->handle))) {
+		goto err2;
+	}
+	if (0 == (sockp->sout = fdopen(tfd, "w"))) {
+		close(tfd);
+		goto err2;
+	}
+	
 	return sockp;
 
+err2:
+	fclose(sockp->sin);
 err1:
 	close(sockp->handle);
 err0:
@@ -63,17 +83,9 @@ void sock_destroy(Socket *sockp)
 	if(!sockp)
 		return;
 
- 	/* we'll be closing the fd twice, but that's ok...
- 	 * at least as long as we're not threaded, then this'll race
- 	 */
- 	fclose(sockp->sin);
- 	fclose(sockp->sout);
- 	/*
- 	 * closing socket directly is not needed, it's closed by the first
- 	 * fclose() above
- 	 */
- 	/* close(sockp->handle); */
-
+	fclose(sockp->sin);
+	fclose(sockp->sout);
+	close(sockp->handle);
 	free(sockp);
 }
 
@@ -141,6 +153,7 @@ int sock_accept(Socket *sockp, const char *mode, bool pasvmode)
 	int s;
 	struct sockaddr sa;
 	int l = sizeof(sa);
+	int tfd;
 
 	if(!pasvmode) {
 		s = accept(sockp->handle, &sa, &l);
@@ -153,14 +166,37 @@ int sock_accept(Socket *sockp, const char *mode, bool pasvmode)
 		sockp->handle = s;
 		memcpy(&sockp->local_addr, &sa, sizeof(sockp->local_addr));
 	}
-	sockp->sin = sockp->sout = fdopen(sockp->handle, mode);
-	if(sockp->sin == 0) {
-		perror("fdopen()");
-		close(sockp->handle);
-		sockp->handle = -1;
-		return -1;
+	fclose(sockp->sin);
+	fclose(sockp->sout);
+
+	if (-1 == (tfd = dup(sockp->handle))) {
+		perror("dup()");
+		goto errdup0;
 	}
+	if (!(sockp->sin = fdopen(tfd, mode))) {
+		close(tfd);
+		perror("fdopen()");
+		goto errdup0;
+	}
+
+	if (-1 == (tfd = dup(sockp->handle))) {
+		perror("dup()");
+		goto errdup1;
+	}
+	if (!(sockp->sout = fdopen(tfd, mode))) {
+		close(tfd);
+		perror("fdopen()");
+		goto errdup1;
+	}
+
 	return 0;
+
+errdup1:
+	fclose(sockp->sin);
+errdup0:
+	close(sockp->handle);
+	sockp->handle = -1;
+	return -1;
 }
 
 int sock_listen(Socket *sockp)

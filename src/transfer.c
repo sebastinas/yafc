@@ -1,4 +1,4 @@
-/* $Id: transfer.c,v 1.11 2003/08/05 09:05:08 mhe Exp $
+/* $Id: transfer.c,v 1.12 2004/05/20 11:10:52 mhe Exp $
  *
  * transfer.c --
  *
@@ -97,7 +97,7 @@ static int print_transfer_string(char *str,
 								 transfer_info *ti,
 								 float bps,
 								 unsigned int secs,
-								 unsigned int eta)
+								 unsigned long long int eta)
 {
 	int i;
 	int len = 0;

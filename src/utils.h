@@ -1,4 +1,4 @@
-/* $Id: utils.h,v 1.3 2001/05/12 18:44:37 mhe Exp $
+/* $Id: utils.h,v 1.4 2004/05/20 11:10:52 mhe Exp $
  *
  * utils.h -- small (generic) functions
  *
@@ -17,7 +17,7 @@
 void listify_string(const char *str, list *lp);
 char *stringify_list(list *lp);
 char *make_unique_filename(const char *path);
-char *human_size(long size);
+char *human_size(long long int size);
 char *human_time(unsigned int secs);
 void print_xterm_title(void);
 void reset_xterm_title(void);

@@ -1,4 +1,4 @@
-/* $Id: help.c,v 1.9 2002/12/05 22:13:44 mhe Exp $
+/* $Id: help.c,v 1.10 2004/05/20 11:10:52 mhe Exp $
  *
  * help.c -- local help and info
  *
@@ -27,7 +27,20 @@ void cmd_help(int argc, char **argv)
 	int i;
 	listitem *li;
 
-	maxargs_nohelp(0);
+	maxargs_nohelp(1);
+
+  if(argc==2) {
+    if(find_func(argv[1], false)) {
+       
+     char *tmp = (char *)xmalloc(30);
+     sprintf(tmp, "%s --help", argv[1]);
+     exe_cmdline(tmp, false);
+     return;
+    }
+    else {
+			fprintf(stderr, _("No such command '%s'!\n\n"), argv[1]);
+    }
+  };
 
 	fprintf(stderr, _("Available commands: (commands may be abbreviated)\n"));
 #ifdef HAVE_LIBREADLINE

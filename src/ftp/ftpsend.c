@@ -1,4 +1,4 @@
-/* $Id: ftpsend.c,v 1.16 2003/10/15 21:37:31 mhe Exp $
+/* $Id: ftpsend.c,v 1.17 2004/05/20 11:10:52 mhe Exp $
  *
  * ftpsend.c -- send/receive files and file listings
  *
@@ -632,7 +632,7 @@ static int ftp_init_receive(const char *path, transfer_mode_t mode,
 			 */
 			e = strstr(ftp->reply, " bytes");
 			if(e != 0) {
-				while(isdigit((int)e[-1]))
+				while((e > ftp->reply) && isdigit((int)e[-1]))
 					e--;
 				ftp->ti.total_size = atol(e);
 			} /* else we don't bother */
@@ -827,11 +827,11 @@ int ftp_fxpfile(Ftp *srcftp, const char *srcfile,
 		rfile *f;
 
 		f = ftp_get_file(destfile);
-		if(f && f->size != (unsigned long)-1)
+		if(f && f->size != (unsigned long long)-1)
 			ftp->restart_offset = f->size;
 		else {
 			ftp->restart_offset = ftp_filesize(destfile);
-			if(ftp->restart_offset == (unsigned long)-1) {
+			if(ftp->restart_offset == (unsigned long long)-1) {
 				ftp_err(_("unable to get remote filesize of '%s',"
 						  " unable to resume\n"),
 						destfile);
@@ -971,7 +971,7 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 	}
 
 	if(rp > 0L) {
-		if(fseek(fp, rp, SEEK_SET) != 0) {
+		if(fseeko(fp, rp, SEEK_SET) != 0) {
 			ftp_err(_("%s: %s, transfer cancelled\n"),
 					outfile, strerror(errno));
 			close_func(fp);
@@ -1028,11 +1028,11 @@ int ftp_putfile(const char *infile, const char *outfile, putmode_t how,
 		rfile *f;
 
 		f = ftp_get_file(outfile);
-		if(f && f->size != (unsigned long)-1)
+		if(f && f->size != (unsigned long long)-1)
 			ftp->restart_offset = f->size;
 		else {
 			ftp->restart_offset = ftp_filesize(outfile);
-			if(ftp->restart_offset == (unsigned long)-1) {
+			if(ftp->restart_offset == (unsigned long long)-1) {
 				ftp_err(_("unable to get remote filesize of '%s',"
 						  " unable to resume\n"),
 						outfile);
@@ -1044,7 +1044,7 @@ int ftp_putfile(const char *infile, const char *outfile, putmode_t how,
 
 
 	if(ftp->restart_offset > 0L) {
-		if(fseek(fp, ftp->restart_offset, SEEK_SET) != 0) {
+		if(fseeko(fp, ftp->restart_offset, SEEK_SET) != 0) {
 			ftp_err(_("%s: %s, transfer cancelled\n"),
 					outfile, strerror(errno));
 			fclose(fp);

@@ -1,4 +1,4 @@
-/* $Id: rfile.h,v 1.6 2002/12/02 12:26:29 mhe Exp $
+/* $Id: rfile.h,v 1.7 2004/05/20 11:10:52 mhe Exp $
  *
  * rfile.h -- representation of a remote file
  *
@@ -27,7 +27,7 @@ typedef struct rfile
 	unsigned int nhl;   /* number of hard links */
 	char *link;         /* target of link */
 	char *path;         /* filename with absolute path */
-	unsigned long size;
+   unsigned long long int size;
 } rfile;
 
 rfile *rfile_create(void);

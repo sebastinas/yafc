@@ -1,4 +1,4 @@
-/* $Id: cmd.c,v 1.11 2003/07/12 10:25:41 mhe Exp $
+/* $Id: cmd.c,v 1.12 2004/05/20 11:10:52 mhe Exp $
  *
  * cmd.c -- read and execute commands, this is the main loop
  *
@@ -28,7 +28,7 @@
 #include "prompt.h"
 #include "ltag.h"
 
-static void exe_cmdline(char *str, bool aliases_are_expanded);
+//static void exe_cmdline(char *str, bool aliases_are_expanded);
 
 void exit_yafc(void)
 {
@@ -221,7 +221,7 @@ static args_t *expand_alias(const char *cmd)
  *
  * first call should pass aliases_are_expanded == false
  */
-static void exe_cmdline(char *str, bool aliases_are_expanded)
+void exe_cmdline(char *str, bool aliases_are_expanded)
 {
 	char *e;
 

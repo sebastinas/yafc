@@ -1,4 +1,4 @@
-/* $Id: ftp.h,v 1.14 2002/12/02 14:32:21 mhe Exp $
+/* $Id: ftp.h,v 1.15 2004/05/20 11:10:52 mhe Exp $
  *
  * ftp.h -- lower level FTP stuff
  *
@@ -96,9 +96,9 @@ typedef struct transfer_info
 {
 	char *remote_name;           /* name of remote file or 0 */
 	char *local_name;            /* name of local file or 0 */
-	long total_size;             /* total size in bytes or -1 */
-	long size;                   /* size in bytes transferred so far */
-	long restart_size;           /* restart size */
+	long long total_size;             /* total size in bytes or -1 */
+	long long size;                   /* size in bytes transferred so far */
+	long long restart_size;           /* restart size */
 	struct timeval start_time;   /* time of transfer start */
 	bool interrupted;            /* true if transfer interrupted (w/SIGINT) */
 	bool ioerror;                /* true if I/O error occurred */
@@ -261,7 +261,7 @@ int ftp_cdup(void);
 int ftp_unlink(const char *path);
 int ftp_chmod(const char *path, const char *mode);
 time_t ftp_filetime(const char *filename);
-unsigned long ftp_filesize(const char *path);
+unsigned long long ftp_filesize(const char *path);
 int ftp_idle(const char *idletime);
 int ftp_noop(void);
 int ftp_help(const char *arg);
