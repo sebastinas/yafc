@@ -1,4 +1,4 @@
-/* $Id: strq.c,v 1.6 2003/07/12 10:25:42 mhe Exp $
+/* $Id: strq.c,v 1.7 2004/05/20 11:15:17 mhe Exp $
  *
  * strq.c -- string functions, handles quoted text
  *
@@ -406,7 +406,7 @@ int str2bool(const char *e)
 
 /* returns string with ~/foo expanded to /home/username/foo
  * FIXME: does not handle ~user/foo
- * returned string should be xfree'd
+ * returned string should be free'd
  */
 char *tilde_expand_home(const char *str, const char *home)
 {
