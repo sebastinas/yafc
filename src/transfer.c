@@ -466,17 +466,35 @@ void transfer_end_nohup(void)
 	exit(0);
 }
 
-void add_ascii_transfer_masks(const char *str)
+void listify_string(const char *str, list *lp)
 {
 	char *e;
 	char *s, *orgs;
 
 	orgs = s = xstrdup(str);
 	while((e = strqsep(&s, ':')) != 0) {
-		if(list_search(gvAsciiMasks, (listsearchfunc)strcmp, e) == 0)
-			list_additem(gvAsciiMasks, xstrdup(e));
+		if(list_search(lp, (listsearchfunc)strcmp, e) == 0)
+			list_additem(lp, xstrdup(e));
 	}
 	xfree(orgs);
+}
+
+char *stringify_list(list *lp)
+{
+	listitem *li;
+	char *str;
+
+	if(!lp)
+		return 0;
+
+	li = lp->first;
+	if(li)
+		str = xstrdup((char *)li->data);
+
+	for(li=li->next; li; li=li->next) {
+		asprintf(&str, "%s:%s",  str, (char *)li->data);
+	}
+	return str;
 }
 
 bool ascii_transfer(const char *mask)

@@ -60,9 +60,10 @@ auto_bookmark_silent no
 # see also 'ascii_transfer_mask' below
 default_type binary # ...or ascii
 
-# default security machanism to use
+# default security machanisms to use, separated with colon
 # valid arguments are krb4, krb5 and none
-default_mechanism krb4
+#default_mechanism "krb4:krb5:none"
+#default_mechanism krb4
 
 # filenames matching any of these masks are transferred in ascii mode,
 # ignoring the value of 'default_type'
@@ -249,22 +250,25 @@ transfer_end_string ""
 #  recognized keywords:
 #
 #   machine <hostname or .domain>
-#                             (match this machine or domain name
-#                              <hostname> can be a valid ftp URL)
-#   alias <alias name>        (give this entry another name, valid
-#                               only after a machine statement)
-#   local                     (match local machines, ie hostname w/o a dot)
-#   default                   (match if no 'machine' or 'local' matched)
-#   login <username>          (login as <username>)
-#   anonymous                 (try anonymous login, uses anon_password)
-#   password <password>       (login with supplied password)
-#   account <account name>    (not fully supported, anyone using it?)
+#                             match this machine or domain name
+#                              <hostname> can be a valid ftp URL
+#   alias <alias name>        give this entry another name, valid
+#                               only after a machine statement
+#   local                     match local machines, ie hostname w/o a dot
+#   default                   match if no 'machine' or 'local' matched
+#   login <username>          login as <username>
+#   anonymous                 try anonymous login, uses anon_password
+#   password <password>       login with supplied password
+#   account <account name>    not fully supported, anyone using it?
 #   cwd <startup working directory>
-#                             (changes to this directory when logged in)
+#                             changes to this directory when logged in
 # these two are no-ops if not compiled with Kerberos:
-#   prot <protlevel>          (set Kerberos data protection level,
+#   prot <protlevel>          set Kerberos data protection level
 #                               valid protlevels are safe, clear and private)
-#   nokrb                     (do not attempt Kerberos login at all)
+#   mech <mechanisms>         try these security mechanisms, in that order
+#                             this is a colon-separated string with any of
+#                             the supported security mechanisms:
+#                              none, krb4 or krb5
 #
 # examples:
 
@@ -283,6 +287,10 @@ transfer_end_string ""
 # login as 'anonymous' and automagically supply password from
 # anon_password, connect on non-standard port 4711
 #machine ftp.gurka.com:4711 anonymous
+
+# login as 'mhe' on newcastle and try Kerberos 5 first, if that fails
+# use Kerberos 4, else use cleartext password
+#machine newcastle login mhe mech krb5:krb4
 
 # login anonymously to machine mayer.physto.se with other name yafc
 machine mayer.physto.se anonymous cwd /pub/yafc alias yafc 

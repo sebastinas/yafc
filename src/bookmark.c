@@ -41,6 +41,8 @@ int parse_rc(const char *file, bool warn);
 /* in local.c */
 void invoke_shell(char *cmdline);
 
+char *stringify_list(list *lp);
+
 static char *xquote_chars(const char *str, const char *qchars)
 {
 	char *q, *oq;
@@ -101,8 +103,11 @@ static int bookmark_save(const char *other_bmfile)
 
 		if(url->protlevel)
 			fprintf(fp, " prot %s", url->protlevel);
-		if(url->mech)
-			fprintf(fp, " mech '%s'", url->mech);
+		if(url->mech) {
+			char *mech_string = stringify_list(url->mech);
+			fprintf(fp, " mech '%s'", mech_string);
+			xfree(mech_string);
+		}
 		if(url->password) {
 			char *cq;
 			base64_encode(url->password, strlen(url->password), &cq);
@@ -267,8 +272,8 @@ static bool should_update_bookmark(url_t *url)
 		return true;
 	if(url->port != ftp->url->port)
 		return true;
-	if(xstrcmp(url->mech, ftp->url->mech) != 0)
-		return true;
+/*	if(xstrcmp(url->mech, ftp->url->mech) != 0)
+	return true;*/
 	if(xstrcmp(url->protlevel, ftp->url->protlevel) != 0)
 		return true;
 	return false;

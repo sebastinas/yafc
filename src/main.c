@@ -36,6 +36,8 @@
 
 #include "yafcrc.h"
 
+void listify_string(const char *str, list *lp);
+
 /* in rc.c */
 int parse_rc(const char *file, bool warn);
 
@@ -168,16 +170,17 @@ void init_yafc(void)
 	init_colors();
 
 	/* choose default security mechanism */
+	gvDefaultMechanism = list_new((listfunc)xfree);
 #ifdef KRB4
 # ifdef KRB5
-	gvMechanism = xstrdup("krb4,krb5");
+	listify_string("krb4:krb5", gvDefaultMechanism);
 # else
-	gvMechanism = xstrdup("krb4");
+	listify_string("krb4", gvDefaultMechanism);
 # endif
 #elif defined(KRB5)
-	gvMechanism = xstrdup("krb5");
+	listify_string("krb5", gvDefaultMechanism);
 #else
-	gvMechanism = xstrdup("none");
+	listify_string("none", gvDefaultMechanism);
 #endif
 	
 	gvPrompt1 = xstrdup("yafc> ");

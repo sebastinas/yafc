@@ -26,157 +26,489 @@
 #include "alias.h"
 #include "commands.h"
 #include "transfer.h"
-#include "cfglib/cfglib.h"
 
-static cfglib_value_list_t *values = 0;
+void listify_string(const char *str, list *lp);
 
-const char *rc_str(const char *optname)
+static int nerr = 0;
+
+static char *current_rcfile = 0;
+
+static void errp(char *str, ...)
 {
-	return cfglib_getstring(optname, values);
+	va_list ap;
+
+	if(nerr == 0)
+		fprintf(stderr, _("Error(s) while parsing '%s':\n"), current_rcfile);
+
+	va_start(ap, str);
+	vfprintf(stderr, str, ap);
+	va_end(ap);
+	nerr++;
 }
 
-bool rc_bool(const char *optname)
+static char *ungetstr = 0;
+
+static char *_nextstr(FILE *fp)
 {
-	return cfglib_getbool(optname, values);
+	static char tmp[257];
+	char *e;
+	int c;
+
+	if(ungetstr) {
+		e = ungetstr;
+		ungetstr = 0;
+		return e;
+	}
+
+	if(fscanf(fp, "%256s", tmp) == EOF) {
+		if(ferror(fp))
+			perror(current_rcfile);
+		return 0;
+	}
+	if(tmp[0] == '#') { /* skip comments */
+		while((c = getc(fp)) != EOF) {
+			if(c == '\n')
+				break;
+		}
+		return _nextstr(fp);
+	}
+	return tmp;
 }
 
-int rc_int(const char *optname)
+static char *nextstr(FILE *fp)
 {
-	return cfglib_getint(optname, values);
-}
+	static char tmp[257];
+	char *e;
+	int i;
 
-cfglib_list_t *rc_list(const char *optname)
-{
-	return cfglib_getlist(optname, values);
-}
+	e = _nextstr(fp);
+	if(!e)
+		return 0;
+	if(*e=='\"' || *e=='\'') {
+		strcpy(tmp, e+1);
+		i = strlen(tmp);
+		if(i >= 1 && (tmp[i-1] == '\'' || tmp[i-1] == '\"')) {
+			tmp[i-1] = 0;
+			return tmp;
+		}
+		while(true) {
+			int c;
 
-#if 0
-static void passwd_warn(const char *filename)
+			tmp[i] = 0;
+
+			c = fgetc(fp);
+			if(c == EOF) {
+				errp(_("unmatched quote\n"));
+				break;
+			}
+			if((i == 0 || tmp[i-1] != '\\') && (c == '\"' || c == '\''))
+				break;
+			tmp[i++] = c;
+			if(i == 256) {
+				errp(_("string too long or unmatched quote, truncated\n"));
+				break;
+			}
+		}
+		return tmp;
+	}
+	return e;
+}
+	
+static bool nextbool(FILE *fp)
 {
-	if(!has_warned_about_passwd) {
-		struct stat sb;
-		has_warned_about_passwd = true;
-		if(stat(filename, &sb) == 0 && (sb.st_mode & 077) != 0)
-			printf(_("WARNING! Config file contains passwords "
-					 "but is readable by others (mode %03o)\n"),
-				   sb.st_mode&0777);
+	char *e;
+	int b;
+
+	if((e=nextstr(fp)) == NULL) {
+		errp(_("Unexpected end of file encountered\n"));
+		return false;
+	}
+
+	if((b=str2bool(e)) != -1)
+		return (bool)b;
+	else {
+		errp(_("Expected boolean value, but got '%s'\n"), e);
+		ungetstr = e;
+		return false;
 	}
 }
+
+#define NEXTSTR       if((e=nextstr(fp)) == 0) break
+
+#define TRIG_MACHINE 1
+#define TRIG_LOCAL 2
+#define TRIG_DEFAULT 3
+
+static void parse_host(int trig, FILE *fp)
+{
+	static bool has_warned_about_passwd = false;
+	char *e;
+	url_t *up;
+
+	up = url_create();
+
+	if(trig == TRIG_MACHINE) {
+		if((e=nextstr(fp)) == 0)
+			return;
+		
+		if(e[0] == 0) {
+			errp(_("'machine' directive needs a hostname\n"));
+			url_destroy(up);
+			return;
+		}
+		url_parse(up, e);
+	}
+
+	while(!feof(fp)) {
+		NEXTSTR;
+
+		if(strcasecmp(e, "login") == 0) {
+			NEXTSTR;
+			url_setusername(up, e);
+		} else if(strcasecmp(e, "alias") == 0) {
+			NEXTSTR;
+			if(up->hostname[0] == '.')
+				printf(_("'alias' directive not useful with domains\n"));
+			else {
+				unquote(e);
+				url_setalias(up, e);
+			}
+		} else if(strcasecmp(e, "password") == 0) {
+			NEXTSTR;
+			url_setpassword(up, e);
+			if(!has_warned_about_passwd) {
+				struct stat sb;
+				has_warned_about_passwd = true;
+				if(fstat(fileno(fp), &sb)==0 && (sb.st_mode & 077)!=0)
+					printf(_("WARNING! Config file contains passwords "
+							 "but is readable by others (mode %03o)\n"),
+						   sb.st_mode&0777);
+			}
+
+		} else if(strcasecmp(e, "anonymous") == 0) {
+			url_setusername(up, e);
+			url_setpassword(up, gvAnonPasswd);    /* could be NULL */
+		} else if(strcasecmp(e, "account") == 0) {
+			NEXTSTR;
+			/* FIXME: account skipped in parse_host() */
+		} else if(strcasecmp(e, "cwd") == 0) {
+			NEXTSTR;
+			url_setdirectory(up, e);
+		} else if(strcasecmp(e, "port") == 0) {
+			NEXTSTR;
+			url_setport(up, atoi(e));
+		} else if(strcasecmp(e, "mech") == 0) {
+			NEXTSTR;
+			url_setmech(up, e);
+		} else if(strcasecmp(e, "prot") == 0) {
+			NEXTSTR;
+			url_setprotlevel(up, e);
+		} else if(strcasecmp(e, "macdef") == 0) {
+			while(e) { /* FIXME: macdef: this is not really true */
+				NEXTSTR;
+			}
+			break;
+		} else {
+			ungetstr = e;
+			clearerr(fp);
+			break;
+		}
+	}
+
+	if(trig == TRIG_MACHINE) {
+		list *ls;
+		listitem *li;
+		char *tmp;
+
+		asprintf(&tmp, "%s/bookmarks", gvWorkingDirectory);
+		if(strcmp(current_rcfile, tmp) == 0)
+			ls = gvBookmarks;
+		else
+			ls = gvUrlHistory;
+		xfree(tmp);
+
+		li = list_search(ls, (listsearchfunc)urlcmp, up);
+#if 0
+		if(li && !gvReplaceBookmarks) {
+			errp(_("Multiple definitions for '%s', skipping...\n"),
+					 up->alias ? up->alias : up->hostname);
+			url_destroy(up);
+		} else
 #endif
+			{
+			if(li)
+				list_delitem(ls, li);
+			list_additem(ls, up);
+		}
+	} else if(trig == TRIG_LOCAL) {
+#if 0
+		if(gvLocalUrl && !gvReplaceBookmarks) {
+			errp(_("Multiple definitions for 'local', skipping...\n"));
+			url_destroy(up);
+		} else
+#endif
+			{
+			if(gvLocalUrl)
+				url_destroy(gvLocalUrl);
+			gvLocalUrl = up;
+		}
+	} else { /* trig == TRIG_DEFAULT */
+#if 0
+		if(gvDefaultUrl && !gvReplaceBookmarks) {
+			errp(_("Multiple definitions for 'default', skipping...\n"));
+			url_destroy(up);
+		} else
+#endif
+			{
+			if(gvDefaultUrl)
+				url_destroy(gvDefaultUrl);
+			gvDefaultUrl = up;
+		}
+	}
+}
 
 int parse_rc(const char *file, bool warn)
 {
 	FILE *fp;
 	char *e;
 
-	cfglib_option_t machine_opts[] = {
-		CFG_STR("host", 0, 0, 0, 0),
-		CFG_STR("login", 0, 0, 1, 0),
-		CFG_STR("alias",0, 0, 2, 0),
-		CFG_STR("password",0,0, 3, 0),
-		CFG_BOOL("passive", 0, 0, 4, 0),
-		CFG_STR("cwd", 0, 0, 5, 0),
-		CFG_TOGGLE("anonymous", 0, 0, 6, 0),
-		CFG_STR("prot", 0, 0, 7, 0),
-		CFG_STR("mechanism", CFGF_LIST, 0, 8, 0),
-		CFG_STR("account", 0, 0, 9, 0),
-		CFG_INT("port", 0, 0, 10, 0),
-		CFG_ENDOPT
-	};
-
-	cfglib_option_t alias_opts[] = {
-		CFG_STR(0 /* all names valid */, 0, 0, 0, 0),
-		CFG_ENDOPT
-	};
-
-	cfglib_option_t proxy_opts[] = {
-		CFG_INT("type", 0, 0, 0, 0),
-		CFG_STR("host", 0, 0, 17, 0),
-		CFG_STR("exclude", CFGF_LIST, 0, 0, 0),
-		CFG_ENDOPT
-	};
-
-	cfglib_option_t bookmark_opts[] = {
-		CFG_SUB(0 /* all names valid */, 0, 0, 0, machine_opts, ""),
-		CFG_ENDOPT
-	};
-
-	cfglib_option_t opts[] = {
-		/* boolean boolean */
-		CFG_BOOL("autologin", 0, 0, 0,
-				"attempt to login automagically, using the autologin " \
-				"entries below"),
-		CFG_BOOL("quit_on_eof", 0, 0, 1, "quit program if " \
-				"received EOF (C-d)"),
-		CFG_BOOL("use_passive_mode", 0, 0, 2,
-				"use passive mode connections\n" \
-				"if false, use sendport mode\n" \
-				"if you get the message 'Host doesn't support passive " \
-				"mode', set to false"),
-		CFG_BOOL("read_netrc", 0, 0, 3, "read netrc"),
-		CFG_BOOL("verbose", 0, 0, 4, ""),
-		CFG_BOOL("debug", 0, 0, 5, ""),
-		CFG_BOOL("trace", 0, 0, 6, ""),
-		CFG_BOOL("inhibit_startup_syst", 0, 0, 7, ""),
-		CFG_BOOL("use_env_string", 0, 0, 8, ""),
-		CFG_BOOL("remote_completion", 0, 0, 9, ""),
-		CFG_BOOL("auto_bookmark_save_passwd", 0, 0, 10, ""),
-		CFG_BOOL("auto_bookmark_silent", 0, 0, 11, ""),
-		CFG_BOOL("beep_after_long_command", 0, 0, 12, ""),
-		CFG_BOOL("use_history", 0, 0, 13, ""),
-		CFG_BOOL("tilde", 0, 0, 14, ""),
-
-		CFG_STR("load_taglist", 0, 0, 15, ""),
-		CFG_STR("auto_bookmark", 0, 0, 10, ""),
-
-		/* integer options */
-		CFG_INT("long_command_time", 0, 0, 0, ""),
-		CFG_INT("history_max", 0, 0, 1, ""),
-		CFG_INT("command_timeout", 0, 0, 2, ""),
-		CFG_INT("connection_timeout", 0, 0, 3, ""),
-		CFG_INT("connect_attempts", 0, 0, 4, ""),
-		CFG_INT("connect_wait_time", 0, 0, 5, ""),
-		CFG_INT("proxy_type", 0, 0, 6, ""),
-
-		/* string options */
-		CFG_STR("default_type", 0, 0, 0, ""),
-
-		CFG_STR("default_mechanism", CFGF_LIST|CFGF_LIST_MERGE_MULTIPLES,
-				0, 1, ""),
-		CFG_STR("ascii_transfer_mask", CFGF_LIST|CFGF_LIST_MERGE_MULTIPLES,
-				0, 2, ""),
-
-		CFG_STR("prompt1", 0, 0, 0, ""),
-		CFG_STR("prompt2", 0, 0, 1, ""),
-		CFG_STR("prompt3", 0, 0, 2, ""),
-		CFG_STR("xterm_title1", 0, 0, 3, ""),
-		CFG_STR("xterm_title2", 0, 0, 4, ""),
-		CFG_STR("xterm_title3", 0, 0, 5, ""),
-		CFG_STR("transfer_begin_string", 0, 0, 6, ""),
-		CFG_STR("transfer_string", 0, 0, 7, ""),
-		CFG_STR("transfer_end_string", 0, 0, 8, ""),
-		CFG_STR("anon_password", 0, 0, 9, ""),
-
-		CFG_STR("xterm_title_terms", CFGF_LIST|CFGF_LIST_MERGE_MULTIPLES,
-				0, 12, ""),
-
-		/* suboptions */
-		CFG_SUB("alias", 0, 0, 0, alias_opts,
-				   "aliases (on the form [alias name value])\n" \
-				   "can't make an alias of another alias"),
-		CFG_SUB("proxy", 0, 0, 0, proxy_opts, "proxy settings"),
-
-		CFG_SUB("bookmarks", CFGF_ALLOW_MULTIPLES, 0, 0, bookmark_opts, "bookmarks"),
-		
-		CFG_ENDOPT
-	};
-
 	e = tilde_expand_home(file, gvLocalHomeDir);
+	fp = fopen(e, "r");
+	if(!fp) {
+		if(warn)
+			perror(e);
+		xfree(e);
+		return -1;
+	}
+	xfree(e);
 
-	fprintf(stderr, "cfglib_load(%s)\n", e);
+	nerr = 0;
+	current_rcfile = xstrdup(file);
 
-	cfglib_load(e, opts, &values);
+	while(!feof(fp)) {
+		if(nerr>20) {
+			errp(_("As a computer, I find your faith in technology amusing...\nToo many errors\n"));
+			fclose(fp);
+			xfree(current_rcfile);
+			return -1;
+		}
 
+		NEXTSTR;
+
+		if(strcasecmp(e, "autologin") == 0)
+			gvAutologin = nextbool(fp);
+		else if(strcasecmp(e, "verbose") == 0) {
+			gvVerbose = nextbool(fp);
+		} else if(strcasecmp(e, "debug") == 0)
+			gvDebug = nextbool(fp);
+		else if(strcasecmp(e, "trace") == 0)
+			gvTrace = nextbool(fp);
+		else if(strcasecmp(e, "inhibit_startup_syst") == 0
+				|| strcasecmp(e, "no_startup_syst") == 0)
+			gvStartupSyst = !nextbool(fp);
+		else if(strcasecmp(e, "prompt_on_disconnect") == 0)
+			/* ignored for backward compat. */ nextbool(fp);
+		else if(strcasecmp(e, "remote_completion") == 0)
+			gvRemoteCompletion = nextbool(fp);
+		else if(strcasecmp(e, "read_netrc") == 0)
+			gvReadNetrc = nextbool(fp);
+		else if(strcasecmp(e, "quit_on_eof") == 0)
+			gvQuitOnEOF = nextbool(fp);
+		else if(strcasecmp(e, "use_passive_mode") == 0)
+			gvPasvmode = nextbool(fp);
+		else if(strcasecmp(e, "use_history") == 0)
+			gvUseHistory = nextbool(fp);
+		else if(strcasecmp(e, "beep_after_long_command") == 0)
+			gvBeepLongCommand = nextbool(fp);
+		else if(strcasecmp(e, "auto_bookmark_save_passwd") == 0)
+			gvAutoBookmarkSavePasswd = nextbool(fp);
+		else if(strcasecmp(e, "auto_bookmark_silent") == 0)
+			gvAutoBookmarkSilent = nextbool(fp);
+		else if(strcasecmp(e, "tilde") == 0)
+			gvTilde = nextbool(fp);
+		else if(strcasecmp(e, "use_env_string") == 0)
+			gvUseEnvString = nextbool(fp);
+		else if(strcasecmp(e, "auto_bookmark") == 0) {
+			NEXTSTR;
+
+			if(strcasecmp(e, "ask") == 0)
+				gvAutoBookmark = 2;
+			else {
+				gvAutoBookmark = str2bool(e);
+				if(gvAutoBookmark == -1) {
+					errp(_("Expected boolean value or 'ask', but got '%s'\n"), e);
+					gvAutoBookmark = 0;
+				}
+			}
+		} else if(strcasecmp(e, "load_taglist") == 0) {
+			NEXTSTR;
+
+			if(strcasecmp(e, "ask") == 0)
+				gvLoadTaglist = 2;
+			else {
+				gvLoadTaglist = str2bool(e);
+				if(gvLoadTaglist == -1) {
+					errp(_("Expected boolean value or 'ask', but got '%s'\n"), e);
+					gvLoadTaglist = 2;
+				}
+			}
+		} else if(strcasecmp(e, "default_type") == 0) {
+			NEXTSTR;
+			if(strcasecmp(e, "binary") == 0 || strcasecmp(e, "I") == 0)
+				gvDefaultType = tmBinary;
+			else if(strcasecmp(e, "ascii") == 0 || strcasecmp(e, "A") == 0)
+				gvDefaultType = tmAscii;
+			else
+				errp(_("Unknown default_type parameter '%s'... (use 'ascii' or 'binary')\n"), e);
+		} else if(strcasecmp(e, "default_mechanism") == 0) {
+			NEXTSTR;
+			list_free(gvDefaultMechanism);
+			gvDefaultMechanism = list_new((listfunc)xfree);
+			listify_string(e, gvDefaultMechanism);
+		} else if(strcasecmp(e, "anon_password") == 0) {
+			NEXTSTR;
+			xfree(gvAnonPasswd);
+			gvAnonPasswd = xstrdup(e);
+		} else if(strcasecmp(e, "long_command_time") == 0) {
+			NEXTSTR;
+			gvLongCommandTime = atoi(e);
+			if(gvLongCommandTime <= 0) {
+				errp(_("Invalid value for long_command_time: %d\n"), gvLongCommandTime);
+				gvLongCommandTime = 30;
+			}
+		} else if(strcasecmp(e, "connect_wait_time") == 0) {
+			NEXTSTR;
+			gvConnectWaitTime = atoi(e);
+			if(gvConnectWaitTime < 0) {
+				errp(_("Invalid value for connect_wait_time: %d\n"), gvConnectWaitTime);
+				gvConnectWaitTime = 30;
+			}
+		} else if(strcasecmp(e, "connect_attempts") == 0) {
+			NEXTSTR;
+			gvConnectAttempts = (unsigned)atoi(e);
+			if(gvConnectAttempts == 0)
+				gvConnectAttempts = 1;
+		} else if(strcasecmp(e, "command_timeout") == 0) {
+			NEXTSTR;
+			gvCommandTimeout = (unsigned)atoi(e);
+		} else if(strcasecmp(e, "connection_timeout") == 0) {
+			NEXTSTR;
+			gvConnectionTimeout = (unsigned)atoi(e);
+		} else if(strcasecmp(e, "include") == 0) {
+			NEXTSTR;
+			xfree(current_rcfile);
+			parse_rc(e, true);
+			current_rcfile = xstrdup(file);
+		} else if(strcasecmp(e, "prompt1") == 0) {
+			NEXTSTR;
+			xfree(gvPrompt1);
+			gvPrompt1 = xstrdup(e);
+		} else if(strcasecmp(e, "prompt2") == 0) {
+			NEXTSTR;
+			xfree(gvPrompt2);
+			gvPrompt2 = xstrdup(e);
+		} else if(strcasecmp(e, "prompt3") == 0) {
+			NEXTSTR;
+			xfree(gvPrompt3);
+			gvPrompt3 = xstrdup(e);
+		} else if(strcasecmp(e, "xterm_title_terms") == 0) {
+			NEXTSTR;
+			xfree(gvXtermTitleTerms);
+			gvXtermTitleTerms = xstrdup(e);
+		} else if(strcasecmp(e, "xterm_title1") == 0) {
+			NEXTSTR;
+			xfree(gvXtermTitle1);
+			gvXtermTitle1 = xstrdup(e);
+		} else if(strcasecmp(e, "xterm_title2") == 0) {
+			NEXTSTR;
+			xfree(gvXtermTitle2);
+			gvXtermTitle2 = xstrdup(e);
+		} else if(strcasecmp(e, "xterm_title3") == 0) {
+			NEXTSTR;
+			xfree(gvXtermTitle3);
+			gvXtermTitle3 = xstrdup(e);
+		} else if(strcasecmp(e, "transfer_begin_string") == 0) {
+			NEXTSTR;
+			xfree(gvTransferBeginString);
+			gvTransferBeginString = xstrdup(e);
+			unquote_escapes(gvTransferBeginString);
+		} else if(strcasecmp(e, "transfer_string") == 0) {
+			NEXTSTR;
+			xfree(gvTransferString);
+			gvTransferString = xstrdup(e);
+			unquote_escapes(gvTransferString);
+		} else if(strcasecmp(e, "transfer_end_string") == 0) {
+			NEXTSTR;
+			xfree(gvTransferEndString);
+			gvTransferEndString = xstrdup(e);
+			unquote_escapes(gvTransferEndString);
+		} else if(strcasecmp(e, "nohup_mailaddress") == 0) {
+			NEXTSTR;
+			xfree(gvNohupMailAddress);
+			gvNohupMailAddress = xstrdup(e);
+		} else if(strcasecmp(e, "sendmail_path") == 0) {
+			NEXTSTR;
+			xfree(gvSendmailPath);
+			gvSendmailPath = xstrdup(e);
+		} else if(strcasecmp(e, "history_max") == 0) {
+			NEXTSTR;
+			gvHistoryMax = atoi(e);
+			if(gvHistoryMax <= 0) {
+				errp(_("Invalid value for history_max: %d\n"), gvHistoryMax);
+				gvHistoryMax = 256;
+			}
+		} else if(strcasecmp(e, "ascii_transfer_mask") == 0) {
+			NEXTSTR;
+			listify_string(e, gvAsciiMasks);
+		} else if(strcasecmp(e, "startup_local_directory") == 0) {
+			NEXTSTR;
+			e = tilde_expand_home(e, gvLocalHomeDir);
+			if(chdir(e) == -1)
+				perror(e);
+			else
+				cmd_lpwd(0, 0);
+			xfree(e);
+		} else if(strcasecmp(e, "alias") == 0) {
+			args_t *args;
+			char *name;
+
+			NEXTSTR;
+			name = xstrdup(e);
+
+			NEXTSTR;
+			
+			args = args_create();
+			args_push_back(args, e);
+			alias_define(name, args);
+			xfree(name);
+		}
+		else if(strcasecmp(e, "proxy_type") == 0) {
+			NEXTSTR;
+
+			gvProxyType = atoi(e);
+			if(gvProxyType < 0 || gvProxyType > 6) {
+				errp(_("Invalid value for proxy_type: %d\n"), gvProxyType);
+				gvProxyType = 0;
+			}
+		} else if(strcasecmp(e, "proxy_host") == 0) {
+			NEXTSTR;
+			url_destroy(gvProxyUrl);
+			gvProxyUrl = url_init(e);
+		} else if(strcasecmp(e, "proxy_exclude") == 0) {
+			NEXTSTR;
+			listify_string(e, gvProxyExclude);
+		}
+		else if(strcasecmp(e, "machine") == 0)
+			parse_host(TRIG_MACHINE, fp);
+		else if(strcasecmp(e, "default") == 0)
+			parse_host(TRIG_DEFAULT, fp);
+		else if(strcasecmp(e, "local") == 0)
+			parse_host(TRIG_LOCAL, fp);
+		else
+			errp(_("Config parse error: '%s'\n"), e);
+	}
+	fclose(fp);
+	xfree(current_rcfile);
 	return 0;
 }
 

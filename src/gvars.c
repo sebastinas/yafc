@@ -45,7 +45,7 @@ bool gvRemoteCompletion = true;
 bool gvQuitOnEOF = true;
 
 /* default security mechanism to use */
-char *gvMechanism = 0;
+list *gvDefaultMechanism = 0;  /* list of (char *) */
 
 char *gvXtermTitle1 = 0;
 char *gvXtermTitle2 = 0;

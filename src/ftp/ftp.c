@@ -720,6 +720,27 @@ static int get_password(url_t *url, const char *anonpass, bool isproxy)
 	return 0;
 }
 
+static const char *secext_name(const char *mech)
+{
+	static struct {
+		const char *short_name;
+		const char *real_name;
+	} names[] = {
+		{"krb4", "KERBEROS_V4"},
+		{"krb5", "GSSAPI"},
+/*		{"ssl", "SSL"},*/
+		{0, 0}
+	};
+	int i;
+
+	for(i = 0; names[i].short_name; i++) {
+		if(strcasecmp(mech, names[i].short_name) == 0)
+			return names[i].real_name;
+	}
+
+	return 0;
+}
+
 int ftp_login(const char *guessed_username, const char *anonpass)
 {
 	int ptype, r;
@@ -752,20 +773,46 @@ int ftp_login(const char *guessed_username, const char *anonpass)
 	ftp->sec_complete = false;
 	ftp->data_prot = prot_clear;
 
-	if(!ftp->url->nokrb && !url_isanon(ftp->url)) {
+	/* don't use secure stuff if anonymous
+	 */
+	if(!url_isanon(ftp->url)) {
+		list *mechlist;
+		/* request a protection level
+		 */
 		if(ftp->url->protlevel) {
 			if(sec_request_prot(ftp->url->protlevel) != 0)
 				ftp_err(_("Invalid protection level '%s'\n"),
 						ftp->url->protlevel);
 		}
 
-		if(sec_login(ftp->host->hostname), url->mech) {
-			ftp_err(_("*** Using plaintext username and password ***\n"));
-			if(ftp->code == ctError
-			   && ftp->fullcode != 504 && ftp->fullcode != 534)
-				ftp->url->nokrb = true;
-		} else
-			ftp_err(_("Authentication successful.\n"));
+		mechlist = ftp->url->mech ? ftp->url->mech : gvDefaultMechanism;
+		if(mechlist) {
+			listitem *li = mechlist->first;
+			for(; li; li=li->next) {
+				const char *mech_name;
+				int ret;
+
+				mech_name = secext_name((char *)li->data);
+				if(mech_name == 0) {
+					ftp_err(_("unknown mechanism '%s'\n"), (char *)li->data);
+					continue;
+				}
+				ret = sec_login(ftp->host->hostname, mech_name);
+
+				if(ret == -1) {
+					ftp_err(_("*** Using plaintext username and password ***\n"));
+# if 0
+					if(ftp->code == ctError
+					   && ftp->fullcode != 504 && ftp->fullcode != 534)
+						ftp->url->nokrb = true;
+# endif
+					break;
+				} else if(ret == 0) {
+					ftp_err(_("Authentication successful.\n"));
+					break;
+				}
+			}
+		}
 	}
 #endif
 

@@ -30,8 +30,6 @@
 #include "commands.h"
 #include "alias.h"
 
-const char *rc_str(const char *optname);
-
 /* in bookmark.c */
 void auto_create_bookmark(void);
 /* in redir.c */
@@ -135,12 +133,9 @@ void command_loop(void)
 #endif
 
 		fputc('\r', stderr);
-/*		p = expand_prompt(ftp_connected()
-						  ? (ftp_loggedin() ? gvPrompt3 : gvPrompt2)
-						  : gvPrompt1);*/
 		p = expand_prompt(ftp_connected()
 						  ? (ftp_loggedin() ? gvPrompt3 : gvPrompt2)
-						  : rc_str("prompt1"));
+						  : gvPrompt1);
 		if(!p)
 			p = xstrdup("yafc> ");
 

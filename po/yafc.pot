@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-10-03 19:56+0200\n"
+"POT-Creation-Date: 2000-10-06 18:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,35 +38,35 @@ msgstr ""
 msgid "no such alias '%s'\n"
 msgstr ""
 
-#: src/bookmark.c:229
+#: src/bookmark.c:234
 #, c-format
 msgid "a bookmark named '%s' already exists, choose another name\n"
 msgstr ""
 
-#: src/bookmark.c:235
+#: src/bookmark.c:240
 #, c-format
 msgid "a bookmark named '%s' already exists, overwrite?"
 msgstr ""
 
-#: src/bookmark.c:246
+#: src/bookmark.c:251
 msgid "Save password?"
 msgstr ""
 
-#: src/bookmark.c:252 src/bookmark.c:373
+#: src/bookmark.c:257 src/bookmark.c:378
 #, c-format
 msgid "created bookmark %s\n"
 msgstr ""
 
-#: src/bookmark.c:309
+#: src/bookmark.c:314
 msgid "Do you want to create a bookmark for this site?"
 msgstr ""
 
-#: src/bookmark.c:371
+#: src/bookmark.c:376
 #, c-format
 msgid "updated bookmark %s\n"
 msgstr ""
 
-#: src/bookmark.c:380
+#: src/bookmark.c:385
 msgid ""
 "Handle bookmarks.  Usage:\n"
 "  bookmark [options] [bookmark alias ...]\n"
@@ -79,27 +79,27 @@ msgid ""
 "  -h, --help             show this help\n"
 msgstr ""
 
-#: src/bookmark.c:438
+#: src/bookmark.c:443
 #, c-format
 msgid "bookmarks saved in %s\n"
 msgstr ""
 
-#: src/bookmark.c:440 src/bookmark.c:501
+#: src/bookmark.c:445 src/bookmark.c:506
 #, c-format
 msgid "bookmarks saved in %s/bookmarks\n"
 msgstr ""
 
-#: src/bookmark.c:453
+#: src/bookmark.c:458
 #, c-format
 msgid "bookmarks read from %s\n"
 msgstr ""
 
-#: src/bookmark.c:467
+#: src/bookmark.c:472
 #, c-format
 msgid "%u bookmarks\n"
 msgstr ""
 
-#: src/bookmark.c:492
+#: src/bookmark.c:497
 #, c-format
 msgid "deleted bookmark %s\n"
 msgstr ""
@@ -550,39 +550,39 @@ msgstr ""
 msgid "%s: no such command\n"
 msgstr ""
 
-#: src/help.c:66
+#: src/help.c:65
 msgid "Available commands: (commands may be abbreviated)\n"
 msgstr ""
 
-#: src/help.c:95
+#: src/help.c:92
 msgid ""
 "This product includes software developed by the Kungliga Tekniska\n"
 "Högskolan and its contributors.\n"
 "\n"
 msgstr ""
 
-#: src/help.c:99
+#: src/help.c:96
 msgid "Compiled "
 msgstr ""
 
-#: src/help.c:99
+#: src/help.c:96
 msgid " "
 msgstr ""
 
-#: src/help.c:99
+#: src/help.c:96
 msgid " ("
 msgstr ""
 
-#: src/help.c:99
+#: src/help.c:96
 msgid ")\n"
 msgstr ""
 
-#: src/help.c:101
+#: src/help.c:98
 #, c-format
 msgid "Using Readline version %s\n"
 msgstr ""
 
-#: src/help.c:115
+#: src/help.c:112
 msgid ""
 "This product includes software developed by the Kungliga Tekniska\n"
 "Högskolan and its contributors.\n"
@@ -679,31 +679,31 @@ msgid ""
 "      --help             display this help\n"
 msgstr ""
 
-#: src/login.c:104
+#: src/login.c:103
 msgid "Connect to what!? Need a hostname!\n"
 msgstr ""
 
-#: src/login.c:110
+#: src/login.c:109
 msgid ""
 "Ambiguous alias/hostname, use 'open --noalias' to skip bookmark alias "
 "lookup\n"
 msgstr ""
 
-#: src/login.c:118
+#: src/login.c:117
 #, c-format
 msgid "Disconnect from %s?"
 msgstr ""
 
-#: src/login.c:200
+#: src/login.c:203
 #, c-format
 msgid "Sleeping %u seconds before connecting again (attempt #%d)...\n"
 msgstr ""
 
-#: src/login.c:204
+#: src/login.c:207
 msgid "connection aborted\n"
 msgstr ""
 
-#: src/login.c:221
+#: src/login.c:224
 msgid ""
 "Connect and login to remote host.  Usage:\n"
 "  open [options] [ftp://][user[:password]@]hostname[:port][/directory] ...\n"
@@ -756,7 +756,7 @@ msgstr ""
 msgid "%u files tagged\n"
 msgstr ""
 
-#: src/main.c:56
+#: src/main.c:58
 #, c-format
 msgid ""
 "This is yet another FTP client.  Usage:\n"
@@ -791,36 +791,36 @@ msgid ""
 msgstr ""
 
 #. printf(_("This seems to be the first time you run Yafc...\n"));
-#: src/main.c:224
+#: src/main.c:227
 #, c-format
 msgid "creating working directory %s: "
 msgstr ""
 
-#: src/main.c:231 src/main.c:241 src/main.c:252 src/main.c:270
+#: src/main.c:234 src/main.c:244 src/main.c:255 src/main.c:273
 msgid "done\n"
 msgstr ""
 
-#: src/main.c:234 src/main.c:245
+#: src/main.c:237 src/main.c:248
 #, c-format
 msgid "creating directory %s: "
 msgstr ""
 
-#: src/main.c:257
+#: src/main.c:260
 msgid "creating default config file /yafcrc: "
 msgstr ""
 
-#: src/main.c:417
+#: src/main.c:420
 msgid ""
 "No proxy host defined!\n"
 "\n"
 msgstr ""
 
-#: src/main.c:427
+#: src/main.c:430
 #, c-format
 msgid "Invalid value for --wait: %d\n"
 msgstr ""
 
-#: src/main.c:439
+#: src/main.c:442
 #, c-format
 msgid "Couldn't open tracefile '%s': %s\n"
 msgstr ""
@@ -902,11 +902,95 @@ msgstr ""
 msgid "Remote doesn't support the STOU (store unique) command\n"
 msgstr ""
 
-#: src/rc.c:38
+#: src/rc.c:41
+#, c-format
+msgid "Error(s) while parsing '%s':\n"
+msgstr ""
+
+#: src/rc.c:101
+msgid "unmatched quote\n"
+msgstr ""
+
+#: src/rc.c:108
+msgid "string too long or unmatched quote, truncated\n"
+msgstr ""
+
+#: src/rc.c:123
+msgid "Unexpected end of file encountered\n"
+msgstr ""
+
+#: src/rc.c:130 src/set.c:167
+#, c-format
+msgid "Expected boolean value, but got '%s'\n"
+msgstr ""
+
+#: src/rc.c:155
+msgid "'machine' directive needs a hostname\n"
+msgstr ""
+
+#: src/rc.c:171
+msgid "'alias' directive not useful with domains\n"
+msgstr ""
+
+#: src/rc.c:183
 #, c-format
 msgid ""
 "WARNING! Config file contains passwords but is readable by others (mode "
 "%03o)\n"
+msgstr ""
+
+#: src/rc.c:233
+#, c-format
+msgid "Multiple definitions for '%s', skipping...\n"
+msgstr ""
+
+#: src/rc.c:246
+msgid "Multiple definitions for 'local', skipping...\n"
+msgstr ""
+
+#: src/rc.c:258
+msgid "Multiple definitions for 'default', skipping...\n"
+msgstr ""
+
+#: src/rc.c:290
+msgid ""
+"As a computer, I find your faith in technology amusing...\n"
+"Too many errors\n"
+msgstr ""
+
+#: src/rc.c:339 src/rc.c:351
+#, c-format
+msgid "Expected boolean value or 'ask', but got '%s'\n"
+msgstr ""
+
+#: src/rc.c:362
+#, c-format
+msgid "Unknown default_type parameter '%s'... (use 'ascii' or 'binary')\n"
+msgstr ""
+
+#: src/rc.c:376
+#, c-format
+msgid "Invalid value for long_command_time: %d\n"
+msgstr ""
+
+#: src/rc.c:383
+#, c-format
+msgid "Invalid value for connect_wait_time: %d\n"
+msgstr ""
+
+#: src/rc.c:457
+#, c-format
+msgid "Invalid value for history_max: %d\n"
+msgstr ""
+
+#: src/rc.c:490
+#, c-format
+msgid "Invalid value for proxy_type: %d\n"
+msgstr ""
+
+#: src/rc.c:508
+#, c-format
+msgid "Config parse error: '%s'\n"
 msgstr ""
 
 #: src/redir.c:41
@@ -1004,11 +1088,6 @@ msgstr ""
 #: src/set.c:158
 #, c-format
 msgid "Ambiguous variable '%s'\n"
-msgstr ""
-
-#: src/set.c:167
-#, c-format
-msgid "Expected boolean value, but got '%s'\n"
 msgstr ""
 
 #: src/tag.c:36
@@ -1224,33 +1303,38 @@ msgstr ""
 msgid "Proxy password: "
 msgstr ""
 
-#: src/ftp/ftp.c:758
+#: src/ftp/ftp.c:784
 #, c-format
 msgid "Invalid protection level '%s'\n"
 msgstr ""
 
-#: src/ftp/ftp.c:763
+#: src/ftp/ftp.c:797
+#, c-format
+msgid "unknown mechanism '%s'\n"
+msgstr ""
+
+#: src/ftp/ftp.c:803
 msgid "*** Using plaintext username and password ***\n"
 msgstr ""
 
-#: src/ftp/ftp.c:768
+#: src/ftp/ftp.c:811
 msgid "Authentication successful.\n"
 msgstr ""
 
-#: src/ftp/ftp.c:773
+#: src/ftp/ftp.c:820
 msgid "logging in anonymously...\n"
 msgstr ""
 
-#: src/ftp/ftp.c:879
+#: src/ftp/ftp.c:926
 #, c-format
 msgid "Data protection is %s\n"
 msgstr ""
 
-#: src/ftp/ftp.c:1045
+#: src/ftp/ftp.c:1092
 msgid "Server doesn't support SITE CHMOD\n"
 msgstr ""
 
-#: src/ftp/ftp.c:1058
+#: src/ftp/ftp.c:1105
 msgid "Server doesn't support SITE IDLE\n"
 msgstr ""
 
@@ -1379,99 +1463,99 @@ msgstr ""
 msgid "Bad checksum returned from server\n"
 msgstr ""
 
-#: lib/security.c:78
+#: lib/security.c:70
 msgid "unknown"
 msgstr ""
 
-#: lib/security.c:373
+#: lib/security.c:354
 msgid "Failed to encode command.\n"
 msgstr ""
 
-#: lib/security.c:377
+#: lib/security.c:358
 msgid "Out of memory base64-encoding.\n"
 msgstr ""
 
-#: lib/security.c:421
+#: lib/security.c:387
 #, c-format
 msgid "Using %s for authentication.\n"
 msgstr ""
 
-#: lib/security.c:422
+#: lib/security.c:388
 #, c-format
 msgid "Using %s command channel.\n"
 msgstr ""
 
-#: lib/security.c:424
+#: lib/security.c:390
 #, c-format
 msgid "Using %s data channel.\n"
 msgstr ""
 
-#: lib/security.c:426
+#: lib/security.c:392
 #, c-format
 msgid "Protection buffer size: %lu.\n"
 msgstr ""
 
-#: lib/security.c:429
+#: lib/security.c:395
 msgid "Not using any security mechanism.\n"
 msgstr ""
 
-#: lib/security.c:444
+#: lib/security.c:408
 msgid "No security data exchange has taken place.\n"
 msgstr ""
 
-#: lib/security.c:451
+#: lib/security.c:415
 msgid "Failed to set protection buffer size.\n"
 msgstr ""
 
-#: lib/security.c:465
+#: lib/security.c:428
 msgid "Failed to set protection level.\n"
 msgstr ""
 
-#: lib/security.c:496
+#: lib/security.c:459
 msgid "No security data exchange has taken place\n"
 msgstr ""
 
-#: lib/security.c:504
+#: lib/security.c:465
 #, c-format
 msgid "Unrecognized protection level %s\n"
 msgstr ""
 
-#: lib/security.c:509
+#: lib/security.c:470
 #, c-format
 msgid "%s does not implement %s protection\n"
 msgstr ""
 
-#: lib/security.c:526
+#: lib/security.c:483
 #, c-format
 msgid "Syntax error, try %s --help for more information\n"
 msgstr ""
 
-#: lib/security.c:569
+#: lib/security.c:543
 #, c-format
 msgid "realloc %u failed"
 msgstr ""
 
-#: lib/security.c:575
+#: lib/security.c:549
 #, c-format
 msgid "Skipping %s...\n"
 msgstr ""
 
-#: lib/security.c:578
+#: lib/security.c:552
 #, c-format
 msgid "Trying %s...\n"
 msgstr ""
 
-#: lib/security.c:582
+#: lib/security.c:556
 #, c-format
 msgid "%s is not supported by the server.\n"
 msgstr ""
 
-#: lib/security.c:584
+#: lib/security.c:558
 #, c-format
 msgid "%s rejected as security mechanism.\n"
 msgstr ""
 
-#: lib/security.c:586
+#: lib/security.c:560
 msgid "The server doesn't support the FTP security extensions.\n"
 msgstr ""
 

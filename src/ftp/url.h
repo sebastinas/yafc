@@ -21,6 +21,8 @@
 #ifndef _url_h_included
 #define _url_h_included
 
+#include "linklist.h"
+
 typedef struct url_t {
 	char *protocol;   /* "http", "ftp", ... (only ftp supported) */
 	char *hostname;   /* hostname to connect to */
@@ -30,7 +32,7 @@ typedef struct url_t {
 	char *directory;  /* startup directory */
 	char *protlevel;  /* security protection level */
 	int port;         /* port in host byte order */
-	char *mech;       /* requested security mechanisms to try */
+	list *mech;       /* requested security mechanisms to try */
 	bool noproxy;     /* don't connect via the configured proxy */
 	bool passive;     /* true if passive mode is requested */
 } url_t;
@@ -49,7 +51,7 @@ void url_setpassword(url_t *urlp, const char *password);
 void url_setdirectory(url_t *urlp, const char *directory);
 void url_setprotlevel(url_t *urlp, const char *protlevel);
 void url_setport(url_t *urlp, int port);
-void url_setmech(url_t *urlp, const char *mech);
+void url_setmech(url_t *urlp, const char *mech_string);
 void url_setpassive(url_t *urlp, bool passive);
 
 bool url_isanon(const url_t *url);

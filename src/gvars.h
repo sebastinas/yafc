@@ -45,7 +45,7 @@ extern bool gvPasvmode;
 extern bool gvReadNetrc;
 
 /* default security mechanism to use */
-extern char *gvMechanism;
+extern list *gvDefaultMechanism;  /* list of (char *) */
 
 extern char *gvXtermTitle1;
 extern char *gvXtermTitle2;

@@ -25,12 +25,15 @@
 #include "strq.h"
 #include "base64.h"
 
+void listify_string(const char *str, list *lp);
+
 url_t *url_create(void)
 {
 	url_t *urlp;
 
 	urlp = (url_t *)xmalloc(sizeof(url_t));
 	urlp->port = -1;
+	urlp->mech = list_new((listfunc)xfree);
 
 	return urlp;
 }
@@ -57,8 +60,8 @@ url_t *url_clone(const url_t *urlp)
 		cloned->directory = xstrdup(urlp->directory);
 		cloned->protlevel = xstrdup(urlp->protlevel);
 		cloned->port = urlp->port;
-		cloned->mech = urlp->mech;
 		cloned->noproxy = urlp->noproxy;
+		cloned->mech = list_clone(urlp->mech, (listclonefunc)xstrdup);
 	}
 
 	return cloned;
@@ -76,7 +79,7 @@ void url_destroy(url_t *urlp)
 		xfree(urlp->alias);
 		xfree(urlp->directory);
 		xfree(urlp->protlevel);
-		xfree(urlp->mech);
+		list_free(urlp->mech);
 		xfree(urlp);
 	}
 }
@@ -185,12 +188,6 @@ void url_setprotlevel(url_t *urlp, const char *protlevel)
 	urlp->protlevel = decode_rfc1738(protlevel);
 }
 
-void url_setmech(url_t *urlp, const char *mech)
-{
-	xfree(urlp->mech);
-	urlp->mech = xstrdup(mech);
-}
-
 void url_setport(url_t *urlp, int port)
 {
 	if(port <= 0)
@@ -203,6 +200,12 @@ void url_setpassive(url_t *urlp, bool passive)
 	urlp->passive = passive;
 }
 
+void url_setmech(url_t *urlp, const char *mech_string)
+{
+	list_free(urlp->mech);
+	urlp->mech = list_new((listfunc)xfree);
+	listify_string(mech_string, urlp->mech);
+}
 
 bool url_isanon(const url_t *url)
 {

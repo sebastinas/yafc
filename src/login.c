@@ -55,7 +55,6 @@ void cmd_user(int argc, char **argv)
 		{"help", no_argument, 0, 'h'},
 		{0, 0, 0, 0},
 	};
-	int k = 0;
 	int c;
 	char *mech = 0;
 
@@ -159,6 +158,9 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 			url_setpassword(url, gvAnonPasswd);
 	}
 
+	if(mech)
+		url_setmech(url, mech);
+
 	if(xurl) {
 		url_sethostname(url, xurl->hostname);
 		url_setalias(url, xurl->alias);
@@ -174,7 +176,8 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 				url_setpassword(url, xurl->password);
 			if(url->port == -1)
 				url_setport(url, xurl->port);
-			url->mech = xurl->mech;
+			if(!url->mech)
+				url->mech = list_clone(xurl->mech, (listclonefunc)xstrdup);
 			url->noproxy = xurl->noproxy;
 		}
 	}

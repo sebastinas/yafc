@@ -1,7 +1,6 @@
 TODO list for Yafc
 ------------------
 
-* rc.c: rewrite config file parser
 * fix --chgrp / --chmod for directories (get)
 * remove more hints from cmds[]
 * ls -r doesn't work (no sorting done)

@@ -165,3 +165,18 @@ void list_removeitem(list *lp, listitem *lip)
 		lp->last = lip->prev;
 	lp->numitem--;
 }
+
+list *list_clone(list *lp, listclonefunc clonefunc)
+{
+	list *cloned;
+	listitem *li;
+
+	if(!lp)
+		return 0;
+	cloned = list_new(lp->freefunc);
+
+	for(li=lp->first; li; li=li->next)
+		list_additem(cloned, clonefunc(li->data));
+
+	return cloned;
+}

@@ -22,6 +22,7 @@
 #define _linklist_h_included
 
 typedef int (*listfunc)(void *);
+typedef void *(*listclonefunc)(void *);
 
 /* should return < 0 if a < b, 0 if a == b, > 0 if a > b */
 typedef int (*listsortfunc)(const void *a, const void *b);
@@ -51,5 +52,6 @@ void list_additem(list *lp, void *data);
 int list_numitem(list *lp);
 listitem *list_search(list *lp, listsearchfunc cmpfunc, const void *arg);
 void list_sort(list *lp, listsortfunc cmp, bool reverse);
+list *list_clone(list *lp, listclonefunc clonefunc);
 
 #endif
