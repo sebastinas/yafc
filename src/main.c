@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.21 2002/12/02 12:38:58 mhe Exp $
+/* $Id: main.c,v 1.22 2002/12/05 22:02:35 mhe Exp $
  *
  * main.c -- parses command line options and starts Yafc
  *
@@ -147,15 +147,15 @@ void init_yafc(void)
 
 	/* choose default security mechanism */
 	gvDefaultMechanism = list_new((listfunc)xfree);
-#ifdef KRB4
-# ifdef KRB5
-	listify_string("krb4:krb5:none", gvDefaultMechanism);
+#ifdef HAVE_KRB4
+# ifdef HAVE_KRB5
+	listify_string("krb5:krb4:none", gvDefaultMechanism);
 # elif defined(USE_SSL)
-	listify_string("krb4:krb5:ssl:none", gvDefaultMechanism);
+	listify_string("krb5:krb4:ssl:none", gvDefaultMechanism);
 # else
 	listify_string("krb4:none", gvDefaultMechanism);
 # endif
-#elif defined(KRB5)
+#elif defined(HAVE_KRB5)
 # ifdef USE_SSL
 	listify_string("krb5:ssl:none", gvDefaultMechanism);
 # else
