@@ -21,7 +21,7 @@
 #ifndef _help_h_included
 #define _help_h_included
 
-#define COPYR "Copyright (C) 1998-2000 Martin Hedenfalk <mhe@home.se>"
+#define COPYR "Copyright (C) 1998-2001 Martin Hedenfalk <mhe@home.se>"
 #define COPYLINE PACKAGE " " VERSION " " COPYR "."
 #define FULLVER COPYLINE"\n" \
   "This program comes with ABSOLUTELY NO WARRANTY; for details type 'warranty'.\n" \
