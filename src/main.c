@@ -64,7 +64,6 @@ void print_syntax_and_exit(char *argv0)
 			 "  -m, --mechanism=MECH\n"
 			 "                    (*) try MECH as security mechanism(s)\n"
 			 "  -n, --norc            don't parse config file\n"
-			 "  -N, --nonetrc         don't parse ~/.netrc\n"
 			 "  -p, --noproxy     (*) don't connect via proxy\n"
 			 "  -q, --quiet           don't print the yafc welcome message\n"
 			 "  -r, --rcfile=FILE     use other config file instead of ~/.yafc/yafcrc\n"
@@ -288,7 +287,6 @@ int main(int argc, char **argv, char **envp)
 	int wait_time = -1;
 
 	bool override_yafcrc = false;
-	bool override_netrc = false;
 	bool override_debug = false;
 	bool override_verbose = false;
 	bool override_welcome = false;
@@ -300,7 +298,6 @@ int main(int argc, char **argv, char **envp)
 		{"debug", no_argument, 0, 'd'},
 		{"dump-rc", no_argument, 0, 'D'},
 		{"norc", no_argument, 0, 'n'},
-		{"nonetrc", no_argument, 0, 'N'},
 		{"quiet", no_argument, 0, 'q'},
 		{"rcfile", required_argument, 0, 'r'},
 		{"mechanism", required_argument, 0, 'm'},
@@ -331,7 +328,7 @@ int main(int argc, char **argv, char **envp)
 #endif
 	
 	while((c = getopt_long(argc, argv,
-						   "qhdDganNt::r:uUm:pvVw:W:", longopts, 0)) != EOF)
+						   "qhdDgant::r:uUm:pvVw:W:", longopts, 0)) != EOF)
 	{
 		switch(c) {
 		case 'a':
@@ -339,9 +336,6 @@ int main(int argc, char **argv, char **envp)
 			break;
 		case 'n':
 			override_yafcrc = true;
-			break;
-		case 'N':
-			override_netrc = true;
 			break;
 		case 'r':
 			configfile = xstrdup(optarg);
@@ -412,8 +406,9 @@ int main(int argc, char **argv, char **envp)
 		xfree(tmp);
 	}
 
-	if(!override_netrc && gvReadNetrc)
+	if(gvReadNetrc)
 		parse_rc("~/.netrc", false);
+
 	init_host_completion();
 
 	if(gvProxyType != 0 && gvProxyUrl == 0) {
