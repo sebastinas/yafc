@@ -40,7 +40,7 @@
 #include "base64.h"
 #include "commands.h"
 
-/*RCSID("$Id: security.c,v 1.4 2000/10/13 22:43:04 mhe Exp $");*/
+/*RCSID("$Id: security.c,v 1.5 2000/10/17 13:00:28 mhe Exp $");*/
 
 /*static enum protection_level command_prot;*/
 /*static enum protection_level data_prot;*/
@@ -512,8 +512,8 @@ static struct sec_client_mech **find_mech(const char *name)
 	if(!name || strcasecmp(name, "none") == 0)
 		return 0;
 
-	for (m = mechs; *m && (*m)->name; m++) {
-		if(!name || strcmp(name, (*m)->name) != 0)
+	for(m = mechs; *m && (*m)->name; m++) {
+		if(strcmp(name, (*m)->name) == 0)
 			return m;
 	}
 	return 0;
