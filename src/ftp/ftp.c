@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.19 2001/05/21 20:51:08 mhe Exp $
+/* $Id: ftp.c,v 1.20 2001/05/21 21:49:26 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -19,6 +19,7 @@
 #include "gvars.h"
 #include "ssh_cmd.h"
 #include "sftp-common.h"
+#include "args.h"
 
 /* in cmd.c */
 void exit_yafc(void);
@@ -55,6 +56,7 @@ Ftp *ftp_create(void)
 #endif
 	ftp->LIST_type = ltUnknown;
 	ftp->ssh_id = 1;
+	ftp->ssh_args = args_create();
 
 	return ftp;
 }
@@ -127,8 +129,7 @@ void ftp_destroy(Ftp *ftp)
 	xfree(ftp->curdir);
 	xfree(ftp->prevdir);
 	list_free(ftp->taglist);
-	xfree(ftp->ssh_args);
-	ftp->ssh_args = 0;
+	args_destroy(ftp->ssh_args);
 
 #if defined(KRB4) || defined(KRB5)
 	sec_end();
@@ -185,8 +186,7 @@ void ftp_reset_vars(void)
 		close(ftp->ssh_out);
 		ftp->ssh_id = 0;
 	}
-	xfree(ftp->ssh_args);
-	ftp->ssh_args = 0;
+	args_clear(ftp->ssh_args);
 
 	url_destroy(ftp->url);
 	ftp->url = 0;
