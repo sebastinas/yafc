@@ -1,13 +1,9 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.9 2001/05/13 11:55:36 mhe Exp $
+## $Id: Makefile.am,v 1.10 2002/12/05 21:56:05 mhe Exp $
 
 SUBDIRS = libmhe ftp
 
 bin_PROGRAMS = yafc
-
-noinst_PROGRAMS = text2c
-
-text2c_SOURCES = text2c.c
 
 BUILT_SOURCES = yafcrc.h
 
@@ -33,5 +29,7 @@ DEFS=@DEFS@
 CLEANFILES=*~ \#*\#
 DISTCLEANFILES=.deps/* yafcrc.h
 
-yafcrc.h: text2c $(top_srcdir)/yafcrc.sample
-	./text2c $(top_srcdir)/yafcrc.sample yafcrc.h default_yafcrc
+yafcrc.h: $(top_srcdir)/yafcrc.sample
+	echo "const char *default_yafcrc = \"\"" > yafcrc.h
+	cat $(top_srcdir)/yafcrc.sample | sed 's/\\/\\\\/g' | sed 's/"/\\\"/g' | sed 's/^\(.*\)$$/\"\1\\n\"/' >> yafcrc.h
+	echo ";" >> yafcrc.h
