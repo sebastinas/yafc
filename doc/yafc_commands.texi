@@ -72,7 +72,7 @@ This is a synonym for the shell (@ref{shell}) command.
 @c -----------------------------------------------------
 @node afslog
 @subsection @code{afslog}
-Documentation missing...
+Obtain remote AFS tokens.
 
 @c -----------------------------------------------------
 @node alias
@@ -82,6 +82,7 @@ Define an alias.
 @c -----------------------------------------------------
 @node bookmark
 @subsection @code{bookmark}
+documentation missing...
 
 @c -----------------------------------------------------
 @node cache
@@ -120,8 +121,10 @@ Show a short help description.
 @c -----------------------------------------------------
 @node cat
 @subsection @code{cat}
-Print file(s) on standard output. All files are transferred in binary mode, so
-it is safe to do a @code{cat foo.tar.gz > bar.tar.gz}.
+Print file(s) on standard output. By default, the files are transferred in
+ascii mode (rewriting newlines). If you want to view binary files through
+a filter (eg viewing a README.gz through gzip) you have to use option
+@samp{--type=binary}.
 
 Usage:
 @example
@@ -131,8 +134,15 @@ cat [options] file ...
 Options:
 
 @table @samp
-@item -h, --help
+
+@item -t @var{TYPE}
+@itemx --type=@var{TYPE}
+Set transfer type. Valid values for @var{TYPE} is @var{ascii} or @var{binary}.
+
+@item -h
+@itemx --help
 Show a short help description
+
 @end table
 
 @c -----------------------------------------------------
@@ -165,7 +175,7 @@ Usage:
 chmod mode file ...
 @end example
 
-Mode must be given in octal representation (for example: 0644 is -rw-r--r--).
+Mode must be given in octal representation (for example: 0644 is -rw-r---r---).
 
 @c -----------------------------------------------------
 @node close
@@ -180,16 +190,23 @@ Show copyright.
 @c -----------------------------------------------------
 @node filesize
 @subsection @code{filesize}
+documentation missing...
 
 @c -----------------------------------------------------
 @node filetime
 @subsection @code{filetime}
+documentation missing...
 
 @c -----------------------------------------------------
 @node get
 @subsection @code{get}
 
 Transfer files from remote server to local computer.
+
+If the destination file already exists, and none of the options
+@samp{--append}, @samp{--force}, @samp{--newer}, @samp{--resume},
+@samp{--skip-existing} or @samp{--unique} is given, you will be prompted what
+to do.
 
 Usage:
 @example
@@ -224,7 +241,7 @@ Delete remote file after successful transfer.
 Enter only directories matching GLOB pattern.
 
 @item --dir-rx-mask=@var{REGEXP}
-Enter only directorues matching REGEXP pattern.
+Enter only directories matching REGEXP pattern.
 
 @item -f
 @itemx --force
@@ -244,7 +261,7 @@ Use @var{FILE} as logfile instead of @file{~/.yafc/nohup/nohup.<pid>}.
 
 @item -m @var{GLOB}
 @itemx --mask=@var{GLOB}
-Only get file matching GLOB pattern.
+Only get files matching GLOB pattern.
 
 @item -M @var{REGEXP}
 @itemx --rx-mask=@var{REGEXP}
@@ -256,7 +273,28 @@ Only get file if remote is newer than local file.
 
 @item -o @var{DEST}
 @itemx --output=@var{DEST}
-Store in local directory @var{DEST}.
+Specify other destination. If more than one file is transferred, or option
+@samp{--recursive} is given, @var{DEST} denotes a directory. Otherwise (if only
+one file is to be transferred), @var{DEST} denotes a filename.
+
+Examples:
+@example
+get foo.tar.gz -o bar.tar.gz
+@end example
+will transfer the remote file @file{foo.tar.gz} to the local file
+@file{bar.tar.gz}.
+
+@example
+get *.tar.gz -o foo
+@end example
+will transfer all remote @file{*.tar.gz} files to a local directory named
+@file{foo}.
+
+@example
+get foo -r -o bar
+@end example
+will transfer the remote file @file{foo} to a local directory named @file{bar}.
+If @file{foo} is a directory, it will be downloaded recursively.
 
 @item -p
 @itemx --preserve
@@ -305,6 +343,7 @@ Show a short syntax description.
 @c -----------------------------------------------------
 @node help
 @subsection @code{help}
+documentation missing...
 
 @c -----------------------------------------------------
 @node idle
@@ -365,7 +404,7 @@ Options:
 Do not hide entries starting with '.'.
 
 @item -A
-@item --almost-all
+@itemx --almost-all
 As @samp{--all}, but do not list . and ..
 
 @item -B
@@ -400,7 +439,7 @@ Ignored.
 Inhibit display of group information.
 
 @item -h
-@item --human-readable
+@itemx --human-readable
 Print sizes in human readable format (e.g. 1K, 234M, 2G)
 
 @item -l
@@ -541,6 +580,133 @@ all data encrypted and integrity checked
 @c -----------------------------------------------------
 @node put
 @subsection @code{put}
+Send files to remote computer.
+
+If the destination file already exists, and none of the options
+@samp{--append}, @samp{--force}, @samp{--newer}, @samp{--resume},
+@samp{--skip-existing} or @samp{--unique} is given, you will be prompted what
+to do.
+
+Usage:
+@example
+put [options] file ...
+@end example
+
+Options:
+
+@table @samp
+
+@item  -a
+@itemx --append
+Append if destination file exists.
+
+@item -D
+@itemx --delete-after
+Delete local file after successful transfer.
+
+@item --dir-mask=@var{GLOB}
+Enter only directories matching GLOB pattern.
+
+@item --dir-rx-mask=@var{REGEXP}
+Enter only directories matching REGEXP pattern.
+
+@item -f
+@itemx --force
+Overwrite existing destinations, never prompt.
+
+@item -H
+@itemx --nohup
+Transfer files in background (nohup mode), quits yafc.
+
+@item -i
+@itemx --interactive
+Prompt before transferring each file.
+
+@item -L @var{FILE}
+@itemx --logfile=@var{FILE}
+Use @var{FILE} as logfile instead of @file{~/.yafc/nohup/nohup.<pid>} for
+nohup transfers.
+
+@item -m @var{GLOB}
+@itemx --mask=@var{GLOB}
+Only put files matching GLOB pattern.
+
+@item -M @var{REGEXP}
+@itemx --rx-mask=@var{REGEXP}
+Only put files matching REGEXP pattern.
+
+@item -n
+@itemx --newer
+Only transfer file if local is newer than remote file.
+
+@item -o @var{DEST}
+@itemx --output=@var{DEST}
+Specify other destination. If more than one file is transferred, or option
+@samp{--recursive} is given, @var{DEST} denotes a directory. Otherwise (if only
+one file is to be transferred), @var{DEST} denotes a filename.
+
+Examples:
+@example
+put foo.tar.gz -o bar.tar.gz
+@end example
+will transfer the local file @file{foo.tar.gz} to the remote file
+@file{bar.tar.gz}.
+
+@example
+put *.tar.gz -o foo
+@end example
+will transfer all local @file{*.tar.gz} files to a remote directory named
+@file{foo}.
+
+@example
+put foo -r -o bar
+@end example
+will transfer the local file @file{foo} to a remote directory named @file{bar}.
+If @file{foo} is a directory, it will be uploaded recursively.
+
+@item -p
+@itemx --preserve
+Try to preserve file attributes (permissions).
+
+@item -P
+@itemx --parents
+Append source path to destination.
+
+@item -q
+@itemx --quiet
+Overrides @samp{--verbose}.
+
+@item -r
+@itemx --recursive
+Upload directories recursively.
+
+@item -R
+@itemx --resume
+Resume broken transfer (restart at EOF).
+
+@item -s
+@itemx --skip-existing
+Always skip existing files.
+
+@item -t
+@itemx --tagged
+Transfer (locally) tagged files.
+
+@item --type=@var{TYPE}
+Specify transfer type, 'ascii' or 'binary'.
+
+@item -u
+@itemx --unique
+Always store as unique file (if server supports the STOU command).
+
+@item -v
+@itemx --verbose
+Explain what is being done.
+
+@item --help
+Show a short syntax description.
+
+@end table
 
 @c -----------------------------------------------------
 @node pwd
@@ -553,14 +719,17 @@ Usage: @code{pwd}
 @c -----------------------------------------------------
 @node quit
 @subsection @code{quit}
+documentation missing...
 
 @c -----------------------------------------------------
 @node quote
 @subsection @code{quote}
+documentation missing...
 
 @c -----------------------------------------------------
 @node rhelp
 @subsection @code{rhelp}
+documentation missing...
 
 @c -----------------------------------------------------
 @node rm
@@ -602,63 +771,87 @@ display help
 @c -----------------------------------------------------
 @node rmdir
 @subsection @code{rmdir}
+documentation missing...
 
 @c -----------------------------------------------------
 @node rstatus
 @subsection @code{rstatus}
+documentation missing...
 
 @c -----------------------------------------------------
 @node set
 @subsection @code{set}
+documentation missing...
 
 @c -----------------------------------------------------
 @node shell
 @subsection @code{shell}
+documentation missing...
 
 @c -----------------------------------------------------
 @node site
-@subsection @code{size}
+@subsection @code{site}
+Send site specific command.
+
+Usage:
+
+@example
+site command
+@end example
+
+Try @code{site help} or @code{rhelp site} for more information
 
 @c -----------------------------------------------------
 @node source
 @subsection @code{source}
+documentation missing...
 
 @c -----------------------------------------------------
 @node status
 @subsection @code{status}
+documentation missing...
 
 @c -----------------------------------------------------
 @node switch
 @subsection @code{switch}
+documentation missing...
 
 @c -----------------------------------------------------
 @node system
 @subsection @code{system}
+documentation missing...
 
 @c -----------------------------------------------------
 @node tag
 @subsection @code{tag}
+documentation missing...
 
 @c -----------------------------------------------------
 @node unalias
 @subsection @code{unalias}
+documentation missing...
 
 @c -----------------------------------------------------
 @node untag
 @subsection @code{untag}
+documentation missing...
 
 @c -----------------------------------------------------
 @node url
 @subsection @code{url}
+documentation missing...
 
 @c -----------------------------------------------------
 @node user
 @subsection @code{user}
+documentation missing...
 
 @c -----------------------------------------------------
 @node version
 @subsection @code{version}
+documentation missing...
 
 @c -----------------------------------------------------
 @node warranty
 @subsection @code{warranty}
+documentation missing...

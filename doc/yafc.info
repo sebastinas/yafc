@@ -305,7 +305,7 @@ File: yafc.info,  Node: afslog,  Next: alias,  Prev: !,  Up: Yafc commands
 `afslog'
 --------
 
-   Documentation missing...
+   Obtain remote AFS tokens.
 
 
 File: yafc.info,  Node: alias,  Next: bookmark,  Prev: afslog,  Up: Yafc commands
@@ -320,6 +320,8 @@ File: yafc.info,  Node: bookmark,  Next: cache,  Prev: alias,  Up: Yafc commands
 
 `bookmark'
 ----------
+
+   documentation missing...
 
 
 File: yafc.info,  Node: cache,  Next: cat,  Prev: bookmark,  Up: Yafc commands
@@ -358,15 +360,22 @@ File: yafc.info,  Node: cat,  Next: cd,  Prev: cache,  Up: Yafc commands
 `cat'
 -----
 
-   Print file(s) on standard output. All files are transferred in
-binary mode, so it is safe to do a `cat foo.tar.gz > bar.tar.gz'.
+   Print file(s) on standard output. By default, the files are
+transferred in ascii mode (rewriting newlines). If you want to view
+binary files through a filter (eg viewing a README.gz through gzip) you
+have to use option `--type=binary'.
 
    Usage:
      cat [options] file ...
 
    Options:
 
-`-h, --help'
+`-t TYPE'
+`--type=TYPE'
+     Set transfer type. Valid values for TYPE is ASCII or BINARY.
+
+`-h'
+`--help'
      Show a short help description
 
 
@@ -407,7 +416,7 @@ File: yafc.info,  Node: chmod,  Next: close,  Prev: cdup,  Up: Yafc commands
      chmod mode file ...
 
    Mode must be given in octal representation (for example: 0644 is
--rw-r-r-).
+-rw-r--r--).
 
 
 File: yafc.info,  Node: close,  Next: copyright,  Prev: chmod,  Up: Yafc commands
@@ -431,11 +440,15 @@ File: yafc.info,  Node: filesize,  Next: filetime,  Prev: copyright,  Up: Yafc c
 `filesize'
 ----------
 
+   documentation missing...
+
 
 File: yafc.info,  Node: filetime,  Next: get,  Prev: filesize,  Up: Yafc commands
 
 `filetime'
 ----------
+
+   documentation missing...
 
 
 File: yafc.info,  Node: get,  Next: help,  Prev: filetime,  Up: Yafc commands
@@ -444,6 +457,10 @@ File: yafc.info,  Node: get,  Next: help,  Prev: filetime,  Up: Yafc commands
 -----
 
    Transfer files from remote server to local computer.
+
+   If the destination file already exists, and none of the options
+`--append', `--force', `--newer', `--resume', `--skip-existing' or
+`--unique' is given, you will be prompted what to do.
 
    Usage:
      get [options] file ...
@@ -474,7 +491,7 @@ File: yafc.info,  Node: get,  Next: help,  Prev: filetime,  Up: Yafc commands
      Enter only directories matching GLOB pattern.
 
 `--dir-rx-mask=REGEXP'
-     Enter only directorues matching REGEXP pattern.
+     Enter only directories matching REGEXP pattern.
 
 `-f'
 `--force'
@@ -494,7 +511,7 @@ File: yafc.info,  Node: get,  Next: help,  Prev: filetime,  Up: Yafc commands
 
 `-m GLOB'
 `--mask=GLOB'
-     Only get file matching GLOB pattern.
+     Only get files matching GLOB pattern.
 
 `-M REGEXP'
 `--rx-mask=REGEXP'
@@ -506,7 +523,23 @@ File: yafc.info,  Node: get,  Next: help,  Prev: filetime,  Up: Yafc commands
 
 `-o DEST'
 `--output=DEST'
-     Store in local directory DEST.
+     Specify other destination. If more than one file is transferred,
+     or option `--recursive' is given, DEST denotes a directory.
+     Otherwise (if only one file is to be transferred), DEST denotes a
+     filename.
+
+     Examples:
+          get foo.tar.gz -o bar.tar.gz
+     will transfer the remote file `foo.tar.gz' to the local file
+     `bar.tar.gz'.
+
+          get *.tar.gz -o foo
+     will transfer all remote `*.tar.gz' files to a local directory
+     named `foo'.
+
+          get foo -r -o bar
+     will transfer the remote file `foo' to a local directory named
+     `bar'.  If `foo' is a directory, it will be downloaded recursively.
 
 `-p'
 `--preserve'
@@ -555,6 +588,8 @@ File: yafc.info,  Node: help,  Next: idle,  Prev: get,  Up: Yafc commands
 
 `help'
 ------
+
+   documentation missing...
 
 
 File: yafc.info,  Node: idle,  Next: kauth,  Prev: help,  Up: Yafc commands
@@ -638,7 +673,6 @@ File: yafc.info,  Node: ls,  Next: ltag,  Prev: lpwd,  Up: Yafc commands
      Do not hide entries starting with '.'.
 
 `-A'
-
 `--almost-all'
      As `--all', but do not list . and ..
 
@@ -674,7 +708,6 @@ File: yafc.info,  Node: ls,  Next: ltag,  Prev: lpwd,  Up: Yafc commands
      Inhibit display of group information.
 
 `-h'
-
 `--human-readable'
      Print sizes in human readable format (e.g. 1K, 234M, 2G)
 
@@ -826,6 +859,122 @@ File: yafc.info,  Node: put,  Next: pwd,  Prev: prot,  Up: Yafc commands
 `put'
 -----
 
+   Send files to remote computer.
+
+   If the destination file already exists, and none of the options
+`--append', `--force', `--newer', `--resume', `--skip-existing' or
+`--unique' is given, you will be prompted what to do.
+
+   Usage:
+     put [options] file ...
+
+   Options:
+
+`-a'
+`--append'
+     Append if destination file exists.
+
+`-D'
+`--delete-after'
+     Delete local file after successful transfer.
+
+`--dir-mask=GLOB'
+     Enter only directories matching GLOB pattern.
+
+`--dir-rx-mask=REGEXP'
+     Enter only directories matching REGEXP pattern.
+
+`-f'
+`--force'
+     Overwrite existing destinations, never prompt.
+
+`-H'
+`--nohup'
+     Transfer files in background (nohup mode), quits yafc.
+
+`-i'
+`--interactive'
+     Prompt before transferring each file.
+
+`-L FILE'
+`--logfile=FILE'
+     Use FILE as logfile instead of `~/.yafc/nohup/nohup.<pid>' for
+     nohup transfers.
+
+`-m GLOB'
+`--mask=GLOB'
+     Only put files matching GLOB pattern.
+
+`-M REGEXP'
+`--rx-mask=REGEXP'
+     Only put files matching REGEXP pattern.
+
+`-n'
+`--newer'
+     Only transfer file if local is newer than remote file.
+
+`-o DEST'
+`--output=DEST'
+     Specify other destination. If more than one file is transferred,
+     or option `--recursive' is given, DEST denotes a directory.
+     Otherwise (if only one file is to be transferred), DEST denotes a
+     filename.
+
+     Examples:
+          put foo.tar.gz -o bar.tar.gz
+     will transfer the local file `foo.tar.gz' to the remote file
+     `bar.tar.gz'.
+
+          put *.tar.gz -o foo
+     will transfer all local `*.tar.gz' files to a remote directory
+     named `foo'.
+
+          put foo -r -o bar
+     will transfer the local file `foo' to a remote directory named
+     `bar'.  If `foo' is a directory, it will be uploaded recursively.
+
+`-p'
+`--preserve'
+     Try to preserve file attributes (permissions).
+
+`-P'
+`--parents'
+     Append source path to destination.
+
+`-q'
+`--quiet'
+     Overrides `--verbose'.
+
+`-r'
+`--recursive'
+     Upload directories recursively.
+
+`-R'
+`--resume'
+     Resume broken transfer (restart at EOF).
+
+`-s'
+`--skip-existing'
+     Always skip existing files.
+
+`-t'
+`--tagged'
+     Transfer (locally) tagged files.
+
+`--type=TYPE'
+     Specify transfer type, 'ascii' or 'binary'.
+
+`-u'
+`--unique'
+     Always store as unique file (if server supports the STOU command).
+
+`-v'
+`--verbose'
+     Explain what is being done.
+
+`--help'
+     Show a short syntax description.
+
 
 File: yafc.info,  Node: pwd,  Next: quit,  Prev: put,  Up: Yafc commands
 
@@ -842,17 +991,23 @@ File: yafc.info,  Node: quit,  Next: quote,  Prev: pwd,  Up: Yafc commands
 `quit'
 ------
 
+   documentation missing...
+
 
 File: yafc.info,  Node: quote,  Next: rhelp,  Prev: quit,  Up: Yafc commands
 
 `quote'
 -------
 
+   documentation missing...
+
 
 File: yafc.info,  Node: rhelp,  Next: rm,  Prev: quote,  Up: Yafc commands
 
 `rhelp'
 -------
+
+   documentation missing...
 
 
 File: yafc.info,  Node: rm,  Next: rmdir,  Prev: rhelp,  Up: Yafc commands
@@ -895,11 +1050,15 @@ File: yafc.info,  Node: rmdir,  Next: rstatus,  Prev: rm,  Up: Yafc commands
 `rmdir'
 -------
 
+   documentation missing...
+
 
 File: yafc.info,  Node: rstatus,  Next: set,  Prev: rmdir,  Up: Yafc commands
 
 `rstatus'
 ---------
+
+   documentation missing...
 
 
 File: yafc.info,  Node: set,  Next: shell,  Prev: rstatus,  Up: Yafc commands
@@ -907,17 +1066,29 @@ File: yafc.info,  Node: set,  Next: shell,  Prev: rstatus,  Up: Yafc commands
 `set'
 -----
 
+   documentation missing...
+
 
 File: yafc.info,  Node: shell,  Next: site,  Prev: set,  Up: Yafc commands
 
 `shell'
 -------
 
+   documentation missing...
+
 
 File: yafc.info,  Node: site,  Next: source,  Prev: shell,  Up: Yafc commands
 
-`size'
+`site'
 ------
+
+   Send site specific command.
+
+   Usage:
+
+     site command
+
+   Try `site help' or `rhelp site' for more information
 
 
 File: yafc.info,  Node: source,  Next: status,  Prev: site,  Up: Yafc commands
@@ -925,11 +1096,15 @@ File: yafc.info,  Node: source,  Next: status,  Prev: site,  Up: Yafc commands
 `source'
 --------
 
+   documentation missing...
+
 
 File: yafc.info,  Node: status,  Next: switch,  Prev: source,  Up: Yafc commands
 
 `status'
 --------
+
+   documentation missing...
 
 
 File: yafc.info,  Node: switch,  Next: system,  Prev: status,  Up: Yafc commands
@@ -937,11 +1112,15 @@ File: yafc.info,  Node: switch,  Next: system,  Prev: status,  Up: Yafc commands
 `switch'
 --------
 
+   documentation missing...
+
 
 File: yafc.info,  Node: system,  Next: tag,  Prev: switch,  Up: Yafc commands
 
 `system'
 --------
+
+   documentation missing...
 
 
 File: yafc.info,  Node: tag,  Next: unalias,  Prev: system,  Up: Yafc commands
@@ -949,11 +1128,15 @@ File: yafc.info,  Node: tag,  Next: unalias,  Prev: system,  Up: Yafc commands
 `tag'
 -----
 
+   documentation missing...
+
 
 File: yafc.info,  Node: unalias,  Next: untag,  Prev: tag,  Up: Yafc commands
 
 `unalias'
 ---------
+
+   documentation missing...
 
 
 File: yafc.info,  Node: untag,  Next: url,  Prev: unalias,  Up: Yafc commands
@@ -961,11 +1144,15 @@ File: yafc.info,  Node: untag,  Next: url,  Prev: unalias,  Up: Yafc commands
 `untag'
 -------
 
+   documentation missing...
+
 
 File: yafc.info,  Node: url,  Next: user,  Prev: untag,  Up: Yafc commands
 
 `url'
 -----
+
+   documentation missing...
 
 
 File: yafc.info,  Node: user,  Next: version,  Prev: url,  Up: Yafc commands
@@ -973,17 +1160,23 @@ File: yafc.info,  Node: user,  Next: version,  Prev: url,  Up: Yafc commands
 `user'
 ------
 
+   documentation missing...
+
 
 File: yafc.info,  Node: version,  Next: warranty,  Prev: user,  Up: Yafc commands
 
 `version'
 ---------
 
+   documentation missing...
+
 
 File: yafc.info,  Node: warranty,  Prev: version,  Up: Yafc commands
 
 `warranty'
 ----------
+
+   documentation missing...
 
 
 File: yafc.info,  Node: Nohup transfers,  Prev: Yafc commands,  Up: The shell
@@ -1798,72 +1991,72 @@ Node: The shell6343
 Node: Yafc commands6908
 Node: !10035
 Node: afslog10169
-Node: alias10295
-Node: bookmark10418
-Node: cache10525
-Node: cat11056
-Node: cd11379
-Node: cdup11734
-Node: chmod11905
-Node: close12166
-Node: copyright12297
-Node: filesize12430
-Node: filetime12544
-Node: get12652
-Node: help14560
-Node: idle14652
-Node: kauth14780
-Node: kdestroy14910
-Node: klist15047
-Node: krbtkfile15179
-Node: lcd15327
-Node: list15458
-Node: lpwd15566
-Node: ls15692
-Node: ltag17333
-Node: luntag17447
-Node: mkdir17570
-Node: mv17760
-Node: nlist17849
-Node: nop17942
-Node: open18033
-Node: prot18766
-Node: put19253
-Node: pwd19342
-Node: quit19497
-Node: quote19590
-Node: rhelp19687
-Node: rm19782
-Node: rmdir20242
-Node: rstatus20339
-Node: set20441
-Node: shell20535
-Node: site20630
-Node: source20726
-Node: status20827
-Node: switch20930
-Node: system21033
-Node: tag21133
-Node: unalias21228
-Node: untag21330
-Node: url21428
-Node: user21519
-Node: version21614
-Node: warranty21720
-Node: Nohup transfers21815
-Node: Configuration22743
-Node: Keywords24197
-Node: Prompt codes32378
-Node: Transfer codes33599
-Node: Autologin34564
-Node: Autologin keywords35048
-Node: Autologin examples37243
-Node: Aliases38440
-Node: Alias examples38960
-Node: Colors40525
-Node: ANSI attribute codes41231
-Node: Bookmarks42228
-Node: Kerberos42951
-Node: Proxy43650
+Node: alias10296
+Node: bookmark10419
+Node: cache10555
+Node: cat11086
+Node: cd11608
+Node: cdup11963
+Node: chmod12134
+Node: close12397
+Node: copyright12528
+Node: filesize12661
+Node: filetime12804
+Node: get12941
+Node: help15651
+Node: idle15772
+Node: kauth15900
+Node: kdestroy16030
+Node: klist16167
+Node: krbtkfile16299
+Node: lcd16447
+Node: list16578
+Node: lpwd16686
+Node: ls16812
+Node: ltag18451
+Node: luntag18565
+Node: mkdir18688
+Node: mv18878
+Node: nlist18967
+Node: nop19060
+Node: open19151
+Node: prot19884
+Node: put20371
+Node: pwd22891
+Node: quit23046
+Node: quote23168
+Node: rhelp23294
+Node: rm23418
+Node: rmdir23878
+Node: rstatus24004
+Node: set24135
+Node: shell24258
+Node: site24382
+Node: source24597
+Node: status24727
+Node: switch24859
+Node: system24991
+Node: tag25120
+Node: unalias25244
+Node: untag25375
+Node: url25502
+Node: user25622
+Node: version25746
+Node: warranty25881
+Node: Nohup transfers26005
+Node: Configuration26933
+Node: Keywords28387
+Node: Prompt codes36568
+Node: Transfer codes37789
+Node: Autologin38754
+Node: Autologin keywords39238
+Node: Autologin examples41433
+Node: Aliases42630
+Node: Alias examples43150
+Node: Colors44715
+Node: ANSI attribute codes45421
+Node: Bookmarks46418
+Node: Kerberos47141
+Node: Proxy47840
 
 End Tag Table
