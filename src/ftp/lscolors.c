@@ -1,4 +1,4 @@
-/* $Id: lscolors.c,v 1.3 2001/05/12 18:44:04 mhe Exp $
+/* $Id: lscolors.c,v 1.4 2002/11/07 18:08:15 mhe Exp $
  *
  * lscolors.c -- parsing of env variable LS_COLORS
  *
@@ -49,12 +49,7 @@ void init_colors(void)
 	if(!p)
 		p = getenv("LS_COLOURS");
 
-	if(p && !*p) {
-		xfree(p);
-		p = 0;
-	}
-
-	if(p) {
+	if(p && *p) {
 		org = p = xstrdup(p);
 		n = strqnchr(p, ':')+2;
 		clrs = (lscolor *)xmalloc(n * sizeof(lscolor));
