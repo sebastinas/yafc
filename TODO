@@ -1,9 +1,7 @@
 TODO list for Yafc
 ------------------
 
-! USE_PIPES
 * MLSD and MLST support (Frank Denis)
-* sftp_server_program is server dependent (place in bookmarks?)
 * Ctrl-C with SSH breaks ssh program *and* yafc, anyone?
 ? config option for default answers to questions (get/put/fxp/more?)
 * fix --chgrp / --chmod for directories (get)
@@ -14,7 +12,6 @@ TODO list for Yafc
 * IPv6 support
 * keep-alive (send NOOP or similar when idle)
 * EPSV and EPRT support (RFC2428)
-? LANGuage support (RFC2640)
 * problems to get directories with double quotes (") in the name
 * completion doesn't work correctly with rels (need to be expanded?)
 ! improve documentation (help wanted)
