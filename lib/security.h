@@ -34,7 +34,7 @@
  * SUCH DAMAGE. 
  */
 
-/* $Id: security.h,v 1.1 2000/09/14 14:06:28 mhe Exp $ */
+/* $Id: security.h,v 1.2 2000/10/05 15:19:36 mhe Exp $ */
 
 #ifndef __security_h__
 #define __security_h__
@@ -63,23 +63,6 @@ struct sec_client_mech {
     int (*overhead)(void *, int, int);
     int (*encode)(void *, void*, int, int, void**);
     int (*decode)(void *, void*, int, int);
-};
-
-struct sec_server_mech {
-    char *name;
-    size_t size;
-    int (*init)(void *);
-    void (*end)(void *);
-    int (*check_prot)(void *, int);
-    int (*overhead)(void *, int, int);
-    int (*encode)(void *, void*, int, int, void**);
-    int (*decode)(void *, void*, int, int);
-
-    int (*auth)(void *);
-    int (*adat)(void *, void*, size_t);
-    size_t (*pbsz)(void *, size_t);
-    int (*ccc)(void*);
-    int (*userok)(void*, char*);
 };
 
 #define AUTH_OK		0

@@ -249,17 +249,16 @@ file\n\
 Send new user information.  Usage:\n\
   user [options] [username]\n\
 Options:\n\
-  -k, --nokrb            disable kerberos authentication\n\
-  -K, --krb              try kerberos authentication\n\
+  -m, --mechanism=MECH       try MECH as security mechanism(s) when logging \
+in\n\
       --help             display this help\n", 124},
-  {"Yafc was not compiled with Kerberos support\n", 125},
-  {"Connect to what!? Need a hostname!\n", 126},
+  {"Connect to what!? Need a hostname!\n", 125},
   {"\
 Ambiguous alias/hostname, use 'open --noalias' to skip bookmark alias \
-lookup\n", 127},
-  {"Disconnect from %s?", 128},
-  {"Sleeping %u seconds before connecting again (attempt #%d)...\n", 129},
-  {"connection aborted\n", 130},
+lookup\n", 126},
+  {"Disconnect from %s?", 127},
+  {"Sleeping %u seconds before connecting again (attempt #%d)...\n", 128},
+  {"connection aborted\n", 129},
   {"\
 Connect and login to remote host.  Usage:\n\
   open [options] [ftp://][user[:password]@]hostname[:port][/directory] ...\n\
@@ -267,10 +266,10 @@ Options:\n\
   -a, --anon                 try to login anonymously\n\
   -u, --noauto               disable autologin\n\
   -U, --noalias              disable bookmark alias lookup and abbreviation\n\
-  -k, --nokrb                disable kerberos authentication\n\
-  -K, --krb                  try kerberos authentication\n\
+  -m, --mechanism=MECH       try MECH as security mechanism(s) when logging \
+in\n\
   -p, --noproxy              don't connect via proxy\n\
-      --help                 display this help and exit\n", 131},
+      --help                 display this help and exit\n", 130},
   {"\
 Tag local file(s) for later transferring.  Usage:\n\
   ltag [option(s)] file(s)\n\
@@ -280,53 +279,52 @@ Options:\n\
   -l, --list              list tagged files\n\
   -L, --load[=FILE]       load saved local taglist file\n\
   -s, --save[=FILE]       save local taglist\n\
-  -h, --help              show this help\n", 132},
-  {"Unable to save local taglist file", 133},
-  {"Saved local taglist to %s\n", 134},
-  {"No saved local taglist\n", 135},
-  {"Found saved local taglist, load it now?", 136},
-  {"nothing tagged -- use 'ltag' to tag files\n", 137},
-  {"%u files tagged\n", 138},
+  -h, --help              show this help\n", 131},
+  {"Unable to save local taglist file", 132},
+  {"Saved local taglist to %s\n", 133},
+  {"No saved local taglist\n", 134},
+  {"Found saved local taglist, load it now?", 135},
+  {"nothing tagged -- use 'ltag' to tag files\n", 136},
+  {"%u files tagged\n", 137},
   {"\
 This is yet another FTP client.  Usage:\n\
   %s [options] [[ftp://][user[:password]@]hostname[:port][/directory] ...]\n\
 Options:\n\
-    -a, --anon        (*) anonymous login\n\
-    -d, --debug           print all commands sent to/from server\n\
-    -D, --dump-rc         prints the default config file to stdout\n\
-    -k, --nokrb       (*) do not attempt a Kerberos login\n\
-    -K, --krb         (*) try a Kerberos login (overrides nokrb in \
-bookmark)\n\
-    -n, --norc            don't parse config file\n\
-    -N, --nonetrc         don't parse ~/.netrc\n\
-    -p, --noproxy     (*) don't connect via proxy\n\
-    -q, --quiet           don't print the yafc welcome message\n\
-    -r, --rcfile=FILE     use other config file instead of ~/.yafc/yafcrc\n\
-    -t, --trace[=FILE]    use a trace file (mainly for debugging)\n\
-                 if FILE specified, use it instead of \
+  -a, --anon        (*) anonymous login\n\
+  -d, --debug           print all commands sent to/from server\n\
+  -D, --dump-rc         prints the default config file to stdout\n\
+  -m, --mechanism=MECH\n\
+                    (*) try MECH as security mechanism(s)\n\
+  -n, --norc            don't parse config file\n\
+  -N, --nonetrc         don't parse ~/.netrc\n\
+  -p, --noproxy     (*) don't connect via proxy\n\
+  -q, --quiet           don't print the yafc welcome message\n\
+  -r, --rcfile=FILE     use other config file instead of ~/.yafc/yafcrc\n\
+  -t, --trace[=FILE]    use a trace file (mainly for debugging)\n\
+               if FILE specified, use it instead of \
 ~/.yafc/trace/trace.<pid>\n\
-    -u, --noauto      (*) disable autologin\n\
-    -U, --noalias     (*) disable bookmark alias lookup and abbreviation\n\
-    -v, --verbose         print all replies from server\n\
-    -w, --wait=TIME       use a different wait time for reconnecting\n\
-    -W, --workdir=DIR     use a different working directory (instead of \
+  -u, --noauto      (*) disable autologin\n\
+  -U, --noalias     (*) disable bookmark alias lookup and abbreviation\n\
+  -v, --verbose         print all replies from server\n\
+  -w, --wait=TIME       use a different wait time for reconnecting\n\
+  -W, --workdir=DIR     use a different working directory (instead of \
 ~/.yafc)\n\
-    -V, --version         print version information and quit\n\
-    -h, --help            print this help and quit\n\
+  -V, --version         print version information and quit\n\
+  -h, --help            print this help and quit\n\
 \n\
 (*) only applies for login to host specified on the command line\n\
 \n\
 Report bugs to <mhe@stacken.kth.se>\n\
-\n", 139},
-  {"creating working directory %s: ", 140},
-  {"done\n", 141},
-  {"creating directory %s: ", 142},
-  {"creating default config file /yafcrc: ", 143},
+\n", 138},
+  {"creating working directory %s: ", 139},
+  {"done\n", 140},
+  {"creating directory %s: ", 141},
+  {"creating default config file /yafcrc: ", 142},
   {"\
 No proxy host defined!\n\
-\n", 144},
-  {"Invalid value for --wait: %d\n", 145},
-  {"Couldn't open tracefile '%s': %s\n", 146},
+\n", 143},
+  {"Invalid value for --wait: %d\n", 144},
+  {"Couldn't open tracefile '%s': %s\n", 145},
   {"\
 Send files to remote.  Usage:\n\
   put [options] file(s) (can include wildcards)\n\
@@ -355,42 +353,22 @@ yafc\n\
       --type=TYPE      specify transfer type, 'ascii' or 'binary'\n\
   -v, --verbose        explain what is being done\n\
   -u, --unique         store in unique filename (if server supports STOU)\n\
-      --help           display this help\n", 147},
-  {"sent %s\n", 148},
-  {"failed to send %s: %s\n", 149},
-  {"%s: is a directory\n", 150},
-  {"Remote file '%s' exists, skipping...\n", 151},
-  {"Remote file '%s' is newer than local, skipping...\n", 152},
-  {"File '%s' exists, overwrite?", 153},
-  {"Delete local file '%s'?", 154},
-  {"Put '%s'?", 155},
-  {"Remote doesn't support the STOU (store unique) command\n", 156},
-  {"Error(s) while parsing '%s':\n", 157},
-  {"unmatched quote\n", 158},
-  {"string too long or unmatched quote, truncated\n", 159},
-  {"Unexpected end of file encountered\n", 160},
-  {"Expected boolean value, but got '%s'\n", 161},
-  {"'machine' directive needs a hostname\n", 162},
-  {"'alias' directive not useful with domains\n", 163},
+      --help           display this help\n", 146},
+  {"sent %s\n", 147},
+  {"failed to send %s: %s\n", 148},
+  {"%s: is a directory\n", 149},
+  {"Remote file '%s' exists, skipping...\n", 150},
+  {"Remote file '%s' is newer than local, skipping...\n", 151},
+  {"File '%s' exists, overwrite?", 152},
+  {"Delete local file '%s'?", 153},
+  {"Put '%s'?", 154},
+  {"Remote doesn't support the STOU (store unique) command\n", 155},
   {"\
 WARNING! Config file contains passwords but is readable by others (mode \
-%03o)\n", 164},
-  {"Multiple definitions for '%s', skipping...\n", 165},
-  {"Multiple definitions for 'local', skipping...\n", 166},
-  {"Multiple definitions for 'default', skipping...\n", 167},
-  {"\
-As a computer, I find your faith in technology amusing...\n\
-Too many errors\n", 168},
-  {"Expected boolean value or 'ask', but got '%s'\n", 169},
-  {"Unknown default_type parameter '%s'... (use 'ascii' or 'binary')\n", 170},
-  {"Invalid value for long_command_time: %d\n", 171},
-  {"Invalid value for connect_wait_time: %d\n", 172},
-  {"Invalid value for history_max: %d\n", 173},
-  {"Invalid value for proxy_type: %d\n", 174},
-  {"Config parse error: '%s'\n", 175},
-  {"Asynchronous mode NOT supported (found '&' in command)\n", 176},
-  {"missing redirection argument\n", 177},
-  {"Error, cannot restore stdout!\n", 178},
+%03o)\n", 156},
+  {"Asynchronous mode NOT supported (found '&' in command)\n", 157},
+  {"missing redirection argument\n", 158},
+  {"Error, cannot restore stdout!\n", 159},
   {"\
 Remove file(s).  Usage:\n\
   rm [options] file ...\n\
@@ -401,23 +379,24 @@ Options:\n\
                           CAREFUL!\n\
   -t, --tagged          remove tagged files\n\
   -v, --verbose         explain what is being done\n\
-      --help            display this help\n", 179},
-  {"Remove remote file '%s'?", 180},
-  {"%s  omitting directory\n", 181},
-  {"no files found\n", 182},
-  {"autologin is on", 183},
-  {"autologin is off", 184},
-  {"verbose is on", 185},
-  {"verbose is off", 186},
-  {"passive mode is on", 187},
-  {"passive mode is off", 188},
-  {"debug is on", 189},
-  {"debug is off", 190},
-  {"Unknown type '%s'? Use 'ascii' or 'binary'\n", 191},
-  {"type is '%s'\n", 192},
-  {"anonymous password is '%s'\n", 193},
-  {"No such variable '%s'\n", 194},
-  {"Ambiguous variable '%s'\n", 195},
+      --help            display this help\n", 160},
+  {"Remove remote file '%s'?", 161},
+  {"%s  omitting directory\n", 162},
+  {"no files found\n", 163},
+  {"autologin is on", 164},
+  {"autologin is off", 165},
+  {"verbose is on", 166},
+  {"verbose is off", 167},
+  {"passive mode is on", 168},
+  {"passive mode is off", 169},
+  {"debug is on", 170},
+  {"debug is off", 171},
+  {"Unknown type '%s'? Use 'ascii' or 'binary'\n", 172},
+  {"type is '%s'\n", 173},
+  {"anonymous password is '%s'\n", 174},
+  {"No such variable '%s'\n", 175},
+  {"Ambiguous variable '%s'\n", 176},
+  {"Expected boolean value, but got '%s'\n", 177},
   {"\
 Tag file(s) for later transferring.  Usage:\n\
   tag [option(s)] [file(s)]\n\
@@ -427,26 +406,26 @@ Options:\n\
   -l, --list              list tagged files\n\
   -L, --load[=FILE]       load saved taglist file for this host\n\
   -s, --save[=FILE]       save taglist\n\
-  -h, --help              show this help\n", 196},
-  {"Unable to save taglist file", 197},
-  {"Saved taglist to %s\n", 198},
-  {"No saved taglist for %s\n", 199},
-  {"Found saved taglist, load it now?", 200},
-  {"nothing tagged -- use 'tag' to tag files\n", 201},
-  {"%lu bytes (%s) in %u files tagged\n", 202},
-  {"%lu directories tagged\n", 203},
-  {"nothing tagged -- use 'tag' to tag files", 204},
-  {"transfer interrupted\n", 205},
-  {"transfer I/O error\n", 206},
-  {"stalled", 207},
-  {"Redirecting output to %s\n", 208},
-  {"SIGTERM (terminate) received, exiting...\n", 209},
-  {"Transfer aborted %s", 210},
-  {"%s may not have transferred correctly\n", 211},
-  {"Connected to %s as user %s\n", 212},
-  {"Transfer started %s\n", 213},
-  {"Transfer received SIGHUP %s\n", 214},
-  {"Command: '%s'\n", 215},
+  -h, --help              show this help\n", 178},
+  {"Unable to save taglist file", 179},
+  {"Saved taglist to %s\n", 180},
+  {"No saved taglist for %s\n", 181},
+  {"Found saved taglist, load it now?", 182},
+  {"nothing tagged -- use 'tag' to tag files\n", 183},
+  {"%lu bytes (%s) in %u files tagged\n", 184},
+  {"%lu directories tagged\n", 185},
+  {"nothing tagged -- use 'tag' to tag files", 186},
+  {"transfer interrupted\n", 187},
+  {"transfer I/O error\n", 188},
+  {"stalled", 189},
+  {"Redirecting output to %s\n", 190},
+  {"SIGTERM (terminate) received, exiting...\n", 191},
+  {"Transfer aborted %s", 192},
+  {"%s may not have transferred correctly\n", 193},
+  {"Connected to %s as user %s\n", 194},
+  {"Transfer started %s\n", 195},
+  {"Transfer received SIGHUP %s\n", 196},
+  {"Command: '%s'\n", 197},
   {"\
 From: yafc@%s\n\
 Subject: yafc transfer finished on %s\n\
@@ -459,92 +438,92 @@ command was: %s\n\
 started %s\n\
 \n\
 (please do not reply to this mail)\n\
-\n", 216},
+\n", 198},
   {"\
 Done\n\
-Transfer ended %s\n", 217},
-  {"Unable to send mail (using %s)\n", 218},
-  {"Connection timeout after %u seconds\n", 219},
+Transfer ended %s\n", 199},
+  {"Unable to send mail (using %s)\n", 200},
+  {"Connection timeout after %u seconds\n", 201},
   {"\
 Sorry, don't know how to handle your '%s' protocol\n\
-trying 'ftp' instead...\n", 220},
-  {"Looking up %s... ", 221},
-  {"Connecting to proxy %s (%s) at port %d...\n", 222},
-  {"Connecting to %s (%s) at port %d...\n", 223},
-  {"No control connection\n", 224},
-  {"Server has closed control connection\n", 225},
-  {"Reply too long (truncated)\n", 226},
-  {"Tired of waiting for reply, timeout after %u seconds\n", 227},
-  {"error writing command", 228},
-  {"Server closed control connection?\n", 229},
-  {"Proxy login: ", 230},
-  {"login (%s): ", 231},
-  {"login (anonymous): ", 232},
-  {"You loose\n", 233},
-  {"password (%s): ", 234},
-  {"password: ", 235},
-  {"Proxy password: ", 236},
-  {"Invalid protection level '%s'\n", 237},
-  {"*** Using plaintext username and password ***\n", 238},
-  {"Authentication successful.\n", 239},
-  {"logging in anonymously...\n", 240},
-  {"Data protection is %s\n", 241},
-  {"Server doesn't support SITE CHMOD\n", 242},
-  {"Server doesn't support SITE IDLE\n", 243},
-  {"Host doesn't support passive mode\n", 244},
-  {"Unable to enter passive mode\n", 245},
-  {"Error parsing PASV reply: '%s'\n", 246},
-  {"Waiting for remote to finish abort...\n", 247},
-  {"read error: %s\n", 248},
-  {"write error: %s\n", 249},
-  {"data connection not accepted\n", 250},
-  {"FxP between same hosts\n", 251},
-  {"unable to get remote filesize of '%s', unable to resume\n", 252},
-  {"%s: permission denied\n", 253},
-  {"%s: %s, transfer cancelled\n", 254},
-  {"OK, one more to close connection...          \n", 255},
-  {"OK, one more to exit program...          \n", 256},
-  {"OK, one more to abort command...          \n", 257},
-  {"Interrupt received, exiting...         \n", 258},
-  {"Hangup received, continuing transfer in background...\n", 259},
-  {"Hangup received, exiting...\n", 260},
-  {"Can't redirect output, exiting...\n", 261},
-  {"setsockopt(THROUGHPUT)... ignored", 262},
-  {"setsockopt(LOWDELAY)... ignored", 263},
-  {"Can't get address for realm %s\n", 264},
-  {"Using NAT IP address (%s) for kerberos 4\n", 265},
-  {"Forced passive mode on\n", 266},
-  {"Out of memory base64-encoding\n", 267},
-  {"Server didn't accept auth data\n", 268},
-  {"Remote host didn't send adat reply\n", 269},
-  {"Failed to decode base64 from server\n", 270},
-  {"Error reading reply from server: %s\n", 271},
-  {"Bad checksum returned from server\n", 272},
-  {"unknown", 273},
-  {"Failed to encode command.\n", 274},
-  {"Out of memory base64-encoding.\n", 275},
-  {"Using %s for authentication.\n", 276},
-  {"Using %s command channel.\n", 277},
-  {"Using %s data channel.\n", 278},
-  {"Protection buffer size: %lu.\n", 279},
-  {"Not using any security mechanism.\n", 280},
-  {"No security data exchange has taken place.\n", 281},
-  {"Failed to set protection buffer size.\n", 282},
-  {"Failed to set protection level.\n", 283},
-  {"No security data exchange has taken place\n", 284},
-  {"Unrecognized protection level %s\n", 285},
-  {"%s does not implement %s protection\n", 286},
-  {"Syntax error, try %s --help for more information\n", 287},
-  {"realloc %u failed", 288},
-  {"Skipping %s...\n", 289},
-  {"Trying %s...\n", 290},
-  {"%s is not supported by the server.\n", 291},
-  {"%s rejected as security mechanism.\n", 292},
-  {"The server doesn't support the FTP security extensions.\n", 293},
-  {"usage: %s [principal]\n", 294},
-  {"Bad reply from server\n", 295},
-  {"Failed to decode base64 in reply\n", 296},
-  {"Password for %s:", 297},
+trying 'ftp' instead...\n", 202},
+  {"Looking up %s... ", 203},
+  {"Connecting to proxy %s (%s) at port %d...\n", 204},
+  {"Connecting to %s (%s) at port %d...\n", 205},
+  {"No control connection\n", 206},
+  {"Server has closed control connection\n", 207},
+  {"Reply too long (truncated)\n", 208},
+  {"Tired of waiting for reply, timeout after %u seconds\n", 209},
+  {"error writing command", 210},
+  {"Server closed control connection?\n", 211},
+  {"Proxy login: ", 212},
+  {"login (%s): ", 213},
+  {"login (anonymous): ", 214},
+  {"You loose\n", 215},
+  {"password (%s): ", 216},
+  {"password: ", 217},
+  {"Proxy password: ", 218},
+  {"Invalid protection level '%s'\n", 219},
+  {"*** Using plaintext username and password ***\n", 220},
+  {"Authentication successful.\n", 221},
+  {"logging in anonymously...\n", 222},
+  {"Data protection is %s\n", 223},
+  {"Server doesn't support SITE CHMOD\n", 224},
+  {"Server doesn't support SITE IDLE\n", 225},
+  {"Host doesn't support passive mode\n", 226},
+  {"Unable to enter passive mode\n", 227},
+  {"Error parsing PASV reply: '%s'\n", 228},
+  {"Waiting for remote to finish abort...\n", 229},
+  {"read error: %s\n", 230},
+  {"write error: %s\n", 231},
+  {"data connection not accepted\n", 232},
+  {"FxP between same hosts\n", 233},
+  {"unable to get remote filesize of '%s', unable to resume\n", 234},
+  {"%s: permission denied\n", 235},
+  {"%s: %s, transfer cancelled\n", 236},
+  {"OK, one more to close connection...          \n", 237},
+  {"OK, one more to exit program...          \n", 238},
+  {"OK, one more to abort command...          \n", 239},
+  {"Interrupt received, exiting...         \n", 240},
+  {"Hangup received, continuing transfer in background...\n", 241},
+  {"Hangup received, exiting...\n", 242},
+  {"Can't redirect output, exiting...\n", 243},
+  {"setsockopt(THROUGHPUT)... ignored", 244},
+  {"setsockopt(LOWDELAY)... ignored", 245},
+  {"Can't get address for realm %s\n", 246},
+  {"Using NAT IP address (%s) for kerberos 4\n", 247},
+  {"Forced passive mode on\n", 248},
+  {"Out of memory base64-encoding\n", 249},
+  {"Server didn't accept auth data\n", 250},
+  {"Remote host didn't send adat reply\n", 251},
+  {"Failed to decode base64 from server\n", 252},
+  {"Error reading reply from server: %s\n", 253},
+  {"Bad checksum returned from server\n", 254},
+  {"unknown", 255},
+  {"Failed to encode command.\n", 256},
+  {"Out of memory base64-encoding.\n", 257},
+  {"Using %s for authentication.\n", 258},
+  {"Using %s command channel.\n", 259},
+  {"Using %s data channel.\n", 260},
+  {"Protection buffer size: %lu.\n", 261},
+  {"Not using any security mechanism.\n", 262},
+  {"No security data exchange has taken place.\n", 263},
+  {"Failed to set protection buffer size.\n", 264},
+  {"Failed to set protection level.\n", 265},
+  {"No security data exchange has taken place\n", 266},
+  {"Unrecognized protection level %s\n", 267},
+  {"%s does not implement %s protection\n", 268},
+  {"Syntax error, try %s --help for more information\n", 269},
+  {"realloc %u failed", 270},
+  {"Skipping %s...\n", 271},
+  {"Trying %s...\n", 272},
+  {"%s is not supported by the server.\n", 273},
+  {"%s rejected as security mechanism.\n", 274},
+  {"The server doesn't support the FTP security extensions.\n", 275},
+  {"usage: %s [principal]\n", 276},
+  {"Bad reply from server\n", 277},
+  {"Failed to decode base64 in reply\n", 278},
+  {"Password for %s:", 279},
 };
 
-int _msg_tbl_length = 297;
+int _msg_tbl_length = 279;

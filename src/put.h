@@ -28,7 +28,7 @@
 #define PUT_RECURSIVE 16
 #define PUT_VERBOSE 32
 #define PUT_FORCE 64
-
+#define PUT_OUTPUT_FILE 128  /* --output=FILE (else --output=DIR) */
 #define PUT_UNIQUE 256
 #define PUT_DELETE_AFTER 512
 #define PUT_SKIP_EXISTING 1024

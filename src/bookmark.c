@@ -101,8 +101,8 @@ static int bookmark_save(const char *other_bmfile)
 
 		if(url->protlevel)
 			fprintf(fp, " prot %s", url->protlevel);
-		if(url->nokrb)
-			fprintf(fp, " nokrb");
+		if(url->mech)
+			fprintf(fp, " mech '%s'", url->mech);
 		if(url->password) {
 			char *cq;
 			base64_encode(url->password, strlen(url->password), &cq);
@@ -267,7 +267,7 @@ static bool should_update_bookmark(url_t *url)
 		return true;
 	if(url->port != ftp->url->port)
 		return true;
-	if(url->nokrb != ftp->url->nokrb)
+	if(xstrcmp(url->mech, ftp->url->mech) != 0)
 		return true;
 	if(xstrcmp(url->protlevel, ftp->url->protlevel) != 0)
 		return true;

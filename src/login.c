@@ -43,8 +43,7 @@ static void print_user_syntax(void)
 	printf(_("Send new user information.  Usage:\n"
 			 "  user [options] [username]\n"
 			 "Options:\n"
-			 "  -k, --nokrb            disable kerberos authentication\n"
-			 "  -K, --krb              try kerberos authentication\n"
+			 "  -m, --mechanism=MECH       try MECH as security mechanism(s) when logging in\n"
 			 "      --help             display this help\n"));
 }
 
@@ -52,42 +51,22 @@ void cmd_user(int argc, char **argv)
 {
 	char *u, *p;
 	struct option longopts[] = {
-		{"nokrb", 0, 0, 'k'},
-		{"krb", 0, 0, 'K'},
+		{"mechanism", required_argument, 0, 'm'},
 		{"help", no_argument, 0, 'h'},
 		{0, 0, 0, 0},
 	};
 	int k = 0;
 	int c;
-#if !defined(KRB4) && !defined(KRB5)
-	bool warn_krb = false;
-#endif
+	char *mech = 0;
 
 	optind = 0;
-	while((c=getopt_long(argc, argv, "kK", longopts, 0)) != EOF) {
+	while((c=getopt_long(argc, argv, "m:", longopts, 0)) != EOF) {
 		switch(c) {
 		  case 'h':
 			print_user_syntax();
 			return;
-		  case 'k':
-#if !defined(KRB4) && !defined(KRB5)
-			if(!warn_krb) {
-				fprintf(stderr,
-						_("Yafc was not compiled with Kerberos support\n"));
-				warn_krb = true;
-			}
-#endif
-			k = 1;
-			break;
-		  case 'K':
-#if !defined(KRB4) && !defined(KRB5)
-			if(!warn_krb) {
-				fprintf(stderr,
-						_("Yafc was not compiled with Kerberos support\n"));
-				warn_krb = true;
-			}
-#endif
-			k = 2;
+		  case 'm':
+			  mech = xstrdup(optarg);
 			break;
 		  case '?':
 			return;
@@ -105,11 +84,6 @@ void cmd_user(int argc, char **argv)
 		url_setusername(ftp->url, 0);
 	url_setpassword(ftp->url, 0);
 
-	if(k == 1)
-		ftp->url->nokrb = 1;
-	else if(k == 2)
-		ftp->url->nokrb = 0;
-
 	if(ftp_login(u, gvAnonPasswd) == 2) {
 		url_setusername(ftp->url, u);
 		url_setpassword(ftp->url, p);
@@ -119,7 +93,7 @@ void cmd_user(int argc, char **argv)
 	xfree(p);
 }
 
-void yafc_open(const char *host, unsigned int opt)
+void yafc_open(const char *host, unsigned int opt, const char *mech)
 {
 	url_t *url;
 	url_t *xurl;
@@ -200,15 +174,11 @@ void yafc_open(const char *host, unsigned int opt)
 				url_setpassword(url, xurl->password);
 			if(url->port == -1)
 				url_setport(url, xurl->port);
-			url->nokrb = xurl->nokrb;
+			url->mech = xurl->mech;
 			url->noproxy = xurl->noproxy;
 		}
 	}
-
-	if(test(opt, OP_NOKRB))
-		url->nokrb = 1;
-	else if(test(opt, OP_YESKRB))
-		url->nokrb = 0;
+	
 	if(test(opt, OP_NOPROXY))
 		url->noproxy = true;
 
@@ -254,8 +224,7 @@ static void print_open_syntax(void)
 			 "  -a, --anon                 try to login anonymously\n"
 			 "  -u, --noauto               disable autologin\n"
 			 "  -U, --noalias              disable bookmark alias lookup and abbreviation\n"
-			 "  -k, --nokrb                disable kerberos authentication\n"
-			 "  -K, --krb                  try kerberos authentication\n"
+			 "  -m, --mechanism=MECH       try MECH as security mechanism(s) when logging in\n"
 			 "  -p, --noproxy              don't connect via proxy\n"
 			 "      --help                 display this help and exit\n"));
 }
@@ -264,19 +233,16 @@ void cmd_open(int argc, char **argv)
 {
 	int c;
 	struct option longopts[] = {
-		{"anon", 0, 0, 'a'},
-		{"noauto", 0, 0, 'u'},
-		{"noalias", 0, 0, 'U'},
-		{"help", 0, 0, 'h'},
-		{"nokrb", 0, 0, 'k'},
-		{"krb", 0, 0, 'K'},
-		{"noproxy", 0, 0, 'p'},
+		{"anon", no_argument, 0, 'a'},
+		{"noauto", no_argument, 0, 'u'},
+		{"noalias", no_argument, 0, 'U'},
+		{"help", no_argument, 0, 'h'},
+		{"mechanism", required_argument, 0, 'm'},
+		{"noproxy", no_argument, 0, 'p'},
 		{0, 0, 0, 0},
 	};
 	unsigned int opt = 0;
-#if !defined(KRB4) && !defined(KRB5)
-	bool warn_krb = false;
-#endif
+	char *mech = 0;
 	int i;
 
 	if(!gvAutologin)
@@ -296,25 +262,8 @@ void cmd_open(int argc, char **argv)
 			/* disable alias lookup */
 			opt |= OP_NOALIAS;
 			break;
-		  case 'k':
-			opt |= OP_NOKRB;
-#if !defined(KRB4) && !defined(KRB5)
-			if(!warn_krb) {
-				fprintf(stderr,
-						_("Yafc was not compiled with Kerberos support\n"));
-				warn_krb = true;
-			}
-#endif
-			break;
-		  case 'K':
-			opt |= OP_YESKRB;
-#if !defined(KRB4) && !defined(KRB5)
-			if(!warn_krb) {
-				fprintf(stderr,
-						_("Yafc was not compiled with Kerberos support\n"));
-				warn_krb = true;
-			}
-#endif
+		  case 'm':
+			  mech = xstrdup(optarg);
 			break;
 		  case 'p':
 			opt |= OP_NOPROXY;
@@ -330,5 +279,5 @@ void cmd_open(int argc, char **argv)
 	minargs(optind);
 
 	for(i=optind; i<argc; i++)
-		yafc_open(argv[i], opt);
+		yafc_open(argv[i], opt, mech);
 }

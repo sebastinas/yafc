@@ -56,25 +56,25 @@ void print_syntax_and_exit(char *argv0)
 	printf(_("This is yet another FTP client.  Usage:\n"
 			 "  %s [options] [[ftp://][user[:password]@]hostname[:port][/directory] ...]\n"
 			 "Options:\n"
-			 "    -a, --anon        (*) anonymous login\n"
-			 "    -d, --debug           print all commands sent to/from server\n"
-			 "    -D, --dump-rc         prints the default config file to stdout\n"
-			 "    -k, --nokrb       (*) do not attempt a Kerberos login\n"
-			 "    -K, --krb         (*) try a Kerberos login (overrides nokrb in bookmark)\n"
-			 "    -n, --norc            don't parse config file\n"
-			 "    -N, --nonetrc         don't parse ~/.netrc\n"
-			 "    -p, --noproxy     (*) don't connect via proxy\n"
-			 "    -q, --quiet           don't print the yafc welcome message\n"
-			 "    -r, --rcfile=FILE     use other config file instead of ~/.yafc/yafcrc\n"
-			 "    -t, --trace[=FILE]    use a trace file (mainly for debugging)\n"
-			 "                 if FILE specified, use it instead of ~/.yafc/trace/trace.<pid>\n"
-			 "    -u, --noauto      (*) disable autologin\n"
-			 "    -U, --noalias     (*) disable bookmark alias lookup and abbreviation\n"
-			 "    -v, --verbose         print all replies from server\n"
-			 "    -w, --wait=TIME       use a different wait time for reconnecting\n"
-			 "    -W, --workdir=DIR     use a different working directory (instead of ~/.yafc)\n"
-			 "    -V, --version         print version information and quit\n"
-			 "    -h, --help            print this help and quit\n"
+			 "  -a, --anon        (*) anonymous login\n"
+			 "  -d, --debug           print all commands sent to/from server\n"
+			 "  -D, --dump-rc         prints the default config file to stdout\n"
+			 "  -m, --mechanism=MECH\n"
+			 "                    (*) try MECH as security mechanism(s)\n"
+			 "  -n, --norc            don't parse config file\n"
+			 "  -N, --nonetrc         don't parse ~/.netrc\n"
+			 "  -p, --noproxy     (*) don't connect via proxy\n"
+			 "  -q, --quiet           don't print the yafc welcome message\n"
+			 "  -r, --rcfile=FILE     use other config file instead of ~/.yafc/yafcrc\n"
+			 "  -t, --trace[=FILE]    use a trace file (mainly for debugging)\n"
+			 "               if FILE specified, use it instead of ~/.yafc/trace/trace.<pid>\n"
+			 "  -u, --noauto      (*) disable autologin\n"
+			 "  -U, --noalias     (*) disable bookmark alias lookup and abbreviation\n"
+			 "  -v, --verbose         print all replies from server\n"
+			 "  -w, --wait=TIME       use a different wait time for reconnecting\n"
+			 "  -W, --workdir=DIR     use a different working directory (instead of ~/.yafc)\n"
+			 "  -V, --version         print version information and quit\n"
+			 "  -h, --help            print this help and quit\n"
 			 "\n"
 			 "(*) only applies for login to host specified on the command line\n"
 			 "\n"
@@ -167,6 +167,19 @@ void init_yafc(void)
 	/* init colors from LS_COLORS for ls */
 	init_colors();
 
+	/* choose default security mechanism */
+#ifdef KRB4
+# ifdef KRB5
+	gvMechanism = xstrdup("krb4,krb5");
+# else
+	gvMechanism = xstrdup("krb4");
+# endif
+#elif defined(KRB5)
+	gvMechanism = xstrdup("krb5");
+#else
+	gvMechanism = xstrdup("none");
+#endif
+	
 	gvPrompt1 = xstrdup("yafc> ");
 	gvPrompt2 = xstrdup("yafc %h> ");
 	gvPrompt3 = xstrdup("yafc %h:%42~> ");
@@ -277,9 +290,7 @@ int main(int argc, char **argv, char **envp)
 	bool override_verbose = false;
 	bool override_welcome = false;
 
-#if !defined(KRB4) && !defined(KRB5)
-	bool warn_krb = false;
-#endif
+	char *mech = 0;
 
 	struct option longopts[] = {
 		{"anon", no_argument, 0, 'a'},
@@ -289,8 +300,7 @@ int main(int argc, char **argv, char **envp)
 		{"nonetrc", no_argument, 0, 'N'},
 		{"quiet", no_argument, 0, 'q'},
 		{"rcfile", required_argument, 0, 'r'},
-		{"nokrb", no_argument, 0, 'k'},
-		{"krb", no_argument, 0, 'K'},
+		{"mechanism", required_argument, 0, 'm'},
 		{"noproxy", no_argument, 0, 'p'},
 		{"trace", optional_argument, 0, 't'},
 		{"noauto", no_argument, 0, 'u'},
@@ -318,7 +328,7 @@ int main(int argc, char **argv, char **envp)
 #endif
 	
 	while((c = getopt_long(argc, argv,
-						   "qhdDganNt::r:uUkKpvVw:W:", longopts, 0)) != EOF)
+						   "qhdDganNt::r:uUm:pvVw:W:", longopts, 0)) != EOF)
 	{
 		switch(c) {
 		case 'a':
@@ -344,25 +354,8 @@ int main(int argc, char **argv, char **envp)
 		case 'U':
 			open_opt |= OP_NOALIAS;
 			break;
-		case 'k':
-			open_opt |= OP_NOKRB;
-#if !defined(KRB4) && !defined(KRB5)
-			if(!warn_krb) {
-				fprintf(stderr,
-						_("Yafc was not compiled with Kerberos support\n"));
-				warn_krb = true;
-			}
-#endif
-			break;
-		case 'K':
-			open_opt |= OP_YESKRB;
-#if !defined(KRB4) && !defined(KRB5)
-			if(!warn_krb) {
-				fprintf(stderr,
-						_("Yafc was not compiled with Kerberos support\n"));
-				warn_krb = true;
-			}
-#endif
+		case 'm':
+			mech = xstrdup(optarg);
 			break;
 		case 'p':
 			open_opt |= OP_NOPROXY;
@@ -456,7 +449,7 @@ int main(int argc, char **argv, char **envp)
 			open_opt |= OP_NOAUTO;
 
 		for(i=optind; i<argc; i++) {
-			yafc_open(argv[i], open_opt);
+			yafc_open(argv[i], open_opt, mech);
 #ifdef HAVE_LIBREADLINE /* add appropriate 'open' command to history */
 			asprintf(&s, "open %s%s",
 					 argv[i], test(open_opt, OP_ANON) ? " --anon" : "");

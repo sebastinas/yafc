@@ -60,6 +60,10 @@ auto_bookmark_silent no
 # see also 'ascii_transfer_mask' below
 default_type binary # ...or ascii
 
+# default security machanism to use
+# valid arguments are krb4, krb5 and none
+default_mechanism krb4
+
 # filenames matching any of these masks are transferred in ascii mode,
 # ignoring the value of 'default_type'
 # masks are separated by colons (eg. "*.ext1:*.ext2:filename*:")

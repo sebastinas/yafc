@@ -192,7 +192,8 @@ else
 fi
 
 AC_OUTPUT([Makefile intl/Makefile doc/Makefile lib/Makefile po/Makefile.in
-  src/Makefile src/ftp/Makefile src/libmhe/Makefile yafc.spec],
+  src/Makefile src/ftp/Makefile src/libmhe/Makefile src/cfglib/Makefile
+  yafc.spec],
 [sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])
 
 echo "------ configure complete ------"

@@ -90,6 +90,12 @@ typedef enum {
 	ltEplf
 } LIST_t;
 
+typedef enum {
+	mechNone,
+	mechKrb4,
+	mechKrb5
+} mech_type_t;
+
 typedef struct transfer_info
 {
 	char *remote_name;     /* name of remote file or 0 */

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-09-25 22:16+0200\n"
+"POT-Creation-Date: 2000-10-03 19:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -332,7 +332,7 @@ msgstr ""
 msgid "ambiguous command '%s' (expanded alias '%s')\n"
 msgstr ""
 
-#: src/commands.c:393 src/get.c:752 src/ltag.c:236 src/tag.c:267
+#: src/commands.c:393 src/get.c:766 src/ltag.c:236 src/tag.c:267
 #, c-format
 msgid "%s: no matches found\n"
 msgstr ""
@@ -438,105 +438,105 @@ msgstr ""
 msgid "failed to receive %s: %s\n"
 msgstr ""
 
-#: src/get.c:223 src/put.c:185
+#: src/get.c:222 src/put.c:187
 #, c-format
 msgid "failed to create directory %s\n"
 msgstr ""
 
-#: src/get.c:232
+#: src/get.c:246
 #, c-format
 msgid "Local file '%s' exists, skipping...\n"
 msgstr ""
 
-#: src/get.c:251
+#: src/get.c:265
 #, c-format
 msgid "Local file '%s' is newer than remote, skipping...\n"
 msgstr ""
 
-#: src/get.c:259
+#: src/get.c:273
 #, c-format
 msgid "Local file '%s' exists, overwrite?"
 msgstr ""
 
-#: src/get.c:291
+#: src/get.c:305
 #, c-format
 msgid "symlinking '%s' to '%s'\n"
 msgstr ""
 
-#: src/get.c:319
+#: src/get.c:333
 #, c-format
 msgid "Delete remote file '%s'?"
 msgstr ""
 
-#: src/get.c:335 src/put.c:283
+#: src/get.c:349 src/put.c:285
 #, c-format
 msgid "%s: deleted\n"
 msgstr ""
 
-#: src/get.c:338 src/put.c:286
+#: src/get.c:352 src/put.c:288
 #, c-format
 msgid "error deleting '%s': %s\n"
 msgstr ""
 
-#: src/get.c:386
+#: src/get.c:400
 #, c-format
 msgid "Get '%s'?"
 msgstr ""
 
-#: src/get.c:432
+#: src/get.c:446
 #, c-format
 msgid "%s: circular link -- skipping\n"
 msgstr ""
 
-#: src/get.c:479 src/put.c:382
+#: src/get.c:493 src/put.c:384
 #, c-format
 msgid "%s: omitting directory\n"
 msgstr ""
 
-#: src/get.c:487 src/put.c:387
+#: src/get.c:501 src/put.c:389
 #, c-format
 msgid "%s: not a regular file\n"
 msgstr ""
 
-#: src/get.c:501 src/put.c:398
+#: src/get.c:515 src/put.c:400
 msgid "Continue transfer?"
 msgstr ""
 
 #. else a == ASKYES
-#: src/get.c:507 src/put.c:404
+#: src/get.c:521 src/put.c:406
 msgid "Excellent!!!\n"
 msgstr ""
 
-#: src/get.c:596
+#: src/get.c:610
 #, c-format
 msgid "Invalid mode for --chmod: %s\n"
 msgstr ""
 
-#: src/get.c:600
+#: src/get.c:614
 msgid "virtual memory exhausted\n"
 msgstr ""
 
-#: src/get.c:608
+#: src/get.c:622
 #, c-format
 msgid "%s is not a valid group name\n"
 msgstr ""
 
-#: src/get.c:619
+#: src/get.c:633
 #, c-format
 msgid "you are not a member of group %s\n"
 msgstr ""
 
-#: src/get.c:647 src/get.c:674 src/put.c:498 src/put.c:531
+#: src/get.c:661 src/get.c:688 src/put.c:500 src/put.c:533
 #, c-format
 msgid "Regexp '%s' failed: %s\n"
 msgstr ""
 
-#: src/get.c:715 src/put.c:577
+#: src/get.c:729 src/put.c:579
 #, c-format
 msgid "Invalid option argument --type=%s\n"
 msgstr ""
 
-#: src/get.c:762 src/put.c:623 src/rm.c:183
+#: src/get.c:776 src/put.c:625 src/rm.c:183
 msgid "no tagged files\n"
 msgstr ""
 
@@ -550,39 +550,39 @@ msgstr ""
 msgid "%s: no such command\n"
 msgstr ""
 
-#: src/help.c:65
+#: src/help.c:66
 msgid "Available commands: (commands may be abbreviated)\n"
 msgstr ""
 
-#: src/help.c:93
+#: src/help.c:95
 msgid ""
 "This product includes software developed by the Kungliga Tekniska\n"
 "Högskolan and its contributors.\n"
 "\n"
 msgstr ""
 
-#: src/help.c:97
+#: src/help.c:99
 msgid "Compiled "
 msgstr ""
 
-#: src/help.c:97
+#: src/help.c:99
 msgid " "
 msgstr ""
 
-#: src/help.c:97
+#: src/help.c:99
 msgid " ("
 msgstr ""
 
-#: src/help.c:97
+#: src/help.c:99
 msgid ")\n"
 msgstr ""
 
-#: src/help.c:99
+#: src/help.c:101
 #, c-format
 msgid "Using Readline version %s\n"
 msgstr ""
 
-#: src/help.c:113
+#: src/help.c:115
 msgid ""
 "This product includes software developed by the Kungliga Tekniska\n"
 "Högskolan and its contributors.\n"
@@ -674,41 +674,36 @@ msgid ""
 "Send new user information.  Usage:\n"
 "  user [options] [username]\n"
 "Options:\n"
-"  -k, --nokrb            disable kerberos authentication\n"
-"  -K, --krb              try kerberos authentication\n"
+"  -m, --mechanism=MECH       try MECH as security mechanism(s) when logging "
+"in\n"
 "      --help             display this help\n"
 msgstr ""
 
-#: src/login.c:76 src/login.c:86 src/login.c:304 src/login.c:314
-#: src/main.c:352 src/main.c:362
-msgid "Yafc was not compiled with Kerberos support\n"
-msgstr ""
-
-#: src/login.c:130
+#: src/login.c:104
 msgid "Connect to what!? Need a hostname!\n"
 msgstr ""
 
-#: src/login.c:136
+#: src/login.c:110
 msgid ""
 "Ambiguous alias/hostname, use 'open --noalias' to skip bookmark alias "
 "lookup\n"
 msgstr ""
 
-#: src/login.c:144
+#: src/login.c:118
 #, c-format
 msgid "Disconnect from %s?"
 msgstr ""
 
-#: src/login.c:230
+#: src/login.c:200
 #, c-format
 msgid "Sleeping %u seconds before connecting again (attempt #%d)...\n"
 msgstr ""
 
-#: src/login.c:234
+#: src/login.c:204
 msgid "connection aborted\n"
 msgstr ""
 
-#: src/login.c:251
+#: src/login.c:221
 msgid ""
 "Connect and login to remote host.  Usage:\n"
 "  open [options] [ftp://][user[:password]@]hostname[:port][/directory] ...\n"
@@ -716,8 +711,8 @@ msgid ""
 "  -a, --anon                 try to login anonymously\n"
 "  -u, --noauto               disable autologin\n"
 "  -U, --noalias              disable bookmark alias lookup and abbreviation\n"
-"  -k, --nokrb                disable kerberos authentication\n"
-"  -K, --krb                  try kerberos authentication\n"
+"  -m, --mechanism=MECH       try MECH as security mechanism(s) when logging "
+"in\n"
 "  -p, --noproxy              don't connect via proxy\n"
 "      --help                 display this help and exit\n"
 msgstr ""
@@ -767,28 +762,27 @@ msgid ""
 "This is yet another FTP client.  Usage:\n"
 "  %s [options] [[ftp://][user[:password]@]hostname[:port][/directory] ...]\n"
 "Options:\n"
-"    -a, --anon        (*) anonymous login\n"
-"    -d, --debug           print all commands sent to/from server\n"
-"    -D, --dump-rc         prints the default config file to stdout\n"
-"    -k, --nokrb       (*) do not attempt a Kerberos login\n"
-"    -K, --krb         (*) try a Kerberos login (overrides nokrb in "
-"bookmark)\n"
-"    -n, --norc            don't parse config file\n"
-"    -N, --nonetrc         don't parse ~/.netrc\n"
-"    -p, --noproxy     (*) don't connect via proxy\n"
-"    -q, --quiet           don't print the yafc welcome message\n"
-"    -r, --rcfile=FILE     use other config file instead of ~/.yafc/yafcrc\n"
-"    -t, --trace[=FILE]    use a trace file (mainly for debugging)\n"
-"                 if FILE specified, use it instead of "
+"  -a, --anon        (*) anonymous login\n"
+"  -d, --debug           print all commands sent to/from server\n"
+"  -D, --dump-rc         prints the default config file to stdout\n"
+"  -m, --mechanism=MECH\n"
+"                    (*) try MECH as security mechanism(s)\n"
+"  -n, --norc            don't parse config file\n"
+"  -N, --nonetrc         don't parse ~/.netrc\n"
+"  -p, --noproxy     (*) don't connect via proxy\n"
+"  -q, --quiet           don't print the yafc welcome message\n"
+"  -r, --rcfile=FILE     use other config file instead of ~/.yafc/yafcrc\n"
+"  -t, --trace[=FILE]    use a trace file (mainly for debugging)\n"
+"               if FILE specified, use it instead of "
 "~/.yafc/trace/trace.<pid>\n"
-"    -u, --noauto      (*) disable autologin\n"
-"    -U, --noalias     (*) disable bookmark alias lookup and abbreviation\n"
-"    -v, --verbose         print all replies from server\n"
-"    -w, --wait=TIME       use a different wait time for reconnecting\n"
-"    -W, --workdir=DIR     use a different working directory (instead of "
+"  -u, --noauto      (*) disable autologin\n"
+"  -U, --noalias     (*) disable bookmark alias lookup and abbreviation\n"
+"  -v, --verbose         print all replies from server\n"
+"  -w, --wait=TIME       use a different wait time for reconnecting\n"
+"  -W, --workdir=DIR     use a different working directory (instead of "
 "~/.yafc)\n"
-"    -V, --version         print version information and quit\n"
-"    -h, --help            print this help and quit\n"
+"  -V, --version         print version information and quit\n"
+"  -h, --help            print this help and quit\n"
 "\n"
 "(*) only applies for login to host specified on the command line\n"
 "\n"
@@ -797,36 +791,36 @@ msgid ""
 msgstr ""
 
 #. printf(_("This seems to be the first time you run Yafc...\n"));
-#: src/main.c:211
+#: src/main.c:224
 #, c-format
 msgid "creating working directory %s: "
 msgstr ""
 
-#: src/main.c:218 src/main.c:228 src/main.c:239 src/main.c:257
+#: src/main.c:231 src/main.c:241 src/main.c:252 src/main.c:270
 msgid "done\n"
 msgstr ""
 
-#: src/main.c:221 src/main.c:232
+#: src/main.c:234 src/main.c:245
 #, c-format
 msgid "creating directory %s: "
 msgstr ""
 
-#: src/main.c:244
+#: src/main.c:257
 msgid "creating default config file /yafcrc: "
 msgstr ""
 
-#: src/main.c:424
+#: src/main.c:417
 msgid ""
 "No proxy host defined!\n"
 "\n"
 msgstr ""
 
-#: src/main.c:434
+#: src/main.c:427
 #, c-format
 msgid "Invalid value for --wait: %d\n"
 msgstr ""
 
-#: src/main.c:446
+#: src/main.c:439
 #, c-format
 msgid "Couldn't open tracefile '%s': %s\n"
 msgstr ""
@@ -874,129 +868,45 @@ msgid "failed to send %s: %s\n"
 msgstr ""
 
 #. can't overwrite a directory
-#: src/ftp/ftpsend.c:890 src/ftp/ftpsend.c:954 src/put.c:198
+#: src/ftp/ftpsend.c:890 src/ftp/ftpsend.c:954 src/put.c:200
 #, c-format
 msgid "%s: is a directory\n"
 msgstr ""
 
-#: src/put.c:208
+#: src/put.c:210
 #, c-format
 msgid "Remote file '%s' exists, skipping...\n"
 msgstr ""
 
-#: src/put.c:216
+#: src/put.c:218
 #, c-format
 msgid "Remote file '%s' is newer than local, skipping...\n"
 msgstr ""
 
-#: src/put.c:226
+#: src/put.c:228
 #, c-format
 msgid "File '%s' exists, overwrite?"
 msgstr ""
 
-#: src/put.c:268
+#: src/put.c:270
 #, c-format
 msgid "Delete local file '%s'?"
 msgstr ""
 
-#: src/put.c:326
+#: src/put.c:328
 #, c-format
 msgid "Put '%s'?"
 msgstr ""
 
-#: src/put.c:555
+#: src/put.c:557
 msgid "Remote doesn't support the STOU (store unique) command\n"
 msgstr ""
 
-#: src/rc.c:39
-#, c-format
-msgid "Error(s) while parsing '%s':\n"
-msgstr ""
-
-#: src/rc.c:99
-msgid "unmatched quote\n"
-msgstr ""
-
-#: src/rc.c:106
-msgid "string too long or unmatched quote, truncated\n"
-msgstr ""
-
-#: src/rc.c:121
-msgid "Unexpected end of file encountered\n"
-msgstr ""
-
-#: src/rc.c:128 src/set.c:167
-#, c-format
-msgid "Expected boolean value, but got '%s'\n"
-msgstr ""
-
-#: src/rc.c:153
-msgid "'machine' directive needs a hostname\n"
-msgstr ""
-
-#: src/rc.c:169
-msgid "'alias' directive not useful with domains\n"
-msgstr ""
-
-#: src/rc.c:181
+#: src/rc.c:38
 #, c-format
 msgid ""
 "WARNING! Config file contains passwords but is readable by others (mode "
 "%03o)\n"
-msgstr ""
-
-#: src/rc.c:230
-#, c-format
-msgid "Multiple definitions for '%s', skipping...\n"
-msgstr ""
-
-#: src/rc.c:243
-msgid "Multiple definitions for 'local', skipping...\n"
-msgstr ""
-
-#: src/rc.c:255
-msgid "Multiple definitions for 'default', skipping...\n"
-msgstr ""
-
-#: src/rc.c:300
-msgid ""
-"As a computer, I find your faith in technology amusing...\n"
-"Too many errors\n"
-msgstr ""
-
-#: src/rc.c:349 src/rc.c:361
-#, c-format
-msgid "Expected boolean value or 'ask', but got '%s'\n"
-msgstr ""
-
-#: src/rc.c:372
-#, c-format
-msgid "Unknown default_type parameter '%s'... (use 'ascii' or 'binary')\n"
-msgstr ""
-
-#: src/rc.c:381
-#, c-format
-msgid "Invalid value for long_command_time: %d\n"
-msgstr ""
-
-#: src/rc.c:388
-#, c-format
-msgid "Invalid value for connect_wait_time: %d\n"
-msgstr ""
-
-#: src/rc.c:462
-#, c-format
-msgid "Invalid value for history_max: %d\n"
-msgstr ""
-
-#: src/rc.c:495
-#, c-format
-msgid "Invalid value for proxy_type: %d\n"
-msgstr ""
-
-#: src/rc.c:513
-#, c-format
-msgid "Config parse error: '%s'\n"
 msgstr ""
 
 #: src/redir.c:41
@@ -1094,6 +1004,11 @@ msgstr ""
 #: src/set.c:158
 #, c-format
 msgid "Ambiguous variable '%s'\n"
+msgstr ""
+
+#: src/set.c:167
+#, c-format
+msgid "Expected boolean value, but got '%s'\n"
 msgstr ""
 
 #: src/tag.c:36
@@ -1464,55 +1379,55 @@ msgstr ""
 msgid "Bad checksum returned from server\n"
 msgstr ""
 
-#: lib/security.c:72
+#: lib/security.c:78
 msgid "unknown"
 msgstr ""
 
-#: lib/security.c:368
+#: lib/security.c:373
 msgid "Failed to encode command.\n"
 msgstr ""
 
-#: lib/security.c:372
+#: lib/security.c:377
 msgid "Out of memory base64-encoding.\n"
 msgstr ""
 
-#: lib/security.c:417
+#: lib/security.c:421
 #, c-format
 msgid "Using %s for authentication.\n"
 msgstr ""
 
-#: lib/security.c:418
+#: lib/security.c:422
 #, c-format
 msgid "Using %s command channel.\n"
 msgstr ""
 
-#: lib/security.c:420
+#: lib/security.c:424
 #, c-format
 msgid "Using %s data channel.\n"
 msgstr ""
 
-#: lib/security.c:422
+#: lib/security.c:426
 #, c-format
 msgid "Protection buffer size: %lu.\n"
 msgstr ""
 
-#: lib/security.c:425
+#: lib/security.c:429
 msgid "Not using any security mechanism.\n"
 msgstr ""
 
-#: lib/security.c:441
+#: lib/security.c:444
 msgid "No security data exchange has taken place.\n"
 msgstr ""
 
-#: lib/security.c:448
+#: lib/security.c:451
 msgid "Failed to set protection buffer size.\n"
 msgstr ""
 
-#: lib/security.c:461
+#: lib/security.c:465
 msgid "Failed to set protection level.\n"
 msgstr ""
 
-#: lib/security.c:497
+#: lib/security.c:496
 msgid "No security data exchange has taken place\n"
 msgstr ""
 
@@ -1526,37 +1441,37 @@ msgstr ""
 msgid "%s does not implement %s protection\n"
 msgstr ""
 
-#: lib/security.c:525
+#: lib/security.c:526
 #, c-format
 msgid "Syntax error, try %s --help for more information\n"
 msgstr ""
 
-#: lib/security.c:568
+#: lib/security.c:569
 #, c-format
 msgid "realloc %u failed"
 msgstr ""
 
-#: lib/security.c:574
+#: lib/security.c:575
 #, c-format
 msgid "Skipping %s...\n"
 msgstr ""
 
-#: lib/security.c:577
+#: lib/security.c:578
 #, c-format
 msgid "Trying %s...\n"
 msgstr ""
 
-#: lib/security.c:581
+#: lib/security.c:582
 #, c-format
 msgid "%s is not supported by the server.\n"
 msgstr ""
 
-#: lib/security.c:583
+#: lib/security.c:584
 #, c-format
 msgid "%s rejected as security mechanism.\n"
 msgstr ""
 
-#: lib/security.c:585
+#: lib/security.c:586
 msgid "The server doesn't support the FTP security extensions.\n"
 msgstr ""
 

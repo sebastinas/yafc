@@ -759,7 +759,7 @@ int ftp_login(const char *guessed_username, const char *anonpass)
 						ftp->url->protlevel);
 		}
 
-		if(sec_login(ftp->host->hostname)) {
+		if(sec_login(ftp->host->hostname), url->mech) {
 			ftp_err(_("*** Using plaintext username and password ***\n"));
 			if(ftp->code == ctError
 			   && ftp->fullcode != 504 && ftp->fullcode != 534)

@@ -28,6 +28,6 @@
 #define OP_NOALIAS 16
 #define OP_NOPROXY 32
 
-void yafc_open(const char *host, unsigned int opt);
+void yafc_open(const char *host, unsigned int opt, const char *mech);
 
 #endif
