@@ -69,8 +69,9 @@ void cmd_help(int argc, char **argv)
 		func = rl_named_function("possible-completions");
 		if(func)
 			func();
-		else {
+		else
 #endif
+		{
 			for(i=0;cmds[i].cmd;i++)
 				printf("%s\n", cmds[i].cmd);
 			{
