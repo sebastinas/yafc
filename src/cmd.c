@@ -1,4 +1,4 @@
-/* $Id: cmd.c,v 1.9 2001/05/12 18:44:37 mhe Exp $
+/* $Id: cmd.c,v 1.10 2002/05/09 12:30:12 mhe Exp $
  *
  * cmd.c -- read and execute commands, this is the main loop
  *
@@ -133,7 +133,7 @@ void command_loop(void)
 #ifdef HAVE_GETTIMEOFDAY
 		gettimeofday(&end, 0);
 		end.tv_sec -= beg.tv_sec;
-		if(gvBeepLongCommand && end.tv_sec > gvLongCommandTime)
+		if(gvBeepLongCommand && end.tv_sec >= gvLongCommandTime)
 			fputc('\007', stderr);
 #endif
     }

@@ -1,4 +1,4 @@
-/* $Id: rc.c,v 1.15 2002/02/23 13:16:30 mhe Exp $
+/* $Id: rc.c,v 1.16 2002/05/09 12:30:12 mhe Exp $
  *
  * rc.c -- config file parser + autologin lookup
  *
@@ -350,7 +350,7 @@ int parse_rc(const char *file, bool warn)
 		} else if(strcasecmp(e, "long_command_time") == 0) {
 			NEXTSTR;
 			gvLongCommandTime = atoi(e);
-			if(gvLongCommandTime <= 0) {
+			if(gvLongCommandTime < 0) {
 				errp(_("Invalid value for long_command_time: %d\n"),
 					 gvLongCommandTime);
 				gvLongCommandTime = 30;
