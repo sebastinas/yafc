@@ -33,6 +33,7 @@
 #include "bufaux.h"
 /*#include "pathnames.h"*/
 #include "ssh_ftp.h"
+#include "rfile.h"
 
 int version;
 
@@ -245,6 +246,49 @@ unsigned long ssh_filesize(const char *path)
 	return 0;
 }
 
+char *attrib2string(Attrib *a)
+{
+	char *attr = (char *)xmalloc(11);
+
+	strcpy(attr, "----------");
+
+	if(S_ISDIR(a->perm))
+		attr[0] = 'd';
+	else if(S_ISLNK(a->perm))
+		attr[0] = 'l';
+	else if(S_ISCHR(a->perm))
+		attr[0] = 'c';
+	else if(S_ISBLK(a->perm))
+		attr[0] = 'b';
+	else if(S_ISFIFO(a->perm))
+		attr[0] = 'p';
+	else if(S_ISSOCK(a->perm))
+		attr[0] = 's';
+
+	if(test(a->perm, S_IRUSR)) attr[1] = 'r';
+	if(test(a->perm, S_IWUSR)) attr[2] = 'w';
+	if(test(a->perm, S_IXUSR)) {
+		if(test(a->perm, S_ISUID)) attr[3] = 's';
+		else attr[3] = 'x';
+	} else if(test(a->perm, S_ISUID)) attr[3] = 'S';
+
+	if(test(a->perm, S_IRGRP)) attr[4] = 'r';
+	if(test(a->perm, S_IWGRP)) attr[5] = 'w';
+	if(test(a->perm, S_IXGRP)) {
+		if(test(a->perm, S_ISGID)) attr[6] = 's';
+		else attr[6] = 'x';
+	} else if(test(a->perm, S_ISGID)) attr[6] = 'S';
+	
+	if(test(a->perm, S_IROTH)) attr[7] = 'r';
+	if(test(a->perm, S_IWOTH)) attr[8] = 'w';
+	if(test(a->perm, S_IXOTH)) {
+		if(test(a->perm, S_ISVTX)) attr[9] = 't';
+		else attr[9] = 'x';
+	} else if(test(a->perm, S_ISVTX)) attr[9] = 'T';
+
+	return attr;
+}
+
 rdirectory *ssh_read_directory(const char *path)
 {
 	rdirectory *rdir;
@@ -260,33 +304,59 @@ rdirectory *ssh_read_directory(const char *path)
 
 	rdir = rdir_create();
 
+	ftp_trace("*** start parsing directory listing ***\n");
+
 	for(i = 0; dir[i]; i++) {
 		rfile *rf;
 		char *e, *cf = dir[i]->longname;
 
+		ftp_trace("%s\n", dir[i]->longname);
+
 		rf = rfile_create();
 
+		rf->perm = attrib2string(&dir[i]->a);
+
 		e = strqsep(&cf, ' ');
-		rf->perm = xstrdup(e);
-		e = strqsep(&cf, ' ');
-		rf->nhl = atoi(e);
+		if(ftp->ssh_version > 2) {
+			e = strqsep(&cf, ' ');
+			rf->nhl = atoi(e);
+		} else
+			rf->nhl = 0;
+#if 0
 		e = strqsep(&cf, ' ');
 		rf->owner = xstrdup(e);
 		e = strqsep(&cf, ' ');
 		rf->group = xstrdup(e);
+#else
+		asprintf(&rf->owner, "%d", dir[i]->a.uid);
+		asprintf(&rf->group, "%d", dir[i]->a.gid);
+#endif
 
 		asprintf(&rf->path, "%s/%s", p, dir[i]->filename);
-		rf->date = time_to_string(dir[i]->a.mtime);
 		rf->mtime = dir[i]->a.mtime;
+		if(rf->mtime == 0) {
+			char *m, *d, *y;
+			while(e && month_number(e) == -1)
+				e = strqsep(&cf, ' ');
+			if(e) {
+				m = e;
+				d = strqsep(&cf, ' ');
+				y = strqsep(&cf, ' ');
+				ftp_trace("parsing time: m:%s d:%s y:%s\n", m, d, y);
+				rfile_parse_time(rf, m, d, y);
+			}
+		}
+		rf->date = time_to_string(rf->mtime);
 		rf->size = dir[i]->a.size;
 		rfile_parse_colors(rf);
 
 		rf->link = 0;
-		if(rislink(rf))
+		if(rislink(rf) && ftp->ssh_version > 2)
 			rf->link = ssh_readlink(rf->path);
 
 		list_additem(rdir->files, (void *)rf);
 	}
+	ftp_trace("*** end parsing directory listing ***\n");
 
 	ssh_free_dirents(dir);
 
