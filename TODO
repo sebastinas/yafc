@@ -1,10 +1,10 @@
 TODO list for Yafc
 ------------------
 
+! USE_PIPES
+* MLSD and MLST support (Frank Denis)
 * sftp_server_program is server dependent (place in bookmarks?)
-* SSH2_FXP_READLINK returns wrong length of filename
-* Ctrl-C with SSH breaks ssh program *and* yafc
-* ssh cmdline option: -o option
+* Ctrl-C with SSH breaks ssh program *and* yafc, anyone?
 ? config option for default answers to questions (get/put/fxp/more?)
 * fix --chgrp / --chmod for directories (get)
 * ltag should ignore multiples just as tag does
@@ -17,6 +17,5 @@ TODO list for Yafc
 ? LANGuage support (RFC2640)
 * problems to get directories with double quotes (") in the name
 * completion doesn't work correctly with rels (need to be expanded?)
-? timeout on cache entry lifetime (eg, re-read after 3 min?)
 ! improve documentation (help wanted)
 * no bugs ;)

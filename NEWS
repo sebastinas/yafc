@@ -3,6 +3,10 @@ New in 0.7.1
 
 * removed bignum functions from src/ftp/bufaux.[ch] (depended on openssl)
 * added checks for data types
+* added per-url sftp setting (specifies path to remote sftp-server program)
+* new option to open: --sftp=PATH to remote sftp-server program
+* added check for pipe/socketpair in configure.in
+* fixed sorting bug in 'ls' introduced in version 0.7
 
 
 New in 0.7
