@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.28 2001/11/03 12:05:09 mhe Exp $
+/* $Id: ftp.c,v 1.29 2002/02/15 10:53:32 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -1631,10 +1631,10 @@ time_t gmt_mktime(const struct tm *ts)
 	const int SECS_HOUR = SECS_MIN * 60;
 	const int SECS_DAY = SECS_HOUR * 24;
 	const int SECS_YEAR = SECS_DAY * 365;
-	const int daysPerMonth[] = { 31, 28, 31, 30, 31, 30, 31, 30, 31,
-		30, 31, 30 };
-	const int leapDaysPerMonth[] = { 31, 29, 31, 30, 31, 30, 31, 30,
-		31, 30, 31, 30 };
+	const int daysPerMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30,
+		31, 30, 31 };
+	const int leapDaysPerMonth[] = { 31, 29, 31, 30, 31,
+		30, 31, 31, 30, 31, 30, 31 }; 
 	const int *maxDaysInMonth = daysPerMonth;
 
 	time_t gmt = -1;
