@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.15 2001/05/13 14:36:26 mhe Exp $
+/* $Id: main.c,v 1.16 2001/05/21 17:45:04 mhe Exp $
  *
  * main.c -- parses command line options and starts Yafc
  *
@@ -38,7 +38,8 @@ void print_syntax_and_exit(char *argv0)
 {
 	printf(COPYLINE "\n");
 	printf(_("This is yet another FTP client.  Usage:\n"
-			 "  %s [options] [[ftp://][user[:password]@]hostname[:port][/directory] ...]\n"
+			 " %s [options] [[proto://][user[:password]@]hostname[:port][/directory] ...]\n"
+			 " proto can be either 'ftp' or 'ssh'\n"
 			 "Options:\n"
 			 "  -a, --anon        (*) anonymous login\n"
 			 "  -d, --debug           print all commands sent to/from server\n"
