@@ -1,4 +1,4 @@
-/* $Id: login.c,v 1.13 2001/05/12 18:44:37 mhe Exp $
+/* $Id: login.c,v 1.14 2001/05/21 19:52:35 mhe Exp $
  *
  * login.c -- connect and login
  *
@@ -88,7 +88,8 @@ void cmd_user(int argc, char **argv)
 	xfree(p);
 }
 
-void yafc_open(const char *host, unsigned int opt, const char *mech)
+void yafc_open(const char *host, unsigned int opt,
+			   const char *mech, const char *sftp_server)
 {
 	url_t *url;
 	url_t *xurl;
@@ -150,7 +151,7 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 	}
 #endif
 
-	if(test(opt, OP_ANON)) {
+	if(test(opt, OP_ANON) && strcmp(url->protocol, "ssh") != 0) {
 		url_setusername(url, "anonymous");
 		if(!url->password)
 			url_setpassword(url, gvAnonPasswd);
@@ -160,6 +161,9 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 
 	if(mech)
 		url_setmech(url, mech);
+
+	if(sftp_server)
+		url_setsftp(url, sftp_server);
 
 	if(xurl) {
 		url_sethostname(url, xurl->hostname);
@@ -180,10 +184,17 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 				url_setport(url, xurl->port);
 			if(!url->mech)
 				url->mech = list_clone(xurl->mech, (listclonefunc)xstrdup);
+			if(!url->sftp_server)
+				url_setsftp(url, xurl->sftp_server);
 			if(xurl->pasvmode != -1 && xurl->pasvmode != gvPasvmode)
 				url_setpassive(url, xurl->pasvmode);
 			url->noproxy = xurl->noproxy;
 		}
+	}
+
+	if(url->sftp_server && url->sftp_server[0] == 0) {
+		xfree(url->sftp_server);
+		url->sftp_server = 0;
 	}
 
 	if(test(opt, OP_NOPROXY))
@@ -227,8 +238,9 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 static void print_open_syntax(void)
 {
 	printf(_("Connect and login to remote host.  Usage:\n"
-			 "  open [options] [ftp://][user[:password]@]hostname[:port]"
+			 "  open [options] [proto://][user[:password]@]hostname[:port]"
 			 "[/directory] ...\n"
+			 " proto can be either 'ftp' or 'ssh'\n"
 			 "Options:\n"
 			 "  -a, --anon                 try to login anonymously\n"
 			 "  -u, --noauto               disable autologin\n"
@@ -237,6 +249,7 @@ static void print_open_syntax(void)
 			 "  -m, --mechanism=MECH       try MECH as security mechanism(s)"
 			 " when logging in\n"
 			 "  -p, --noproxy              don't connect via proxy\n"
+			 "  -s, --sftp=PATH            specify path to remote sftp_server\n"
 			 "      --help                 display this help and exit\n"));
 }
 
@@ -250,47 +263,52 @@ void cmd_open(int argc, char **argv)
 		{"help", no_argument, 0, 'h'},
 		{"mechanism", required_argument, 0, 'm'},
 		{"noproxy", no_argument, 0, 'p'},
+		{"sftp", required_argument, 0, 's'},
 		{0, 0, 0, 0},
 	};
 	unsigned int opt = 0;
 	char *mech = 0;
 	int i;
+	char *sftp_server = 0;
 
 	if(!gvAutologin)
 		opt |= OP_NOAUTO;
 
 	optind = 0; /* force getopt() to re-initialize */
-	while((c = getopt_long(argc, argv, "auUkKpm:", longopts, 0)) != EOF) {
+	while((c = getopt_long(argc, argv, "auUkKpm:s:", longopts, 0)) != EOF) {
 		switch(c) {
-		  case 'a':
-			opt |= OP_ANON;
-			break;
-		  case 'u':
-			/* disable autologin but not alias lookup */
-			opt |= OP_NOAUTO;
-			break;
-		  case 'U':
-			/* disable alias lookup */
-			opt |= OP_NOALIAS;
-			break;
-		  case 'm': /* --mechanism=MECH */
-			  mech = xstrdup(optarg);
-			break;
-		  case 'p':
-			opt |= OP_NOPROXY;
-			break;
-		  case 'h':
-			print_open_syntax();
-			return;
-		  case '?':
-			return;
+			case 'a':
+				opt |= OP_ANON;
+				break;
+			case 'u':
+				/* disable autologin but not alias lookup */
+				opt |= OP_NOAUTO;
+				break;
+			case 'U':
+				/* disable alias lookup */
+				opt |= OP_NOALIAS;
+				break;
+			case 'm': /* --mechanism=MECH */
+				mech = xstrdup(optarg);
+				break;
+			case 'p':
+				opt |= OP_NOPROXY;
+				break;
+			case 's':
+				sftp_server = optarg;
+				break;
+			case 'h':
+				print_open_syntax();
+				return;
+			case '?':
+				return;
 		}
 	}
 
 	minargs(optind);
 
 	for(i=optind; i<argc; i++)
-		yafc_open(argv[i], opt, mech);
+		yafc_open(argv[i], opt, mech, sftp_server);
 }
 
 void cmd_reopen(int argc, char **argv)

@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.16 2001/05/21 17:45:04 mhe Exp $
+/* $Id: main.c,v 1.17 2001/05/21 19:51:48 mhe Exp $
  *
  * main.c -- parses command line options and starts Yafc
  *
@@ -426,7 +426,7 @@ int main(int argc, char **argv, char **envp)
 			open_opt |= OP_NOAUTO;
 
 		for(i=optind; i<argc; i++) {
-			yafc_open(argv[i], open_opt, mech);
+			yafc_open(argv[i], open_opt, mech, 0);
 #ifdef HAVE_LIBREADLINE /* add appropriate 'open' command to history */
 			asprintf(&s, "open %s%s",
 					 argv[i], test(open_opt, OP_ANON) ? " --anon" : "");

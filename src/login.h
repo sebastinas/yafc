@@ -1,4 +1,4 @@
-/* $Id: login.h,v 1.4 2001/05/12 18:44:37 mhe Exp $
+/* $Id: login.h,v 1.5 2001/05/21 19:52:48 mhe Exp $
  *
  * login.h -- connect and login
  *
@@ -21,6 +21,7 @@
 #define OP_NOALIAS 16
 #define OP_NOPROXY 32
 
-void yafc_open(const char *host, unsigned int opt, const char *mech);
+void yafc_open(const char *host, unsigned int opt,
+			   const char *mech, const char *sftp_server);
 
 #endif
