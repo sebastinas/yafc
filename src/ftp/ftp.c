@@ -741,6 +741,19 @@ static const char *secext_name(const char *mech)
 	return 0;
 }
 
+static bool mech_unsupported(const char *mech)
+{
+#ifndef KRB4
+	if(strcasecmp(mech, "KERBEROS_V4") == 0)
+		return true;
+#endif
+#ifndef KRB5
+	if(strcasecmp(mech, "GSSAPI") == 0)
+		return true;
+#endif
+	return false;
+}
+
 int ftp_login(const char *guessed_username, const char *anonpass)
 {
 	int ptype, r;
@@ -785,35 +798,43 @@ int ftp_login(const char *guessed_username, const char *anonpass)
 						ftp->url->protlevel);
 		}
 
+		/* get list of mechanisms to try
+		 */
 		mechlist = ftp->url->mech ? ftp->url->mech : gvDefaultMechanism;
 		if(mechlist) {
 			listitem *li = mechlist->first;
+			int ret = 0;
 			for(; li; li=li->next) {
 				const char *mech_name;
-				int ret;
 
 				mech_name = secext_name((char *)li->data);
 				if(mech_name == 0) {
 					ftp_err(_("unknown mechanism '%s'\n"), (char *)li->data);
 					continue;
 				}
+				if(mech_unsupported(mech_name)) {
+					ftp_err(_("Yafc was not compiled with support for %s\n"),
+							mech_name);
+					continue;
+				}
 				ret = sec_login(ftp->host->hostname, mech_name);
-
 				if(ret == -1) {
-					ftp_err(_("*** Using plaintext username and password ***\n"));
 					if(ftp->code == ctError
 					   && ftp->fullcode != 504 && ftp->fullcode != 534)
 						url_setmech(ftp->url, "none");
-					break;
-				} else if(ret == 0) {
-					ftp_err(_("Authentication successful.\n"));
-					break;
 				}
+				if(ret != 1)
+					break;
 			}
 		}
+		if(ftp->sec_complete)
+			ftp_err(_("Authentication successful.\n"));
+		else
+			ftp_err(_("*** Using plaintext username"
+					  " and password ***\n"));
 	}
 #endif
-
+	
 	if(url_isanon(ftp->url))
 		fprintf(stderr, _("logging in anonymously...\n"));
 	ftp_set_tmp_verbosity(ftp->url->password ? vbError : vbCommand);

@@ -43,7 +43,7 @@
 #include "base64.h"
 #include "commands.h"
 
-/*RCSID("$Id: security.c,v 1.6 2000/10/20 07:38:56 mhe Exp $");*/
+/*RCSID("$Id: security.c,v 1.7 2000/10/20 09:35:29 mhe Exp $");*/
 
 /*static enum protection_level command_prot;*/
 /*static enum protection_level data_prot;*/
@@ -512,9 +512,6 @@ static struct sec_client_mech **find_mech(const char *name)
 {
 	struct sec_client_mech **m;
 
-	if(!name || strcasecmp(name, "none") == 0)
-		return 0;
-
 	for(m = mechs; *m && (*m)->name; m++) {
 		if(strcmp(name, (*m)->name) == 0)
 			return m;
@@ -536,6 +533,9 @@ int sec_login(char *host, const char *mech_to_try)
 	/* shut up all messages this will produce (they
 	 are usually not very user friendly) */
 	ftp_set_tmp_verbosity(vbError);
+
+	if(!mech_to_try || strcasecmp(mech_to_try, "none") == 0)
+		return 0;
 
 	m = find_mech(mech_to_try);
 	if(!m)
