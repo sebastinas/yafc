@@ -1,4 +1,4 @@
-/* $Id: rglob.c,v 1.4 2002/11/05 22:51:58 mhe Exp $
+/* $Id: rglob.c,v 1.5 2002/12/02 12:24:39 mhe Exp $
  *
  * rglob.c -- remote glob functions
  *
@@ -32,7 +32,7 @@ bool rglob_exclude_dotdirs(rfile *f)
 	return risdotdir(f);
 }
 
-bool contains_wildcards(char *str)
+static bool contains_wildcards(char *str)
 {
 	return (strqchr(str, '*') != 0 || strqchr(str, '?') != 0
 			|| strqchr(str, '[') != 0 || strqchr(str, ']') != 0);
@@ -57,6 +57,7 @@ int rglob_glob(list *gl, const char *mask, bool cpifnomatch,
 	listitem *lip;
 	rfile *fi = 0, *nfi;
 	char *d;
+	int found = 0;
 	int before = list_numitem(gl);
 
 	path = tilde_expand_home(mask, ftp->homedir);
@@ -65,7 +66,8 @@ int rglob_glob(list *gl, const char *mask, bool cpifnomatch,
 		dep = path;
 	else dep++;
 	mp = xstrdup(dep);
-	unquote(mp);
+	if(mp)
+		unquote(mp);
 	/* note: mp might be NULL here, treat it like mp == "*" */
 
 	/* read the directory */
@@ -82,39 +84,42 @@ int rglob_glob(list *gl, const char *mask, bool cpifnomatch,
 			fi = (rfile *)lip->data;
 			lip = lip->next;
 
-			/* call the exclude function, if any, and skip file
-			   if the function returns true
-			 */
-			if(exclude_func && exclude_func(fi))
-				continue;
-
 			/* check if the mask includes this file */
 			if(mp == 0 || fnmatch(mp, base_name_ptr(fi->path), 0)
 			   != FNM_NOMATCH)
 			{
 				bool ignore_item;
 
-				ignore_item =
-					(ignore_multiples &&
-					 (list_search(gl, (listsearchfunc)rfile_search_path,
-								  fi->path) != 0));
+				found++;
+
+				/* call the exclude function, if any, and skip file
+					if the function returns true
+				*/
+				if(exclude_func && exclude_func(fi))
+					ignore_item = true;
+				else
+					ignore_item =
+						(ignore_multiples &&
+						 (list_search(gl, (listsearchfunc)rfile_search_path,
+										  fi->path) != 0));
 
 				if(!ignore_item) {
 					nfi = rfile_clone(fi);
 					list_additem(gl, (void *)nfi);
-				}
+				} else
+					ftp_trace("ignoring file '%s'\n", fi->path);
 			}
 		}
 	}
 
-	xfree(mp);
-
-	if(list_numitem(gl) == before) {
+	if(found == 0) {
 		char *p;
 		bool ignore_item;
 
-		if(!cpifnomatch || mp == 0 || contains_wildcards(mp))
+		if(!cpifnomatch || mp == 0 || *mp == 0 || contains_wildcards(mp)) {
+			xfree(mp);
 			return -1;
+		}
 		p = ftp_path_absolute(path);
 		unquote(p);
 
@@ -129,11 +134,10 @@ int rglob_glob(list *gl, const char *mask, bool cpifnomatch,
 			rfile_fake(nfi, p);
 			list_additem(gl, (void *)nfi);
 		}
-/*		else
-		fprintf(stderr, _("2: ignored multiple of '%s'\n"), p);*/
 		xfree(p);
 	}
 
+	xfree(mp);
 	xfree(path);
 	return 0;
 }
