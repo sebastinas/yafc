@@ -1,4 +1,4 @@
-/* $Id: gvars.c,v 1.17 2002/11/04 14:02:39 mhe Exp $
+/* $Id: gvars.c,v 1.18 2002/11/06 10:31:10 mhe Exp $
  *
  * gvars.c -- global variables
  *
@@ -129,6 +129,7 @@ bool gvPasvmode = true;
 bool gvReadNetrc = false;
 
 int gvAutoBookmark = 1; /* 0 = no, 1 = yes, 2 = ask */
+int gvAutoBookmarkUpdate = 1; /* 0 = no, 1 = yes, 2 = ask */
 bool gvAutoBookmarkSilent = false;
 bool gvAutoBookmarkSavePasswd = false;
 

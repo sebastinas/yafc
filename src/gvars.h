@@ -1,4 +1,4 @@
-/* $Id: gvars.h,v 1.12 2002/11/04 14:02:39 mhe Exp $
+/* $Id: gvars.h,v 1.13 2002/11/06 10:31:10 mhe Exp $
  *
  * gvars.h -- global variables
  *
@@ -124,6 +124,7 @@ extern list *gvAsciiMasks;
 extern bool gvCompletionSkipDotdirs;
 
 extern int gvAutoBookmark;
+extern int gvAutoBookmarkUpdate;
 extern bool gvAutoBookmarkSilent;
 extern bool gvAutoBookmarkSavePasswd;
 

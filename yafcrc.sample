@@ -47,8 +47,9 @@ waiting_dots on
 # path to the SSH program
 #ssh_program "/usr/bin/ssh"
 
-# path to the remote sftp-server program
-# leave commented to use sftp subsystem (requires ssh > 2.3.0)
+# Path to the remote sftp-server program (global option)
+# Leave commented to use sftp subsystem (requires ssh > 2.3.0)
+# See also the per-bookmark 'sftp' keyword
 #sftp_server_program "/usr/libexec/sftp-server"
 
 # set to true to skip query of remote system on connect
@@ -65,8 +66,11 @@ remote_completion on
 # be reread, 0 == never
 cache_timeout 0
 
-# auto-create a bookmark when connection closed?
+# auto-create a bookmark when connection is closed?
 auto_bookmark yes # no/yes/ask
+
+# auto-update an existing bookmark when connection is closed?
+auto_bookmark_update yes # no/yes/ask
 
 # by default, if auto_bookmark is true, non-anonymous passwords are not saved
 # anonymous passwords are always saved though

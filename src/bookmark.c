@@ -1,4 +1,4 @@
-/* $Id: bookmark.c,v 1.17 2002/05/09 13:50:44 mhe Exp $
+/* $Id: bookmark.c,v 1.18 2002/11/06 10:31:10 mhe Exp $
  *
  * bookmark.c -- create bookmark(s)
  *
@@ -312,7 +312,7 @@ void auto_create_bookmark(void)
 	bool auto_create, had_passwd = false;
 	bool update = false;
 
-	if(gvAutoBookmark == 0)
+	if(gvAutoBookmark == 0 && gvAutoBookmarkUpdate == 0)
 		return;
 
 	if(!ftp_loggedin() || gvSighupReceived)
@@ -327,12 +327,19 @@ void auto_create_bookmark(void)
 			return;
 
 		/* bookmark already exist, update it */
+		if(gvAutoBookmarkUpdate == 2) {
+			a = ask(ASKYES|ASKNO, ASKNO,
+					_("Do you want to update the bookmark for this site?"));
+			if(a == ASKNO)
+				return;
+		}
+
 		update = true;
 		auto_create = true;
 		had_passwd = (((url_t *)li->data)->password != 0);
 	}
 
-	if(!auto_create) {
+	if(gvAutoBookmark == 2 && !auto_create) {
 		a = ask(ASKYES|ASKNO, ASKNO,
 				_("Do you want to create a bookmark for this site?"));
 		if(a == ASKNO)
@@ -544,13 +551,28 @@ void cmd_bookmark(int argc, char **argv)
 		bool toggle_done = false;
 
 		if(argc == optind) {
+			listitem *li;
+
 			need_connected();
 			need_loggedin();
 
+			li = list_search(gvBookmarks,
+							 (listsearchfunc)urlcmp_name,
+							 ftp->url->alias);
+			if(li) {
+				url_t *u = (url_t *)li->data;
+				u->noupdate = !u->noupdate;
+				printf(_("%s: noupdate: %s\n"),
+					   u->alias ? u->alias : u->hostname,
+					   u->noupdate ? _("yes") : _("no"));
+				toggle_done = true;
+			}
+
 			ftp->url->noupdate = !ftp->url->noupdate;
-			printf(_("%s: noupdate: %s\n"),
-				   ftp->url->alias ? ftp->url->alias : ftp->url->hostname,
-				   ftp->url->noupdate ? _("yes") : _("no"));
+			if(!toggle_done)
+				printf(_("%s: noupdate: %s\n"),
+					   ftp->url->alias ? ftp->url->alias : ftp->url->hostname,
+					   ftp->url->noupdate ? _("yes") : _("no"));
 		}
 
 		for(i = optind; i < argc; i++) {

@@ -1,4 +1,4 @@
-/* $Id: rc.c,v 1.17 2002/11/04 14:02:39 mhe Exp $
+/* $Id: rc.c,v 1.18 2002/11/06 10:31:10 mhe Exp $
  *
  * rc.c -- config file parser + autologin lookup
  *
@@ -316,6 +316,19 @@ int parse_rc(const char *file, bool warn)
 					errp(_("Expected boolean value or 'ask', but got '%s'\n"),
 						 e);
 					gvAutoBookmark = 0;
+				}
+			}
+		} else if(strcasecmp(e, "auto_bookmark_update") == 0) {
+			NEXTSTR;
+
+			if(strcasecmp(e, "ask") == 0)
+				gvAutoBookmarkUpdate = 2;
+			else {
+				gvAutoBookmarkUpdate = str2bool(e);
+				if(gvAutoBookmarkUpdate == -1) {
+					errp(_("Expected boolean value or 'ask', but got '%s'\n"),
+						 e);
+					gvAutoBookmarkUpdate = 0;
 				}
 			}
 		} else if(strcasecmp(e, "load_taglist") == 0) {
