@@ -1,4 +1,4 @@
-/* $Id: login.c,v 1.14 2001/05/21 19:52:35 mhe Exp $
+/* $Id: login.c,v 1.15 2001/05/23 07:19:07 mhe Exp $
  *
  * login.c -- connect and login
  *
@@ -151,7 +151,8 @@ void yafc_open(const char *host, unsigned int opt,
 	}
 #endif
 
-	if(test(opt, OP_ANON) && strcmp(url->protocol, "ssh") != 0) {
+	if(test(opt, OP_ANON) && url->protocol
+	   && strcmp(url->protocol, "ssh") != 0) {
 		url_setusername(url, "anonymous");
 		if(!url->password)
 			url_setpassword(url, gvAnonPasswd);
