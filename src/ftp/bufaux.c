@@ -40,6 +40,7 @@
  */
 
 #include "syshdr.h"
+#include "ftp.h"
 /*#include "includes.h"*/
 /*RCSID("$OpenBSD: bufaux.c,v 1.17 2001/01/21 19:05:45 markus Exp $");*/
 
@@ -49,7 +50,7 @@
 #include "getput.h"
 /*#include "log.h"*/
 
-#define fatal ftp_err     /* FIXME: ! */
+#if 0
 
 /*
  * Stores an BIGNUM in the buffer with a 2-byte msb first bit count, followed
@@ -147,6 +148,8 @@ buffer_get_bignum2(Buffer *buffer, BIGNUM *value)
 	return len;
 }
 
+#endif
+
 /*
  * Returns an integer from the buffer (4 bytes, msb first).
  */
@@ -200,8 +203,10 @@ buffer_get_string(Buffer *buffer, u_int *length_ptr)
 	char *value;
 	/* Get the length. */
 	len = buffer_get_int(buffer);
-	if (len > 256 * 1024)
-		fatal("Received packet with bad string length %d", len);
+	if (len > 256 * 1024) {
+		ftp_err("Received packet with bad string length %d", len);
+		return 0;
+	}
 	/* Allocate space for the string.  Add one byte for a null character. */
 	value = xmalloc(len + 1);
 	/* Get the string. */
