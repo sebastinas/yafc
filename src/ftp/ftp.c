@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.30 2002/02/23 13:16:30 mhe Exp $
+/* $Id: ftp.c,v 1.31 2002/04/07 18:10:38 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -1345,7 +1345,24 @@ rdirectory *ftp_read_directory(const char *path)
 
 	fchmod(fileno(fp), S_IRUSR | S_IWUSR);
 
+	/* we do a "CWD" before the listing, because: we want a listing of
+	 *  the directory contents, not the directory itself, and some
+	 *  servers misunderstand this. If the target is a link to a
+	 *  directory, we have to do this.
+	 */
+	if(!is_curdir) {
+		ftp_cmd("CWD %s", dir);
+		if(ftp->code != ctComplete)
+			goto failed;
+	}
+
 	if(ftp->has_mlsd_command) {
+#if 0
+		/* PureFTPd (1.0.11) doesn't recognize directory arguments
+		 * with spaces, not even quoted, it just chops the argument
+		 * string after the first space, duh... so we have to CWD to
+		 * the directory...
+		 */
 		char *asdf;
 		asprintf(&asdf, "%s/", dir);
 		/* Hack to get around issue in PureFTPd (up to version 0.98.2):
@@ -1354,27 +1371,17 @@ rdirectory *ftp_read_directory(const char *path)
 		 */
 		_failed = (ftp_list("MLSD", asdf, fp) != 0);
 		xfree(asdf);
+#else
+		_failed = (ftp_list("MLSD", 0, fp) != 0);
+#endif
 		if(_failed && ftp->code == ctError)
 			ftp->has_mlsd_command = false;
 	}
-	if(!ftp->has_mlsd_command) {
-
-		/* we do a "CWD" before the listing, because:
-		 *  we want a listing of the directory contents, not the
-		 *  directory itself, and some servers misunderstand this
-		 *  If the target is a link to a directory, we have to do this
-		 */
-		if(!is_curdir) {
-			ftp_cmd("CWD %s", dir);
-			if(ftp->code != ctComplete)
-				goto failed;
-		}
-
+	if(!ftp->has_mlsd_command)
 		_failed = (ftp_list("LIST", 0, fp) != 0);
 
-		if(!is_curdir)
-			ftp_cmd("CWD %s", ftp->curdir);
-	}
+	if(!is_curdir)
+		ftp_cmd("CWD %s", ftp->curdir);
 
 	if(_failed)
 		goto failed;

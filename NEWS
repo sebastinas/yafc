@@ -1,3 +1,11 @@
+New in 0.7.8
+------------
+
+* Fixed segfault when issuing "bookmark -u" without being connected.
+* Went around issue in PureFTPd when listing files using
+  MLSD. PureFTPd doesn't recognize directory arguments with spaces.
+
+
 New in 0.7.7
 ------------
 
