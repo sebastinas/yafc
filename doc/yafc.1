@@ -1,0 +1,87 @@
+.TH YAFC 1
+.SH NAME
+yafc - Yet another FTP client
+.SH SYNOPSIS
+.B yafc [options] [ftp://][\fIuser\fP[:\fIpassword\fP]@]\fIhostname\fP[:\fIport\fP][/\fIdirectory\fP]
+.SH DESCRIPTION
+This manual documents \fBYafc\fP. \fBYafc\fP is quite a powerful ftp
+client.  It is a console interface to the ftp protocol. If you're
+looking for a nice GUI client, Yafc is not for you. If you, however,
+use ftp often and want a fast, powerful, friendly client Yafc is here
+for you...
+.PP
+Some of the features are recursive get/put/ls/rm, nohup transfers,
+colored ls, cached directory listings, autologin and bookmarks,
+powerful aliases and extensive tab completion.
+.PP
+To my knowledge, Yafc is the only ftp client that has colored ls.
+.PP
+.SH OPTIONS
+.TP
+.B -a, --anon
+Try an anonymous login, ie login as "anonymous" and prompt for
+password.  Your email address (or password set in the config file with
+"anon_password") is printed as default. Press enter to accept it.
+.TP
+.B -d, --debug
+Print all messages sent to/from server.
+.TP
+.B -D, --dump-rc
+Prints the default configuration file to standard output.
+.TP
+.B -k, --nokrb
+Don't try Kerberos4 authentication when logging in to the host specified on the command line.
+.TP
+.B -K, --krb
+Try Kerberos4 authentication when logging in to the host specified on the
+command line. This will override any 'nokrb' options in \fIyafcrc\fP or \fIbookmarks\fP.
+.TP
+.B -n, --norc
+Do not read the users configuration file. This will cause yafc to use its default settings.
+.TP
+.B -p, --noproxy
+Do not connect via the proxy. This should be used if connection to a host on
+the local network.
+.TP
+.B -N, --nonetrc
+Do not read \fI~/.netrc\fP for additional autologin information.
+.TP
+.B -q, --quiet
+Do not print the welcome message with copyright information when starting Yafc.
+.TP
+.B -r \fIFILE\fP, --rcfile=\fIFILE\fP
+Read another configuration file.
+.TP
+.B -t \fIFILE\fP, --trace[=\fIFILE\fP]
+Enable creation of trace file. Trace files are mainly for debugging and includes every response
+and command Yafc receives/sends. If FILE is specified, use that file instead of the default
+trace file (\fI~/.yafc/trace/trace.pid\fP, where pid is the process id number of Yafc.) Trace files can
+grow quite large and can safely be deleted.
+.TP
+.B -u, --noauto
+Do not login automagically to the host specified on the command line. You can
+still use bookmark aliases, though.
+.TP
+.B -U, --noalias
+As ---noauto, but bookmark aliases is disabled (for host on command line).
+.TP
+.B -v, --verbose
+Print all responses received (without response code.)
+.TP
+.B -V, --version
+Print version information on stdout and exit successfully.
+.TP
+.B -h, --help
+Print a short help description on stdout and exit successfully.
+.SH SEE ALSO
+The full documentation for \fByafc\fP is maintained as a Texinfo
+manual.  If the \fBinfo\fP and \fByafc\fP programs are properly
+installed at your site, the command
+.IP
+.B info yafc
+.PP
+should give you access to the complete manual.
+.SH AUTHOR
+Yafc was written by Martin Hedenfalk <mhe@stacken.kth.se>. This manual
+page was created from the Texinfo documentation by Decklin Foster
+<decklin@red-bean.com> for the Debian system.

@@ -1,0 +1,96 @@
+@node Invoking Yafc, The shell, Overview, top
+@chapter Invoking Yafc
+@cindex command line options
+
+Usage:
+@example
+yafc [options] [ftp://][@var{user}[:@var{password}]@@]@var{hostname}[:@var{port}][/@var{directory}]
+@end example
+
+Options:
+
+@table @samp
+
+@item -a
+@itemx --anon
+Try an anonymous login, ie login as "anonymous" and prompt for password.
+Your email address (or password set in the config file with "anon_password") is
+printed as default. Press enter to accept it.
+
+@item -d
+@itemx --debug
+Print all messages sent to/from server.
+
+@item -D
+@itemx --dump-rc
+Prints the default configuration file to standard output.
+
+@item -k
+@itemx --nokrb
+Don't try Kerberos4 authentication when logging in to the host specified on the command line.
+
+@item -K
+@itemx --krb
+Try Kerberos4 authentication when logging in to the host specified on the
+command line. This will override any 'nokrb' options in @file{yafcrc} or @file{bookmarks}.
+
+@item -n
+@itemx --norc
+Do not read the users configuration file. This will cause yafc to use its default settings.
+
+@item -N
+@itemx --nonetrc
+Do not read @file{~/.netrc} for additional autologin information.
+
+@item -p
+@itemx --noproxy
+Do not connect via the proxy. This should be used if connection to a host on
+the local network.
+
+@item -q
+@itemx --quiet
+Do not print the welcome message with copyright information when starting Yafc.
+
+@item -r @var{FILE}
+@itemx --rcfile=@var{FILE}
+Read another configuration file.
+
+@item -t @var{FILE}
+@itemx --trace[=@var{FILE}]
+Enable creation of trace file. Trace files are mainly for debugging and includes every response
+and command Yafc receives/sends. If FILE is specified, use that file instead of the default
+trace file (@file{~/.yafc/trace/trace.pid}, where pid is the process id number of Yafc.) Trace files can
+grow quite large and can safely be deleted.
+
+@item -u
+@itemx --noauto
+Do not login automagically to the host specified on the command line. You can
+still use bookmark aliases, though.
+
+@item -U
+@itemx --noalias
+As ---noauto, but bookmark aliases is disabled (for host on command line).
+
+@item -v
+@itemx --verbose
+Print all responses received (without response code.)
+
+@item -w
+@itemx --wait=@var{TIME}
+Use a different time to wait between connection attempts, in seconds.
+This overrides the value set by @code{connect_wait_time} in the configuration file, @ref{connect_wait_time}.
+
+@item -W
+@itemx --workdir=@var{DIR}
+Use a different working directory for configuration files and
+temporary files. Default is @file{~/.yafc}.
+
+@item -V
+@itemx --version
+Print version information on stdout and exit successfully.
+
+@item -h
+@itemx --help
+Print a short help description on stdout and exit successfully.
+
+@end table

@@ -1,0 +1,508 @@
+@node Yafc commands, Nohup transfers, , The shell
+@section Yafc commands
+
+All commands follow the usual GNU command line syntax,
+with long options starting with two dashes (@samp{--}).
+
+Most commands have an option @samp{--help} that shows a
+short syntax description.
+
+@menu
+* !::                           execute shell command
+* afslog::                      
+* alias::                       create an alias
+* bookmark::                    create a bookmark
+* cache::                       control directory cache
+* cat::                         view a text file
+* cd::                          change working directory
+* cdup::                        change to parent directory
+* chmod::                       change access mode (permissions) of files
+* close::                       close connection
+* copyright::                   show copyright notice
+* filesize::                    print filesize in bytes
+* filetime::                    print file modification time
+* get::                         get files
+* help::                        
+* idle::                        modify idle time
+* kauth::                       authenticate to Kerberos
+* kdestroy::                    destroy Kerberos tickets
+* klist::                       list Kerberos tickets
+* krbtkfile::                   specify Kerberos ticket file
+* lcd::                         change local working directory
+* list::                        show raw directory listing
+* lpwd::                        print local working directory
+* ls::                          show directory listing
+* ltag::                        tag local files
+* luntag::                      remove files from local taglist
+* mkdir::                       create directory
+* mv::                          move files
+* nlist::                       show filename list
+* nop::                         do nothing
+* open::                        open a connection
+* prot::                        change Kerberos data protection level
+* put::                         put files
+* pwd::                         print working directory
+* quit::                        quit Yafc
+* quote::                       send arbitrary FTP command
+* rhelp::                       remote help
+* rm::                          remove files
+* rmdir::                       remove empty directory
+* rstatus::                     show status
+* set::                         show and set variables
+* shell::                       execute local shell
+* site::                        issue a site specific FTP command
+* source::                      read a configuration file
+* status::                      show local status
+* switch::                      switch between open connections
+* system::                      show type of system
+* tag::                         tag files
+* unalias::                     remove an alias
+* untag::                       remove files from taglist
+* url::                         print the current FTP url
+* user::                        send new user information
+* version::                     show Yafc version
+* warranty::                    show lack of warranty
+@end menu
+
+@c -----------------------------------------------------
+@node !
+@subsection @code{!}
+This is a synonym for the shell command.
+
+@c -----------------------------------------------------
+@node afslog
+@subsection @code{afslog}
+
+@c -----------------------------------------------------
+@node alias
+@subsection @code{alias}
+
+Create an alias for a command. 
+
+@c -----------------------------------------------------
+@node bookmark
+@subsection @code{bookmark}
+
+@c -----------------------------------------------------
+@node cache
+@subsection @code{cache}
+
+Control the directory cache.
+
+Usage:
+@example
+cache <option(s)>
+@end example
+
+Options:
+
+@table @samp
+
+@item  -c
+@itemx --clear
+Clear the whole directory cache.
+
+@item  -l
+@itemx --list
+List the contents of the directory cache.
+
+@item  -t
+@itemx --touch
+Remove the current directory from the cache.
+
+@item  -h
+@itemx --help
+Show a short help description.
+
+@end table
+
+@c -----------------------------------------------------
+@node cat
+@subsection @code{cat}
+
+@c -----------------------------------------------------
+@node cd
+@subsection @code{cd}
+
+@c -----------------------------------------------------
+@node cdup
+@subsection @code{cdup}
+
+@c -----------------------------------------------------
+@node chmod
+@subsection @code{chmod}
+
+@c -----------------------------------------------------
+@node close
+@subsection @code{close}
+
+@c -----------------------------------------------------
+@node copyright
+@subsection @code{copyright}
+
+@c -----------------------------------------------------
+@node filesize
+@subsection @code{filesize}
+
+@c -----------------------------------------------------
+@node filetime
+@subsection @code{filetime}
+
+@c -----------------------------------------------------
+@node get
+@subsection @code{get}
+
+Transfer files from remote server to local computer.
+
+Usage:
+@example
+get [options] file...
+@end example
+
+Options:
+
+@table @samp
+
+@item  -a
+@itemx --append
+append if destination exists
+
+@item -c @var{PERM}
+@itemx --chmod=@var{PERM}
+change mode of transferred files to PERM
+
+@item --chgrp=@var{GROUP}
+change group of transferred files to GROUP
+You need to be a member of GROUP.
+
+@item -d
+@itemx --no-dereference
+copy symbolic links as symbolic links
+
+@item -D
+@itemx --delete-after
+delete remote file after successful transfer
+
+@item -f
+@itemx --force
+overwrite existing destinations, never prompt
+
+@item -H
+@itemx --nohup
+transfer files in background (nohup mode), quits yafc
+
+@item -i
+@itemx --interactive
+prompt before each transfer
+
+@item -L @var{FILE}
+@itemx --logfile=@var{FILE}
+use @var{FILE} as logfile instead of @file{~/.yafc/nohup/nohup.<pid>}.
+
+@item -n
+@itemx --newer
+get file if remote is newer than local file
+
+@item -o @var{DEST}
+@itemx --output=@var{DEST}
+store in local directory @var{DEST}
+
+@item -p
+@itemx --preserve
+try to preserve file attributes and timestamps
+
+@item -P
+@itemx --parents
+append source path to destination
+
+@item -q
+@itemx --quiet
+overrides @samp{--verbose}
+
+@item -r
+@itemx --recursive
+get directories recursively
+
+@item -R
+@itemx --resume
+resume broken download (restart at eof)
+
+@item -s
+@itemx --skip-existing
+always skip existing files
+
+@item -t
+@itemx --tagged
+transfer tagged file(s)
+
+@item --type=@var{TYPE}
+specify transfer type, 'ascii' or 'binary'
+
+@item -u
+@itemx --unique
+always store as unique local file
+
+@item -v
+@itemx --verbose
+explain what is being done
+
+@item --help
+display help
+
+@end table
+
+@c -----------------------------------------------------
+@node help
+@subsection @code{help}
+
+@c -----------------------------------------------------
+@node idle
+@subsection @code{idle}
+
+@c -----------------------------------------------------
+@node kauth
+@subsection @code{kauth}
+
+@c -----------------------------------------------------
+@node kdestroy
+@subsection @code{kdestroy}
+
+@c -----------------------------------------------------
+@node klist
+@subsection @code{klist}
+
+@c -----------------------------------------------------
+@node krbtkfile
+@subsection @code{krbtkfile}
+
+@c -----------------------------------------------------
+@node lcd
+@subsection @code{lcd}
+
+@c -----------------------------------------------------
+@node list
+@subsection @code{list}
+
+@c -----------------------------------------------------
+@node lpwd
+@subsection @code{lpwd}
+
+@c -----------------------------------------------------
+@node ls
+@subsection @code{ls}
+
+@c -----------------------------------------------------
+@node ltag
+@subsection @code{ltag}
+
+@c -----------------------------------------------------
+@node luntag
+@subsection @code{luntag}
+
+@c -----------------------------------------------------
+@node mkdir
+@subsection @code{mkdir}
+
+Creates a remote directory (requires proper permissions.)
+
+Usage: @code{mkdir <directory>}
+
+@c -----------------------------------------------------
+@node mv
+@subsection @code{mv}
+
+@c -----------------------------------------------------
+@node nlist
+@subsection @code{nlist}
+
+@c -----------------------------------------------------
+@node nop
+@subsection @code{nop}
+
+@c -----------------------------------------------------
+@node open
+@subsection @code{open}
+
+Opens a new connection to an FTP server.
+
+Usage:  open [options] [ftp://][user[:password]@@]hostname[:port][/directory] ...
+
+Options:
+
+@table @samp
+
+@item -a
+@itemx --anon
+try to login anonymously
+
+@item -u
+@itemx --noauto
+disable autologin
+
+@item -U
+@itemx --noalias
+disable bookmark alias lookup and abbreviation
+
+@item -k
+@itemx --nokrb
+disable kerberos authentication
+
+@item -K
+@itemx --krb
+try kerberos authentication
+
+@item --help
+display this help and exit
+
+@end table
+
+@c -----------------------------------------------------
+@node prot
+@subsection @code{prot}
+
+Changes the data protection level for data transfers. The
+protection level defines how data transfers are handled
+by Kerberos. The control connection (where commands are
+sent and received) are always private.
+
+Usage: @code{prot <protlevel>}
+
+Valid protection levels are:
+
+@table @code
+
+@item clear
+no data protection
+
+@item safe
+integrity check
+
+@item private
+all data encrypted and integrity checked
+
+@end table
+
+@c -----------------------------------------------------
+@node put
+@subsection @code{put}
+
+@c -----------------------------------------------------
+@node pwd
+@subsection @code{pwd}
+
+Prints the current remote working directory.
+
+Usage: @code{pwd}
+
+@c -----------------------------------------------------
+@node quit
+@subsection @code{quit}
+
+@c -----------------------------------------------------
+@node quote
+@subsection @code{quote}
+
+@c -----------------------------------------------------
+@node rhelp
+@subsection @code{rhelp}
+
+@c -----------------------------------------------------
+@node rm
+@subsection @code{rm}
+
+Remove files on remote server.
+
+Usage: @code{rm [options] file...}
+
+Options:
+
+@table @samp
+
+@item -f
+@itemx --force
+never prompt
+
+@item -i
+@itemx --interactive
+prompt before any removal
+
+@item -r
+@itemx --recursive
+remove the contents of directories recursively. CAREFUL!
+
+@item -t
+@itemx --tagged
+remove tagged files
+
+@item -v
+@itemx --verbose
+explain what is being done
+
+@item --help
+display help
+
+@end table
+
+@c -----------------------------------------------------
+@node rmdir
+@subsection @code{rmdir}
+
+@c -----------------------------------------------------
+@node rstatus
+@subsection @code{rstatus}
+
+@c -----------------------------------------------------
+@node set
+@subsection @code{set}
+
+@c -----------------------------------------------------
+@node shell
+@subsection @code{shell}
+
+@c -----------------------------------------------------
+@node site
+@subsection @code{size}
+
+@c -----------------------------------------------------
+@node source
+@subsection @code{source}
+
+@c -----------------------------------------------------
+@node status
+@subsection @code{status}
+
+@c -----------------------------------------------------
+@node switch
+@subsection @code{switch}
+
+@c -----------------------------------------------------
+@node system
+@subsection @code{system}
+
+@c -----------------------------------------------------
+@node tag
+@subsection @code{tag}
+
+@c -----------------------------------------------------
+@node unalias
+@subsection @code{unalias}
+
+@c -----------------------------------------------------
+@node untag
+@subsection @code{untag}
+
+@c -----------------------------------------------------
+@node url
+@subsection @code{url}
+
+@c -----------------------------------------------------
+@node user
+@subsection @code{user}
+
+@c -----------------------------------------------------
+@node version
+@subsection @code{version}
+
+@c -----------------------------------------------------
+@node warranty
+@subsection @code{warranty}

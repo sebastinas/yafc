@@ -1,0 +1,14 @@
+TODO list for Yafc
+------------------
+
+* remove more hints from cmds[]
+* ls -r doesn't work (no sorting done)
+* ltag should ignore multiples just as tag does
+* per connection setting for passive mode
+* keep-alive (send NOOP or similar when idle)
+* IPv6 support
+* problems to get directories with double quotes (") in the name
+* completion doesn't work correctly with rels (need to be expanded?)
+? timeout on cache entry lifetime (eg, re-read after 3 min?)
+! improve documentation (help wanted)
+* no bugs ;)

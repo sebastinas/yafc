@@ -1,0 +1,17 @@
+known BUGS (aka undocumented features ;)
+----------------------------------------
+
+* aliases with multiple commands may get wrong completion type
+* quote-problems if filename has a real '\' (backslash) in it
+   and using single- or double-quotes (backslash-quoting works, though)
+* using a slash ('/') in a bookmarks alias name will lead yafc into thinking
+   there is a directory to change into
+* issuing a "ls /usr /var" gives a listing of both directories mixed together
+* issuing a "ls .profile" doesn't list .profile if -a option isn't given
+
+--
+Please report bugs to Martin Hedenfalk <mhe@stacken.kth.se>
+Before reporting a bug, please verify you're using the latest version
+(check the ftp site.) When reporting bugs, please include information on
+what machine and operating system, including versions, you are running, an
+example for me to reproduce (use the --trace option) and a patch if you have one.

@@ -1,0 +1,36 @@
+@node The shell, Configuration, Invoking Yafc, top
+@chapter The shell
+
+Yafc presents the user with an internal shell. Command redirection is available, using the conventional
+shell syntax (eg @code{cat foo.txt > foo} will copy the remote file foo.txt to the local file foo.) Input
+redirection, however, is not supported. Also asynchronous mode is not supported. The following
+will thus be rejected: @code{ls |emacs &} or @code{open < login.foo}.
+
+@menu
+* Yafc commands::               all yafc internal commands
+* Nohup transfers::             
+@end menu
+
+@c =====================================================
+@include yafc_commands.texi
+
+@c =====================================================
+@node Nohup transfers, ,Yafc commands ,The shell
+@section Nohup transfers
+
+get and put has an option @samp{--nohup}. When given, Yafc will fork itself
+to the background and continue to transfer the specified files,
+allowing you to use your shell or even logout. Output
+is redirected to the file @file{~/.yafc/nohup/nohup.pid}, or to file specified by
+option @samp{--logfile=@var{FILE}}.
+Combine this option with @samp{--parents} and @samp{--force} or @samp{--unique}
+to get the best results.
+   
+If you have tagged any files (with the @code{tag} command, see @ref{tag}), add
+the option @samp{--tagged} to the get command to transfer those files too.
+There is an equivalent command for local files and put, namely @code{ltag}.
+
+Yafc will also enter nohup mode upon receipt of @code{SIGHUP}.
+
+Set @var{nohup_mailaddress} in the yafcrc file to a valid mail address if you
+want to receive a mail notifying you when the transfer is complete.

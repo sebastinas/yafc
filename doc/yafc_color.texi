@@ -1,0 +1,94 @@
+@node Colors, , Aliases, Configuration
+@section Colors
+
+Escape codes can be used to display colors in the transfer strings and the prompts.
+See @ref{transfer_begin_string} and @ref{prompt1}.
+
+The built-in command @code{ls} has an option @samp{--color}. You must set the environment
+variable @var{LS_COLORS} (or @var{LS_COLOURS}) for this to work.
+ See manpage for GNU ls(1) and 
+@inforef{dircolors invocation, dircolors, fileutils}, for information how to do 
+this. If you don't set LS_COLO[U]RS, you can still use the @samp{--color} 
+option, since Yafc provides some default settings.
+
+@menu
+* ANSI attribute codes::        Escape codes for attributes
+@end menu
+
+@c -----------------------------------------------------
+
+@node ANSI attribute codes, , ,Colors
+@subsection ANSI attribute codes
+
+An ANSI escape sequence has the format @code{ESC[X;Ym}, where @code{ESC} is
+the escape character (octal 033). @code{X} and, optionally, @code{Y}, is
+one of the following escape codes:
+
+@itemize @bullet
+
+@item attribute codes
+
+@itemize @minus
+
+@item 00 = none
+
+@item 01 = bold
+
+@item 04 = underscore
+
+@item 05 = blink
+
+@item 07 = reverse
+
+@item 08 = concealed
+
+@end itemize
+
+@item text color codes
+
+@itemize @minus
+
+@item 30 = black
+
+@item 31 = red
+
+@item 32 = green
+
+@item 33 = yellow
+
+@item 34 = blue
+
+@item 35 = magenta
+
+@item 36 = cyan
+
+@item 37 = white
+
+@end itemize
+
+@item background color codes
+
+@itemize @minus
+
+@item 40 = black
+
+@item 41 = red
+
+@item 42 = green
+
+@item 43 = yellow
+
+@item 44 = blue
+
+@item 45 = magenta
+
+@item 46 = cyan
+
+@item 47 = white
+
+@end itemize
+
+@end itemize
+
+For example, the sequence @code{ESC[1;32myafc rulesESC[0m} will be the string @code{yafc rules}
+in bright green, after which the attribute is restored to normal.

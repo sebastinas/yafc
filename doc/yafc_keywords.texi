@@ -1,0 +1,405 @@
+@node Keywords
+@section Keywords
+
+Documentation missing...
+
+
+The configuration keywords are case insensitive.
+
+@menu
+* autologin::                   disable the autologin feature
+* quit_on_eof::                 quit Yafc on C-d (end-of-file)
+* read_netrc::                  read the ~/.netrc file for additional autologin entries
+* use_passive_mode::            use passive mode data connections
+* verbose::                     be verbose
+* debug::                       shows exactly what is going on
+* trace::                       create trace files for debugging
+* inhibit_startup_syst::        don't display system type on connect
+* use_env_string::              alter the environment strings
+* remote_completion::           complete remote filenames
+* auto_bookmark::               automate creation of bookmarks
+* auto_bookmark_save_passwd::   always save password with bookmarks
+* auto_bookmark_silent::        don't shout
+* default_type::                specify default transfer type
+* ascii_transfer_mask::         match files that always should be transferred in ascii mode
+* beep_after_long_command::     ring a bell?
+* long_command_time::           how long is a command?
+* command_timeout::             how long should Yafc wait for commands?
+* connection_timeout::          how long should Yafc wait for connect?
+* connect_attempts::            how many times to try to connect
+* connect_wait_time::           how long to wait between connection attempts
+* use_history::                 use command history?
+* history_max::                 how large should the history be?
+* startup_local_directory::     change to a local startup directory
+* nohup_mailaddress::           send mail to someone when nohup transfers finish
+* sendmail_path::               where is sendmail?
+* prompt1::                     disconnected prompt
+* prompt2::                     connected prompt
+* prompt3::                     logged in prompt
+* transfer_begin_string::       string printed before transfer
+* transfer_string::             string printed during transfer
+* transfer_end_string::         string printed after transfer
+* tilde::                       use ~ instead of `echo $HOME`
+* xterm_title1::                disconnected title for xterms
+* xterm_title2::                connected title for xterms
+* xterm_title3::                logged in title for xterms
+* xterm_title_terms::           which $TERM's are xterms?
+@end menu
+
+@node autologin
+@subsection @code{autologin}
+Setting this to true will cause yafc to attempt to login automatically.
+Information for doing this is specified by @xref{Autologin}.
+
+@node quit_on_eof
+@subsection @code{quit_on_eof}
+Quits yafc on end-of-file (usually @kbd{Ctrl-D}).
+
+@node read_netrc
+@subsection @code{read_netrc}
+Read additional autologin entries from @file{~/.netrc}.
+@ref{Autologin}.
+
+@node use_passive_mode
+@subsection @code{use_passive_mode}
+If true, use passive mode data connections. You might have to do this
+if you are behind a proxy. @ref{Proxy}.
+
+@node verbose
+@subsection @code{verbose}
+Show all replies received from remote host.
+
+@node debug
+@subsection @code{debug}
+Show exactly what is going on. Prints all FTP commands sent to
+remote host and all replies received, including response code.
+
+@node trace
+@subsection @code{trace}
+Create trace files in @file{~/.yafc/trace/trace.<pid>}.
+
+@node inhibit_startup_syst
+@subsection @code{inhibit_startup_syst}
+Set to true to skip query of remote system on connect.
+
+@node use_env_string
+@subsection @code{use_env_string}
+Alter the environment strings to reflect what Yafc is doing.
+This information can be seen with the shell command @code{ps}.
+
+@node remote_completion
+@subsection @code{remote_completion}
+Use tab to complete remote files. Yeahh.
+
+@node auto_bookmark
+@subsection @code{auto_bookmark}
+If set to @code{yes}, Yafc automatically creates a bookmarks for the
+site when the connection is closed. Setting this to @code{ask}, makes
+Yafc to ask if to create the bookmark.
+
+The bookmark is given an appropriate aliases name.
+
+@node auto_bookmark_save_passwd
+@subsection @code{auto_bookmark_save_passwd}
+If set to @code{yes}, Yafc don't ask whether to save passwords
+in the bookmarks file. Anonymous password, though, are always saved.
+
+Passwords in the bookmarks file are stored either as clear text
+or base64-encoded. Be sure the file is not world readable (@code{chmod 0600 bookmarks}.)
+
+@node auto_bookmark_silent
+@subsection @code{auto_bookmark_silent}
+If set to @code{true}, Yafc won't say anything about automatically created bookmarks.
+
+@node default_type
+@subsection @code{default_type}
+Specifies the default type used for file transfers, either
+@code{binary} or @code{ascii}. Setting this to @code{ascii}
+can mess up binary files (ascii mode rewrites the end-of-line characters.)
+@ref{ascii_transfer_mask}.
+
+@node ascii_transfer_mask
+@subsection @code{ascii_transfer_mask}
+Filenames matching any of these filemasks are always
+transferred in @code{ascii} mode, regardless of the value of
+the @code{default_type} keyword. This can be overridden with
+the @samp{--type} option to get/put.
+
+Masks are separated by colons (eg. @code{*.ext1:*.ext2:filename*})
+and are case sensitive.
+
+Preferrably used with @code{default_type} set to @code{binary}.
+
+@node beep_after_long_command
+@subsection @code{beep_after_long_command}
+Beep after a long command is finished. Use @code{long_command_time}
+to specify how long a @samp{long} command is.
+
+@node long_command_time
+@subsection @code{long_command_time}
+Number of seconds for command to become @samp{long}
+
+@node command_timeout
+@subsection @code{command_timeout}
+How long (in seconds) before aborting a command without response.
+
+@node connection_timeout
+@subsection @code{connection_timeout}
+How long (in seconds) before aborting a connection without response.
+
+@node connect_attempts
+@subsection @code{connect_attempts}
+Number of times to try to re-connect if login failed (due to busy server.)
+Use the value -1 for unlimited number of tries, and 0 to disable this feature.
+
+@node connect_wait_time
+@subsection @code{connect_wait_time}
+Number of seconds to wait between connection attempts.
+
+@node use_history
+@subsection @code{use_history}
+Save and load history lines in @file{~/.yafc/history}.
+This is a no-op if not compiled with Readline.
+
+@node history_max
+@subsection @code{history_max}
+Max number of history lines to save in the history file.
+This is a no-op if not compiled with Readline.
+
+@node startup_local_directory
+@subsection @code{startup_local_directory}
+Yafc will change to this (local) directory upon startup.
+
+@node nohup_mailaddress
+@subsection @code{nohup_mailaddress}
+If set, Yafc sends mail to this address when nohup transfers are finished.
+@ref{Nohup transfers}.
+
+@node sendmail_path
+@subsection @code{sendmail_path}
+Complete path to sendmail used by @samp{nohup_mailaddress} above.
+
+@node prompt1
+@subsection @code{prompt1}
+not connected
+
+ftp prompts
+
+special codes:
+
+@table @samp
+
+@item %u
+username
+
+@item %h
+      remote host name (as passed to open)
+
+@item %H
+      %h up to the first '.'
+
+@item %m
+      remote machine name (as returned by gethostbyname)
+
+@item %M
+      %m up to the first '.'
+
+@item %n
+      remote ip number
+
+@item %[#]w
+   current remote working directory
+
+@item %W
+      basename of %w
+
+@item %[#]~
+   as %w but home directory is replaced with ~
+
+@item %[#]l
+   current local working directory
+
+@item %%
+      percent sign
+
+@item %#
+      a '#' if (local) user is root, else '$'
+
+@item %@{
+      begin sequence of non-printing chars, ie escape codes
+
+@item %@}
+      end      -"-
+
+@item \e
+      escape (0x1B)
+
+@item \n
+      newline
+
+@item \t
+      tab
+
+@item \r
+      carriage return
+
+@item \b
+      backspace
+
+@item \x##
+    character 0x## (hex)
+
+@end table
+
+[#] means an optional width specifier can be specified
+ example: %32w
+
+Escape codes can be used to blah, blah, blah...
+
+you can put escape codes here, for example if you want a colored prompt
+"%@{\e[01;31m%@}ftp%@{\e[0m%@}" will be "ftp" in red, if your terminal supports
+ISO 6429 (ANSI) color codes. @ref{Colors}.
+
+The %@{ and %@} codes are needed for readline to correctly wrap
+lines with embedded escape codes.
+
+
+@node prompt2
+@subsection @code{prompt2}
+connected but not logged in.
+@xref{prompt1}.
+
+@node prompt3
+@subsection @code{prompt3}
+connected and logged in
+@xref{prompt1}.
+
+@node transfer_begin_string
+@subsection @code{transfer_begin_string}
+this string is printed before the actual transfer begins
+
+transfer status string codes
+these strings are printed with the --verbose option to get/put
+
+@table @samp
+
+@item %r
+ source filename
+
+@item %R
+soource filename w/path
+
+@item %l
+ target filename
+
+@item %L
+target filename w/path
+
+@item %s
+ size transferred so far
+
+@item %S
+ total size (if available)
+
+@item %e
+ ETA (time left)
+
+@item %p
+ percent transferred so fat
+
+@item %%
+ percent sign
+
+@item %b
+ transfer rate (Bps)
+
+@item %B
+ transfer rate (Bps) or "stalled" if stalled
+
+@item %t
+ time elapsed
+
+@item %v
+ visual progress bar
+
+@end table
+
+you can specify an (optional) max width between the '%' and
+the character code
+escape codes are recognized
+
+@node transfer_string
+@subsection @code{transfer_string}
+this string is printed (approx.) every second or so during the transfer
+with a trailing carriage return
+
+@xref{transfer_begin_string}.
+
+@node transfer_end_string
+@subsection @code{transfer_end_string}
+this string is printed when the transfer is finished
+
+@xref{transfer_begin_string}.
+
+@node tilde
+@subsection @code{tilde}
+display ~ instead of full home directory path for various commands
+
+@node xterm_title1
+@subsection @code{xterm_title1}
+Xterm window titles
+
+same codes as for the prompts, see @ref{prompt1}.
+
+This is an excerpt from the Xterm-title mini-HOWTO:
+@quotation
+Many people find it useful to set the title of a terminal to reflect
+dynamic information, such as the name of the host the user is logged
+into, the current working directory, etc.
+
+This may be done by using XTerm escape sequences. The following
+sequences are useful in this respect:
+
+@table @code
+
+@item ESC]0;_string_BEL
+Set icon name and window title to _string_
+
+@item ESC]1;_string_BEL
+Set icon name to _string_
+
+@item ESC]2;_string_BEL
+Set window title to _string_
+
+@end table
+
+where @code{ESC} is the _escape_ character (\033), and @code{BEL} is the _bell_
+character (\007).
+
+_Note_: these sequences apply to most xterm derivatives, such as
+nxterm, color-xterm and rxvt. Other terminal types often use different
+escapes; see the appendix for examples. For the full list of xterm
+escape sequences see the file ctlseq2.txt, which comes with the xterm
+distribution, or xterm.seq, which comes with the rxvt distribution.
+
+These escapes really need to be applied every time the prompt changes.
+This way the string is updated with every command you issue and can
+keep track of information such as current working directory, username,
+hostname, etc.
+@end quotation
+
+Example: @code{xterm_title1 "\e]0Yafc\x07"} sets the xterm window title and icon name to @code{Yafc}.
+
+@node xterm_title2
+@subsection @code{xterm_title2}
+Example: @code{xterm_title1 "\e]0Yafc - %h\x07"} sets the xterm window title and icon name to @code{Yafc - @var{hostname}}.
+
+@node xterm_title3
+@subsection @code{xterm_title3}
+Example: @code{xterm_title1 "\e]0Yafc - %u@@%h:%~\x07"} sets the xterm window title and icon
+ name to @code{Yafc - @var{user}@@@var{hostname}:@var{directory}}.
+
+@node xterm_title_terms
+@subsection @code{xterm_title_terms}
+List of $TERM's, separated with spaces, which can handle xterm
+escape sequences.

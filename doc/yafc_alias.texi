@@ -1,0 +1,59 @@
+@node Aliases, Colors, Autologin, Configuration
+@section Aliases
+
+Just like in the shell, you can create aliases for commands you use
+often, with options you like. 
+
+Aliases can be defined in the configuration file or directly
+on the command line. Aliases defined on the command line are
+only valid in the current session. @ref{alias}.
+
+The best way to explain aliases, I think, is to look at some examples:
+
+@menu
+* Alias examples::              examples on aliases
+@end menu
+
+@c -----------------------------------------------------
+@node Alias examples
+@subsection Alias examples
+
+@table @samp
+
+@item alias ls "ls -F --color"
+Override the command @code{ls} to be expanded to @code{ls -F --color}.
+Any arguments given to the new @code{ls} alias will be appended.
+
+@item alias ll "ls -l"
+@code{ll} will be expanded to @code{ls -l}, regardless if there is an
+alias for plain @code{ls} like the one above. Aliases can't be nested.
+
+@item alias ls list
+Override the command @code{ls} to be expanded to the command @code{list}.
+This is fine, but will generate a warning; @code{warning: alias 'ls' shadows a command with the same name},
+because the original command @code{ls} is lost and can't be referenced (except through
+another alias.)
+
+@item alias pls "ls %1 | less"
+Create a new command @code{pls}, which lists the contents of a directory and pages
+it through the pager @code{less}. The @code{%1} keyword is replaced with the first
+argument to @code{pls}, any other arguments will be appended at the end (to the local @code{less} command.)
+
+@item alias pls "ls %* | $PAGER"
+Create a new command @code{pls}, which lists the contents of a directory and pages
+it through your favourite pager. Any arguments given to @code{pls} will be inserted
+between ls and the pipe because of the @code{%*} keyword. Using @code{$PAGER} is fine,
+it is expanded by the ordinary shell.
+
+@item alias tget "untag *; tag; get --tagged --verbose --preserve"
+Create a new command @code{tget}, which untags any tagged files, enters the
+visual tag interface (if Yafc was compiled with the newt library), and then
+transfers any tagged files to the local computer (with a couple of other options).
+ Any options to @code{tget} are appended at the end of the alias (to the @code{get} command.)
+
+@item alias rels "cache --touch %*; ls -F --color %*"
+Create a new command @code{rels}, which flushes the directories from
+the cache before listing them. Two @code{%*} sequences are needed to
+insert the arguments at both places.
+
+@end table

@@ -1,0 +1,180 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header
+@setfilename yafc.info
+@settitle Yafc
+@setchapternewpage odd
+@c %**end of header
+
+@include version.texi
+
+@ifinfo
+@format
+START-INFO-DIR-ENTRY
+* Yafc: (yafc).  Yet Another FTP Client
+END-INFO-DIR-ENTRY
+@end format
+This file documents Yafc version @value{VERSION}
+
+Copyright @copyright{} 1999 Martin Hedenfalk
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through TeX and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation approved
+by the copyright holder.
+@end ifinfo
+
+@c  This title page illustrates only one of the
+@c  two methods of forming a title page.
+
+@titlepage
+@title Yafc -- Yet Another FTP Client
+@subtitle version @value{VERSION}, @value{UPDATED}
+@author Martin Hedenfalk
+
+@c  The following two commands
+@c  start the copyright page.
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1999 Martin Hedenfalk
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation approved
+by the copyright holder.
+@end titlepage
+
+@node Top, Overview, , (dir)
+
+@ifinfo
+This document describes @sc{Yafc}, an interactive interface to the FTP protocol.
+This document applies to version @value{VERSION}.
+@end ifinfo
+
+@menu
+* Overview::                    Introduction to Yafc
+* Invoking Yafc::               How to start Yafc
+* The shell::                   
+* Configuration::               How to configure Yafc
+* Bookmarks::                   
+* Kerberos::                    How Yafc uses Kerberos
+* Proxy::                       Proxy support
+@end menu
+
+@c *****************************************************
+@include yafc_intro.texi
+
+@c *****************************************************
+@include yafc_invoke.texi
+
+@c *****************************************************
+@include yafc_shell.texi
+
+@c *****************************************************
+@node Configuration, Bookmarks, The shell, top
+@chapter Configuration
+
+Yafc will parse a system-wide configuration file,
+@file{/etc/yafcrc}, first. Then, personal settings are read from
+@file{~/.yafc/yafcrc}.
+
+The @samp{--dump-rc} option of Yafc can be used to dump the default
+configuration file on standard output.
+
+Yafc also looks for @file{~/.netrc}, and reads autologin information from
+that file. @ref{read_netrc}. This file is also used by the standard ftp
+client.
+
+Yafc uses the Readline library to read commands from the terminal, and
+Readline can be configured via the @file{~/.inputrc} file. In this file
+you can put keybindings and Readline-oriented options. You can use
+@kbd{$yafc} for conditional parsing of the @file{~/.inputrc} file.
+A sample inputrc file is included in the distribution.
+
+@menu
+* Keywords::                    Configuration keywords used
+* Autologin::                   Writing autologin entries
+* Aliases::                     Writing aliases
+* Colors::                      Using colors
+@end menu
+
+@c =====================================================
+@include yafc_keywords.texi
+
+@c =====================================================
+@include yafc_autologin.texi
+
+@c =====================================================
+@include yafc_alias.texi
+
+@c =====================================================
+@include yafc_color.texi
+
+@c *****************************************************
+@node Bookmarks, Kerberos, Configuration, top
+@chapter Bookmarks 
+
+Just like creating bookmarks for web pages in a browser, you can create
+bookmarks for ftp sites in Yafc. These can later be used for
+autologin (@ref{autologin}) to that site.
+
+When connected to an ftp site, use the @code{bookmark} command to
+create a bookmark for that site. If you logged in with a username
+and password, Yafc will ask if you want to save the password in
+the bookmarks file. If you do, be sure it isn't world readable.
+By using the @code{auto_bookmark} keyword in the configuration
+file, Yafc can create bookmarks automatically for new sites.
+
+The bookmarks are available to the @code{open} command, with tab
+completion.
+
+
+@c *****************************************************
+@node Kerberos, Proxy, Bookmarks, top
+@chapter Kerberos
+
+If Yafc is compiled with Kerberos, it tries to authenticate using Kerberos 4
+without sending the password in cleartext. For anonymous logins, Kerberos
+is never used. The default protection level for data connections is
+clear, ie no encryption on transfers. Use the command @code{prot} (@ref{prot}), to change the
+data protection level. Valid arguments are @code{clear}, @code{safe}, and @code{private}.
+Note that confidential protection is not supported in Kerberos 4.
+You can use the @samp{prot} keyword (@pxref{Autologin keywords}) in the 
+configuration file to automagically set the protection level for autologin.
+
+@c *****************************************************
+@node Proxy, , Kerberos, top
+@chapter Proxy
+
+Documentation missing...
+
+The proxy support is untested. Please report.
+
+@c *****************************************************
+@contents
+
+@bye

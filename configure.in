@@ -1,0 +1,202 @@
+dnl Process this file with autoconf to produce a -*- m4 -*- configure script.
+
+dnl
+dnl init
+dnl
+
+AC_INIT(src/ftp/ftp.c)
+AC_CONFIG_AUX_DIR(support)
+AM_INIT_AUTOMAKE(yafc, 0.6.2)
+AM_CONFIG_HEADER(config.h)
+
+CDPATH=""
+
+ALL_LINGUAS="sv"
+
+dnl AM_MAINTAINER_MODE
+
+dnl AC_CANONICAL_HOST
+
+AC_PROG_CC
+
+dnl checks for different unix variants
+AC_ISC_POSIX
+AC_AIX
+AC_MINIX
+
+AM_PROG_CC_STDC
+AC_PROG_INSTALL
+
+dnl AC_CYGWIN
+
+dnl
+dnl add --with-warn option
+dnl
+
+mhe_WITH_WARN
+
+dnl
+dnl Checks for header files.
+dnl
+
+AC_HEADER_STDC
+AC_HEADER_SYS_WAIT
+AC_HEADER_STAT
+AC_HEADER_TIME
+AC_CHECK_HEADERS(stdlib.h pwd.h \
+   sys/stat.h sys/socket.h sys/types.h \
+   netdb.h netinet/in.h netinet/ip.h netinet/in_systm.h \
+   arpa/inet.h sys/ioctl.h
+)
+
+dnl
+dnl Checks for typedefs, structures, and compiler characteristics.
+dnl
+
+AC_C_CONST
+AC_TYPE_PID_T
+AC_TYPE_SIZE_T
+AC_TYPE_MODE_T
+dnl AC_STRUCT_TM
+
+dnl
+dnl Checks for library functions
+dnl
+
+AC_CHECK_HEADERS(setjmp.h)
+
+AC_CHECK_FUNCS(memcpy sigsetjmp)
+
+BASH_FUNC_POSIX_SETJMP
+
+AM_GNU_GETTEXT
+dnl AC_LINK_FILES($nls_cv_header_libgt, $nls_cv_header_intl)
+
+AC_SEARCH_LIBS(socket, socket, ,
+ AC_WARN(can't find socket function))
+
+AC_SEARCH_LIBS(gethostbyname, resolv nsl, ,
+ AC_WARN(can't find resolver functions))
+
+AC_CHECK_HEADERS(dirent.h ndir.h sys/ndir.h sys/dir.h memory.h)
+AC_CHECK_FUNCS(strcoll)
+
+AC_REPLACE_FUNCS(setproctitle vasprintf)
+
+AC_CHECK_FUNCS(getopt_long)
+if test "$ac_cv_func_getopt_long" != "yes"; then
+  LIBOBJS="$LIBOBJS getopt.o getopt1.o"
+fi
+
+AC_CHECK_FUNC(regcomp,
+[
+ AC_CHECK_HEADERS(regex.h)
+ AC_DEFINE(HAVE_REGEX)
+])
+
+mhe_ARG_WITH(socks)
+if test "$mhe_with_socks" = "yes"; then
+  AC_CHECK_LIB(socks, Rconnect, , [
+    AC_MSG_ERROR(socks library not found)
+  ])
+fi
+
+mhe_ARG_WITH(socks5)
+if test "$mhe_with_socks5" = "yes"; then
+  AC_CHECK_LIB(socks5, SOCKSconnect, , [
+    AC_MSG_ERROR(socks5 library not found)
+  ])
+fi
+
+mhe_ARG_WITH(readline, yes)
+if test "$mhe_with_readline" = "yes"; then
+ mhe_CHECK_READLINE
+fi
+
+dnl AC_FUNC_FNMATCH
+dnl if test "$ac_cv_func_fnmatch_works" != "yes"; then
+dnl   LIBOBJS="$LIBOBJS fnmatch.o"
+dnl else
+dnl   AC_CHECK_HEADERS(fnmatch.h)
+dnl fi
+
+AC_SEARCH_LIBS(inet_aton, resolv nsl)
+AC_SEARCH_LIBS(herror, resolv nsl)
+
+AC_CHECK_FUNCS(gettimeofday uname setsockopt)
+
+mhe_CHECK_PROTO(herror, [
+#ifdef HAVE_NETDB_H
+#include <netdb.h>
+#endif])
+
+mhe_CHECK_PROTO(vasprintf, [#include <stdio.h>])
+mhe_CHECK_PROTO(asprintf, [#include <stdio.h>])
+
+mhe_ARG_WITH(krb4)
+mhe_ARG_WITH(krb5)
+
+AC_MSG_CHECKING(whether Kerberos support is requested)
+
+if test "$mhe_with_krb4" = "yes" -o "$mhe_with_krb5" = yes; then
+  AC_MSG_RESULT(yes)
+
+  LIBOBJS="$LIBOBJS security.o"
+
+  AC_CHECK_LIB(des, des_pcbc_encrypt,
+  [
+    LIBS="-ldes $LIBS"
+    AC_DEFINE(HAVE_LIBDES)
+
+    AC_CHECK_HEADERS(des.h)
+
+    if test "$mhe_with_krb4" = "yes"; then
+      AC_CHECK_LIB(krb, krb_net_read,
+      [
+        LIBS="-lkrb $LIBS"
+        AC_DEFINE(KRB4)
+        AC_CHECK_FUNCS(krb_get_our_ip_for_realm)
+        AC_CHECK_HEADERS(krb.h)
+        LIBOBJS="$LIBOBJS krb4.o kauth.o"
+      ])
+    fi
+
+    if test "$mhe_with_krb5" = "yes"; then
+	  SAVELIBS="$LIBS"
+      AC_CHECK_LIB(com_err, init_error_table)
+      AC_CHECK_LIB(asn1, copy_EncryptionKey)
+      AC_CHECK_LIB(db, dbopen)
+      AC_CHECK_LIB(roken, roken_gethostbyaddr)
+      AC_CHECK_LIB(krb5, krb5_mk_priv)
+      if test "$ac_cv_lib_krb5_krb5_mk_priv" = "yes"; then
+        AC_CHECK_LIB(gssapi, gss_init_sec_context)
+        if test "$ac_cv_lib_gssapi_gss_init_sec_context" = "yes"; then
+          AC_DEFINE(KRB5)
+          AC_CHECK_HEADERS(krb5.h gssapi.h)
+          LIBOBJS="$LIBOBJS gssapi.o"
+		else
+		  LIBS="$SAVELIBS"
+        fi
+	  else
+	    LIBS="$SAVELIBS"
+      fi
+    fi
+
+    AC_REPLACE_FUNCS(strlcpy)
+  ])
+
+else
+  AC_MSG_RESULT(no)
+fi
+
+AC_OUTPUT([Makefile intl/Makefile doc/Makefile lib/Makefile po/Makefile.in
+  src/Makefile src/ftp/Makefile src/libmhe/Makefile yafc.spec],
+[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])
+
+echo "------ configure complete ------"
+echo "Compiling with $CC $CFLAGS"
+echo "CPPFLAGS = $CPPFLAGS"
+echo "LDFLAGS = $LDFLAGS"
+echo "LIBS = $LIBS $RLLIBS"
+echo "installing in $prefix"
+echo "----- type make to compile -----"
