@@ -165,6 +165,7 @@ if test "$mhe_with_krb4" = "yes" -o "$mhe_with_krb5" = yes; then
     fi
 
     if test "$mhe_with_krb5" = "yes"; then
+      echo "checking for Heimdal Kerberos 5..."
 	  SAVELIBS="$LIBS"
       AC_CHECK_LIB(com_err, init_error_table)
       AC_CHECK_LIB(asn1, copy_EncryptionKey)
