@@ -1,4 +1,4 @@
-/* $Id: commands.c,v 1.10 2001/05/12 18:44:37 mhe Exp $
+/* $Id: commands.c,v 1.11 2001/07/01 11:27:13 mhe Exp $
  *
  * commands.c --
  *
@@ -26,73 +26,68 @@
 #define __(text) (text)
 
 #undef CMD
-#define CMD(NAME, NC, NL, AU, CPL, HINT) \
- {#NAME, NC, NL, AU, CPL, HINT, cmd_ ## NAME}
+#define CMD(NAME, NC, NL, AU, CPL) \
+ {#NAME, NC, NL, AU, CPL, cmd_ ## NAME}
 
 cmd_t cmds[] = {
-	CMD(flush, 0,0,1, cpNone, 0),
-	{"!", 0,0,0, cpLocalFile, __("same as 'shell'"), cmd_shell},
-	CMD(alias, 0,0,1, cpAlias, 0),
-	CMD(bookmark, 0,0,1, cpBookmark, 0),
-	CMD(cache, 0,0,1, cpNone, 0),
-	CMD(cat, 0,0,1, cpRemoteFile, 0),
-	CMD(cd, 0,0,1, cpRemoteDir, 0),
-	CMD(cdup, 0,0,1, cpNone, 0),
-	CMD(chmod, 0,0,0, cpRemoteFile, 0),
-	CMD(close, 0,0,1, cpNone, 0),
-	CMD(copyright, 0,0,1, cpNone,
-		__("show copyright notice\n usage: copyright")),
-	CMD(filesize, 0,0,1, cpRemoteFile, 0),
-	CMD(filetime, 0,0,1, cpRemoteFile, 0),
-	CMD(fxp, 0,0,0, cpRemoteFile, 0),
-	CMD(get, 0,0,0, cpRemoteFile, 0),
-	CMD(help, 0,0,1, cpCommand, __("DON'T PANIC\n usage: help [command(s)]")),
-	CMD(lcd, 0,0,1, cpLocalFile, 0),
-	CMD(list, 0,0,1, cpRemoteFile, 0),
-	CMD(lpwd, 0,0,1, cpNone, 0),
-	CMD(ls, 0,0,0, cpRemoteFile, 0),
-	CMD(ltag, 0,0,1, cpLocalFile, 0),
-	CMD(luntag, 0,0,0, cpLocalTaglist, 0),
-	CMD(mkdir, 0,0,1, cpNone, 0),
-	CMD(nlist, 0,0,1, cpRemoteFile, 0),
-	CMD(nop, 0,0,1, cpNone, 0),
-	CMD(idle, 0,0,1, cpNone, 0),
-	CMD(open, 0,0,1, cpHostname, 0),
-	CMD(put, 0,0,1, cpLocalFile, 0),
-	CMD(pwd, 0,0,1, cpNone, 0),
-	CMD(quit, 0,0,1, cpNone, 0),
-	CMD(quote, 0,0,1, cpNone, 0),
-	CMD(mv, 0,0,1, cpRemoteFile, 0),
-	CMD(reopen, 1, 1, 1, cpNone, 0),
-	CMD(rhelp, 1,0,1, cpNone, __("get remote help\n usage: rhelp [command]")),
-	CMD(rm, 0,0,1, cpRemoteFile, 0),
-	CMD(rmdir, 0,0,1, cpRemoteDir, 0),
-	CMD(rstatus, 0,0,1, cpRemoteFile, 0),
-	CMD(set, 0,0,1, cpVariable,
-		__("set program variables\n usage: set [variable] [value]")),
-	CMD(shell, 0,0,0, cpLocalFile, __("execute shell command or invoke shell"
-									  "\n usage: shell [shell command]")),
-	CMD(site, 0,0,1, cpNone, __("Send site specific command")),
-	CMD(source, 0,0,1, cpLocalFile, 0),
-	CMD(status, 0,0,1, cpNone, 0),
-	CMD(switch, 0,0,0, cpFtpList, 0),
-	CMD(system, 0,0,0, cpNone, 0),
-	CMD(tag, 0,0,0, cpRemoteFile, 0),
-	CMD(unalias, 0,0,1, cpAlias, 0),
-	CMD(untag, 0,0,1, cpTaglist, 0),
-	CMD(url, 0,0,1, cpNone, 0),
-	CMD(user, 0,0,1, cpNone, 0),
-	CMD(version, 0,0,1, cpNone, __("show version")),
-	CMD(warranty, 0,0,1, cpNone, __("show warranty (or lack of)")),
+	{"!", 0,0,0, cpLocalFile, cmd_shell},
+	CMD(alias, 0,0,1, cpAlias),
+	CMD(bookmark, 0,0,1, cpBookmark),
+	CMD(cache, 0,0,1, cpNone),
+	CMD(cat, 0,0,1, cpRemoteFile),
+	CMD(cd, 0,0,1, cpRemoteDir),
+	CMD(cdup, 0,0,1, cpNone),
+	CMD(chmod, 0,0,0, cpRemoteFile),
+	CMD(close, 0,0,1, cpNone),
+	CMD(copyright, 0,0,1, cpNone),
+	CMD(filetime, 0,0,1, cpRemoteFile),
+	CMD(fxp, 0,0,0, cpRemoteFile),
+	CMD(get, 0,0,0, cpRemoteFile),
+	CMD(help, 0,0,1, cpCommand),
+	CMD(lcd, 0,0,1, cpLocalFile),
+	CMD(list, 0,0,1, cpRemoteFile),
+	CMD(lpwd, 0,0,1, cpNone),
+	CMD(ls, 0,0,0, cpRemoteFile),
+	CMD(ltag, 0,0,1, cpLocalFile),
+	CMD(luntag, 0,0,0, cpLocalTaglist),
+	CMD(mkdir, 0,0,1, cpNone),
+	CMD(nlist, 0,0,1, cpRemoteFile),
+	CMD(nop, 0,0,1, cpNone),
+	CMD(idle, 0,0,1, cpNone),
+	CMD(open, 0,0,1, cpHostname),
+	CMD(put, 0,0,1, cpLocalFile),
+	CMD(pwd, 0,0,1, cpNone),
+	CMD(quit, 0,0,1, cpNone),
+	CMD(quote, 0,0,1, cpNone),
+	CMD(mv, 0,0,1, cpRemoteFile),
+	CMD(reopen, 1, 1, 1, cpNone),
+	CMD(rhelp, 1,0,1, cpNone),
+	CMD(rm, 0,0,1, cpRemoteFile),
+	CMD(rmdir, 0,0,1, cpRemoteDir),
+	CMD(rstatus, 0,0,1, cpRemoteFile),
+	CMD(set, 0,0,1, cpVariable),
+	CMD(shell, 0,0,0, cpLocalFile),
+	CMD(site, 0,0,1, cpNone),
+	CMD(source, 0,0,1, cpLocalFile),
+	CMD(status, 0,0,1, cpNone),
+	CMD(switch, 0,0,0, cpFtpList),
+	CMD(system, 0,0,0, cpNone),
+	CMD(tag, 0,0,0, cpRemoteFile),
+	CMD(unalias, 0,0,1, cpAlias),
+	CMD(untag, 0,0,1, cpTaglist),
+	CMD(url, 0,0,1, cpNone),
+	CMD(user, 0,0,1, cpNone),
+	CMD(version, 0,0,1, cpNone),
+	CMD(warranty, 0,0,1, cpNone),
 #if defined(KRB4) || defined(KRB5)
-	CMD(prot, 1,1,1, cpNone, __("set protection level")),
+	CMD(prot, 1,1,1, cpNone),
 #endif
 #ifdef KRB4
-	CMD(afslog, 0,0,1, cpNone, 0),
-	CMD(klist, 0,0,1, cpNone, 0),
-	CMD(kauth, 0,0,1, cpNone, 0),
-	CMD(kdestroy, 0,0,1, cpNone, 0),
-	CMD(krbtkfile, 0,0,1, cpNone, 0),
+	CMD(afslog, 0,0,1, cpNone),
+	CMD(klist, 0,0,1, cpNone),
+	CMD(kauth, 0,0,1, cpNone),
+	CMD(kdestroy, 0,0,1, cpNone),
+	CMD(krbtkfile, 0,0,1, cpNone),
 #endif
 
     /* this _must_ be the last entry, unless you like segfaults ;) */
@@ -881,26 +876,6 @@ void cmd_filetime(int argc, char **argv)
 	}
 }
 
-void cmd_filesize(int argc, char **argv)
-{
-	int i;
-
-	OPT_HELP("Show size of a remote file.  Usage:\n"
-			 "  filesize [options] <file>...\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
-
-	minargs(optind);
-	need_connected();
-	need_loggedin();
-
-	for(i=optind;i<argc;i++) {
-		unsigned long s = ftp_filesize(argv[i]);
-		if(s != (unsigned long) -1)
-			printf(_("%s: %lu bytes\n"), argv[i], s);
-	}
-}
-
 /* in rc.c */
 int parse_rc(const char *file, bool warn);
 
@@ -973,18 +948,4 @@ void cmd_switch(int argc, char **argv)
 	}
 
 	ftp_use((Ftp *)gvCurrentFtp->data);
-}
-
-void cmd_flush(int argc, char **argv)
-{
-	OPT_HELP("Flushes all replies.  Usage:\n"
-			 "  flush [options]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
-
-	maxargs(0);
-	need_connected();
-	need_loggedin();
-
-	ftp_flush_reply();
 }
