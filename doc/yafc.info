@@ -862,7 +862,7 @@ defaults will be used.
 
    The `--dump-rc' option of Yafc can be used to dump the default
 configuration file to standard output. You can create your own config
-file with the command `yafc --dum-rc > ~/.yafc/yafcrc'. You can
+file with the command `yafc --dump-rc > ~/.yafc/yafcrc'. You can
 customize it with your favourite editor, it should be quite
 self-explaining if you read the comments.
 
@@ -879,19 +879,22 @@ inputrc file is included in the distribution.
 * Menu:
 
 * Keywords::                    Configuration keywords used
+* Prompt codes::                Special codes in the prompts
+* Transfer codes::              Special codes in the transfer strings
 * Autologin::                   Writing autologin entries
 * Aliases::                     Writing aliases
 * Colors::                      Using colors
 
 
-File: yafc.info,  Node: Keywords,  Next: Autologin,  Up: Configuration
+File: yafc.info,  Node: Keywords,  Next: Prompt codes,  Up: Configuration
 
 Keywords
 ========
 
-   Documentation missing...
+   The configuration file consists of keywords with an argument,
+separated with a space. The keywords are case insensitive.
 
-   The configuration keywords are case insensitive.
+   These are the supported keywords:
 
 * Menu:
 
@@ -1203,71 +1206,9 @@ File: yafc.info,  Node: prompt1,  Next: prompt2,  Prev: sendmail_path,  Up: Keyw
 
    ftp prompts
 
-   special codes:
-
-`%u'
-     username
-
-`%h'
-     remote host name (as passed to open)
-
-`%H'
-     %h up to the first '.'
-
-`%m'
-     remote machine name (as returned by gethostbyname)
-
-`%M'
-     %m up to the first '.'
-
-`%n'
-     remote ip number
-
-`%[#]w'
-     current remote working directory
-
-`%W'
-     basename of %w
-
-`%[#]~'
-     as %w but home directory is replaced with ~
-
-`%[#]l'
-     current local working directory
-
-`%%'
-     percent sign
-
-`%#'
-     a '#' if (local) user is root, else '$'
-
-`%{'
-     begin sequence of non-printing chars, ie escape codes
-
-`%}'
-     end      -"-
-
-`\e'
-     escape (0x1B)
-
-`\n'
-     newline
-
-`\t'
-     tab
-
-`\r'
-     carriage return
-
-`\b'
-     backspace
-
-`\x##'
-     character 0x## (hex)
+   *Note Prompt codes::
 
    [#] means an optional width specifier can be specified  example: %32w
-
-   Escape codes can be used to blah, blah, blah...
 
    you can put escape codes here, for example if you want a colored
 prompt "%{\e[01;31m%}ftp%{\e[0m%}" will be "ftp" in red, if your
@@ -1303,47 +1244,10 @@ File: yafc.info,  Node: transfer_begin_string,  Next: transfer_string,  Prev: pr
    transfer status string codes these strings are printed with the
 -verbose option to get/put
 
-`%r'
-     source filename
-
-`%R'
-     soource filename w/path
-
-`%l'
-     target filename
-
-`%L'
-     target filename w/path
-
-`%s'
-     size transferred so far
-
-`%S'
-     total size (if available)
-
-`%e'
-     ETA (time left)
-
-`%p'
-     percent transferred so fat
-
-`%%'
-     percent sign
-
-`%b'
-     transfer rate (Bps)
-
-`%B'
-     transfer rate (Bps) or "stalled" if stalled
-
-`%t'
-     time elapsed
-
-`%v'
-     visual progress bar
-
    you can specify an (optional) max width between the '%' and the
 character code escape codes are recognized
+
+   *Note Transfer codes::
 
 
 File: yafc.info,  Node: transfer_string,  Next: transfer_end_string,  Prev: transfer_begin_string,  Up: Keywords
@@ -1447,7 +1351,140 @@ File: yafc.info,  Node: xterm_title_terms,  Prev: xterm_title3,  Up: Keywords
 escape sequences.
 
 
-File: yafc.info,  Node: Autologin,  Next: Aliases,  Prev: Keywords,  Up: Configuration
+File: yafc.info,  Node: Prompt codes,  Next: Transfer codes,  Prev: Keywords,  Up: Configuration
+
+Prompt codes
+============
+
+   These codes can be used in the prompts, *Note prompt1::, to reflect
+dynamic information.  For all codes, there may be an optional minimum
+field width. This is an integer between the '%' and the code character.
+For example will %17v be expanded to a visual progress bar with length
+17. If the field width if negative (start with a minus), the string is
+left-justified, so using %-20S will show the total size, padded with
+spaces to 20 characters.
+
+`%u'
+     username
+
+`%h'
+     remote host name (as passed to open)
+
+`%H'
+     %h up to the first '.'
+
+`%m'
+     remote machine name (as returned by gethostbyname)
+
+`%M'
+     %m up to the first '.'
+
+`%n'
+     remote IP number
+
+`%w'
+     current remote working directory
+
+`%W'
+     basename of %w
+
+`%~'
+     as %w but home directory is replaced with ~
+
+`%l'
+     current local working directory
+
+`%L'
+     basename of %l
+
+`%c'
+     Total number of connections open
+
+`%C'
+     The number of the currently active connection
+
+`%%'
+     a percent sign
+
+`%#'
+     a '#' if (local) user is root, else '$'
+
+`%{'
+     begin sequence of non-printing chars, ie escape codes
+
+`%}'
+     end sequence of non-printing chars, ie escape codes
+
+`\e'
+     an escape character (hex 0x1B)
+
+`\n'
+     a newline
+
+`\t'
+     a tab character
+
+`\r'
+     a carriage return
+
+`\x##'
+     character 0x## (hex)
+
+
+File: yafc.info,  Node: Transfer codes,  Next: Autologin,  Prev: Prompt codes,  Up: Configuration
+
+Transfer codes
+==============
+
+   These codes can be used in the transfer strings, *Note
+transfer_string::.  For all codes, there may be an optional minimum
+field width. This is an integer between the '%' and the code character.
+For example will %17v be expanded to a visual progress bar with length
+17. If the field width if negative (start with a minus), the string is
+left-justified, so using %-20S will show the total size, padded with
+spaces to 20 characters.
+
+`%r'
+     source filename
+
+`%R'
+     source filename w/path
+
+`%l'
+     target filename
+
+`%L'
+     target filename w/path
+
+`%s'
+     size transferred so far
+
+`%S'
+     total size (if available)
+
+`%e'
+     ETA (time left)
+
+`%p'
+     percent transferred so fat
+
+`%%'
+     percent sign
+
+`%b'
+     transfer rate (Bps)
+
+`%B'
+     transfer rate (Bps) or "stalled" if stalled
+
+`%t'
+     time elapsed
+
+`%v'
+     visual progress bar
+
+
+File: yafc.info,  Node: Autologin,  Next: Aliases,  Prev: Transfer codes,  Up: Configuration
 
 Autologin
 =========
@@ -1738,7 +1775,7 @@ Kerberos
 ********
 
    If Yafc is compiled with Kerberos, it tries to authenticate using
-Kerberos 4 without sending the password in cleartext. For anonymous
+Kerberos 4/5 without sending the password in cleartext. For anonymous
 logins, Kerberos is never used. The default protection level for data
 connections is clear, ie no encryption on transfers. Use the command
 `prot' (*Note prot::), to change the data protection level. Valid
@@ -1824,55 +1861,57 @@ Node: version18371
 Node: warranty18477
 Node: Nohup transfers18572
 Node: Configuration19500
-Node: Keywords20842
-Node: anon_password23469
-Node: autologin23661
-Node: quit_on_eof23919
-Node: read_netrc24089
-Node: use_passive_mode24289
-Node: verbose24538
-Node: debug24696
-Node: trace24921
-Node: inhibit_startup_syst25084
-Node: use_env_string25290
-Node: remote_completion25561
-Node: auto_bookmark25752
-Node: auto_bookmark_save_passwd26128
-Node: auto_bookmark_silent26587
-Node: default_type26837
-Node: default_mechanism27191
-Node: ascii_transfer_mask27540
-Node: beep_after_long_command28054
-Node: long_command_time28335
-Node: command_timeout28543
-Node: connection_timeout28761
-Node: connect_attempts28987
-Node: connect_wait_time29297
-Node: use_history29502
-Node: history_max29733
-Node: startup_local_directory29977
-Node: nohup_mailaddress30203
-Node: sendmail_path30463
-Node: prompt130659
-Node: prompt231952
-Node: prompt332106
-Node: transfer_begin_string32268
-Node: transfer_string33113
-Node: transfer_end_string33409
-Node: tilde33646
-Node: xterm_title133831
-Node: xterm_title235413
-Node: xterm_title335653
-Node: xterm_title_terms35920
-Node: Autologin36127
-Node: Autologin keywords36599
-Node: Autologin examples38624
-Node: Aliases39589
-Node: Alias examples40109
-Node: Colors42078
-Node: ANSI attribute codes42742
-Node: Bookmarks43739
-Node: Kerberos44482
-Node: Proxy45179
+Node: Keywords20974
+Node: anon_password23685
+Node: autologin23877
+Node: quit_on_eof24135
+Node: read_netrc24305
+Node: use_passive_mode24505
+Node: verbose24754
+Node: debug24912
+Node: trace25137
+Node: inhibit_startup_syst25300
+Node: use_env_string25506
+Node: remote_completion25777
+Node: auto_bookmark25968
+Node: auto_bookmark_save_passwd26344
+Node: auto_bookmark_silent26803
+Node: default_type27053
+Node: default_mechanism27407
+Node: ascii_transfer_mask27756
+Node: beep_after_long_command28270
+Node: long_command_time28551
+Node: command_timeout28759
+Node: connection_timeout28977
+Node: connect_attempts29203
+Node: connect_wait_time29513
+Node: use_history29718
+Node: history_max29949
+Node: startup_local_directory30193
+Node: nohup_mailaddress30419
+Node: sendmail_path30679
+Node: prompt130875
+Node: prompt231414
+Node: prompt331568
+Node: transfer_begin_string31730
+Node: transfer_string32177
+Node: transfer_end_string32473
+Node: tilde32710
+Node: xterm_title132895
+Node: xterm_title234477
+Node: xterm_title334717
+Node: xterm_title_terms34984
+Node: Prompt codes35191
+Node: Transfer codes36647
+Node: Autologin37638
+Node: Autologin keywords38116
+Node: Autologin examples40141
+Node: Aliases41106
+Node: Alias examples41626
+Node: Colors43595
+Node: ANSI attribute codes44259
+Node: Bookmarks45256
+Node: Kerberos45999
+Node: Proxy46698
 
 End Tag Table

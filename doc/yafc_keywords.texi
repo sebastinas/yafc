@@ -1,10 +1,10 @@
-@node Keywords
+@node Keywords, Prompt codes, , Configuration
 @section Keywords
 
-Documentation missing...
+The configuration file consists of keywords with an argument, separated with
+a space. The keywords are case insensitive.
 
-
-The configuration keywords are case insensitive.
+These are the supported keywords:
 
 @menu
 * anon_password::               set password for anonymous logins
@@ -197,76 +197,10 @@ not connected
 
 ftp prompts
 
-special codes:
-
-@table @samp
-
-@item %u
-username
-
-@item %h
-      remote host name (as passed to open)
-
-@item %H
-      %h up to the first '.'
-
-@item %m
-      remote machine name (as returned by gethostbyname)
-
-@item %M
-      %m up to the first '.'
-
-@item %n
-      remote ip number
-
-@item %[#]w
-   current remote working directory
-
-@item %W
-      basename of %w
-
-@item %[#]~
-   as %w but home directory is replaced with ~
-
-@item %[#]l
-   current local working directory
-
-@item %%
-      percent sign
-
-@item %#
-      a '#' if (local) user is root, else '$'
-
-@item %@{
-      begin sequence of non-printing chars, ie escape codes
-
-@item %@}
-      end      -"-
-
-@item \e
-      escape (0x1B)
-
-@item \n
-      newline
-
-@item \t
-      tab
-
-@item \r
-      carriage return
-
-@item \b
-      backspace
-
-@item \x##
-    character 0x## (hex)
-
-@end table
+@ref{Prompt codes}
 
 [#] means an optional width specifier can be specified
  example: %32w
-
-Escape codes can be used to blah, blah, blah...
 
 you can put escape codes here, for example if you want a colored prompt
 "%@{\e[01;31m%@}ftp%@{\e[0m%@}" will be "ftp" in red, if your terminal supports
@@ -274,7 +208,6 @@ ISO 6429 (ANSI) color codes. @ref{Colors}.
 
 The %@{ and %@} codes are needed for readline to correctly wrap
 lines with embedded escape codes.
-
 
 @node prompt2
 @subsection @code{prompt2}
@@ -293,52 +226,11 @@ this string is printed before the actual transfer begins
 transfer status string codes
 these strings are printed with the --verbose option to get/put
 
-@table @samp
-
-@item %r
- source filename
-
-@item %R
-soource filename w/path
-
-@item %l
- target filename
-
-@item %L
-target filename w/path
-
-@item %s
- size transferred so far
-
-@item %S
- total size (if available)
-
-@item %e
- ETA (time left)
-
-@item %p
- percent transferred so fat
-
-@item %%
- percent sign
-
-@item %b
- transfer rate (Bps)
-
-@item %B
- transfer rate (Bps) or "stalled" if stalled
-
-@item %t
- time elapsed
-
-@item %v
- visual progress bar
-
-@end table
-
 you can specify an (optional) max width between the '%' and
 the character code
 escape codes are recognized
+
+@ref{Transfer codes}
 
 @node transfer_string
 @subsection @code{transfer_string}

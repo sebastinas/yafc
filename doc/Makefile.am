@@ -7,7 +7,8 @@ yafc_TEXINFOS = \
 	yafc_intro.texi \
 	yafc_invoke.texi \
 	yafc_keywords.texi \
-	yafc_shell.texi
+	yafc_shell.texi \
+	yafc_codes.texi
 
 man_MANS = yafc.1
 

@@ -1,4 +1,4 @@
-@node Autologin
+@node Autologin, Aliases, Transfer codes, Configuration
 @section Autologin
 
 Documentation missing...

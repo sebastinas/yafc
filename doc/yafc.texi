@@ -105,7 +105,7 @@ files exists, internal defaults will be used.
 
 The @samp{--dump-rc} option of Yafc can be used to dump the default
 configuration file to standard output. You can create your own config
-file with the command @code{yafc --dum-rc > ~/.yafc/yafcrc}. You can
+file with the command @code{yafc --dump-rc > ~/.yafc/yafcrc}. You can
 customize it with your favourite editor, it should be quite self-explaining if
 you read the comments.
 
@@ -121,6 +121,8 @@ A sample inputrc file is included in the distribution.
 
 @menu
 * Keywords::                    Configuration keywords used
+* Prompt codes::                Special codes in the prompts
+* Transfer codes::              Special codes in the transfer strings
 * Autologin::                   Writing autologin entries
 * Aliases::                     Writing aliases
 * Colors::                      Using colors
@@ -128,6 +130,9 @@ A sample inputrc file is included in the distribution.
 
 @c =====================================================
 @include yafc_keywords.texi
+
+@c =====================================================
+@include yafc_codes.texi
 
 @c =====================================================
 @include yafc_autologin.texi
@@ -161,7 +166,7 @@ completion.
 @node Kerberos, Proxy, Bookmarks, top
 @chapter Kerberos
 
-If Yafc is compiled with Kerberos, it tries to authenticate using Kerberos 4
+If Yafc is compiled with Kerberos, it tries to authenticate using Kerberos 4/5
 without sending the password in cleartext. For anonymous logins, Kerberos
 is never used. The default protection level for data connections is
 clear, ie no encryption on transfers. Use the command @code{prot} (@ref{prot}), to change the
