@@ -1,4 +1,4 @@
-/* $Id: help.c,v 1.6 2001/05/13 11:50:46 mhe Exp $
+/* $Id: help.c,v 1.7 2001/05/21 20:52:23 mhe Exp $
  *
  * help.c -- local help and info
  *
@@ -66,14 +66,12 @@ void cmd_help(int argc, char **argv)
 		else
 #endif
 		{
+			listitem *li = gvAliases->first;
 			for(i=0;cmds[i].cmd;i++)
 				printf("%s\n", cmds[i].cmd);
-			{
-				listitem *li = gvAliases->first;
-				while(li) {
-					printf("%s\n", ((alias *)li->data)->name);
-					li = li->next;
-				}
+			while(li) {
+				printf("%s\n", ((alias *)li->data)->name);
+				li = li->next;
 			}
 		}
 	}
@@ -92,7 +90,7 @@ void cmd_version(int argc, char **argv)
 	printf(_("Compiled " __TIME__ " " __DATE__ " (" HOSTTYPE ")\n"));
 #if (HAVE_LIBREADLINE >= 210)
 	printf(_("Using Readline version %s\n"), rl_library_version);
-#else
+#elif defined(HAVE_LIBREADLINE)
 	printf(_("Using Readline version 2.0\n"));
 #endif
 }
