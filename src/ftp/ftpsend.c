@@ -1,4 +1,4 @@
-/* $Id: ftpsend.c,v 1.10 2001/05/27 20:30:53 mhe Exp $
+/* $Id: ftpsend.c,v 1.11 2001/07/01 12:53:49 mhe Exp $
  *
  * ftpsend.c -- send/receive files and file listings
  *
@@ -543,6 +543,7 @@ int ftp_list(const char *cmd, const char *param, FILE *fp)
 	if(ftp_init_transfer() != 0)
 		return -1;
 
+	ftp_set_tmp_verbosity(vbNone);
 	if(param)
 		ftp_cmd("%s %s", cmd, param);
 	else
