@@ -1,4 +1,4 @@
-/* $Id: rfile.c,v 1.9 2001/08/24 09:08:25 mhe Exp $
+/* $Id: rfile.c,v 1.10 2002/12/02 12:26:29 mhe Exp $
  *
  * rfile.c -- representation of a remote file
  *
@@ -196,6 +196,7 @@ int month_number(const char *str)
 		if(strcasecmp(str, month_name[i]) == 0)
 			return i;
 	}
+
 	return -1;
 }
 
@@ -340,12 +341,15 @@ static int rfile_parse_eplf(rfile *f, char *str, const char *dirpath)
 	return 0;
 }
 
+/* This is a total mess!
+ */
 static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 {
 	char *cf;
 	char *e;
 	char *m=0, *d=0, *y=0;
 	char *saved_field[5];
+	bool time_parsed = false;
 
 	/* real unix ls listing:
 	 *
@@ -355,6 +359,7 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 	 * saved_field[3] == size
 	 * saved_field[4] == month
 	 *
+	 *
 	 * unix w/o group listing:
 	 *
 	 * saved_field[0] == nhl
@@ -363,6 +368,7 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 	 * saved_field[3] == month
 	 * saved_field[4] == date
 	 *
+	 *
 	 * strange MacOS WebStar thingy:
 	 *
 	 * saved_field[0] == size or "folder"
@@ -370,6 +376,16 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 	 * saved_field[2] == size (again!?) or month
 	 * saved_field[3] == month or date
 	 * saved_field[4] == date or time (or year?)
+	 *
+	 *
+	 * Linux netkit FTP server with LANG=sv_SE (ISO date&time format):
+	 * (-rw-------    1 mhe      mhe          1422 2002-09-24 22:30 asdf.txt)
+	 *
+	 * saved_field[0] == nhl
+	 * saved_field[1] == owner
+	 * saved_field[2] == group
+	 * saved_field[3] == size
+	 * saved_field[4] == YYYY-MM-DD
 	 *
 	 */
 
@@ -455,21 +471,69 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 		d = saved_field[3];
 		y = saved_field[4];
 	} else {
-		xfree(saved_field[0]);
-		xfree(saved_field[1]);
-		xfree(saved_field[2]);
-		xfree(saved_field[3]);
-		xfree(saved_field[4]);
-		return -1;
+		int iy, im, id, ih = 0, imin = 0;
+		if(sscanf(saved_field[4], "%d-%d-%d", &iy, &im, &id) == 3) {
+			/* date on the form YYYY-MM-DD */
+			im -= 1; /* should be 0-based */
+
+			f->nhl = atoi(saved_field[0]);
+			xfree(saved_field[0]);
+			f->owner = saved_field[1];
+			f->group = saved_field[2];
+			f->size = atol(saved_field[3]);
+			xfree(saved_field[3]);
+			xfree(saved_field[4]);
+
+			e = strqsep(&cf, ' '); /* HH:MM */
+			sscanf(e, "%d:%d", &ih, &imin);
+
+			{
+				struct tm mt;
+				time_t now;
+
+				f->mtime = (time_t)-1;
+
+				mt.tm_sec = 0;
+				mt.tm_min = imin;
+				mt.tm_hour = ih;
+				mt.tm_mday = id;
+				mt.tm_mon = im;
+				mt.tm_year = iy;
+				mt.tm_isdst = -1;
+
+				f->mtime = mktime(&mt);
+
+				time(&now);
+				
+				if(f->mtime != (time_t)-1 &&
+				   (now > f->mtime + 6L * 30L * 24L * 60L * 60L  /* Old. */
+					|| now < f->mtime - 60L * 60L))   /* In the future. */
+				{
+					asprintf(&f->date, "%s %2d %5d", month_name[im], id, iy);
+				} else {
+					asprintf(&f->date, "%s %2d %02d:%02d", month_name[im], id, ih, imin);
+				}
+				time_parsed = true;
+			}
+		} else {
+			xfree(saved_field[0]);
+			xfree(saved_field[1]);
+			xfree(saved_field[2]);
+			xfree(saved_field[3]);
+			xfree(saved_field[4]);
+			return -1;
+		}
 	}
 
-	asprintf(&f->date, "%s %2s %5s", m, d, y);
-	rfile_parse_time(f, m, d, y);
-	if(f->mtime == (time_t)-1)
-		ftp_trace("rfile_parse_time failed! date == '%s'\n", f->date);
-	xfree(m);
-	xfree(d);
-	xfree(y);
+	if(!time_parsed) {
+		asprintf(&f->date, "%s %2s %5s", m, d, y);
+		rfile_parse_time(f, m, d, y);
+		if(f->mtime == (time_t)-1)
+			ftp_trace("rfile_parse_time failed! date == '%s'\n", f->date);
+		xfree(m);
+		xfree(d);
+		xfree(y);
+	}
 
 	if(!cf)
 		return -1;
@@ -664,15 +728,22 @@ static int rfile_parse_mlsd(rfile *f, char *str, const char *dirpath)
 	return 0;
 }
 
-int rfile_parse(rfile *f, char *str, const char *dirpath)
+int rfile_parse(rfile *f, char *str, const char *dirpath, bool is_mlsd)
 {
 	int i;
 	int r = -1;
 
+	if(is_mlsd) {
+		char *tmp = xstrdup(str);
+		r = rfile_parse_mlsd(f, tmp, dirpath);
+		xfree(tmp);
+		return r;
+	}
+
 	if(ftp->LIST_type == ltUnknown)
 		ftp->LIST_type = ltUnix;
 
-	for(i=0;i<4;i++) {
+	for(i=0;i<3;i++) {
 		char *tmp = xstrdup(str);
 
 		if(ftp->LIST_type == ltUnix)
@@ -681,8 +752,8 @@ int rfile_parse(rfile *f, char *str, const char *dirpath)
 			r = rfile_parse_dos(f, tmp, dirpath);
 		else if(ftp->LIST_type == ltEplf)
 			r = rfile_parse_eplf(f, tmp, dirpath);
-		else if(ftp->LIST_type == ltMlsd)
-			r = rfile_parse_mlsd(f, tmp, dirpath);
+/*		else if(ftp->LIST_type == ltMlsd)
+		r = rfile_parse_mlsd(f, tmp, dirpath);*/
 
 		xfree(tmp);
 
@@ -696,11 +767,11 @@ int rfile_parse(rfile *f, char *str, const char *dirpath)
 				ftp->LIST_type = ltEplf;
 				ftp_trace("DOS output parsing failed, trying EPLF\n");
 			} else if(ftp->LIST_type == ltEplf) {
-				ftp->LIST_type = ltMlsd;
-				ftp_trace("EPLF output parsing failed, trying MLSD\n");
-			} else if(ftp->LIST_type == ltMlsd) {
 				ftp->LIST_type = ltUnix;
-				ftp_trace("MLSD output parsing failed, trying UNIX\n");
+				ftp_trace("EPLF output parsing failed, trying UNIX\n");
+/*			} else if(ftp->LIST_type == ltMlsd) {
+				ftp->LIST_type = ltUnix;
+				ftp_trace("MLSD output parsing failed, trying UNIX\n");*/
 			}
 		} else
 			return r;
