@@ -1,5 +1,4 @@
 # sample config file for Yafc -*- sh -*-
-# this file resides in ~/.yafc/yafcrc
 # If you plan to save passwords in this file,
 # make sure permissions is no more than 0600 (chmod 0600 yafcrc)
 

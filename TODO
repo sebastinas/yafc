@@ -6,7 +6,6 @@ TODO list for Yafc
 * remove more hints from cmds[]
 * ls -r doesn't work (no sorting done)
 * ltag should ignore multiples just as tag does
-* per connection setting for passive mode
 * keep-alive (send NOOP or similar when idle)
 * IPv6 support
 * EPSV and EPRT support (RFC2428)
