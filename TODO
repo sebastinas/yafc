@@ -1,6 +1,7 @@
 TODO list for Yafc
 ------------------
 
+! ls . still doesn't work
 * option: do reverse DNS lookups? (Ari Pollak)
 ? config option for default answers to questions (get/put/fxp/more?)
 * fix --chgrp / --chmod for directories (get)
