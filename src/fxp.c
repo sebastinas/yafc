@@ -99,6 +99,7 @@ static void print_fxp_syntax(void)
 			 "  -R, --resume         resume broken download (restart at eof)\n"
 			 "  -s, --skip-existing  skip file if destination exists\n"
 			 "  -t, --tagged         transfer tagged files\n"
+			 "  -T, --target=HOST    specify target host\n"
 			 "      --type=TYPE      specify transfer type, 'ascii' or 'binary'\n"
 			 "  -u, --unique         store in unique filename (if target supports STOU)\n"
 			 "  -v, --verbose        explain what is being done\n"
