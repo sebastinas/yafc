@@ -279,9 +279,8 @@ int ssh_help(const char *arg)
 
 unsigned long ssh_filesize(const char *path)
 {
-	ftp_err("ssh_filesize() not implemented yet\n");
-
-	return 0;
+	Attrib *a = ssh_stat(path);
+	return a ? a->size : 0;
 }
 
 rdirectory *ssh_read_directory(const char *path)
