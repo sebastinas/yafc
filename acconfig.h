@@ -45,6 +45,12 @@
 
 #undef KRB5
 
+/* Define this if we're using MIT's implementation of krb5 */
+#undef KRB5_MIT
+
+/* Define this if we're using the Heimdal implementation of krb5 */
+#undef KRB5_HEIMDAL
+
 #undef HAVE_LIBDES
 
 #undef HOSTTYPE
