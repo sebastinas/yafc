@@ -1,7 +1,8 @@
 info_TEXINFOS = yafc.texi
 yafc_TEXINFOS = \
     yafc_alias.texi \
-    yafc_autologin.texi \
+    yafc_bookmark.texi \
+    yafc_config.texi \
 	yafc_color.texi \
 	yafc_commands.texi \
 	yafc_intro.texi \

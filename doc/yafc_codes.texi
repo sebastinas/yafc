@@ -76,7 +76,7 @@ character 0x## (hex)
 @end table
 
 @c ===========================================================
-@node Transfer codes, Autologin, Prompt codes, Configuration
+@node Transfer codes, Aliases, Prompt codes, Configuration
 @section Transfer codes
 
 These codes can be used in the transfer strings. For all codes, there may be

@@ -2,8 +2,8 @@
 @section Colors
 
 Escape codes can be used to display colors in the transfer strings and the
-prompts. All escape codes must
-be surrounded by %@{ and %@} pairse for readline to correctly wrap long lines.
+prompts. All escape codes must be surrounded by %@{ and %@} pairs for readline
+to correctly wrap long lines.
 
 The built-in command @code{ls} has an option @samp{--color}. You must set the
 environment variable @var{LS_COLORS} (or @var{LS_COLOURS}) for this to work.

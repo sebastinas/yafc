@@ -1,4 +1,4 @@
-@node Aliases, Colors, Autologin, Configuration
+@node Aliases, Colors, Transfer codes, Configuration
 @section Aliases
 
 Just like in the shell, you can create aliases for commands you use

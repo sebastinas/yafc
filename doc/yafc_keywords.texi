@@ -20,7 +20,7 @@ address.
 type: boolean
 
 Setting this to true will cause yafc to attempt to login automatically.
-Information for doing this is specified by @xref{Autologin}.
+Information for doing this is specified by @xref{Bookmarks}.
 
 @item quit_on_eof
 type: boolean
@@ -31,7 +31,7 @@ Quits yafc on end-of-file (usually @kbd{Ctrl-D}).
 type: boolean
 
 Read additional autologin entries from @file{~/.netrc}.
-@ref{Autologin}.
+@ref{Bookmarks}.
 
 @item use_passive_mode
 type: boolean

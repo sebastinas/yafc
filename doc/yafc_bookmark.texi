@@ -1,7 +1,19 @@
-@node Autologin, Aliases, Transfer codes, Configuration
-@section Autologin
+@node Bookmarks, Kerberos, Configuration, top
+@chapter Bookmarks 
 
-Documentation missing...
+Just like creating bookmarks for web pages in a browser, you can create
+bookmarks for ftp sites in Yafc. These can later be used for
+autologin to that site.
+
+When connected to an ftp site, use the @code{bookmark} command to
+create a bookmark for that site. If you logged in with a username
+and password, Yafc will ask if you want to save the password in
+the bookmarks file. If you do, be sure it isn't world readable.
+By using the @code{auto_bookmark} keyword in the configuration
+file, Yafc can create bookmarks automatically for new sites.
+
+The bookmarks are available to the @code{open} command, with tab
+completion.
 
 The autologin information is stored in much the same way as in the
 @file{~/.netrc} file used by standard ftp(1), except that the macdef option
@@ -11,14 +23,14 @@ An entry must begin with a @code{machine}, @code{default} or @code{local}
 keyword.
 
 @menu
-* Autologin keywords::          keywords for autologin
-* Autologin examples::          examples
+* Bookmark keywords::          keywords for bookmarks
+* Bookmark examples::          examples
 @end menu
 
-@c -----------------------------------------------------
+@c ======================================================
 
-@node Autologin keywords, Autologin examples, , Autologin
-@subsection Autologin keywords
+@node Bookmark keywords, Bookmark examples, , Bookmarks
+@subsection Bookmark keywords
 
 @table @samp
 
@@ -73,7 +85,7 @@ This is a no-op if not compiled with Kerberos.
 
 @item mech
 List the preferred security mechanisms to use. This is the same as
-@code{default_mechanism}, except it is only use for this machine.
+@code{default_mechanism}, except it is only used for this machine.
 
 @item passive
 Boolean option requiring an argument (true/false). If true, use passive
@@ -82,10 +94,10 @@ in the configuration file.
 
 @end table
 
-@c -----------------------------------------------------
+@c ============================================================
 
-@node Autologin examples, , Autologin keywords, Autologin
-@subsection Autologin examples
+@node Bookmark examples, , Bookmark keywords, Bookmarks
+@subsection Bookmark examples
 
 @table @code
 

@@ -210,9 +210,9 @@ File: yafc.info,  Node: The shell,  Next: Configuration,  Prev: Invoking Yafc,  
 The shell
 *********
 
-   Yafc presents the user with an internal shell. Command redirection
-is available, using the conventional shell syntax (eg `cat foo.txt >
-foo' will copy the remote file foo.txt to the local file foo.) Input
+   Yafc presents the user with an internal shell. Command redirection is
+available, using the conventional shell syntax (eg `cat foo.txt > foo'
+will copy the remote file foo.txt to the local file foo.) Input
 redirection, however, is not supported. Also asynchronous mode is not
 supported. The following will thus be rejected: `ls |emacs &' or `open
 < login.foo'.
@@ -237,7 +237,7 @@ description.
 * Menu:
 
 * !::                           execute shell command
-* afslog::
+* afslog::                      obtain remote AFS tokens
 * alias::                       create an alias
 * bookmark::                    create a bookmark
 * cache::                       control directory cache
@@ -249,8 +249,10 @@ description.
 * copyright::                   show copyright notice
 * filesize::                    print filesize in bytes
 * filetime::                    print file modification time
+* flush::                       flush replies
+* fxp::                         transfer files between hosts
 * get::                         get files
-* help::
+* help::                        don't panic
 * idle::                        modify idle time
 * kauth::                       authenticate to Kerberos
 * kdestroy::                    destroy Kerberos tickets
@@ -320,8 +322,6 @@ File: yafc.info,  Node: bookmark,  Next: cache,  Prev: alias,  Up: Yafc commands
 
 `bookmark'
 ----------
-
-   documentation missing...
 
 
 File: yafc.info,  Node: cache,  Next: cat,  Prev: bookmark,  Up: Yafc commands
@@ -443,7 +443,7 @@ File: yafc.info,  Node: filesize,  Next: filetime,  Prev: copyright,  Up: Yafc c
    documentation missing...
 
 
-File: yafc.info,  Node: filetime,  Next: get,  Prev: filesize,  Up: Yafc commands
+File: yafc.info,  Node: filetime,  Next: flush,  Prev: filesize,  Up: Yafc commands
 
 `filetime'
 ----------
@@ -451,7 +451,159 @@ File: yafc.info,  Node: filetime,  Next: get,  Prev: filesize,  Up: Yafc command
    documentation missing...
 
 
-File: yafc.info,  Node: get,  Next: help,  Prev: filetime,  Up: Yafc commands
+File: yafc.info,  Node: flush,  Next: fxp,  Prev: filetime,  Up: Yafc commands
+
+`flush'
+-------
+
+   documentation missing...
+
+
+File: yafc.info,  Node: fxp,  Next: get,  Prev: flush,  Up: Yafc commands
+
+`fxp'
+-----
+
+   Transfer files from one remote server to another remote server,
+bypassing the client. This is done by setting up a passive mode
+connection on the source host and using the obtained port for an active
+connection on the target host. The source host is the current active
+host, the target host must be specified using the `--target=HOST'
+option.
+
+   This will not always work, either because passive mode is not
+supported on the source host, or because the target refuses the given
+port. The target ftp server might refuse the port as a security policy.
+You might get the error 'Illegal PORT Command' or 'Possible port theft'.
+
+   If the destination file already exists, and none of the options
+`--append', `--force', `--newer', `--resume', `--skip-existing' or
+`--unique' is given, you will be prompted what to do.
+
+   Usage:
+     fxp [options] file ...
+
+   Options:
+
+`-a'
+`--append'
+     Append if destination exists.
+
+`-D'
+`--delete-after'
+     Delete remote file after successful transfer.
+
+`--dir-mask=GLOB'
+     Enter only directories matching GLOB pattern.
+
+`--dir-rx-mask=REGEXP'
+     Enter only directories matching REGEXP pattern.
+
+`-f'
+`--force'
+     Overwrite existing destinations, never prompt.
+
+`-H'
+`--nohup'
+     Transfer files in background (nohup mode), quits yafc.
+
+`-i'
+`--interactive'
+     Prompt before each transfer.
+
+`-L FILE'
+`--logfile=FILE'
+     Use FILE as logfile instead of `~/.yafc/nohup/nohup.<pid>'.
+
+`-m GLOB'
+`--mask=GLOB'
+     Only transfer files matching GLOB pattern.
+
+`-M REGEXP'
+`--rx-mask=REGEXP'
+     Only transfer files matching REGEXP pattern.
+
+`-n'
+`--newer'
+     Only transfer file if remote is newer than local file.
+
+`-o DEST'
+`--output=DEST'
+     Specify other destination. If more than one file is transferred,
+     or option `--recursive' is given, DEST denotes a directory.
+     Otherwise (if only one file is to be transferred), DEST denotes a
+     filename.
+
+     Examples:
+          fxp --target=2 foo.tar.gz -o bar.tar.gz
+     will transfer the remote file `foo.tar.gz' on the currently active
+     remote server to the remote file `bar.tar.gz' on the remote server
+     specified with the `--target' option (in this case the second open
+     connection).
+
+          fxp --target=funet *.tar.gz -o foo
+     will transfer all remote `*.tar.gz' files to a directory named
+     `foo' on the host specified with the `--target' option (in this
+     case 'funet').
+
+          fxp -T ftp.stacken.kth.se foo -r -o bar
+     will transfer the remote file `foo' to a directory named `bar' on
+     ftp.stacken.kth.se.  If `foo' is a directory, it will be
+     downloaded recursively.
+
+`-p'
+`--preserve'
+     Try to preserve file attributes.
+
+`-P'
+`--parents'
+     Append source path to destination.
+
+`-q'
+`--quiet'
+     Overrides `--verbose'.
+
+`-r'
+`--recursive'
+     Transfer directories recursively.
+
+`-R'
+`--resume'
+     Resume broken download (restart at EOF).
+
+`-s'
+`--skip-existing'
+     Always skip existing files.
+
+`-t'
+`--tagged'
+     Transfer tagged files.
+
+`-T HOST'
+`--target=HOST'
+     This option is required and specifies which remote server is the
+     target.  The HOST parameter can be a complete hostname, an alias
+     or the connection number. The connection number is 1 for the first
+     open connection, 2 for the second and so on. It might be useful to
+     include that information in the prompt using the `%C' code, *Note
+     Prompt codes::.
+
+`--type=TYPE'
+     Specify transfer type, 'ascii' or 'binary'.
+
+`-u'
+`--unique'
+     Always store as unique target file.
+
+`-v'
+`--verbose'
+     Explain what is being done.
+
+`--help'
+     Show a short syntax description.
+
+
+File: yafc.info,  Node: get,  Next: help,  Prev: fxp,  Up: Yafc commands
 
 `get'
 -----
@@ -1188,8 +1340,7 @@ Nohup transfers
 itself to the background and continue to transfer the specified files,
 allowing you to use your shell or even logout. Output is redirected to
 the file `~/.yafc/nohup/nohup.pid', or to file specified by option
-`--logfile=FILE'.  Combine this option with `--parents' and `--force'
-or `--unique' to get the best results.
+`--logfile=FILE'.
 
    If you have tagged any files (with the `tag' command, see *Note
 tag::), add the option `--tagged' to the get command to transfer those
@@ -1232,7 +1383,6 @@ inputrc file is included in the distribution.
 * Keywords::                    Configuration keywords used
 * Prompt codes::                Special codes in the prompts
 * Transfer codes::              Special codes in the transfer strings
-* Autologin::                   Writing autologin entries
 * Aliases::                     Writing aliases
 * Colors::                      Using colors
 
@@ -1261,7 +1411,7 @@ on/off. The keywords are case insensitive.
 
      Setting this to true will cause yafc to attempt to login
      automatically.  Information for doing this is specified by *Note
-     Autologin::.
+     Bookmarks::.
 
 `quit_on_eof'
      type: boolean
@@ -1272,7 +1422,7 @@ on/off. The keywords are case insensitive.
      type: boolean
 
      Read additional autologin entries from `~/.netrc'.  *Note
-     Autologin::.
+     Bookmarks::.
 
 `use_passive_mode'
      type: boolean
@@ -1629,7 +1779,7 @@ field width. This is an integer between the '%' and the code character.
      character 0x## (hex)
 
 
-File: yafc.info,  Node: Transfer codes,  Next: Autologin,  Prev: Prompt codes,  Up: Configuration
+File: yafc.info,  Node: Transfer codes,  Next: Aliases,  Prev: Prompt codes,  Up: Configuration
 
 Transfer codes
 ==============
@@ -1681,126 +1831,7 @@ negative (start with a minus), the string is left-justified, so using
      visual progress bar
 
 
-File: yafc.info,  Node: Autologin,  Next: Aliases,  Prev: Transfer codes,  Up: Configuration
-
-Autologin
-=========
-
-   Documentation missing...
-
-   The autologin information is stored in much the same way as in the
-`~/.netrc' file used by standard ftp(1), except that the macdef option
-is not supported.
-
-   An entry must begin with a `machine', `default' or `local' keyword.
-
-* Menu:
-
-* Autologin keywords::          keywords for autologin
-* Autologin examples::          examples
-
-
-File: yafc.info,  Node: Autologin keywords,  Next: Autologin examples,  Up: Autologin
-
-Autologin keywords
-------------------
-
-`machine'
-     Specify the hostname to connect to or a domainname. The hostname
-     can be a valid FTP URL, including username, password, etc. In that
-     case there is no need to specify the corresponding keywords. Using
-     the URL syntax is the only way to specify a non-standard port.
-
-     Domainnames should begin with a period, as in `.kth.se'. This will
-     match any hostname on that domain, except for hostnames explicitly
-     mentioned with another `machine' keyword.  You can not specify an
-     alias name for a domain entry.
-
-`alias'
-     Specifies another (verbose) name for the bookmark, like `ruby'
-     instead of `ftp.netlab.co.jp'. This is the name that will be shown
-     in the tab completion list. Valid only after a `machine' statement.
-
-`local'
-     If an entry begins with `local', it specifies how to login to all
-     ocal machines. Local machines are unqualified hostnames (ie,
-     hostnames without a period.)
-
-     This can be overridden with an entry for a specific machine.
-
-`default'
-     The `default' entry is used when no other `machine' or `local'
-     keyword matched. It can be used to login anonymously to all
-     unknown sites.
-
-`login'
-     Specify the username.
-
-`anonymous'
-     Try an anonymous login, uses ANON_PASSWORD.
-
-`password'
-     Specify the password, if required.
-
-`account'
-     Specify account name. Not fully supported, anyone using it?
-
-`cwd'
-     This keyword specifies a startup directory on the remote server.
-     Yafc changes the current directory when logged in.
-
-`prot'
-     The prot keyword sets the Kerberos data protection level.  Valid
-     protection levels are `safe', `clear' and `private'.
-
-     This is a no-op if not compiled with Kerberos.
-
-`mech'
-     List the preferred security mechanisms to use. This is the same as
-     `default_mechanism', except it is only use for this machine.
-
-`passive'
-     Boolean option requiring an argument (true/false). If true, use
-     passive mode in data transfers, regardless of the value of
-     `use_passive_mode' in the configuration file.
-
-
-File: yafc.info,  Node: Autologin examples,  Prev: Autologin keywords,  Up: Autologin
-
-Autologin examples
-------------------
-
-`default login anonymous'
-     as default, login as 'anonymous' and prompt for password
-
-`local login mhe'
-     login as 'mhe' on all machines on the local network (machines w/o
-     a '.')
-
-`machine .foo.bar.se login niels'
-     login as 'niels' on all hosts on .foo.bar.se domain
-
-`machine dent.foo.bar.se login slartibartfast cwd ~/fjord'
-     login as 'slartibartfast' on dent.foo.bar.se and start in
-     directory ~/fjord
-
-`machine slartibartfast@dent.foo.bar.se/fjord'
-     identical to the example above, but using an ftp URL instead
-
-`machine ftp.gurka.com:4711 anonymous'
-     login as 'anonymous' and automagically supply password from
-     anon_password, connect on non-standard port 4711
-
-`machine mayer.physto.se anonymous cwd /pub/yafc alias yafc'
-     login anonymously to machine mayer.physto.se with other name yafc
-
-`machine shell.stacken.kth.se login mhe mech krb4 passive yes alias stacken'
-     login as mhe using Kerberos 4 authentication, and use passive mode
-     for transfers (overrides the use_passive_mode keyword in the
-     config file)
-
-
-File: yafc.info,  Node: Aliases,  Next: Colors,  Prev: Autologin,  Up: Configuration
+File: yafc.info,  Node: Aliases,  Next: Colors,  Prev: Transfer codes,  Up: Configuration
 
 Aliases
 =======
@@ -1865,8 +1896,8 @@ Colors
 ======
 
    Escape codes can be used to display colors in the transfer strings
-and the prompts. All escape codes must be surrounded by %{ and %}
-pairse for readline to correctly wrap long lines.
+and the prompts. All escape codes must be surrounded by %{ and %} pairs
+for readline to correctly wrap long lines.
 
    The built-in command `ls' has an option `--color'. You must set the
 environment variable LS_COLORS (or LS_COLOURS) for this to work.  See
@@ -1967,6 +1998,117 @@ bookmarks automatically for new sites.
    The bookmarks are available to the `open' command, with tab
 completion.
 
+   The autologin information is stored in much the same way as in the
+`~/.netrc' file used by standard ftp(1), except that the macdef option
+is not supported.
+
+   An entry must begin with a `machine', `default' or `local' keyword.
+
+* Menu:
+
+* Bookmark keywords::          keywords for bookmarks
+* Bookmark examples::          examples
+
+
+File: yafc.info,  Node: Bookmark keywords,  Next: Bookmark examples,  Up: Bookmarks
+
+Bookmark keywords
+-----------------
+
+`machine'
+     Specify the hostname to connect to or a domainname. The hostname
+     can be a valid FTP URL, including username, password, etc. In that
+     case there is no need to specify the corresponding keywords. Using
+     the URL syntax is the only way to specify a non-standard port.
+
+     Domainnames should begin with a period, as in `.kth.se'. This will
+     match any hostname on that domain, except for hostnames explicitly
+     mentioned with another `machine' keyword.  You can not specify an
+     alias name for a domain entry.
+
+`alias'
+     Specifies another (verbose) name for the bookmark, like `ruby'
+     instead of `ftp.netlab.co.jp'. This is the name that will be shown
+     in the tab completion list. Valid only after a `machine' statement.
+
+`local'
+     If an entry begins with `local', it specifies how to login to all
+     ocal machines. Local machines are unqualified hostnames (ie,
+     hostnames without a period.)
+
+     This can be overridden with an entry for a specific machine.
+
+`default'
+     The `default' entry is used when no other `machine' or `local'
+     keyword matched. It can be used to login anonymously to all
+     unknown sites.
+
+`login'
+     Specify the username.
+
+`anonymous'
+     Try an anonymous login, uses ANON_PASSWORD.
+
+`password'
+     Specify the password, if required.
+
+`account'
+     Specify account name. Not fully supported, anyone using it?
+
+`cwd'
+     This keyword specifies a startup directory on the remote server.
+     Yafc changes the current directory when logged in.
+
+`prot'
+     The prot keyword sets the Kerberos data protection level.  Valid
+     protection levels are `safe', `clear' and `private'.
+
+     This is a no-op if not compiled with Kerberos.
+
+`mech'
+     List the preferred security mechanisms to use. This is the same as
+     `default_mechanism', except it is only used for this machine.
+
+`passive'
+     Boolean option requiring an argument (true/false). If true, use
+     passive mode in data transfers, regardless of the value of
+     `use_passive_mode' in the configuration file.
+
+
+File: yafc.info,  Node: Bookmark examples,  Prev: Bookmark keywords,  Up: Bookmarks
+
+Bookmark examples
+-----------------
+
+`default login anonymous'
+     as default, login as 'anonymous' and prompt for password
+
+`local login mhe'
+     login as 'mhe' on all machines on the local network (machines w/o
+     a '.')
+
+`machine .foo.bar.se login niels'
+     login as 'niels' on all hosts on .foo.bar.se domain
+
+`machine dent.foo.bar.se login slartibartfast cwd ~/fjord'
+     login as 'slartibartfast' on dent.foo.bar.se and start in
+     directory ~/fjord
+
+`machine slartibartfast@dent.foo.bar.se/fjord'
+     identical to the example above, but using an ftp URL instead
+
+`machine ftp.gurka.com:4711 anonymous'
+     login as 'anonymous' and automagically supply password from
+     anon_password, connect on non-standard port 4711
+
+`machine mayer.physto.se anonymous cwd /pub/yafc alias yafc'
+     login anonymously to machine mayer.physto.se with other name yafc
+
+`machine shell.stacken.kth.se login mhe mech krb4 passive yes alias stacken'
+     login as mhe using Kerberos 4 authentication, and use passive mode
+     for transfers (overrides the use_passive_mode keyword in the
+     config file)
+
 
 File: yafc.info,  Node: Kerberos,  Next: Proxy,  Prev: Bookmarks,  Up: Top
 
@@ -1978,10 +2120,10 @@ Kerberos 4/5 without sending the password in cleartext. For anonymous
 logins, Kerberos is never used. The default protection level for data
 connections is clear, ie no encryption on transfers. Use the command
 `prot' (*Note prot::), to change the data protection level. Valid
-arguments are `clear', `safe', and `private'.  Note that confidential
-protection is not supported in Kerberos 4.  You can use the `prot'
-keyword (*note Autologin keywords::) in the configuration file to
-automagically set the protection level for autologin.
+arguments are `clear', `safe', and `private'. Note that confidential
+protection is not supported in Kerberos 4. You can use the `prot'
+keyword (*note Bookmark keywords::) in the bookmarks file to
+automagically set the protection level for a specific host.
 
 
 File: yafc.info,  Node: Proxy,  Prev: Kerberos,  Up: Top
@@ -1990,8 +2132,6 @@ Proxy
 *****
 
    Documentation missing...
-
-   The proxy support is untested. Please report.
 
 
 
@@ -2004,74 +2144,75 @@ Node: Motivation3144
 Node: Invoking Yafc3738
 Node: The shell6343
 Node: Yafc commands6908
-Node: !10035
-Node: afslog10169
-Node: alias10296
-Node: bookmark10419
-Node: cache10555
-Node: cat11086
-Node: cd11608
-Node: cdup11963
-Node: chmod12134
-Node: close12397
-Node: copyright12528
-Node: filesize12661
-Node: filetime12804
-Node: get12941
-Node: help15651
-Node: idle15772
-Node: kauth15900
-Node: kdestroy16030
-Node: klist16167
-Node: krbtkfile16299
-Node: lcd16447
-Node: list16578
-Node: lpwd16686
-Node: ls16812
-Node: ltag18451
-Node: luntag18565
-Node: mkdir18688
-Node: mv18878
-Node: nlist18967
-Node: nop19060
-Node: open19151
-Node: prot19884
-Node: put20371
-Node: pwd22891
-Node: quit23046
-Node: quote23168
-Node: rhelp23294
-Node: rm23418
-Node: rmdir23878
-Node: rstatus24004
-Node: set24135
-Node: shell24258
-Node: site24382
-Node: source24597
-Node: status24727
-Node: switch24859
-Node: system24991
-Node: tag25120
-Node: unalias25244
-Node: untag25375
-Node: url25502
-Node: user25622
-Node: version25746
-Node: warranty25881
-Node: Nohup transfers26005
-Node: Configuration26933
-Node: Keywords28387
-Node: Prompt codes37205
-Node: Transfer codes38426
-Node: Autologin39391
-Node: Autologin keywords39875
-Node: Autologin examples42070
-Node: Aliases43267
-Node: Alias examples43787
-Node: Colors45352
-Node: ANSI attribute codes46058
-Node: Bookmarks47055
-Node: Kerberos47778
-Node: Proxy48477
+Node: !10223
+Node: afslog10357
+Node: alias10484
+Node: bookmark10607
+Node: cache10714
+Node: cat11245
+Node: cd11767
+Node: cdup12122
+Node: chmod12293
+Node: close12556
+Node: copyright12687
+Node: filesize12820
+Node: filetime12963
+Node: flush13102
+Node: fxp13230
+Node: get16957
+Node: help19662
+Node: idle19783
+Node: kauth19911
+Node: kdestroy20041
+Node: klist20178
+Node: krbtkfile20310
+Node: lcd20458
+Node: list20589
+Node: lpwd20697
+Node: ls20823
+Node: ltag22462
+Node: luntag22576
+Node: mkdir22699
+Node: mv22889
+Node: nlist22978
+Node: nop23071
+Node: open23162
+Node: prot23895
+Node: put24382
+Node: pwd26902
+Node: quit27057
+Node: quote27179
+Node: rhelp27305
+Node: rm27429
+Node: rmdir27889
+Node: rstatus28015
+Node: set28146
+Node: shell28269
+Node: site28393
+Node: source28608
+Node: status28738
+Node: switch28870
+Node: system29002
+Node: tag29131
+Node: unalias29255
+Node: untag29386
+Node: url29513
+Node: user29633
+Node: version29757
+Node: warranty29892
+Node: Nohup transfers30016
+Node: Configuration30853
+Node: Keywords32249
+Node: Prompt codes41067
+Node: Transfer codes42288
+Node: Aliases43251
+Node: Alias examples43776
+Node: Colors45341
+Node: ANSI attribute codes46046
+Node: Bookmarks47043
+Node: Bookmark keywords48102
+Node: Bookmark examples50294
+Node: Kerberos51487
+Node: Proxy52185
 
 End Tag Table
