@@ -948,6 +948,7 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 	}
 	if(!fp) {
 		ftp_err("%s: %s\n", outfile, strerror(errno));
+		ftp->restart_offset = 0L;
 		return -1;
 	}
 
@@ -956,6 +957,7 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 			ftp_err(_("%s: %s, transfer cancelled\n"),
 					outfile, strerror(errno));
 			close_func(fp);
+			ftp->restart_offset = 0L;
 			return -1;
 		}
 	}
