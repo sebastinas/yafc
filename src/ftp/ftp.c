@@ -1378,6 +1378,7 @@ rfile *ftp_get_file(const char *path)
 		return 0;
 
 	ap = ftp_path_absolute(path);
+	stripslash(ap);
 
 	f = ftp_cache_get_file(ap);
 	if(!f) {
@@ -1385,7 +1386,7 @@ rfile *ftp_get_file(const char *path)
 		rdirectory *rdir = ftp_get_directory(p);
 		xfree(p);
 		if(rdir)
-			f = rdir_get_file(rdir, base_name_ptr(path));
+			f = rdir_get_file(rdir, base_name_ptr(ap));
 	}
 	xfree(ap);
 	return f;
