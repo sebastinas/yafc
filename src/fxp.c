@@ -1,4 +1,4 @@
-/* $Id: fxp.c,v 1.8 2001/05/12 18:44:37 mhe Exp $
+/* $Id: fxp.c,v 1.9 2001/05/13 20:06:55 mhe Exp $
  *
  * fxp.c -- transfer files between hosts
  *
@@ -476,7 +476,7 @@ void cmd_fxp(int argc, char **argv)
 	int ret;
 	char fxp_rx_errbuf[129];
 #endif
-	int c, opt = 0;
+	int c, opt = FXP_VERBOSE;
 	struct option longopts[] = {
 		{"append", no_argument, 0, 'a'},
 		{"delete-after", no_argument, 0, 'D'},

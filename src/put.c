@@ -1,4 +1,4 @@
-/* $Id: put.c,v 1.9 2001/05/12 18:44:37 mhe Exp $
+/* $Id: put.c,v 1.10 2001/05/13 20:06:55 mhe Exp $
  *
  * put.c -- upload files
  *
@@ -369,7 +369,7 @@ static void putfiles(const list *gl, unsigned opt, const char *output)
 /* store a local file on remote server */
 void cmd_put(int argc, char **argv)
 {
-	int c, opt=0;
+	int c, opt=PUT_VERBOSE;
 	list *gl;
 	char *put_output = 0;
 	char *logfile = 0;

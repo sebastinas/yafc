@@ -1,4 +1,4 @@
-/* $Id: get.c,v 1.9 2001/05/12 18:44:37 mhe Exp $
+/* $Id: get.c,v 1.10 2001/05/13 20:06:55 mhe Exp $
  *
  * get.c -- get file(s) from remote
  *
@@ -507,7 +507,7 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
 void cmd_get(int argc, char **argv)
 {
 	list *gl;
-	int opt=0, c;
+	int opt=GET_VERBOSE, c;
 	char *logfile = 0;
 	pid_t pid;
 	struct group *grp;
