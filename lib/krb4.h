@@ -1,4 +1,4 @@
-/* Modified for use in Yafc by Martin Hedenfalk <mhe@stacken.kth.se>
+/* Modified for use in Yafc by Martin Hedenfalk <mhe@home.se>
  * last changed: 980729
  */
 
@@ -40,7 +40,7 @@
  * SUCH DAMAGE.
  */
 
-/* $Id: krb4.h,v 1.1 2000/09/14 14:06:26 mhe Exp $ */
+/* $Id: krb4.h,v 1.2 2000/10/13 22:43:04 mhe Exp $ */
 
 #ifndef __KRB4_H__
 #define __KRB4_H__

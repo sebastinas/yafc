@@ -1,4 +1,4 @@
-/* modified by Martin Hedenfalk <mhe@stacken.kth.se> 19 aug 2000
+/* modified by Martin Hedenfalk <mhe@home.se> 19 aug 2000
  */
 
 /*
@@ -34,7 +34,7 @@
  * SUCH DAMAGE. 
  */
 
-/* $Id: security.h,v 1.3 2000/10/06 10:30:40 mhe Exp $ */
+/* $Id: security.h,v 1.4 2000/10/13 22:43:04 mhe Exp $ */
 
 #ifndef __security_h__
 #define __security_h__

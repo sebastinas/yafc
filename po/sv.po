@@ -889,7 +889,7 @@ msgstr ""
 "\n"
 "(*) gäller bara om ett värddatornamn givits på kommandoraden\n"
 "\n"
-"Rapportera fel till <mhe@stacken.kth.se>\n"
+"Rapportera fel till <mhe@home.se>\n"
 
 #. printf(_("This seems to be the first time you run Yafc...\n"));
 #: src/main.c:224

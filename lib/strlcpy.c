@@ -1,4 +1,4 @@
-/* modified by Martin Hedenfalk <mhe@stacken.kth.se> 19 aug 2000
+/* modified by Martin Hedenfalk <mhe@home.se> 19 aug 2000
  */
 
 /*
@@ -40,7 +40,7 @@
 /*#include "roken.h"*/
 #include "syshdr.h"
 
-/*RCSID("$Id: strlcpy.c,v 1.1 2000/09/14 14:06:20 mhe Exp $");*/
+/*RCSID("$Id: strlcpy.c,v 1.2 2000/10/13 22:43:04 mhe Exp $");*/
 
 #ifndef HAVE_STRLCPY
 

@@ -1,4 +1,4 @@
-/* modified by Martin Hedenfalk <mhe@stacken.kth.se> 21 aug 2000
+/* modified by Martin Hedenfalk <mhe@home.se> 21 aug 2000
  */
 
 /*
@@ -43,7 +43,7 @@
 #endif
 #include <gssapi.h>
 
-/*RCSID("$Id: gssapi.c,v 1.1 2000/09/14 14:06:17 mhe Exp $");*/
+/*RCSID("$Id: gssapi.c,v 1.2 2000/10/13 22:43:04 mhe Exp $");*/
 
 struct gss_data {
     gss_ctx_id_t context_hdl;

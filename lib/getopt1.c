@@ -1,4 +1,4 @@
-/* getopt1.c -- modified for use in Yafc (mhe@stacken.kth.se)
+/* getopt1.c -- modified for use in Yafc (mhe@home.se)
  * last changed: 980714
  */
 

@@ -1,4 +1,4 @@
-/* Modified for use in Yafc by Martin Hedenfalk <mhe@stacken.kth.se>
+/* Modified for use in Yafc by Martin Hedenfalk <mhe@home.se>
  * last changed: 990414
  */
 
@@ -46,7 +46,7 @@
 #include "commands.h"
 #include "args.h"
 
-/*RCSID("$Id: kauth.c,v 1.2 2000/09/23 13:04:56 mhe Exp $");*/
+/*RCSID("$Id: kauth.c,v 1.3 2000/10/13 22:43:04 mhe Exp $");*/
 
 void cmd_kauth(int argc, char **argv)
 {

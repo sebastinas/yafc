@@ -1,5 +1,5 @@
 
-/* modified by Martin Hedenfalk <mhe@stacken.kth.se> 19 aug 2000
+/* modified by Martin Hedenfalk <mhe@home.se> 19 aug 2000
  */
 
 /*
@@ -40,7 +40,7 @@
 #include "base64.h"
 #include "commands.h"
 
-/*RCSID("$Id: security.c,v 1.3 2000/10/06 10:30:40 mhe Exp $");*/
+/*RCSID("$Id: security.c,v 1.4 2000/10/13 22:43:04 mhe Exp $");*/
 
 /*static enum protection_level command_prot;*/
 /*static enum protection_level data_prot;*/

@@ -1,4 +1,4 @@
-/* modified by Martin Hedenfalk <mhe@stacken.kth.se> 19 aug 2000
+/* modified by Martin Hedenfalk <mhe@home.se> 19 aug 2000
  */
 
 /*
@@ -46,7 +46,7 @@ extern int krb_get_our_ip_for_realm(
 #endif
 /*#include <krb.h>*/
 
-/*RCSID("$Id: krb4.c,v 1.2 2000/10/09 21:02:49 mhe Exp $");*/
+/*RCSID("$Id: krb4.c,v 1.3 2000/10/13 22:43:04 mhe Exp $");*/
 
 #ifdef FTP_SERVER
 #define LOCAL_ADDR ctrl_addr
