@@ -46,7 +46,7 @@ extern int krb_get_our_ip_for_realm(
 #endif
 /*#include <krb.h>*/
 
-/*RCSID("$Id: krb4.c,v 1.1 2000/09/14 14:06:18 mhe Exp $");*/
+/*RCSID("$Id: krb4.c,v 1.1.1.1 2000/09/14 14:06:18 mhe Exp $");*/
 
 #ifdef FTP_SERVER
 #define LOCAL_ADDR ctrl_addr

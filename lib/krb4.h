@@ -40,7 +40,7 @@
  * SUCH DAMAGE.
  */
 
-/* $Id: krb4.h,v 1.1 2000/09/14 14:06:26 mhe Exp $ */
+/* $Id: krb4.h,v 1.1.1.1 2000/09/14 14:06:26 mhe Exp $ */
 
 #ifndef __KRB4_H__
 #define __KRB4_H__

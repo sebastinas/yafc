@@ -46,7 +46,7 @@
 #include "commands.h"
 #include "args.h"
 
-/*RCSID("$Id: kauth.c,v 1.1 2000/09/14 14:06:18 mhe Exp $");*/
+/*RCSID("$Id: kauth.c,v 1.1.1.1 2000/09/14 14:06:18 mhe Exp $");*/
 
 void cmd_kauth(int argc, char **argv)
 {

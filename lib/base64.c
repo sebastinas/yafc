@@ -38,7 +38,7 @@
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
-/*RCSID("$Id: base64.c,v 1.1 2000/09/14 14:06:23 mhe Exp $");*/
+/*RCSID("$Id: base64.c,v 1.1.1.1 2000/09/14 14:06:23 mhe Exp $");*/
 #endif
 #include <stdlib.h>
 #include <string.h>

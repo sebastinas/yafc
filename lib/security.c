@@ -43,7 +43,7 @@
 # include "commands.h"
 #endif
 
-/*RCSID("$Id: security.c,v 1.1 2000/09/14 14:06:19 mhe Exp $");*/
+/*RCSID("$Id: security.c,v 1.1.1.1 2000/09/14 14:06:19 mhe Exp $");*/
 
 /*static enum protection_level command_prot;*/
 /*static enum protection_level data_prot;*/

@@ -40,7 +40,7 @@
 /*#include "roken.h"*/
 #include "syshdr.h"
 
-/*RCSID("$Id: strlcpy.c,v 1.1 2000/09/14 14:06:20 mhe Exp $");*/
+/*RCSID("$Id: strlcpy.c,v 1.1.1.1 2000/09/14 14:06:20 mhe Exp $");*/
 
 #ifndef HAVE_STRLCPY
 

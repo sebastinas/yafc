@@ -44,7 +44,7 @@
  */
 
 /*char setproctitle_rcsid[] =
-  "$Id: setproctitle.c,v 1.1 2000/09/14 14:06:19 mhe Exp $";*/
+  "$Id: setproctitle.c,v 1.1.1.1 2000/09/14 14:06:19 mhe Exp $";*/
 
 #include "syshdr.h"
 
