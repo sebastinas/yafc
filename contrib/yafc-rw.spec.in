@@ -1,0 +1,72 @@
+%define	name	@PACKAGE@
+%define	version	@VERSION@
+%define	release	1
+%define	prefix	/usr
+
+Summary:	Yafc - yet another ftp client.
+Name:		%{name}
+Version:	%{version}
+Release:	%{release}
+Prefix:		%{prefix}
+Copyright:	GPL
+Group:		Applications/Internet
+URL:		http://www.stacken.kth.se/~mhe/yafc/
+Vendor:		Martin Hedenfalk <mhe@home.se>
+Source:		ftp://mayer.physto.se/pub/yafc/%{name}-%{version}.tar.bz2
+BuildRoot:	/var/tmp/%{name}-%{version}
+
+%description
+Yafc is yet another ftp client, similar to ftp(1).
+It is an interactive interface to the FTP protocol.
+
+FEATURES
+
+* cached directory listings
+* uses readline (tab completion, emacs/vi editing keys, history file, etc.)
+* extensive tab completion
+* multiple connections open
+* aliases
+* colored ls (ie, ls --color, uses $LS_COLORS like GNU ls)
+* autologin and bookmarks
+* Kerberos authentication support
+* recursive get/put/rm/ls
+* nohup mode get and put
+* tagging (queueing) of files for later transferring
+* automagically enters nohup-mode when SIGHUP received (in get and put)
+* redirection to local command or file ('>', '>>' and '|')
+* uses autoconf and automake
+* proxy support
+* Kerberos authentication
+* more...
+
+%prep
+%setup -q
+
+%build
+%configure --prefix=%{prefix}
+
+make
+
+%install
+if [ -d $RPM_BUILD_ROOT ]; then rm -rf $RPM_BUILD_ROOT; fi
+mkdir -p $RPM_BUILD_ROOT
+make prefix=$RPM_BUILD_ROOT%{prefix} install
+
+%clean
+if [ -d $RPM_BUILD_ROOT ]; then rm -rf $RPM_BUILD_ROOT; fi
+
+%post
+/sbin/install-info --info-dir=%{prefix}/info %{prefix}/info/yafc.info
+
+%preun
+/sbin/install-info --info-dir=%{prefix}/info --remove yafc.info
+
+%files
+%defattr(-,root,root)
+%doc contrib BUGS COPYING NEWS README THANKS inputrc.sample yafcrc.sample
+%{prefix}/bin/yafc
+%{prefix}/info/yafc.info
+%{prefix}/share/locale/*/LC_MESSAGES/yafc.mo
+
+%changelog
+
