@@ -1,4 +1,4 @@
-/* $Id: url.c,v 1.8 2002/02/23 13:16:30 mhe Exp $
+/* $Id: url.c,v 1.9 2002/05/09 13:50:44 mhe Exp $
  *
  * url.c -- splits an URL into its components
  *
@@ -214,8 +214,10 @@ void url_setmech(url_t *urlp, const char *mech_string)
 
 bool url_isanon(const url_t *url)
 {
-	return (strcmp(url->username, "ftp") == 0
-			|| strcmp(url->username, "anonymous") == 0);
+	if(url && url->username)
+		return (strcmp(url->username, "ftp") == 0
+				|| strcmp(url->username, "anonymous") == 0);
+	return false;
 }
 
 int urlcmp(const url_t *a, const url_t *b)

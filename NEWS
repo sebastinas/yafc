@@ -6,6 +6,13 @@ New in 0.7.9
   destination already exists and is a directory the file is put in that
   directory (thanks David Harris)
 
+* the "long command" setting now also applies to connection attempts (thanks Aubin Paul)
+
+* put, rm, untag, cat and ltag functions now handles quoted characters
+  correctly (thanks to Mark Schreiber)
+
+* fixed segfault with bookmarks without login (thanks Markus Dobel)
+
 
 New in 0.7.8
 ------------

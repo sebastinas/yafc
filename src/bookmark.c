@@ -1,4 +1,4 @@
-/* $Id: bookmark.c,v 1.16 2002/03/11 19:00:05 mhe Exp $
+/* $Id: bookmark.c,v 1.17 2002/05/09 13:50:44 mhe Exp $
  *
  * bookmark.c -- create bookmark(s)
  *
@@ -71,7 +71,7 @@ static void bookmark_save_one(FILE *fp, url_t *url)
 	if(url_isanon(url) && url->password
 	   && strcmp(url->password, gvAnonPasswd) == 0)
 		fprintf(fp, "\n  anonymous");
-	else {
+	else if(url->username) {
 		fprintf(fp, "\n  login %s", url->username);
 		if(url->password) {
 			if(url_isanon(url))
@@ -281,7 +281,7 @@ static bool should_update_bookmark(url_t *url)
 		return false;
 
 	/* don't update bookmark if username has changed */
-	if(strcmp(url->username, ftp->url->username) != 0)
+	if(url->username && strcmp(url->username, ftp->url->username) != 0)
 		return false;
 
 	if(url->directory && strcmp(url->directory, ftp->curdir) != 0)
