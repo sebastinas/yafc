@@ -153,6 +153,7 @@ alias bzcat "cat --type=binary %* | bzcat"
 alias page "cat --type=ascii %* | $PAGER"
 alias zpage "cat --type=binary %* | zcat | $PAGER"
 alias bzpage "cat --type=binary %* | bzcat | $PAGER"
+alias show_trace "!$PAGER $HOME/.yafc/trace/trace.$PPID"
 
 # ftp prompts
 #
