@@ -448,7 +448,7 @@ void cmd_cd(int argc, char **argv)
 	maxargs(optind);
 #endif
 
-	maxargs(1);
+	maxargs_nohelp(1);
 	need_connected();
 	need_loggedin();
 
@@ -712,10 +712,10 @@ void cmd_site(int argc, char **argv)
 			 "try 'site help' or 'rhelp site' for more information\n");
 #endif
 
-	minargs(optind);
+	minargs_nohelp(1);
 	need_connected();
 
-	e = args_cat(argc, argv, optind);
+	e = args_cat(argc, argv, 1);
 	ftp_set_tmp_verbosity(vbCommand);
 	ftp_cmd("SITE %s", e);
 	xfree(e);
