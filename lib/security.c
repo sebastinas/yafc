@@ -1,5 +1,5 @@
 
-/* modified by Martin Hedenfalk <mhe@home.se> 19 aug 2000
+/* modified by Martin Hedenfalk <mhe@home.se> Dec 2002
  */
 
 /*
@@ -43,13 +43,7 @@
 #include "base64.h"
 #include "commands.h"
 
-/*RCSID("$Id: security.c,v 1.9 2001/05/27 20:32:47 mhe Exp $");*/
-
-/*static enum protection_level command_prot;*/
-/*static enum protection_level data_prot;*/
-/*static size_t buffer_size;*/
-/*static struct buffer in_buffer, out_buffer;*/
-/*int sec_complete;*/
+/*RCSID("$Id: security.c,v 1.10 2002/12/05 22:12:37 mhe Exp $");*/
 
 static struct
 {
@@ -84,10 +78,10 @@ enum protection_level name_to_level(const char *name)
 }
 
 static struct sec_client_mech *mechs[] = {
-#ifdef KRB5
+#ifdef HAVE_KRB5
 	&gss_client_mech,
 #endif
-#ifdef KRB4
+#ifdef HAVE_KRB4
 	&krb4_client_mech,
 #endif
 #ifdef USE_SSL

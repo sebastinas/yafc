@@ -1,4 +1,4 @@
-/* modified by Martin Hedenfalk <mhe@home.se> 19 aug 2000
+/* modified by Martin Hedenfalk <mhe@home.se> dec 2002 -*- tab-width: 8; -*-
  */
 
 /*
@@ -34,29 +34,22 @@
  * SUCH DAMAGE.
  */
 
-#ifdef FTP_SERVER
-#include "ftpd_locl.h"
-#else
-# include "syshdr.h"
-# include "ftp.h"
-/*# include <syslog.h>*/
-# include "base64.h"
+/*#include <des.h>*/
+#include <krb.h>
+
+#include "syshdr.h"
+#include "ftp.h"
+#include "base64.h"
+
 extern int krb_get_our_ip_for_realm(
     const char *realm, struct in_addr *ip_addr);
-#endif
-/*#include <krb.h>*/
 
-/*RCSID("$Id: krb4.c,v 1.3 2000/10/13 22:43:04 mhe Exp $");*/
+/*RCSID("$Id: krb4.c,v 1.4 2002/12/05 22:12:37 mhe Exp $");*/
 
-#ifdef FTP_SERVER
-#define LOCAL_ADDR ctrl_addr
-#define REMOTE_ADDR his_addr
-#else
 #define LOCAL_ADDR (&ftp->ctrl->local_addr)
 #define REMOTE_ADDR (&ftp->ctrl->remote_addr)
 #define myctladdr (&ftp->ctrl->local_addr)
 #define hisctladdr (&ftp->ctrl->remote_addr)
-#endif
 
 /*extern struct sockaddr *LOCAL_ADDR, *REMOTE_ADDR;*/
 
@@ -67,6 +60,24 @@ struct krb4_data {
     char instance[INST_SZ];
     char realm[REALM_SZ];
 };
+
+static int
+krb_get_int(void *f, u_int32_t *to, int size, int lsb)
+{
+    int i;
+    unsigned char *from = (unsigned char *)f;
+
+    *to = 0;
+    if(lsb){
+        for(i = size-1; i >= 0; i--)
+            *to = (*to << 8) | from[i];
+    }else{
+        for(i = 0; i < size; i++)
+            *to = (*to << 8) | from[i];
+    }
+    return size;
+}
+
 
 static int
 krb4_check_prot(void *app_data, int level)
@@ -191,25 +202,10 @@ krb4_auth(void *app_data, char *host)
 	  ftp_err(_("Using NAT IP address (%s) for kerberos 4\n"),
 		 inet_ntoa(natAddr));
 	  localaddr->sin_addr = natAddr;
-	  
-	  /*
-	   * This not the best place to do this, but it
-	   * is here we know that (probably) NAT is in
-	   * use!
-	   */
-#if 0
-	  if(ftp->url->pasvmode == false) {
-		  ftp->url->pasvmode = true;
-		  printf(_("Forced passive mode on\n"));
-	  }
-#endif
 	}
       }
     }
 #endif
-
-/*    printf("Local address is %s\n", inet_ntoa(localaddr->sin_addr));
-      printf("Remote address is %s\n", inet_ntoa(remoteaddr->sin_addr));*/
 
    if(base64_encode(adat.dat, adat.length, &p) < 0) {
 	ftp_err(_("Out of memory base64-encoding\n"));

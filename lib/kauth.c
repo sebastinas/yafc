@@ -1,32 +1,27 @@
 /* Modified for use in Yafc by Martin Hedenfalk <mhe@home.se>
- * last changed: 2000-Oct-14
+ * last changed: Dec 2002
  */
 
 /*
- * Copyright (c) 1995, 1996, 1997 Kungliga Tekniska Högskolan
+ * Copyright (c) 1995-1999 Kungliga Tekniska Högskolan
  * (Royal Institute of Technology, Stockholm, Sweden).
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
- *
+ * 
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- *
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *      This product includes software developed by the Kungliga Tekniska
- *      Högskolan and its contributors.
- *
- * 4. Neither the name of the Institute nor the names of its contributors
+ * 
+ * 3. Neither the name of the Institute nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,13 +35,20 @@
  * SUCH DAMAGE.
  */
 
+/*#include <des.h>*/
+#include <krb.h>
+
 #include "syshdr.h"
 #include "ftp.h"
 #include "base64.h"
 #include "commands.h"
 #include "args.h"
 
-/*RCSID("$Id: kauth.c,v 1.4 2000/10/14 11:05:29 mhe Exp $");*/
+#ifndef KRB_TICKET_GRANTING_TICKET
+# define KRB_TICKET_GRANTING_TICKET "krbtgt"
+#endif
+
+/*RCSID("$Id: kauth.c,v 1.5 2002/12/05 22:12:37 mhe Exp $");*/
 
 void cmd_kauth(int argc, char **argv)
 {
@@ -121,6 +123,7 @@ void cmd_kauth(int argc, char **argv)
     des_pcbc_encrypt((des_cblock*)tkt.dat, (des_cblock*)tktcopy.dat,
 					 tkt.length,
 					 schedule, &key, DES_DECRYPT);
+#ifdef HAVE_AFS_STRING_TO_KEY
     if (strcmp ((char*)tktcopy.dat + 8,
 				KRB_TICKET_GRANTING_TICKET) != 0)
 	{
@@ -131,6 +134,7 @@ void cmd_kauth(int argc, char **argv)
 						 tkt.length,
 						 schedule, &key, DES_DECRYPT);
     }
+#endif
     memset(key, 0, sizeof(key));
     memset(schedule, 0, sizeof(schedule));
     memset(passwd, 0, sizeof(passwd));
