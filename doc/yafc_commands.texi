@@ -714,7 +714,7 @@ Documentation missing...
 @c -----------------------------------------------------
 @node nop
 @subsection @code{nop}
-Send a NOOP command to remote. This does nothing except checking if the
+Send a NOOP command to remote host. This does nothing except checking if the
 connection is still open. It may be used to reset the servers idle
 timeout (though some servers ignore it).
 
