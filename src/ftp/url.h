@@ -34,7 +34,7 @@ typedef struct url_t {
 	int port;         /* port in host byte order */
 	list *mech;       /* requested security mechanisms to try */
 	bool noproxy;     /* don't connect via the configured proxy */
-	bool passive;     /* true if passive mode is requested */
+	int pasvmode;    /* true if passive mode is requested */
 } url_t;
 
 url_t *url_create(void);
@@ -52,7 +52,7 @@ void url_setdirectory(url_t *urlp, const char *directory);
 void url_setprotlevel(url_t *urlp, const char *protlevel);
 void url_setport(url_t *urlp, int port);
 void url_setmech(url_t *urlp, const char *mech_string);
-void url_setpassive(url_t *urlp, bool passive);
+void url_setpassive(url_t *urlp, int passive);
 
 bool url_isanon(const url_t *url);
 

@@ -33,6 +33,7 @@ url_t *url_create(void)
 
 	urlp = (url_t *)xmalloc(sizeof(url_t));
 	urlp->port = -1;
+	urlp->pasvmode = -1;
 	urlp->mech = list_new((listfunc)xfree);
 
 	return urlp;
@@ -62,6 +63,7 @@ url_t *url_clone(const url_t *urlp)
 		cloned->port = urlp->port;
 		cloned->noproxy = urlp->noproxy;
 		cloned->mech = list_clone(urlp->mech, (listclonefunc)xstrdup);
+		cloned->pasvmode = urlp->pasvmode;
 	}
 
 	return cloned;
@@ -195,9 +197,9 @@ void url_setport(url_t *urlp, int port)
 	urlp->port = port;
 }
 
-void url_setpassive(url_t *urlp, bool passive)
+void url_setpassive(url_t *urlp, int passive)
 {
-	urlp->passive = passive;
+	urlp->pasvmode = passive;
 }
 
 void url_setmech(url_t *urlp, const char *mech_string)
