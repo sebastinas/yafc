@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.14 2001/05/12 18:44:37 mhe Exp $
+/* $Id: main.c,v 1.15 2001/05/13 14:36:26 mhe Exp $
  *
  * main.c -- parses command line options and starts Yafc
  *
@@ -184,9 +184,10 @@ void init_yafc(void)
 	ftp_set_signal(SIGTSTP, tstp_sighandler);
 	ftp_set_signal(SIGCONT, tstp_sighandler);
 
-	gvTransferBeginString = 0;
-	gvTransferString = xstrdup("%-40R %s/%S ETA %e %B");
-	gvTransferEndString = xstrdup("%-40R      %s in %t @ %b\n");
+	gvTransferBeginString = xstrdup("%-70R\n");
+	gvTransferString = xstrdup("%5p%% [%25v] %s/%S ETA %e %B");
+/*	gvTransferEndString = xstrdup("%-40R      %s in %t @ %b\n");*/
+
 	gvTransferXtermString = xstrdup("\e]0;yafc - (%p%%) %r\x07");
 
 	input_init();
