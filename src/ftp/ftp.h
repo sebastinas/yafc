@@ -1,4 +1,4 @@
-/* $Id: ftp.h,v 1.11 2001/05/27 20:30:53 mhe Exp $
+/* $Id: ftp.h,v 1.12 2001/05/28 09:53:21 mhe Exp $
  *
  * ftp.h -- lower level FTP stuff
  *
@@ -37,7 +37,7 @@ typedef enum {
 	putNormal,
 	putAppend,
 	putUnique,
-	putResume,
+	putResume
 } putmode_t;
 
 typedef enum {
