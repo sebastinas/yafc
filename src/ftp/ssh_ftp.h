@@ -107,8 +107,9 @@ void ssh_send_string_attrs_request(u_int id, u_int code, const char *s,
 								   u_int len, Attrib *a);
 u_int ssh_get_status(int expected_id);
 int ssh_recv_binary(const char *remote_path, FILE *local_fp,
-					ftp_transfer_func hookf);
+					ftp_transfer_func hookf, u_int64_t offset);
 int ssh_send_binary(const char *remote_path, FILE *local_fp,
-					ftp_transfer_func hookf);
+					ftp_transfer_func hookf, u_int64_t offset);
+char *ssh_readlink(char *path);
 
 #endif

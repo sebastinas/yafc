@@ -2,15 +2,14 @@
 #include "ftp.h"
 
 #include "ssh_ftp.h"
-#include "ssh.h"
 #include "buffer.h"
 #include "bufaux.h"
 #include "getput.h"
 #include "atomicio.h"
-#include "pathnames.h"
+#include "gvars.h"
 
 int use_ssh1 = 0;
-char *ssh_program = _PATH_SSH_PROGRAM;
+/*char *ssh_program = _PATH_SSH_PROGRAM;*/
 char *sftp_server = NULL;
 
 #define COPY_SIZE 8192
@@ -38,9 +37,10 @@ int ssh_connect(char **args, int *in, int *out, pid_t *sshpid)
 	c_in = c_out = inout[1];
 #endif /* USE_PIPES */
 
-	if ((*sshpid = fork()) == -1)
-		ftp_err("fork: %s\n", strerror(errno)); /* FIXME: fatal() */
-	else if (*sshpid == 0) {
+	if ((*sshpid = fork()) == -1) {
+		ftp_err("fork: %s\n", strerror(errno));
+		return -1;
+	} else if (*sshpid == 0) {
 		if ((dup2(c_in, STDIN_FILENO) == -1) ||
 		    (dup2(c_out, STDOUT_FILENO) == -1)) {
 			ftp_err("dup2: %s\n", strerror(errno));
@@ -50,8 +50,13 @@ int ssh_connect(char **args, int *in, int *out, pid_t *sshpid)
 		close(*out);
 		close(c_in);
 		close(c_out);
-		execv(ssh_program, args);
-		ftp_err("exec: %s: %s\n", ssh_program, strerror(errno));
+
+		signal(SIGINT, SIG_IGN);
+		signal(SIGTERM, SIG_IGN);
+		signal(SIGHUP, SIG_IGN);
+
+		execv(gvSSHProgram, args);
+		ftp_err("exec: %s: %s\n", gvSSHProgram, strerror(errno));
 		exit(1);
 	}
 
@@ -100,7 +105,7 @@ char **ssh_make_args(char ***args, char *add_arg)
 
 	/* XXX: overflow - doesn't grow debug_buf */
 	debug_buf[0] = '\0';
-	for(i = 0; args[i]; i++) {
+	for(i = 0; (*args)[i]; i++) {
 		if (i)
 			strlcat(debug_buf, " ", sizeof(debug_buf));
 
@@ -133,7 +138,7 @@ static const char *ssh_cmd2txt(int code)
 		"SSH2_FXP_REALPATH",
 		"SSH2_FXP_STAT",
 		"SSH2_FXP_RENAME",
-		"SSH2_FXP_READLINE",
+		"SSH2_FXP_READLINK",
 		"SSH2_FXP_SYMLINK" /* 20 */
 	};
 
@@ -458,7 +463,6 @@ int ssh_readdir(char *path, SFTP_DIRENT ***dir)
 		(*dir)[0] = NULL;
 	}
 
-
 	while(true) {
 		int count;
 
@@ -654,10 +658,10 @@ u_int ssh_get_status(int expected_id)
 }
 
 int ssh_recv_binary(const char *remote_path, FILE *local_fp,
-					ftp_transfer_func hookf)
+					ftp_transfer_func hookf, u_int64_t offset)
 {
 	u_int expected_id, handle_len, mode, type, id;
-	u_int64_t offset;
+/*	u_int64_t offset;*/
 	char *handle;
 	Buffer msg;
 	Attrib junk, *a;
@@ -705,7 +709,10 @@ int ssh_recv_binary(const char *remote_path, FILE *local_fp,
 	}
 
 	/* Read from remote and write to local */
-	offset = 0;
+/*	offset = 0;*/
+
+	ftp_err("reading from %s at offset %lu\n", remote_path, offset);
+
 	while(true) {
 		u_int len;
 		char *data;
@@ -792,10 +799,10 @@ done:
 }
 
 int ssh_send_binary(const char *remote_path, FILE *local_fp,
-					ftp_transfer_func hookf)
+					ftp_transfer_func hookf, u_int64_t offset)
 {
 	u_int handle_len, id;
-	u_int64_t offset;
+/*	u_int64_t offset;*/
 	char *handle;
 	Buffer msg;
 	Attrib a;
@@ -840,7 +847,7 @@ int ssh_send_binary(const char *remote_path, FILE *local_fp,
 	}
 
 	/* Read from local and write to remote */
-	offset = 0;
+/*	offset = 0;*/
 	while(true) {
 		int len;
 		char data[COPY_SIZE];
@@ -895,4 +902,54 @@ done:
 	xfree(handle);
 	buffer_free(&msg);
 	return status;
+}
+
+char *ssh_readlink(char *path)
+{
+	Buffer msg;
+	u_int type, expected_id, count, id;
+	char *filename, *longname;
+	Attrib *a;
+
+	expected_id = id = ftp->ssh_id++;
+	ssh_send_string_request(id, SSH2_FXP_READLINK, path, strlen(path));
+
+	buffer_init(&msg);
+
+	if(ssh_reply(&msg) == -1)
+		return 0;
+	type = buffer_get_char(&msg);
+	id = buffer_get_int(&msg);
+
+	if(id != expected_id) {
+		ftp_err("ID mismatch (%d != %d)", id, expected_id);
+		return 0;
+	}
+
+	if(type == SSH2_FXP_STATUS) {
+		u_int status = buffer_get_int(&msg);
+
+		ftp_err("Couldn't readlink: %s", fx2txt(status));
+		return 0;
+	} else if(type != SSH2_FXP_NAME) {
+		ftp_err("Expected SSH2_FXP_NAME (%d) packet, got %s (%d)",
+				SSH2_FXP_NAME, ssh_reply2txt(type), type);
+		return 0;
+	}
+
+	count = buffer_get_int(&msg);
+	if(count != 1) {
+		ftp_err("Got multiple names (%d) from SSH2_FXP_READLINK", count);
+		return 0;
+	}
+
+	filename = buffer_get_string(&msg, 0);
+	longname = buffer_get_string(&msg, 0);
+	a = decode_attrib(&msg);
+
+	xfree(longname);
+
+	buffer_free(&msg);
+
+	return filename;
 }
