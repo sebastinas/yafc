@@ -1,4 +1,4 @@
-/* $Id: fxp.c,v 1.12 2003/07/12 10:25:41 mhe Exp $
+/* $Id: fxp.c,v 1.13 2004/05/20 09:20:43 mhe Exp $
  *
  * fxp.c -- transfer files between hosts
  *
@@ -662,6 +662,9 @@ void cmd_fxp(int argc, char **argv)
 				break;
 			case 'R': /* --resume */
 				opt |= FXP_RESUME;
+				break;
+			case 's':
+				opt |= FXP_SKIP_EXISTING;
 				break;
 			case 't': /* --tagged */
 				opt |= FXP_TAGGED;

@@ -12,6 +12,7 @@ New in 1.1
   transfer progress
 * Fixed bug when pressing Ctrl-D in user input (ask), reported by Robin Breathe
 * Applied patch by Thomas Habets, fixing a file descriptor leak
+* Fixed the "-s" parameter for the "fxp" command (patch by Julien Antille)
 
 
 New in 1.0

@@ -1,4 +1,4 @@
-/* $Id: get.c,v 1.16 2003/07/12 10:25:41 mhe Exp $
+/* $Id: get.c,v 1.17 2004/05/20 09:20:43 mhe Exp $
  *
  * get.c -- get file(s) from remote
  *
@@ -281,7 +281,7 @@ static int getfile(const rfile *fi, unsigned int opt,
 						ASKRESUME,
 						_("Local file '%s' exists\nLocal: %ld bytes, %sRemote: %ld bytes, %sOverwrite?"),
 						shortpath(dest, 42, gvLocalHomeDir),
-						sb.st_size, e ? e : "unknown date",
+						sb.st_size, e ? e : "unknown date\n",
 						ftp_filesize(fi->path), ctime(&ft));
 				free(e);
 				if(a == ASKCANCEL) {
