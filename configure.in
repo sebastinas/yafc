@@ -6,7 +6,7 @@ dnl
 
 AC_INIT(src/ftp/ftp.c)
 AC_CONFIG_AUX_DIR(support)
-AM_INIT_AUTOMAKE(yafc, 0.6.6)
+AM_INIT_AUTOMAKE(yafc, 0.6.7)
 AM_CONFIG_HEADER(config.h)
 
 CDPATH=""
@@ -146,48 +146,148 @@ if test "$mhe_with_krb4" = "yes" -o "$mhe_with_krb5" = yes; then
 
   LIBOBJS="$LIBOBJS security.o"
 
-  AC_CHECK_LIB(des, des_pcbc_encrypt,
-  [
-    LIBS="-ldes $LIBS"
-    AC_DEFINE(HAVE_LIBDES)
+  AC_CHECK_LIB(des, des_pcbc_encrypt)
 
-    AC_CHECK_HEADERS(des.h)
-
-    if test "$mhe_with_krb4" = "yes"; then
-      AC_CHECK_LIB(krb, krb_net_read,
-      [
-        LIBS="-lkrb $LIBS"
-        AC_DEFINE(KRB4)
-        AC_CHECK_FUNCS(krb_get_our_ip_for_realm)
-        AC_CHECK_HEADERS(krb.h)
-        LIBOBJS="$LIBOBJS krb4.o kauth.o"
-      ])
+    if test "$ac_cv_lib_des_des_pcbc_encrypt" = "no" ; then
+        AC_CHECK_LIB(des425, des_pcbc_encrypt)
     fi
 
-    if test "$mhe_with_krb5" = "yes"; then
-      echo "checking for Heimdal Kerberos 5..."
-	  SAVELIBS="$LIBS"
-      AC_CHECK_LIB(com_err, init_error_table)
-      AC_CHECK_LIB(asn1, copy_EncryptionKey)
-      AC_CHECK_LIB(db, dbopen)
-      AC_CHECK_LIB(roken, roken_gethostbyaddr)
-      AC_CHECK_LIB(krb5, krb5_mk_priv)
-      if test "$ac_cv_lib_krb5_krb5_mk_priv" = "yes"; then
-        AC_CHECK_LIB(gssapi, gss_init_sec_context)
-        if test "$ac_cv_lib_gssapi_gss_init_sec_context" = "yes"; then
-          AC_DEFINE(KRB5)
-          AC_CHECK_HEADERS(krb5.h gssapi.h)
-          LIBOBJS="$LIBOBJS gssapi.o"
-		else
-		  LIBS="$SAVELIBS"
+    dnl if we found either flavor of the des library, look for the
+    dnl header, and then continue on by looking for the appropriate
+    dnl version and flavor of other libraries.
+    if test "$ac_cv_lib_des_des_pcbc_encrypt" = "yes" || \
+        test "$ac_cv_lib_des425_des_pcbc_encrypt" = "yes" ; then
+        AC_CHECK_HEADERS(des.h)
+
+        if test "$mhe_with_krb4" = "yes"; then
+          AC_CHECK_LIB(krb, krb_net_read,
+          [
+            LIBS="-lkrb $LIBS"
+            AC_DEFINE(KRB4)
+            AC_CHECK_FUNCS(krb_get_our_ip_for_realm)
+            AC_CHECK_HEADERS(krb.h)
+            LIBOBJS="$LIBOBJS krb4.o kauth.o"
+          ])
         fi
-	  else
-	    LIBS="$SAVELIBS"
+
+        if test "$mhe_with_krb5" = "yes"; then
+          echo "checking for Heimdal Kerberos 5..."
+
+          dnl have we found all the libraries we need?  So far, yes.
+          found_all_krb5=1;
+
+          SAVELIBS="$LIBS"
+          AC_CHECK_LIB(com_err, init_error_table)
+
+          dnl MIT krb5 does not have an init_error_table in libcom_err,
+          dnl but there is an add_error_table.
+          if test "$ac_cv_lib_com_err_init_error_table" = "no" ; then
+            echo "checking for MIT Kerberos 5..."
+            AC_CHECK_LIB(com_err, add_error_table)
+            if test "$ac_cv_lib_com_err_add_error_table" = "no" ; then
+              found_all_krb5=0;
+            fi
+          fi
+
+          if test "$found_all_krb5" = "1" ; then
+            dnl only check for libasn1 if we're using Heimdal, MIT's krb5
+            dnl doesn't have this library.
+            if test "$ac_cv_lib_com_err_init_error_table" = "yes" ; then
+              AC_CHECK_LIB(asn1, copy_EncryptionKey)
+              if test "$ac_cv_lib_asn1_copy_EncryptionKey" = "no" ; then
+                found_all_krb5=0;
+              fi
+            fi
+          fi
+
+          if test "$found_all_krb5" = "1" ; then
+            if test "$ac_cv_lib_com_err_init_error_table" = "yes" ; then
+              dnl Heimdal calls this libdb
+              AC_CHECK_LIB(db, dbopen)
+              if test "$ac_cv_lib_db_dbopen" = "no" ; then
+                found_all_krb5=0;
+              fi
+            else
+              dnl MIT calls this libkdb5
+              AC_CHECK_LIB(kdb5, krb5_db_init)
+              if test "$ac_cv_lib_kdb5_krb5_db_init" = "no" ; then
+                found_all_krb5=0;
+              fi
+            fi
+          fi
+
+          if test "$found_all_krb5" = "1" ; then
+            dnl only check for libroken if we're using Heimdal, MIT's krb5
+            dnl doesn't have this library.
+            if test "$ac_cv_lib_com_err_init_error_table" = "yes" ; then
+              AC_CHECK_LIB(roken, roken_gethostbyaddr)
+              if test "$ac_cv_lib_roken_roken_gethostbyaddr" = "no" ; then
+                found_all_krb5=0;
+              fi
+            fi
+          fi
+
+          if test "$found_all_krb5" = "1" ; then
+            dnl shockingly, MIT and Heimdal agree on the library name and
+            dnl the symbol, here.
+            AC_CHECK_LIB(krb5, krb5_mk_priv)
+              if test "$ac_cv_lib_krb5_krb5_mk_priv" = "no" ; then
+                found_all_krb5=0;
+              fi
+          fi
+
+          if test "$found_all_krb5" = "1" && \
+			test "$ac_cv_lib_krb5_krb5_mk_priv" = "yes"; then
+            if test "$ac_cv_lib_com_err_init_error_table" = "yes" ; then
+              dnl the Heimdal name of what we're really looking for.
+              AC_CHECK_LIB(gssapi, gss_init_sec_context)
+              if test "$ac_cv_lib_gssapi_gss_init_sec_context" = "yes"; then
+                AC_DEFINE(KRB5)
+                AC_CHECK_HEADERS(krb5.h gssapi.h)
+                LIBOBJS="$LIBOBJS gssapi.o"
+              else
+                found_all_krb5=0;
+                LIBS="$SAVELIBS"
+              fi
+            else
+              dnl the MIT name of what we're really looking for.
+              AC_CHECK_LIB(gssapi_krb5, gss_init_sec_context)
+              if test "$ac_cv_lib_gssapi_krb5_gss_init_sec_context" = "yes"
+              then
+                AC_DEFINE(KRB5)
+                AC_CHECK_HEADERS(krb5.h)
+                AC_CHECK_HEADERS(gssapi.h gssapi/gssapi.h)
+                AC_CHECK_HEADERS(gssapi/gssapi_generic.h gssapi/gssapi_krb5.h)
+                LIBOBJS="$LIBOBJS gssapi.o"
+              else
+                found_all_krb5=0;
+                LIBS="$SAVELIBS"
+              fi
+            fi
+          else
+            LIBS="$SAVELIBS"
+          fi
+        fi
+
+    else
+        AC_MSG_WARN([Kerberos support not enabled])
+    fi
+
+    if test "$found_all_krb5" = "0" ; then
+      AC_MSG_WARN([Kerberos support not enabled])
+    else
+      dnl we found all of one version of krb5 or another.  Define one
+      dnl additional convenience cpp symbol, so we know which it is.  This
+      dnl is currently important for only one symbol, but there may be
+      dnl additional things that hinge on this in the future.
+      if test "$ac_cv_lib_com_err_init_error_table" = "yes" ; then
+        AC_DEFINE(KRB5_HEIMDAL)
+      else
+        AC_DEFINE(KRB5_MIT)
       fi
     fi
 
     AC_REPLACE_FUNCS(strlcpy)
-  ])
 
 else
   AC_MSG_RESULT(no)
