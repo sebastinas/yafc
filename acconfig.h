@@ -46,3 +46,5 @@
 #undef KRB5
 
 #undef HAVE_LIBDES
+
+#undef HOSTTYPE

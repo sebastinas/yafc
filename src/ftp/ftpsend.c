@@ -156,7 +156,8 @@ int ftp_abort(FILE *fp)
 	/* ftp_cmd("ABOR") won't work here,
 	 * we must flush data between the ABOR command and ftp_read_reply()
 	 */
-	sock_krb_printf(ftp->ctrl, "ABOR\r\n");
+	sock_krb_printf(ftp->ctrl, "ABOR");
+	sock_printf(ftp->ctrl, "\r\n");
 	sock_flush(ftp->ctrl);
 	if(ftp_get_verbosity() == vbDebug)
 		ftp_err("--> [%s] ABOR\n", ftp->url->hostname);

@@ -1,6 +1,8 @@
 New in 0.6.3
 ------------
 
+* always using private protlevel in kauth
+* fix for DOS style paths (w/backslashes)
 
 
 New in 0.6.2

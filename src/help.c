@@ -69,19 +69,18 @@ void cmd_help(int argc, char **argv)
 		func = rl_named_function("possible-completions");
 		if(func)
 			func();
-		else
-			fprintf(stderr, "oops, no possible-completions?\n");
-#else
-		for(i=0;cmds[i].cmd;i++)
-			printf("%s\n", cmds[i].cmd);
-		{
-			listitem *li = gvAliases->first;
-			while(li) {
-				printf("%s\n", ((alias *)li->data)->name);
-				li = li->next;
+		else {
+#endif
+			for(i=0;cmds[i].cmd;i++)
+				printf("%s\n", cmds[i].cmd);
+			{
+				listitem *li = gvAliases->first;
+				while(li) {
+					printf("%s\n", ((alias *)li->data)->name);
+					li = li->next;
+				}
 			}
 		}
-#endif
 	}
 }
 
@@ -94,7 +93,7 @@ void cmd_version(int argc, char **argv)
 			 "Högskolan and its contributors.\n\n"));
 #endif
 
-	printf(_("Compiled " __TIME__ " " __DATE__ "\n"));
+	printf(_("Compiled " __TIME__ " " __DATE__ " (" HOSTTYPE ")\n"));
 #ifdef HAVE_LIBREADLINE
 	printf(_("Using Readline version %s\n"), rl_library_version);
 #endif

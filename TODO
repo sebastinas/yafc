@@ -7,6 +7,8 @@ TODO list for Yafc
 * per connection setting for passive mode
 * keep-alive (send NOOP or similar when idle)
 * IPv6 support
+* EPSV and EPRT support (RFC2428)
+* LANGuage support (RFC2640)
 * problems to get directories with double quotes (") in the name
 * completion doesn't work correctly with rels (need to be expanded?)
 ? timeout on cache entry lifetime (eg, re-read after 3 min?)

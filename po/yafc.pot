@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-09-14 16:12+0200\n"
+"POT-Creation-Date: 2000-09-25 22:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -570,7 +570,11 @@ msgid " "
 msgstr ""
 
 #: src/help.c:97
-msgid "\n"
+msgid " ("
+msgstr ""
+
+#: src/help.c:97
+msgid ")\n"
 msgstr ""
 
 #: src/help.c:99
@@ -870,7 +874,7 @@ msgid "failed to send %s: %s\n"
 msgstr ""
 
 #. can't overwrite a directory
-#: src/ftp/ftpsend.c:889 src/ftp/ftpsend.c:953 src/put.c:198
+#: src/ftp/ftpsend.c:890 src/ftp/ftpsend.c:954 src/put.c:198
 #, c-format
 msgid "%s: is a directory\n"
 msgstr ""
@@ -1249,7 +1253,7 @@ msgstr ""
 msgid "Connecting to %s (%s) at port %d...\n"
 msgstr ""
 
-#: src/ftp/ftp.c:372 src/ftp/ftp.c:574
+#: src/ftp/ftp.c:372 src/ftp/ftp.c:573
 msgid "No control connection\n"
 msgstr ""
 
@@ -1261,77 +1265,77 @@ msgstr ""
 msgid "Reply too long (truncated)\n"
 msgstr ""
 
-#: src/ftp/ftp.c:491
+#: src/ftp/ftp.c:490
 #, c-format
 msgid "Tired of waiting for reply, timeout after %u seconds\n"
 msgstr ""
 
-#: src/ftp/ftp.c:589
+#: src/ftp/ftp.c:588
 msgid "error writing command"
 msgstr ""
 
 #. server is closing control connection!
-#: src/ftp/ftp.c:610
+#: src/ftp/ftp.c:609
 msgid "Server closed control connection?\n"
 msgstr ""
 
-#: src/ftp/ftp.c:659
+#: src/ftp/ftp.c:658
 msgid "Proxy login: "
 msgstr ""
 
-#: src/ftp/ftp.c:661
+#: src/ftp/ftp.c:660
 #, c-format
 msgid "login (%s): "
 msgstr ""
 
-#: src/ftp/ftp.c:663
+#: src/ftp/ftp.c:662
 msgid "login (anonymous): "
 msgstr ""
 
-#: src/ftp/ftp.c:673 src/ftp/ftp.c:715
+#: src/ftp/ftp.c:672 src/ftp/ftp.c:714
 msgid "You loose\n"
 msgstr ""
 
-#: src/ftp/ftp.c:697
+#: src/ftp/ftp.c:696
 #, c-format
 msgid "password (%s): "
 msgstr ""
 
-#: src/ftp/ftp.c:699 src/ftp/ftp.c:711
+#: src/ftp/ftp.c:698 src/ftp/ftp.c:710
 msgid "password: "
 msgstr ""
 
-#: src/ftp/ftp.c:710
+#: src/ftp/ftp.c:709
 msgid "Proxy password: "
 msgstr ""
 
-#: src/ftp/ftp.c:759
+#: src/ftp/ftp.c:758
 #, c-format
 msgid "Invalid protection level '%s'\n"
 msgstr ""
 
-#: src/ftp/ftp.c:764
+#: src/ftp/ftp.c:763
 msgid "*** Using plaintext username and password ***\n"
 msgstr ""
 
-#: src/ftp/ftp.c:769
+#: src/ftp/ftp.c:768
 msgid "Authentication successful.\n"
 msgstr ""
 
-#: src/ftp/ftp.c:774
+#: src/ftp/ftp.c:773
 msgid "logging in anonymously...\n"
 msgstr ""
 
-#: src/ftp/ftp.c:880
+#: src/ftp/ftp.c:879
 #, c-format
 msgid "Data protection is %s\n"
 msgstr ""
 
-#: src/ftp/ftp.c:1043
+#: src/ftp/ftp.c:1045
 msgid "Server doesn't support SITE CHMOD\n"
 msgstr ""
 
-#: src/ftp/ftp.c:1056
+#: src/ftp/ftp.c:1058
 msgid "Server doesn't support SITE IDLE\n"
 msgstr ""
 
@@ -1352,35 +1356,35 @@ msgstr ""
 msgid "Waiting for remote to finish abort...\n"
 msgstr ""
 
-#: src/ftp/ftpsend.c:274
+#: src/ftp/ftpsend.c:275
 #, c-format
 msgid "read error: %s\n"
 msgstr ""
 
-#: src/ftp/ftpsend.c:278
+#: src/ftp/ftpsend.c:279
 #, c-format
 msgid "write error: %s\n"
 msgstr ""
 
-#: src/ftp/ftpsend.c:592 src/ftp/ftpsend.c:722
+#: src/ftp/ftpsend.c:593 src/ftp/ftpsend.c:723
 msgid "data connection not accepted\n"
 msgstr ""
 
-#: src/ftp/ftpsend.c:766
+#: src/ftp/ftpsend.c:767
 msgid "FxP between same hosts\n"
 msgstr ""
 
-#: src/ftp/ftpsend.c:803 src/ftp/ftpsend.c:978
+#: src/ftp/ftpsend.c:804 src/ftp/ftpsend.c:979
 #, c-format
 msgid "unable to get remote filesize of '%s', unable to resume\n"
 msgstr ""
 
-#: src/ftp/ftpsend.c:893
+#: src/ftp/ftpsend.c:894
 #, c-format
 msgid "%s: permission denied\n"
 msgstr ""
 
-#: src/ftp/ftpsend.c:924 src/ftp/ftpsend.c:989
+#: src/ftp/ftpsend.c:925 src/ftp/ftpsend.c:990
 #, c-format
 msgid "%s: %s, transfer cancelled\n"
 msgstr ""
@@ -1435,7 +1439,7 @@ msgstr ""
 msgid "Forced passive mode on\n"
 msgstr ""
 
-#: lib/kauth.c:123 lib/krb4.c:214
+#: lib/kauth.c:131 lib/krb4.c:214
 msgid "Out of memory base64-encoding\n"
 msgstr ""
 
@@ -1556,20 +1560,20 @@ msgstr ""
 msgid "The server doesn't support the FTP security extensions.\n"
 msgstr ""
 
-#: lib/kauth.c:64
+#: lib/kauth.c:65
 #, c-format
 msgid "usage: %s [principal]\n"
 msgstr ""
 
-#: lib/kauth.c:78 lib/kauth.c:92
+#: lib/kauth.c:83 lib/kauth.c:99
 msgid "Bad reply from server\n"
 msgstr ""
 
-#: lib/kauth.c:84
+#: lib/kauth.c:90
 msgid "Failed to decode base64 in reply\n"
 msgstr ""
 
-#: lib/kauth.c:99
+#: lib/kauth.c:107
 #, c-format
 msgid "Password for %s:"
 msgstr ""

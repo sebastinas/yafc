@@ -15,7 +15,9 @@ ALL_LINGUAS="sv"
 
 dnl AM_MAINTAINER_MODE
 
-dnl AC_CANONICAL_HOST
+AC_CANONICAL_HOST
+
+AC_DEFINE_UNQUOTED(HOSTTYPE, "${host_cpu}-${host_vendor}-${host_os}")
 
 AC_PROG_CC
 
