@@ -1,4 +1,4 @@
-/* $Id: cache.c,v 1.3 2001/05/12 18:44:04 mhe Exp $
+/* $Id: cache.c,v 1.4 2002/11/04 14:02:39 mhe Exp $
  *
  * cache.c -- remote directory cache
  *
@@ -16,10 +16,13 @@
 #include "ftp.h"
 #include "xmalloc.h"
 #include "strq.h"
+#include "gvars.h"
 
 void ftp_cache_list_contents(void)
 {
 	listitem *li = ftp->cache->first;
+
+	ftp_cache_flush();
 
 	printf("Directory cache contents: (%u items)\n",
 		   list_numitem(ftp->cache));
@@ -31,7 +34,7 @@ void ftp_cache_list_contents(void)
 }
 
 /* marks the directory PATH to be flushed in the
- * next call to  ftp_cache_flush()
+ * next call to ftp_cache_flush()
  */
 void ftp_cache_flush_mark(const char *path)
 {
@@ -57,16 +60,8 @@ void ftp_cache_flush_mark_for(const char *path)
 		xfree(e);
 		e = xstrdup(ftp->curdir);
 	}
-	p = ftp_path_absolute(e);
-	stripslash(p);
+	ftp_cache_flush_mark(e);
 	xfree(e);
-
-	if(list_search(ftp->dirs_to_flush, (listsearchfunc)strcmp, p) != 0)
-		/* already in the flush list */
-		return;
-
-	list_additem(ftp->dirs_to_flush, p);
-	ftp_trace("marked directory '%s' for flush\n", p);
 }
 
 static int cache_search(rdirectory *rdir, const char *arg)
@@ -118,11 +113,21 @@ rdirectory *ftp_cache_get_directory(const char *path)
 
 	li = list_search(ftp->cache, (listsearchfunc)cache_search,
 					 dir_to_search_for);
-/*	if(li)
-		ftp_trace("cache hit: '%s'\n", dir_to_search_for);*/
+
+	if(li && gvCacheTimeout &&
+	   ((rdirectory *)li->data)->timestamp + gvCacheTimeout <= time(0))
+	{
+		/* directory cache has timed out */
+
+		ftp_trace("Directory cache for '%s' has timed out\n",
+				  dir_to_search_for);
+		ftp_cache_flush_mark(dir_to_search_for);
+	}
 	xfree(dir_to_search_for);
+
 	if(!li)
 		return 0;
+
 	return (rdirectory *)li->data;
 }
 

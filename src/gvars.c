@@ -1,4 +1,4 @@
-/* $Id: gvars.c,v 1.16 2001/05/13 17:57:49 mhe Exp $
+/* $Id: gvars.c,v 1.17 2002/11/04 14:02:39 mhe Exp $
  *
  * gvars.c -- global variables
  *
@@ -15,6 +15,9 @@
 #include "ftp.h"
 #include "linklist.h"
 
+/* time (in seconds) before a cached directory times out, 0 == never */
+int gvCacheTimeout = 0;
+
 /* list of Ftp objects */
 list *gvFtpList = 0;
 
@@ -30,6 +33,9 @@ bool gvAutologin = true;
 
 /* do reverse DNS lookups? */
 bool gvReverseDNS = true;
+
+/* add ... while waiting for a completion? */
+bool gvWaitingDots = true;
 
 /* path to the SSH program */
 char *gvSSHProgram = 0;

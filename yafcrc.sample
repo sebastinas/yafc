@@ -40,6 +40,10 @@ debug off
 # create trace files
 trace off
 
+# If this option is true, filenames will be completed with ... while
+# waiting for the directory listing to be downloaded.
+waiting_dots on
+
 # path to the SSH program
 #ssh_program "/usr/bin/ssh"
 
@@ -56,6 +60,10 @@ use_env_string yes
 
 # use tab to complete remote files
 remote_completion on
+
+# time (in seconds) before a cached directory times out and needs to
+# be reread, 0 == never
+cache_timeout 0
 
 # auto-create a bookmark when connection closed?
 auto_bookmark yes # no/yes/ask

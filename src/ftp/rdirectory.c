@@ -1,4 +1,4 @@
-/* $Id: rdirectory.c,v 1.3 2001/05/12 18:44:04 mhe Exp $
+/* $Id: rdirectory.c,v 1.4 2002/11/04 14:02:39 mhe Exp $
  *
  * rdirectory.c -- representation of a remote directory
  *
@@ -21,6 +21,7 @@ rdirectory *rdir_create(void)
 
 	rdir = (rdirectory *)xmalloc(sizeof(rdirectory));
 	rdir->files = list_new((listfunc)rfile_destroy);
+	rdir->timestamp = time(0);
 
 	return rdir;
 }
@@ -49,6 +50,7 @@ int rdir_parse(rdirectory *rdir, FILE *fp, const char *path)
 	xfree(rdir->path);
 	rdir->path = 0;
 	list_clear(rdir->files);
+	rdir->timestamp = time(0);
 
 	f = rfile_create();
 

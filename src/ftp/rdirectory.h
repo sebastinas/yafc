@@ -1,4 +1,4 @@
-/* $Id: rdirectory.h,v 1.3 2001/05/12 18:44:04 mhe Exp $
+/* $Id: rdirectory.h,v 1.4 2002/11/04 14:02:39 mhe Exp $
  *
  * rdirectory.h -- representation of a remote directory
  *
@@ -20,8 +20,9 @@
 
 typedef struct rdirectory
 {
-	char *path;  /* directory path */
+	char *path;        /* directory path */
 	list *files;       /* linked list of rfiles */
+	time_t timestamp;  /* time of creation */
 } rdirectory;
 
 rdirectory *rdir_create(void);
