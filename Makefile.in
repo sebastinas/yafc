@@ -89,6 +89,10 @@ EXTRA_DIST = ABOUT-NLS BUGS THANKS COPYRIGHT acconfig.h              yafcrc.samp
 
 SUBDIRS = intl po doc lib src
 
+SUPPORT_FILES = config.guess config.sub install-sh mdate-sh                 missing mkinstalldirs
+
+CONTRIB_FILES = yafc-import_ncftp.pl
+
 CLEANFILES = *~ \#*\#
 DISTCLEANFILES = build
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -107,9 +111,9 @@ GZIP_ENV = --best
 all: all-redirect
 .SUFFIXES:
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --foreign --include-deps Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --foreign Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
@@ -278,6 +282,11 @@ distdir: $(DISTFILES)
 	-rm -rf $(distdir)
 	mkdir $(distdir)
 	-chmod 777 $(distdir)
+	here=`cd $(top_builddir) && pwd`; \
+	top_distdir=`cd $(distdir) && pwd`; \
+	distdir=`cd $(distdir) && pwd`; \
+	cd $(top_srcdir) \
+	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --foreign Makefile
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
@@ -377,9 +386,11 @@ maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 dist-hook:
 	mkdir $(distdir)/support
-	cp -p $(top_srcdir)/support/* $(distdir)/support
+	for sf in $(SUPPORT_FILES) ; do \
+		cp -p $(top_srcdir)/support/$$sf $(distdir)/support ; done
 	mkdir $(distdir)/contrib
-	cp -p $(top_srcdir)/contrib/* $(distdir)/contrib
+	for cf in $(CONTRIB_FILES); do \
+		cp -p $(top_srcdir)/contrib/$$cf $(distdir)/contrib ; done
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -7,11 +7,17 @@ EXTRA_DIST = ABOUT-NLS BUGS THANKS COPYRIGHT acconfig.h \
 
 SUBDIRS = intl po doc lib src
 
+SUPPORT_FILES = config.guess config.sub install-sh mdate-sh \
+                missing mkinstalldirs
+CONTRIB_FILES = yafc-import_ncftp.pl
+
 dist-hook:
 	mkdir $(distdir)/support
-	cp -p $(top_srcdir)/support/* $(distdir)/support
+	for sf in $(SUPPORT_FILES) ; do \
+		cp -p $(top_srcdir)/support/$$sf $(distdir)/support ; done
 	mkdir $(distdir)/contrib
-	cp -p $(top_srcdir)/contrib/* $(distdir)/contrib
+	for cf in $(CONTRIB_FILES); do \
+		cp -p $(top_srcdir)/contrib/$$cf $(distdir)/contrib ; done
 
 CLEANFILES=*~ \#*\#
 DISTCLEANFILES=build
