@@ -1389,10 +1389,10 @@ void ftp_flush_reply(void)
 		else
 			break;
 	}
-
+#if 0
 	if(ftp_loggedin())
 		ftp_chdir(ftp->curdir);
-
+#endif
 	ftp_set_close_handler();
 }
 

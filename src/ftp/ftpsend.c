@@ -67,7 +67,14 @@ static int ftp_pasv(unsigned char result[6])
 	return 0;
 }
 
-static int ftp_init_transfer(bool pasvmode)
+static bool ftp_is_passive(void)
+{
+	if(!ftp || !ftp->url || ftp->url->pasvmode == -1)
+		return gvPasvmode;
+	return ftp->url->pasvmode;
+}
+
+static int ftp_init_transfer(void)
 {
 	struct sockaddr_in sa;
 	unsigned char *a, *p;
@@ -79,7 +86,16 @@ static int ftp_init_transfer(bool pasvmode)
 	ftp->data = sock_create();
 	sock_copy(ftp->data, ftp->ctrl);
 
-	if(!pasvmode) {
+	if(ftp_is_passive()) {
+		if(ftp_pasv(pac) != 0)
+			return -1;
+
+		sock_getsockname(ftp->ctrl, &sa);
+		memcpy(&sa.sin_addr, pac, (size_t)4);
+		memcpy(&sa.sin_port, pac+4, (size_t)2);
+		if(sock_connect_addr(ftp->data, &sa) == -1)
+			return -1;
+	} else {
 		sock_listen(ftp->data);
 
 		a = (unsigned char *)&ftp->data->local_addr.sin_addr;
@@ -89,15 +105,6 @@ static int ftp_init_transfer(bool pasvmode)
 		ftp_cmd("PORT %d,%d,%d,%d,%d,%d",
 				a[0], a[1], a[2], a[3], p[0], p[1]);
 		if(ftp->code != ctComplete)
-			return -1;
-	} else {
-		if(ftp_pasv(pac) != 0)
-			return -1;
-
-		sock_getsockname(ftp->ctrl, &sa);
-		memcpy(&sa.sin_addr, pac, (size_t)4);
-		memcpy(&sa.sin_port, pac+4, (size_t)2);
-		if(sock_connect_addr(ftp->data, &sa) == -1)
 			return -1;
 	}
 
@@ -528,7 +535,7 @@ int ftp_list(const char *cmd, const char *param, FILE *fp)
 	ftp_type(tmAscii);
 #endif
 
-	if(ftp_init_transfer(ftp->url->pasvmode) != 0)
+	if(ftp_init_transfer() != 0)
 		return -1;
 
 	if(param)
@@ -538,7 +545,7 @@ int ftp_list(const char *cmd, const char *param, FILE *fp)
 	if(ftp->code != ctPrelim)
 		return -1;
 
-	if(sock_accept(ftp->data, "r", ftp->url->pasvmode) != 0) {
+	if(sock_accept(ftp->data, "r", ftp_is_passive()) != 0) {
 		perror("accept()");
 		return -1;
 	}
@@ -571,7 +578,7 @@ int ftp_init_receive(const char *path, transfer_mode_t mode, ftp_transfer_func h
 	foo_hookf = hookf;
 	reset_transfer_info();
 
-	if(ftp_init_transfer(ftp->url->pasvmode) != 0)
+	if(ftp_init_transfer() != 0)
 		return -1;
 
 	ftp_type(mode);
@@ -589,7 +596,7 @@ int ftp_init_receive(const char *path, transfer_mode_t mode, ftp_transfer_func h
 	if(ftp->code != ctPrelim)
 		return -1;
 
-	if(sock_accept(ftp->data, "r", ftp->url->pasvmode) != 0) {
+	if(sock_accept(ftp->data, "r", ftp_is_passive()) != 0) {
 		ftp_err(_("data connection not accepted\n"));
 		return -1;
 	}
@@ -668,7 +675,7 @@ int ftp_send(const char *path, FILE *fp, putmode_t how,
 	reset_transfer_info();
 	ftp->ti.transfer_is_put = true;
 
-	if(ftp_init_transfer(ftp->url->pasvmode) != 0)
+	if(ftp_init_transfer() != 0)
 		return -1;
 
 	ftp_type(mode);
@@ -719,7 +726,7 @@ int ftp_send(const char *path, FILE *fp, putmode_t how,
 		}
 	}
 
-	if(sock_accept(ftp->data, "w", ftp->url->pasvmode) != 0) {
+	if(sock_accept(ftp->data, "w", ftp_is_passive()) != 0) {
 		ftp_err(_("data connection not accepted\n"));
 		return -1;
 	}

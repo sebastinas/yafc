@@ -238,7 +238,6 @@ void ftp_set_tmp_verbosity(int verbosity);
 
 bool ftp_connected(void);
 bool ftp_loggedin(void);
-void ftp_setpasvmode(void);
 
 rdirectory *ftp_get_directory(const char *path);
 rdirectory *ftp_read_directory(const char *path);
