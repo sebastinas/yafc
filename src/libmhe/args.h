@@ -1,4 +1,4 @@
-/* $Id: args.h,v 1.3 2001/05/12 18:43:01 mhe Exp $
+/* $Id: args.h,v 1.4 2001/05/21 21:47:55 mhe Exp $
  *
  * args.h -- handles command arguments
  *
@@ -34,6 +34,7 @@ void args_add_args2(args_t *args, const args_t *add_args, unsigned int first);
 void args_add_args3(args_t *args, const args_t *add_args, unsigned int first,
 					unsigned int last);
 void args_del(args_t *args, unsigned int first, unsigned int n);
+void args_add_null(args_t *args);
 void args_push_back(args_t *args, const char *str);
 void args_push_front(args_t *args, const char *str);
 void args_remove_empty(args_t *args);

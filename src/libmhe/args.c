@@ -1,4 +1,4 @@
-/* $Id: args.c,v 1.3 2001/05/12 18:43:01 mhe Exp $
+/* $Id: args.c,v 1.4 2001/05/21 21:47:55 mhe Exp $
  *
  * args.c -- handles command arguments
  *
@@ -128,7 +128,7 @@ static args_t *split_args(const char *str)
 	/* allocated argv might be way too big if there are many
 	 * adjacent spaces in str */
 
-	while((e = strqsep(&c, ' ')) != 0)
+	while(c && (e = strqsep(&c, ' ')) != 0)
 		args->argv[args->argc++] = xstrdup(e);
 
 	args->argv = xrealloc(args->argv, args->argc * sizeof(char *));
@@ -174,6 +174,16 @@ void args_add_args2(args_t *args, const args_t *add_args, unsigned int first)
 void args_add_args(args_t *args, const args_t *add_args)
 {
 	args_add_args2(args, add_args, 0);
+}
+
+void args_add_null(args_t *args)
+{
+	args_t *add_args = args_create();
+	add_args->argv = alloc_argv(1);
+	add_args->argv[0] = 0;
+	add_args->argc = 1;
+	args_add_args(args, add_args);
+	args_destroy(add_args);
 }
 
 void args_push_back(args_t *args, const char *str)
