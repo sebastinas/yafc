@@ -1,4 +1,4 @@
-/* $Id: list.c,v 1.9 2001/05/27 20:31:42 mhe Exp $
+/* $Id: list.c,v 1.10 2001/05/28 16:04:07 mhe Exp $
  *
  * list.c -- the remote cached 'ls' command
  *
@@ -546,7 +546,7 @@ void cmd_ls(int argc, char **argv)
 					rfile *rf;
 					char *q = xstrdup(e);
 					unquote(q);
-					rdir = ftp_get_directory(q);
+					rdir = ftp_cache_get_directory(q);
 					if(rdir)
 						isdir = true;
 					else {
