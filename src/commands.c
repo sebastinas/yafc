@@ -76,7 +76,7 @@ cmd_t cmds[] = {
 	CMD(rstatus, 0,0,1, cpRemoteFile, 0),
 	CMD(set, 0,0,1, cpVariable, __("set program variables\n usage: set [variable] [value]")),
 	CMD(shell, 0,0,0, cpLocalFile, __("execute shell command or invoke shell\n usage: shell [shell command]")),
-	CMD(site, 0,0,1, cpNone, 0),
+	CMD(site, 0,0,1, cpNone, __("Send site specific command")),
 	CMD(source, 0,0,1, cpLocalFile, 0),
 	CMD(status, 0,0,1, cpNone, 0),
 	CMD(switch, 0,0,0, cpFtpList, 0),
@@ -375,22 +375,49 @@ void cmd_nlist(int argc, char **argv)
 	}
 }
 
-/* FIXME: option --type={binary | ascii} to cmd_cat
- */
 void cmd_cat(int argc, char **argv)
 {
 	int i;
+	struct option longopts[] = {
+		{"type", required_argument, 0, 't'},
+		{"help", no_argument, 0, 'h'},
+		{0, 0, 0, 0}
+	};
+	int c;
+	transfer_mode_t mode = tmAscii;
 
-	OPT_HELP("Print file(s) on standard output.  Usage:\n"
-			 "  cat [options] <file>...\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
+	optind = 0;
+	while((c = getopt_long(argc, argv, "t:h", longopts, 0)) != EOF) {
+		switch(c) {
+		case 't':
+			if(strncmp(optarg, "ascii", strlen(optarg)) == 0)
+				mode = tmAscii;
+			else if(strncmp(optarg, "binary", strlen(optarg)) == 0)
+				mode = tmBinary;
+			else {
+				fprintf(stderr,
+						_("Invalid option argument --type=%s\n"), optarg);
+				return;
+			}
+			break;
+		case 'h':
+			fprintf(stderr, "Print file(s) on standard output.  Usage:\n"
+					"  cat [options] <file>...\n"
+					"Options:\n"
+					"  -t, --type=TYPE    set transfer TYPE to ascii or binary\n"
+					"  -h, --help         show this help\n");
+			return;
+		case '?':
+			optind = -1;
+			return;
+		}
+	}
 
 	minargs(optind);
 	need_connected();
 	need_loggedin();
 
-	for(i=optind;i<argc;i++) {
+	for(i = optind; i < argc; i++) {
 		listitem *gli;
 		list *gl = rglob_create();
 		stripslash(argv[i]);
@@ -399,8 +426,10 @@ void cmd_cat(int argc, char **argv)
 		for(gli = gl->first; gli; gli=gli->next) {
 			rfile *rf = (rfile *)gli->data;
 			const char *fn = base_name_ptr(rf->path);
-			if(strcmp(fn, ".")!=0 && strcmp(fn, "..")!=0)
-				ftp_receive(rf->path, stdout, tmBinary, 0);
+			if(strcmp(fn, ".") != 0 && strcmp(fn, "..") != 0) {
+				ftp_receive(rf->path, stdout, mode, 0);
+				fflush(stdout);
+			}
 		}
 		rglob_destroy(gl);
 	}
@@ -674,12 +703,15 @@ void cmd_status(int argc, char **argv)
 void cmd_site(int argc, char **argv)
 {
 	char *e;
+
+#if 0
 	OPT_HELP("Send site specific command.  Usage:\n"
 			 "  site [options] [command]\n"
 			 "Options:\n"
 			 "  -h, --help    show this help\n"
 			 "[command] should be a valid SITE argument\n"
 			 "try 'site help' or 'rhelp site' for more information\n");
+#endif
 
 	minargs(optind);
 	need_connected();
