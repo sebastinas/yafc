@@ -448,7 +448,6 @@ static int ftp_gets(void)
 			ftp->fullcode = atoi(ftp->reply);
 	}
 #endif
-/*	c = strlen(ftp->reply);*/
 	strip_trailing_chars(ftp->reply, "\n\r");
 	ftp->code = ftp->fullcode / 100;
 	return ftp->fullcode;
