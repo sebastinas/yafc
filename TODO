@@ -1,6 +1,7 @@
 TODO list for Yafc
 ------------------
 
+* sftp_server_program is server dependent (place in bookmarks?)
 * SSH2_FXP_READLINK returns wrong length of filename
 * Ctrl-C with SSH breaks ssh program *and* yafc
 * ssh cmdline option: -o option
