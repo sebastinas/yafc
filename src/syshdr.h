@@ -1,4 +1,4 @@
-/* $Id: syshdr.h,v 1.9 2001/05/21 18:01:06 mhe Exp $
+/* $Id: syshdr.h,v 1.10 2001/05/27 20:29:32 mhe Exp $
  *
  * syshdr.h -- includes global header files etc.
  *
@@ -215,7 +215,8 @@ extern int rl_filename_completion_desired;
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
-#if defined(KRB4) || defined(KRB5)
+#if defined(KRB4) || defined(KRB5) || defined(USE_SSL)
+# define SECFTP
 # ifdef HAVE_DES_H
 #  include <des.h>
 # endif

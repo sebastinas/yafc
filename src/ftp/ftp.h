@@ -1,4 +1,4 @@
-/* $Id: ftp.h,v 1.10 2001/05/21 22:16:28 mhe Exp $
+/* $Id: ftp.h,v 1.11 2001/05/27 20:30:53 mhe Exp $
  *
  * ftp.h -- lower level FTP stuff
  *
@@ -87,7 +87,8 @@ typedef enum {
 typedef enum {
 	mechNone,
 	mechKrb4,
-	mechKrb5
+	mechKrb5,
+	mechSSL
 } mech_type_t;
 
 typedef struct transfer_info
@@ -166,7 +167,7 @@ typedef struct Ftp
 	char * (*getuser_hook)(const char *prompt);
 	char * (*getpass_hook)(const char *prompt);
 
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 	bool sec_complete;
 	enum protection_level data_prot;
 	enum protection_level command_prot;

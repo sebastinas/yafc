@@ -1,4 +1,4 @@
-/* $Id: socket.c,v 1.3 2001/05/12 18:44:04 mhe Exp $
+/* $Id: socket.c,v 1.4 2001/05/27 20:30:53 mhe Exp $
  *
  * socket.c --
  *
@@ -238,7 +238,7 @@ int sock_vprintf(Socket *sockp, const char *str, va_list ap)
 
 int sock_krb_vprintf(Socket *sockp, const char *str, va_list ap)
 {
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 	if(ftp->sec_complete)
 		return sec_vfprintf(sockp->sout, str, ap);
 	else

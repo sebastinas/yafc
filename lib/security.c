@@ -37,13 +37,13 @@
 
 #include "syshdr.h"
 
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 
 #include "ftp.h"
 #include "base64.h"
 #include "commands.h"
 
-/*RCSID("$Id: security.c,v 1.8 2000/10/20 13:50:18 mhe Exp $");*/
+/*RCSID("$Id: security.c,v 1.9 2001/05/27 20:32:47 mhe Exp $");*/
 
 /*static enum protection_level command_prot;*/
 /*static enum protection_level data_prot;*/
@@ -90,7 +90,7 @@ static struct sec_client_mech *mechs[] = {
 #ifdef KRB4
 	&krb4_client_mech,
 #endif
-#ifdef SSL
+#ifdef USE_SSL
 	&ssl_client_mech,
 #endif
 	NULL
@@ -596,4 +596,4 @@ void sec_end(void)
 	ftp->data_prot = (enum protection_level)0;
 }
 
-#endif /* KRB4 || KRB5 */
+#endif /* SECFTP */

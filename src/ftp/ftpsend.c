@@ -1,4 +1,4 @@
-/* $Id: ftpsend.c,v 1.9 2001/05/12 18:44:04 mhe Exp $
+/* $Id: ftpsend.c,v 1.10 2001/05/27 20:30:53 mhe Exp $
  *
  * ftpsend.c -- send/receive files and file listings
  *
@@ -316,7 +316,7 @@ static int FILE_recv_binary(FILE *in, FILE *out)
 			ftp_trace("wait_for_input() returned non-zero\n");
 			break;
 		}
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 		n = sec_read(fileno(in), buf, FTP_BUFSIZ);
 #else
 		n = fread(buf, sizeof(char), FTP_BUFSIZ, in);
@@ -376,7 +376,7 @@ static int FILE_send_binary(FILE *in, FILE *out)
 
 		if(wait_for_output() != 0)
 			break;
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 		if(sec_write(fileno(out), buf, n) != n)
 			break;
 #else
@@ -392,7 +392,7 @@ static int FILE_send_binary(FILE *in, FILE *out)
 			}
 		}
 	}
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 	sec_fflush(out);
 #endif
 
@@ -403,7 +403,7 @@ static int FILE_send_binary(FILE *in, FILE *out)
 
 static int krb_getc(FILE *fp)
 {
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 	return sec_getc(fp);
 #else
 	return fgetc(fp);
