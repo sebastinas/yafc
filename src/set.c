@@ -70,7 +70,7 @@ static void set_pasvmode(void *val)
 static void set_debug(void *val)
 {
 	bool b;
-
+	
 	if(val) {
 		b = *(bool *)val;
 		ftp_set_verbosity(b ? vbDebug : vbError);
@@ -88,16 +88,19 @@ static void set_debug(void *val)
 static void set_type(void *val)
 {
 	if(val) {
-		if(strcasecmp((char *)val, "binary")==0 || strcasecmp((char *)val, "I") == 0)
+		if(strcasecmp((char *)val, "binary") == 0
+		   || strcasecmp((char *)val, "I") == 0)
 			gvDefaultType = tmBinary;
-		else if(strcasecmp((char *)val, "ascii") == 0 || strcasecmp((char *)val, "A") == 0)
+		else if(strcasecmp((char *)val, "ascii") == 0
+				|| strcasecmp((char *)val, "A") == 0)
 			gvDefaultType = tmAscii;
 		else {
-			printf(_("Unknown type '%s'? Use 'ascii' or 'binary'\n"), (char *)val);
+			printf(_("Unknown type '%s'? Use 'ascii' or 'binary'\n"),
+				   (char *)val);
 			return;
 		}
 	}
-	printf(_("type is '%s'\n"), gvDefaultType==tmBinary ? "binary" : "ascii");
+	printf(_("default type is '%s'\n"), gvDefaultType==tmBinary ? "binary" : "ascii");
 }
 
 /* changes password used with anonymous connections */
