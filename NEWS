@@ -2,10 +2,12 @@ New in 0.6.3
 ------------
 
 * removed nokrb option in bookmarks
-* added option mech in bookmarks
 * added option --mechanism=MECH to open command (and removed --krb/--nokrb)
 * always using private protlevel in kauth
 * fix for DOS style paths (w/backslashes)
+* some manual updates
+* added per-url passive mode setting in bookmarks
+* added per-url mechanism setting in bookmarks
 
 
 New in 0.6.2

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-10-07 00:09+0200\n"
+"POT-Creation-Date: 2000-10-08 18:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,35 +38,35 @@ msgstr ""
 msgid "no such alias '%s'\n"
 msgstr ""
 
-#: src/bookmark.c:234
+#: src/bookmark.c:238
 #, c-format
 msgid "a bookmark named '%s' already exists, choose another name\n"
 msgstr ""
 
-#: src/bookmark.c:240
+#: src/bookmark.c:244
 #, c-format
 msgid "a bookmark named '%s' already exists, overwrite?"
 msgstr ""
 
-#: src/bookmark.c:251
+#: src/bookmark.c:255
 msgid "Save password?"
 msgstr ""
 
-#: src/bookmark.c:257 src/bookmark.c:378
+#: src/bookmark.c:261 src/bookmark.c:384
 #, c-format
 msgid "created bookmark %s\n"
 msgstr ""
 
-#: src/bookmark.c:314
+#: src/bookmark.c:320
 msgid "Do you want to create a bookmark for this site?"
 msgstr ""
 
-#: src/bookmark.c:376
+#: src/bookmark.c:382
 #, c-format
 msgid "updated bookmark %s\n"
 msgstr ""
 
-#: src/bookmark.c:385
+#: src/bookmark.c:391
 msgid ""
 "Handle bookmarks.  Usage:\n"
 "  bookmark [options] [bookmark alias ...]\n"
@@ -79,27 +79,27 @@ msgid ""
 "  -h, --help             show this help\n"
 msgstr ""
 
-#: src/bookmark.c:443
+#: src/bookmark.c:449
 #, c-format
 msgid "bookmarks saved in %s\n"
 msgstr ""
 
-#: src/bookmark.c:445 src/bookmark.c:506
+#: src/bookmark.c:451 src/bookmark.c:512
 #, c-format
 msgid "bookmarks saved in %s/bookmarks\n"
 msgstr ""
 
-#: src/bookmark.c:458
+#: src/bookmark.c:464
 #, c-format
 msgid "bookmarks read from %s\n"
 msgstr ""
 
-#: src/bookmark.c:472
+#: src/bookmark.c:478
 #, c-format
 msgid "%u bookmarks\n"
 msgstr ""
 
-#: src/bookmark.c:497
+#: src/bookmark.c:503
 #, c-format
 msgid "deleted bookmark %s\n"
 msgstr ""
@@ -679,31 +679,31 @@ msgid ""
 "      --help             display this help\n"
 msgstr ""
 
-#: src/login.c:103
+#: src/login.c:106
 msgid "Connect to what!? Need a hostname!\n"
 msgstr ""
 
-#: src/login.c:109
+#: src/login.c:112
 msgid ""
 "Ambiguous alias/hostname, use 'open --noalias' to skip bookmark alias "
 "lookup\n"
 msgstr ""
 
-#: src/login.c:117
+#: src/login.c:120
 #, c-format
 msgid "Disconnect from %s?"
 msgstr ""
 
-#: src/login.c:203
+#: src/login.c:210
 #, c-format
 msgid "Sleeping %u seconds before connecting again (attempt #%d)...\n"
 msgstr ""
 
-#: src/login.c:207
+#: src/login.c:214
 msgid "connection aborted\n"
 msgstr ""
 
-#: src/login.c:224
+#: src/login.c:231
 msgid ""
 "Connect and login to remote host.  Usage:\n"
 "  open [options] [ftp://][user[:password]@]hostname[:port][/directory] ...\n"
@@ -790,36 +790,36 @@ msgid ""
 msgstr ""
 
 #. printf(_("This seems to be the first time you run Yafc...\n"));
-#: src/main.c:224
+#: src/main.c:222
 #, c-format
 msgid "creating working directory %s: "
 msgstr ""
 
-#: src/main.c:231 src/main.c:241 src/main.c:252 src/main.c:270
+#: src/main.c:229 src/main.c:239 src/main.c:250 src/main.c:268
 msgid "done\n"
 msgstr ""
 
-#: src/main.c:234 src/main.c:245
+#: src/main.c:232 src/main.c:243
 #, c-format
 msgid "creating directory %s: "
 msgstr ""
 
-#: src/main.c:257
+#: src/main.c:255
 msgid "creating default config file /yafcrc: "
 msgstr ""
 
-#: src/main.c:413
+#: src/main.c:411
 msgid ""
 "No proxy host defined!\n"
 "\n"
 msgstr ""
 
-#: src/main.c:423
+#: src/main.c:421
 #, c-format
 msgid "Invalid value for --wait: %d\n"
 msgstr ""
 
-#: src/main.c:435
+#: src/main.c:433
 #, c-format
 msgid "Couldn't open tracefile '%s': %s\n"
 msgstr ""
@@ -918,7 +918,7 @@ msgstr ""
 msgid "Unexpected end of file encountered\n"
 msgstr ""
 
-#: src/rc.c:130 src/set.c:167
+#: src/rc.c:130 src/set.c:170
 #, c-format
 msgid "Expected boolean value, but got '%s'\n"
 msgstr ""
@@ -938,56 +938,56 @@ msgid ""
 "%03o)\n"
 msgstr ""
 
-#: src/rc.c:233
+#: src/rc.c:239
 #, c-format
 msgid "Multiple definitions for '%s', skipping...\n"
 msgstr ""
 
-#: src/rc.c:246
+#: src/rc.c:252
 msgid "Multiple definitions for 'local', skipping...\n"
 msgstr ""
 
-#: src/rc.c:258
+#: src/rc.c:264
 msgid "Multiple definitions for 'default', skipping...\n"
 msgstr ""
 
-#: src/rc.c:290
+#: src/rc.c:296
 msgid ""
 "As a computer, I find your faith in technology amusing...\n"
 "Too many errors\n"
 msgstr ""
 
-#: src/rc.c:339 src/rc.c:351
+#: src/rc.c:345 src/rc.c:357
 #, c-format
 msgid "Expected boolean value or 'ask', but got '%s'\n"
 msgstr ""
 
-#: src/rc.c:362
+#: src/rc.c:368
 #, c-format
 msgid "Unknown default_type parameter '%s'... (use 'ascii' or 'binary')\n"
 msgstr ""
 
-#: src/rc.c:376
+#: src/rc.c:382
 #, c-format
 msgid "Invalid value for long_command_time: %d\n"
 msgstr ""
 
-#: src/rc.c:383
+#: src/rc.c:389
 #, c-format
 msgid "Invalid value for connect_wait_time: %d\n"
 msgstr ""
 
-#: src/rc.c:457
+#: src/rc.c:463
 #, c-format
 msgid "Invalid value for history_max: %d\n"
 msgstr ""
 
-#: src/rc.c:490
+#: src/rc.c:496
 #, c-format
 msgid "Invalid value for proxy_type: %d\n"
 msgstr ""
 
-#: src/rc.c:508
+#: src/rc.c:514
 #, c-format
 msgid "Config parse error: '%s'\n"
 msgstr ""
@@ -1048,43 +1048,43 @@ msgstr ""
 msgid "verbose is off"
 msgstr ""
 
-#: src/set.c:62
+#: src/set.c:65
 msgid "passive mode is on"
 msgstr ""
 
-#: src/set.c:64
+#: src/set.c:67
 msgid "passive mode is off"
 msgstr ""
 
-#: src/set.c:77
+#: src/set.c:80
 msgid "debug is on"
 msgstr ""
 
-#: src/set.c:80
+#: src/set.c:83
 msgid "debug is off"
 msgstr ""
 
-#: src/set.c:93
+#: src/set.c:96
 #, c-format
 msgid "Unknown type '%s'? Use 'ascii' or 'binary'\n"
 msgstr ""
 
-#: src/set.c:97
+#: src/set.c:100
 #, c-format
 msgid "type is '%s'\n"
 msgstr ""
 
-#: src/set.c:107
+#: src/set.c:110
 #, c-format
 msgid "anonymous password is '%s'\n"
 msgstr ""
 
-#: src/set.c:155
+#: src/set.c:158
 #, c-format
 msgid "No such variable '%s'\n"
 msgstr ""
 
-#: src/set.c:158
+#: src/set.c:161
 #, c-format
 msgid "Ambiguous variable '%s'\n"
 msgstr ""
@@ -1219,86 +1219,86 @@ msgstr ""
 msgid "Unable to send mail (using %s)\n"
 msgstr ""
 
-#: src/ftp/ftp.c:271
+#: src/ftp/ftp.c:270
 #, c-format
 msgid "Connection timeout after %u seconds\n"
 msgstr ""
 
-#: src/ftp/ftp.c:281
+#: src/ftp/ftp.c:280
 #, c-format
 msgid ""
 "Sorry, don't know how to handle your '%s' protocol\n"
 "trying 'ftp' instead...\n"
 msgstr ""
 
-#: src/ftp/ftp.c:287
+#: src/ftp/ftp.c:286
 #, c-format
 msgid "Looking up %s... "
 msgstr ""
 
-#: src/ftp/ftp.c:303
+#: src/ftp/ftp.c:302
 #, c-format
 msgid "Connecting to proxy %s (%s) at port %d...\n"
 msgstr ""
 
-#: src/ftp/ftp.c:307
+#: src/ftp/ftp.c:306
 #, c-format
 msgid "Connecting to %s (%s) at port %d...\n"
 msgstr ""
 
-#: src/ftp/ftp.c:372 src/ftp/ftp.c:573
+#: src/ftp/ftp.c:371 src/ftp/ftp.c:572
 msgid "No control connection\n"
 msgstr ""
 
-#: src/ftp/ftp.c:379
+#: src/ftp/ftp.c:378
 msgid "Server has closed control connection\n"
 msgstr ""
 
-#: src/ftp/ftp.c:423
+#: src/ftp/ftp.c:422
 msgid "Reply too long (truncated)\n"
 msgstr ""
 
-#: src/ftp/ftp.c:490
+#: src/ftp/ftp.c:489
 #, c-format
 msgid "Tired of waiting for reply, timeout after %u seconds\n"
 msgstr ""
 
-#: src/ftp/ftp.c:588
+#: src/ftp/ftp.c:587
 msgid "error writing command"
 msgstr ""
 
 #. server is closing control connection!
-#: src/ftp/ftp.c:609
+#: src/ftp/ftp.c:608
 msgid "Server closed control connection?\n"
 msgstr ""
 
-#: src/ftp/ftp.c:658
+#: src/ftp/ftp.c:657
 msgid "Proxy login: "
 msgstr ""
 
-#: src/ftp/ftp.c:660
+#: src/ftp/ftp.c:659
 #, c-format
 msgid "login (%s): "
 msgstr ""
 
-#: src/ftp/ftp.c:662
+#: src/ftp/ftp.c:661
 msgid "login (anonymous): "
 msgstr ""
 
-#: src/ftp/ftp.c:672 src/ftp/ftp.c:714
+#: src/ftp/ftp.c:671 src/ftp/ftp.c:713
 msgid "You loose\n"
 msgstr ""
 
-#: src/ftp/ftp.c:696
+#: src/ftp/ftp.c:695
 #, c-format
 msgid "password (%s): "
 msgstr ""
 
-#: src/ftp/ftp.c:698 src/ftp/ftp.c:710
+#: src/ftp/ftp.c:697 src/ftp/ftp.c:709
 msgid "password: "
 msgstr ""
 
-#: src/ftp/ftp.c:709
+#: src/ftp/ftp.c:708
 msgid "Proxy password: "
 msgstr ""
 
@@ -1316,24 +1316,24 @@ msgstr ""
 msgid "*** Using plaintext username and password ***\n"
 msgstr ""
 
-#: src/ftp/ftp.c:811
+#: src/ftp/ftp.c:809
 msgid "Authentication successful.\n"
 msgstr ""
 
-#: src/ftp/ftp.c:820
+#: src/ftp/ftp.c:818
 msgid "logging in anonymously...\n"
 msgstr ""
 
-#: src/ftp/ftp.c:926
+#: src/ftp/ftp.c:924
 #, c-format
 msgid "Data protection is %s\n"
 msgstr ""
 
-#: src/ftp/ftp.c:1092
+#: src/ftp/ftp.c:1090
 msgid "Server doesn't support SITE CHMOD\n"
 msgstr ""
 
-#: src/ftp/ftp.c:1105
+#: src/ftp/ftp.c:1103
 msgid "Server doesn't support SITE IDLE\n"
 msgstr ""
 
@@ -1437,28 +1437,28 @@ msgstr ""
 msgid "Forced passive mode on\n"
 msgstr ""
 
-#: lib/kauth.c:131 lib/krb4.c:214
+#: lib/kauth.c:131 lib/krb4.c:215
 msgid "Out of memory base64-encoding\n"
 msgstr ""
 
-#: lib/krb4.c:221
+#: lib/krb4.c:222
 msgid "Server didn't accept auth data\n"
 msgstr ""
 
-#: lib/krb4.c:227
+#: lib/krb4.c:228
 msgid "Remote host didn't send adat reply\n"
 msgstr ""
 
-#: lib/krb4.c:233
+#: lib/krb4.c:234
 msgid "Failed to decode base64 from server\n"
 msgstr ""
 
-#: lib/krb4.c:241
+#: lib/krb4.c:242
 #, c-format
 msgid "Error reading reply from server: %s\n"
 msgstr ""
 
-#: lib/krb4.c:247
+#: lib/krb4.c:248
 msgid "Bad checksum returned from server\n"
 msgstr ""
 

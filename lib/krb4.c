@@ -46,7 +46,7 @@ extern int krb_get_our_ip_for_realm(
 #endif
 /*#include <krb.h>*/
 
-/*RCSID("$Id: krb4.c,v 1.1 2000/09/14 14:06:18 mhe Exp $");*/
+/*RCSID("$Id: krb4.c,v 1.2 2000/10/09 21:02:49 mhe Exp $");*/
 
 #ifdef FTP_SERVER
 #define LOCAL_ADDR ctrl_addr
@@ -197,11 +197,12 @@ krb4_auth(void *app_data, char *host)
 	   * is here we know that (probably) NAT is in
 	   * use!
 	   */
-
-	  if(ftp->pasvmode == false) {
-		  ftp->pasvmode = true;
+#if 0
+	  if(ftp->url->pasvmode == false) {
+		  ftp->url->pasvmode = true;
 		  printf(_("Forced passive mode on\n"));
 	  }
+#endif
 	}
       }
     }
