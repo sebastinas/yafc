@@ -242,9 +242,10 @@ static void create_bookmark(const char *guessed_alias)
 			a = ask(ASKYES|ASKNO, ASKYES,
 					_("a bookmark named '%s' already exists, overwrite?"),
 					url->alias ? url->alias : url->hostname);
-			if(a == ASKNO)
-				return;
-		}
+			if(a == ASKYES)
+				break;
+		} else
+			break;
 	}
 
 	/* password is automatically saved if anonymous login */
@@ -350,8 +351,11 @@ void auto_create_bookmark(void)
 					}
 					url_setalias(url, a);
 					xfree(a);
-				} else
+				} else {
+					update = true;
+					had_passwd = (xurl->password != 0);
 					break;
+				}
 				li = list_search(gvBookmarks, (listsearchfunc)urlcmp, url);
 				if(li == 0)
 					break;
