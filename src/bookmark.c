@@ -64,15 +64,31 @@ static void bookmark_save_one(FILE *fp, url_t *url)
 	else if(url == gvDefaultUrl)
 		fprintf(fp, "default");
 	else {
-		fprintf(fp, "machine %s:%d", url->hostname,
-				url->port==-1 ? 21 : url->port);
+		fprintf(fp, "machine %s", url->hostname);
+		if(url->port != -1)
+			fprintf(fp, ":%d", url->port);
 		if(url->alias) {
 			char *a = xquote_chars(url->alias, "\'\"");
 			fprintf(fp, " alias '%s'", a);
 			xfree(a);
 		}
 	}
-	fprintf(fp, "\n  login %s", url->username);
+	if(url_isanon(url) && url->password
+	   && strcmp(url->password, gvAnonPasswd) == 0)
+		fprintf(fp, "\n  anonymous");
+	else {
+		fprintf(fp, "\n  login %s", url->username);
+		if(url->password) {
+			if(url_isanon(url))
+				fprintf(fp, " password %s", url->password);
+			else {
+				char *cq;
+				base64_encode(url->password, strlen(url->password), &cq);
+				fprintf(fp, " password [base64]%s", cq);
+				xfree(cq);
+			}
+		}
+	}
 
 	if(url->directory)
 		fprintf(fp, " cwd '%s'", url->directory);
@@ -88,12 +104,6 @@ static void bookmark_save_one(FILE *fp, url_t *url)
 	}
 	if(url->pasvmode != -1)
 		fprintf(fp, " passive %s", url->pasvmode ? "true" : "false");
-	if(url->password) {
-		char *cq;
-		base64_encode(url->password, strlen(url->password), &cq);
-		fprintf(fp, " password [base64]%s", cq);
-		xfree(cq);
-	}
 	fprintf(fp, "\n\n");
 }
 
