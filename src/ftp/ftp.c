@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.24 2001/05/28 14:21:48 mhe Exp $
+/* $Id: ftp.c,v 1.25 2001/05/28 17:13:50 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -1334,24 +1334,35 @@ rdirectory *ftp_read_directory(const char *path)
 
 	fchmod(fileno(fp), S_IRUSR | S_IWUSR);
 
-	if(!is_curdir) {
-		ftp_cmd("CWD %s", dir);
-		if(ftp->code != ctComplete)
-			goto failed;
-	}
-
 	if(ftp->has_mlsd_command) {
-		_failed = (ftp_list("MLSD", 0, fp) != 0);
+		char *asdf;
+		asprintf(&asdf, "%s/", dir);
+		/* Hack to get around issue in PureFTPd:
+		 * doing a 'MLSD link-to-dir' on PureFTPd closes the control
+		 * connection, however, 'MLSD link-to-dir/' works fine.
+		 */
+		_failed = (ftp_list("MLSD", asdf, fp) != 0);
+		xfree(asdf);
 		if(_failed && ftp->code == ctError)
 			ftp->has_mlsd_command = false;
 	}
-	if(!ftp->has_mlsd_command)
+	if(!ftp->has_mlsd_command) {
+
+		/* we do a "CWD" before the listing, because:
+		 *  we want a listing of the directory contents, not the
+		 *  directory itself, and some servers misunderstand this
+		 *  If the target is a link to a directory, we have to do this
+		 */
+		if(!is_curdir) {
+			ftp_cmd("CWD %s", dir);
+			if(ftp->code != ctComplete)
+				goto failed;
+		}
+
 		_failed = (ftp_list("LIST", 0, fp) != 0);
 
-	if(!is_curdir) {
-		ftp_cmd("CWD %s", ftp->curdir);
-/*		if(ftp->code != ctComplete)*/
-/*			goto failed;*/
+		if(!is_curdir)
+			ftp_cmd("CWD %s", ftp->curdir);
 	}
 
 	if(_failed)

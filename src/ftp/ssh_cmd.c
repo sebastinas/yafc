@@ -116,6 +116,8 @@ int ssh_open_url(url_t *urlp)
 	if(ftp->url->directory)
 		ftp_chdir(ftp->url->directory);
 
+	ftp_get_feat();
+
 	return 0;
 }
 
@@ -272,49 +274,6 @@ unsigned long ssh_filesize(const char *path)
 	return 0;
 }
 
-char *attrib2string(Attrib *a)
-{
-	char *attr = (char *)xmalloc(11);
-
-	strcpy(attr, "----------");
-
-	if(S_ISDIR(a->perm))
-		attr[0] = 'd';
-	else if(S_ISLNK(a->perm))
-		attr[0] = 'l';
-	else if(S_ISCHR(a->perm))
-		attr[0] = 'c';
-	else if(S_ISBLK(a->perm))
-		attr[0] = 'b';
-	else if(S_ISFIFO(a->perm))
-		attr[0] = 'p';
-	else if(S_ISSOCK(a->perm))
-		attr[0] = 's';
-
-	if(test(a->perm, S_IRUSR)) attr[1] = 'r';
-	if(test(a->perm, S_IWUSR)) attr[2] = 'w';
-	if(test(a->perm, S_IXUSR)) {
-		if(test(a->perm, S_ISUID)) attr[3] = 's';
-		else attr[3] = 'x';
-	} else if(test(a->perm, S_ISUID)) attr[3] = 'S';
-
-	if(test(a->perm, S_IRGRP)) attr[4] = 'r';
-	if(test(a->perm, S_IWGRP)) attr[5] = 'w';
-	if(test(a->perm, S_IXGRP)) {
-		if(test(a->perm, S_ISGID)) attr[6] = 's';
-		else attr[6] = 'x';
-	} else if(test(a->perm, S_ISGID)) attr[6] = 'S';
-
-	if(test(a->perm, S_IROTH)) attr[7] = 'r';
-	if(test(a->perm, S_IWOTH)) attr[8] = 'w';
-	if(test(a->perm, S_IXOTH)) {
-		if(test(a->perm, S_ISVTX)) attr[9] = 't';
-		else attr[9] = 'x';
-	} else if(test(a->perm, S_ISVTX)) attr[9] = 'T';
-
-	return attr;
-}
-
 rdirectory *ssh_read_directory(const char *path)
 {
 	rdirectory *rdir;
@@ -340,7 +299,7 @@ rdirectory *ssh_read_directory(const char *path)
 
 		rf = rfile_create();
 
-		rf->perm = attrib2string(&dir[i]->a);
+		rf->perm = perm2string(dir[i]->a.perm);
 
 		e = strqsep(&cf, ' ');  /* skip permissions */
 		e = strqsep(&cf, ' ');  /* nhl? */

@@ -1,4 +1,4 @@
-/* $Id: rfile.c,v 1.7 2001/05/28 08:23:40 mhe Exp $
+/* $Id: rfile.c,v 1.8 2001/05/28 17:11:51 mhe Exp $
  *
  * rfile.c -- representation of a remote file
  *
@@ -575,6 +575,92 @@ static int rfile_parse_dos(rfile *f, char *str, const char *dirpath)
 	return 0;
 }
 
+/* type=cdir;sizd=4096;modify=20010528094249;UNIX.mode=0700;UNIX.uid=1000;UNIX.gid=1000;unique=1642g7c81 .
+ */
+
+static int rfile_parse_mlsd(rfile *f, char *str, const char *dirpath)
+{
+	char *e;
+	bool isdir = false;
+
+	if(!str)
+		return -1;
+
+	e = strchr(str, ' ');
+	if(e) {
+		asprintf(&f->path, "%s/%s",
+				 strcmp(dirpath, "/") ? dirpath : "", base_name_ptr(e+1));
+		*e = 0;
+	} else
+		return -1;
+
+	f->perm = 0;
+	f->size = 0L;
+	f->mtime = 0;
+	f->link = 0;
+	f->nhl = 0;
+	f->owner = xstrdup("owner");
+	f->group = xstrdup("group");
+	f->date = xstrdup("Jan  0  1900");
+
+	while((e = strqsep(&str, ';')) != 0) {
+		char *factname, *value;
+
+		factname = strqsep(&e, '=');
+		value = e;
+
+		if(!factname || !value) {
+			return -1;
+		}
+
+		if(strcasecmp(factname, "size") == 0 ||
+			strcasecmp(factname, "sizd") == 0)
+			/* the "sizd" fact is not standardized in "Extension to
+			 * FTP" Internet draft, but PureFTPd uses it for some
+			 * reason for size of directories
+			 */
+			f->size = atol(value);
+		else if(strcasecmp(factname, "type") == 0) {
+			if(strcasecmp(value, "file") == 0)
+				isdir = false;
+			else if(strcasecmp(value, "dir") == 0 ||
+					strcasecmp(value, "cdir") == 0 ||
+					strcasecmp(value, "pdir") == 0)
+				isdir = true;
+		} else if(strcasecmp(factname, "modify") == 0) {
+			struct tm ts;
+
+			sscanf(value, "%04d%02d%02d%02d%02d%02d",
+				   &ts.tm_year, &ts.tm_mon, &ts.tm_mday,
+				   &ts.tm_hour, &ts.tm_min, &ts.tm_sec);
+			ts.tm_year -= 1900;
+			ts.tm_mon--;
+			f->mtime = gmt_mktime(&ts);
+			xfree(f->date);
+			f->date = time_to_string(f->mtime);
+		} else if(strcasecmp(factname, "UNIX.mode") == 0) {
+			xfree(f->perm);
+			f->perm = perm2string(strtoul(value, 0, 8));
+		} else if(strcasecmp(factname, "UNIX.gid") == 0) {
+			xfree(f->group);
+			f->group = xstrdup(value);
+		} else if(strcasecmp(factname, "UNIX.uid") == 0) {
+			xfree(f->owner);
+			f->owner = xstrdup(value);
+		}
+	}
+
+	if(!f->perm)
+		f->perm = xstrdup("-rw-r--r--");
+
+	if(isdir)
+		f->perm[0] = 'd';
+
+	rfile_parse_colors(f);
+
+	return 0;
+}
+
 int rfile_parse(rfile *f, char *str, const char *dirpath)
 {
 	int i;
@@ -583,7 +669,7 @@ int rfile_parse(rfile *f, char *str, const char *dirpath)
 	if(ftp->LIST_type == ltUnknown)
 		ftp->LIST_type = ltUnix;
 
-	for(i=0;i<3;i++) {
+	for(i=0;i<4;i++) {
 		char *tmp = xstrdup(str);
 
 		if(ftp->LIST_type == ltUnix)
@@ -592,18 +678,27 @@ int rfile_parse(rfile *f, char *str, const char *dirpath)
 			r = rfile_parse_dos(f, tmp, dirpath);
 		else if(ftp->LIST_type == ltEplf)
 			r = rfile_parse_eplf(f, tmp, dirpath);
+		else if(ftp->LIST_type == ltMlsd)
+			r = rfile_parse_mlsd(f, tmp, dirpath);
 
 		xfree(tmp);
 
 		if(r == -1) {
 			rfile_clear(f);
 
-			if(ftp->LIST_type == ltUnix)
+			if(ftp->LIST_type == ltUnix) {
 				ftp->LIST_type = ltDos;
-			else if(ftp->LIST_type == ltDos)
+				ftp_trace("UNIX output parsing failed, trying DOS\n");
+			} else if(ftp->LIST_type == ltDos) {
 				ftp->LIST_type = ltEplf;
-			else if(ftp->LIST_type == ltEplf)
+				ftp_trace("DOS output parsing failed, trying EPLF\n");
+			} else if(ftp->LIST_type == ltEplf) {
+				ftp->LIST_type = ltMlsd;
+				ftp_trace("EPLF output parsing failed, trying MLSD\n");
+			} else if(ftp->LIST_type == ltMlsd) {
 				ftp->LIST_type = ltUnix;
+				ftp_trace("MLSD output parsing failed, trying UNIX\n");
+			}
 		} else
 			return r;
 	}
