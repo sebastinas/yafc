@@ -35,9 +35,24 @@
     return; \
   }
 
+#define maxargs_nohelp(n) \
+  if(argc > n+1) { \
+    char *fooargs; \
+    fooargs = args_cat(argc, argv, n+1); \
+    fprintf(stderr, _("unexpected arguments -- '%s', try 'help %s' for more information\n"), fooargs, argv[0]); \
+    xfree(fooargs); \
+    return; \
+  }
+
 #define minargs(n) \
   if(argc <= n) { \
     fprintf(stderr, _("missing argument, try '%s --help' for more information\n"), argv[0]); \
+    return; \
+  }
+
+#define minargs_nohelp(n) \
+  if(argc <= n) { \
+    fprintf(stderr, _("missing argument, try 'help %s' for more information\n"), argv[0]); \
     return; \
   }
 
