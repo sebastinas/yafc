@@ -1,3 +1,11 @@
+New in 0.7.4
+------------
+
+* Fixed segfault in DOS directory listings (thanks Cort Tompkins)
+* Fixed alias %-expansion off-by-one bug, %1 is now the first arg (thanks Jens Askengren)
+* Fixed weird parse error in some directory listings (thanks Matthew Gabeler-Lee)
+
+
 New in 0.7.3
 ------------
 
