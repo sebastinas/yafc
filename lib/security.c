@@ -36,11 +36,14 @@
  */
 
 #include "syshdr.h"
+
+#if defined(KRB4) || defined(KRB5)
+
 #include "ftp.h"
 #include "base64.h"
 #include "commands.h"
 
-/*RCSID("$Id: security.c,v 1.5 2000/10/17 13:00:28 mhe Exp $");*/
+/*RCSID("$Id: security.c,v 1.6 2000/10/20 07:38:56 mhe Exp $");*/
 
 /*static enum protection_level command_prot;*/
 /*static enum protection_level data_prot;*/
@@ -591,3 +594,5 @@ void sec_end(void)
 	ftp->sec_complete = false;
 	ftp->data_prot = (enum protection_level)0;
 }
+
+#endif /* KRB4 || KRB5 */
