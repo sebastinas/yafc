@@ -1,4 +1,4 @@
-/* $Id: rfile.c,v 1.5 2001/05/13 13:26:32 mhe Exp $
+/* $Id: rfile.c,v 1.6 2001/05/21 17:20:01 mhe Exp $
  *
  * rfile.c -- representation of a remote file
  *
@@ -475,6 +475,7 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 		f->link = xstrdup(e+4);
 	}
 
+#if 0
 	/* ftp.apple.com:
 	 *
 	 * drwxr-xr-x   8 0        system       512 Jan  1 22:51 dts
@@ -482,8 +483,13 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 	 *                                             --------^
 	 * doesn't pad year, so assume filename doesn't start with a space
 	 */
+	/* I've dropped this workaround, 'cause ftp.apple.com seems to
+	 * have fixed this, and this prevents a cd to directories with
+	 * leading spaces
+	 */
 	while(*cf == ' ')
 		cf++;
+#endif
 
 	asprintf(&f->path, "%s/%s", strcmp(dirpath, "/") ? dirpath : "", cf);
 
