@@ -1,4 +1,4 @@
-/* $Id: ftpsend.c,v 1.12 2001/07/09 19:15:15 mhe Exp $
+/* $Id: ftpsend.c,v 1.13 2001/07/16 09:18:13 mhe Exp $
  *
  * ftpsend.c -- send/receive files and file listings
  *
@@ -19,6 +19,7 @@
 #include "ftpsigs.h"
 #include "gvars.h"
 #include "ssh_cmd.h"
+#include "ssh_ftp.h"
 
 static int ftp_pasv(unsigned char result[6])
 {
@@ -937,8 +938,11 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 		Attrib *a = ssh_stat(infile);
 		if(a == 0) {
 			ftp_err(_("Unable to stat file '%s'\n"), infile);
-			return -a;
+			return -1;
 		}
+		/* FIXME: how can we check if it will be possible to transfer
+		 * the specified file?
+		 */
 	} else if(ftp_init_receive(infile, mode, hookf) != 0)
 		return -1;
 
