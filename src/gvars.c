@@ -44,6 +44,9 @@ bool gvRemoteCompletion = true;
 /* quit program when Ctrl-D is pressed */
 bool gvQuitOnEOF = true;
 
+/* default security mechanism to use */
+char *gvMechanism = 0;
+
 char *gvXtermTitle1 = 0;
 char *gvXtermTitle2 = 0;
 char *gvXtermTitle3 = 0;

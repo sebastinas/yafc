@@ -44,6 +44,9 @@ extern bool gvTrace;
 extern bool gvPasvmode;
 extern bool gvReadNetrc;
 
+/* default security mechanism to use */
+extern char *gvMechanism;
+
 extern char *gvXtermTitle1;
 extern char *gvXtermTitle2;
 extern char *gvXtermTitle3;
