@@ -1,6 +1,6 @@
 /* bashline.c -- Bash's interface to the readline library. */
 
-/* modified for use in Yafc by Martin Hedenfalk <mhe@stacken.kth.se>
+/* modified for use in Yafc by Martin Hedenfalk <mhe@home.se>
  * this is not the complete bashline.c, see the bash source,
  * available at ftp://ftp.gnu.org/pub/
  * 

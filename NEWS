@@ -1,7 +1,7 @@
 New in 0.6.5
 ------------
 
-* changed default for auto_bookmark to yes
+* changed default value for auto_bookmark to yes
 * added option --type={ascii|binary} to cat
 * forgot a fflush() in cat (cat didn't work on binary files)
 * fixed broken alias zpage in yafcrc.sample + added (b)zcat alias
