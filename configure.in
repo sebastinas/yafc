@@ -304,4 +304,8 @@ echo "CPPFLAGS = $CPPFLAGS"
 echo "LDFLAGS = $LDFLAGS"
 echo "LIBS = $LIBS $RLLIBS"
 echo "installing in $prefix"
+
+if test "$mhe_with_readline" = "no" -o "$mhe_cv_lib_readline" = "no"; then
+  echo "Readline was not found, completion won't work"
+fi
 echo "----- type make to compile -----"
