@@ -138,7 +138,6 @@ typedef struct Ftp
 
 	bool connected;
 	bool loggedin;
-	bool pasvmode;   /* use passive mode data connections */
 	verbose_t verbosity, tmp_verbosity;
 
 	bool has_mdtm_command;

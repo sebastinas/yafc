@@ -50,7 +50,6 @@ Ftp *ftp_create(void)
 	ftp->last_mkpath = 0;
 	ftp->cache = list_new((listfunc)rdir_destroy);
 	ftp->dirs_to_flush = list_new((listfunc)xfree);
-	ftp->pasvmode = false;
 	ftp->reply_timeout = 30;
 	ftp->open_timeout = 30;
 	ftp->taglist = list_new((listfunc)rfile_destroy);
@@ -729,6 +728,7 @@ static const char *secext_name(const char *mech)
 		{"krb4", "KERBEROS_V4"},
 		{"krb5", "GSSAPI"},
 /*		{"ssl", "SSL"},*/
+		{"none", "none"},
 		{0, 0}
 	};
 	int i;
