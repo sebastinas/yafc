@@ -1,4 +1,4 @@
-/* $Id: strq.c,v 1.4 2001/05/12 18:43:01 mhe Exp $
+/* $Id: strq.c,v 1.5 2001/05/21 21:48:16 mhe Exp $
  *
  * strq.c -- string functions, handles quoted text
  *
@@ -106,6 +106,9 @@ int strqnchr(const char *str, char c)
 {
 	int n=0;
 	bool dq;
+
+	if(!str)
+		return 0;
 
 	while(*str) {
 		/* string is quoted using double or single quotes (" or ') */
