@@ -1,4 +1,4 @@
-/* $Id: utils.c,v 1.4 2003/07/12 10:25:41 mhe Exp $
+/* $Id: utils.c,v 1.5 2003/08/05 09:05:08 mhe Exp $
  *
  * utils.c -- small (generic) functions
  *
@@ -74,14 +74,13 @@ char *human_size(long size)
 
 	if(size < 1024)
 		sprintf(buf, "%lu", size);
-	/* else if(size < 1024*1024) */
-	else if(size < 999.5*1024)
-		sprintf(buf, "%.1fk", (double)size/1024);
-	else if(size < 999.5*1024*1024)
-		sprintf(buf, "%.2fM", (double)size/(1024*1024));
-	else
-		sprintf(buf, "%.2fG", (double)size/(1024*1024*1024));
-	/* they aren't transferring TB with ftp, eh? */
+	else if(size < 999.5*1024) /* kilobinary */
+		sprintf(buf, "%.1fKi", (double)size/1024);
+	else if(size < 999.5*1024*1024) /* megabinary */
+		sprintf(buf, "%.2fMi", (double)size/(1024*1024));
+	else /* gigabinary */
+		sprintf(buf, "%.2fGi", (double)size/(1024*1024*1024));
+	/* they aren't transferring terabinaries with ftp, eh? */
 
 	return buf;
 }

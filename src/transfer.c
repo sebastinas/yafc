@@ -1,4 +1,4 @@
-/* $Id: transfer.c,v 1.10 2003/07/12 10:25:41 mhe Exp $
+/* $Id: transfer.c,v 1.11 2003/08/05 09:05:08 mhe Exp $
  *
  * transfer.c --
  *
@@ -152,24 +152,24 @@ static int print_transfer_string(char *str,
 											gvLocalHomeDir));
 				break;
 			case 's':
-				len += max_printf(fp, minlen, "%sb", human_size(ti->size));
+				len += max_printf(fp, minlen, "%sB", human_size(ti->size));
 				break;
 			case 'S':
-				len += max_printf(fp, minlen, "%sb",
+				len += max_printf(fp, minlen, "%sB",
 								  (ti->total_size == -1L
 								   ? "??"
 								   : human_size(ti->total_size)));
 				break;
 			case 'b':
 				len += max_printf(fp, minlen < 2 ? minlen : minlen-2,
-								  "%sb/s", human_size(bps));
+								  "%sB/s", human_size(bps));
 				break;
 			case 'B':
 				if(ti->stalled >= 5)
 					len += max_printf(fp, minlen, "%s", _("stalled"));
 				else
 					len += max_printf(fp, minlen < 2 ? minlen : minlen-2,
-									  "%sb/s", human_size(bps));
+									  "%sB/s", human_size(bps));
 				break;
 			case 'e':
 				if(eta != (unsigned) -1)
@@ -331,9 +331,9 @@ static RETSIGTYPE term_handler(int signum)
 {
 	time_t now = time(0);
 
-	fprintf(stderr, "%s [%sb of ", ftp->ti.remote_name,
+	fprintf(stderr, "%s [%sB of ", ftp->ti.remote_name,
 			human_size(ftp->ti.size));
-	fprintf(stderr, "%sb]\n", human_size(ftp->ti.total_size));
+	fprintf(stderr, "%sB]\n", human_size(ftp->ti.total_size));
 	printf(_("SIGTERM (terminate) received, exiting...\n"));
 	printf(_("Transfer aborted %s"), ctime(&now));
 	if(ftp->ti.remote_name)

@@ -8,6 +8,8 @@ New in 1.1
 * alternative SSH port now accepted (thanks Henk Csaba)
 * Applied patch from Eduard Bloch that adds a setting for user
   configurable SSH options
+* Uses standard SI prefixes for binary multiples (KiB, MiB, GiB) in
+  transfer progress
 
 
 New in 1.0
