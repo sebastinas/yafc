@@ -232,11 +232,6 @@ Close active connection.
 Show copyright.
 
 @c -----------------------------------------------------
-@node filesize
-@subsection @code{filesize}
-documentation missing...
-
-@c -----------------------------------------------------
 @node filetime
 @subsection @code{filetime}
 documentation missing...
@@ -542,7 +537,7 @@ Show a short syntax description.
 @c -----------------------------------------------------
 @node help
 @subsection @code{help}
-documentation missing...
+Shows the available commands.
 
 @c -----------------------------------------------------
 @node idle

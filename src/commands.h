@@ -1,4 +1,4 @@
-/* $Id: commands.h,v 1.6 2001/05/12 18:44:37 mhe Exp $
+/* $Id: commands.h,v 1.7 2001/07/01 11:27:57 mhe Exp $
  *
  * commands.h --
  *
@@ -33,8 +33,7 @@
   if(argc > n+1) { \
     char *fooargs; \
     fooargs = args_cat(argc, argv, n+1); \
-    fprintf(stderr, _("unexpected arguments -- '%s', try 'help %s'" \
-					  " for more information\n"), fooargs, argv[0]); \
+    fprintf(stderr, _("unexpected arguments -- '%s'\n"), fooargs); \
     xfree(fooargs); \
     return; \
   }
@@ -48,8 +47,7 @@
 
 #define minargs_nohelp(n) \
   if(argc <= n) { \
-    fprintf(stderr, _("missing argument, try 'help %s'" \
-					  " for more information\n"), argv[0]); \
+    fprintf(stderr, _("missing argument\n")); \
     return; \
   }
 
@@ -79,7 +77,6 @@ extern cpl_t force_completion_type;
 DEFCMD(cachelist);
 DEFCMD(status);
 DEFCMD(quit);
-DEFCMD(filesize);
 DEFCMD(filetime);
 DEFCMD(source);
 DEFCMD(system);
@@ -177,8 +174,6 @@ DEFCMD(ltag);
 DEFCMD(luntag);
 DEFCMD(ltaglist);
 DEFCMD(ltaginfo);
-
-DEFCMD(flush);
 
 #define OPT_HELP(help) { opt_help(argc, argv, _(help)); \
  if(optind == -1) return; }
