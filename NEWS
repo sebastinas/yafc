@@ -10,6 +10,8 @@ New in 1.1
   configurable SSH options
 * Uses standard SI prefixes for binary multiples (KiB, MiB, GiB) in
   transfer progress
+* Fixed bug when pressing Ctrl-D in user input (ask), reported by Robin Breathe
+* Applied patch by Thomas Habets, fixing a file descriptor leak
 
 
 New in 1.0

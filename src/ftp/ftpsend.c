@@ -1,4 +1,4 @@
-/* $Id: ftpsend.c,v 1.15 2003/07/12 10:25:41 mhe Exp $
+/* $Id: ftpsend.c,v 1.16 2003/10/15 21:37:31 mhe Exp $
  *
  * ftpsend.c -- send/receive files and file listings
  *
@@ -76,20 +76,23 @@ static int ftp_init_transfer(void)
 	unsigned char pac[6];
 
 	if(!ftp_connected())
-		return -1;
+		goto err0;
 
-	ftp->data = sock_create();
+	if (!(ftp->data = sock_create())) {
+		goto err0;
+	}
 	sock_copy(ftp->data, ftp->ctrl);
 
 	if(ftp_is_passive()) {
-		if(ftp_pasv(pac) != 0)
-			return -1;
+		if(ftp_pasv(pac) != 0) {
+			goto err1;
+		}
 
 		sock_getsockname(ftp->ctrl, &sa);
 		memcpy(&sa.sin_addr, pac, (size_t)4);
 		memcpy(&sa.sin_port, pac+4, (size_t)2);
 		if(sock_connect_addr(ftp->data, &sa) == -1)
-			return -1;
+			goto err1;
 	} else {
 		sock_listen(ftp->data);
 
@@ -100,12 +103,17 @@ static int ftp_init_transfer(void)
 		ftp_cmd("PORT %d,%d,%d,%d,%d,%d",
 				a[0], a[1], a[2], a[3], p[0], p[1]);
 		if(ftp->code != ctComplete)
-			return -1;
+			goto err1;
 	}
 
 	sock_throughput(ftp->data);
 
 	return 0;
+
+ err1:
+	sock_destroy(ftp->data);
+ err0:
+	return -1;
 }
 
 int ftp_type(transfer_mode_t type)

@@ -1,4 +1,4 @@
-/* $Id: socket.c,v 1.5 2003/07/12 10:25:41 mhe Exp $
+/* $Id: socket.c,v 1.6 2003/10/15 21:37:31 mhe Exp $
  *
  * socket.c --
  *
@@ -31,28 +31,31 @@ Socket *sock_create(void)
 	/* create a socket file descriptor */
 	sockp->handle = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if(sockp->handle == -1)
-		return 0;
+		goto err0;
 #if 0
 	/* enable local address reuse */
 	if(setsockopt(sockp->handle, SOL_SOCKET, SO_REUSEADDR,
 				  &on, sizeof(on)) == -1)
 	{
-		close(sockp->handle);
-		return 0;
+		goto err1;
 	}
 #endif
 	sockp->sin = fdopen(sockp->handle, "r");
 	if(sockp->sin == 0) {
-		close(sockp->handle);
-		return 0;
+		goto err1;
 	}
 	sockp->sout = fdopen(sockp->handle, "w");
 	if(sockp->sout == 0) {
-		close(sockp->handle);
-		return 0;
+		goto err1;
 	}
 
 	return sockp;
+
+err1:
+	close(sockp->handle);
+err0:
+	free(sockp);
+	return 0;
 }
 
 void sock_destroy(Socket *sockp)
@@ -60,8 +63,17 @@ void sock_destroy(Socket *sockp)
 	if(!sockp)
 		return;
 
-	if(sockp->connected)
-		close(sockp->handle);
+ 	/* we'll be closing the fd twice, but that's ok...
+ 	 * at least as long as we're not threaded, then this'll race
+ 	 */
+ 	fclose(sockp->sin);
+ 	fclose(sockp->sout);
+ 	/*
+ 	 * closing socket directly is not needed, it's closed by the first
+ 	 * fclose() above
+ 	 */
+ 	/* close(sockp->handle); */
+
 	free(sockp);
 }
 

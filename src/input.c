@@ -1,4 +1,4 @@
-/* $Id: input.c,v 1.9 2003/07/12 10:25:41 mhe Exp $
+/* $Id: input.c,v 1.10 2003/10/15 21:37:31 mhe Exp $
  *
  * input.c -- string input and readline stuff
  *
@@ -332,8 +332,12 @@ int ask(int opt, int def, const char *prompt, ...)
 
 		fprintf(stderr, "%s [%s] ", e, chstr);
 		if(fgets(tmp, 80, stdin) == 0) {
+#if 0
 			fputc('\n', stderr);
 			continue; /* skip EOF chars */
+#else
+			return def;
+#endif
 		}
 
 		if(tmp[0] == '\n')
