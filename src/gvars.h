@@ -1,4 +1,4 @@
-/* $Id: gvars.h,v 1.14 2002/12/02 12:38:48 mhe Exp $
+/* $Id: gvars.h,v 1.15 2003/07/12 10:22:45 mhe Exp $
  *
  * gvars.h -- global variables
  *
@@ -42,6 +42,9 @@ extern bool gvWaitingDots;
 
 /* path to the SSH program */
 extern char *gvSSHProgram ;
+
+/* custom user options like -C */
+extern char *gvSSHOptions ;
 
 /* path to the remote sftp-server program
  * leave blank to use sftp subsystem

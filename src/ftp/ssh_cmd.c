@@ -35,8 +35,6 @@
 #include "ssh_ftp.h"
 #include "rfile.h"
 
-int version;
-
 int ssh_open_url(url_t *urlp)
 {
 	char *sftp = gvSFTPServerProgram;
@@ -49,6 +47,8 @@ int ssh_open_url(url_t *urlp)
 		sftp = urlp->sftp_server;
 
 	args_push_back(ftp->ssh_args, gvSSHProgram);
+	if(gvSSHOptions && strlen(gvSSHOptions))
+		args_push_back(ftp->ssh_args, gvSSHOptions);
 	args_push_back(ftp->ssh_args, urlp->hostname);
 
 	r = get_username(urlp, gvUsername, false);
@@ -69,7 +69,7 @@ int ssh_open_url(url_t *urlp)
 		asprintf(&p, "%d", urlp->port);
 		args_push_back(ftp->ssh_args, "-p");
 		args_push_back(ftp->ssh_args, p);
-		xfree(p);
+		free(p);
 	}
 
 	if(ftp_get_verbosity() == vbDebug)
@@ -78,9 +78,6 @@ int ssh_open_url(url_t *urlp)
 	/* no subsystem if the server-spec contains a '/' */
 	if(sftp == 0 || strchr(sftp, '/') == 0)
 		args_push_back(ftp->ssh_args, "-s");
-/*	args_push_back(ftp->ssh_args, "-oForwardX11=no");*/
-/*	args_push_back(ftp->ssh_args, "-oForwardAgent=no");*/
-/*	args_push_back(ftp->ssh_args, "-oProtocol=2");*/
 
 	/* Otherwise finish up and return the arg array */
 	if(sftp != 0)
@@ -92,7 +89,7 @@ int ssh_open_url(url_t *urlp)
 	ftp_trace("SSH args: %s\n", s);
 	if(ftp_get_verbosity() == vbDebug)
 		fprintf(stderr, "SSH args: %s\n", s);
-	xfree(s);
+	free(s);
 
 	args_add_null(ftp->ssh_args);
 
@@ -102,7 +99,7 @@ int ssh_open_url(url_t *urlp)
 			return -1;
 		}
 
-	ftp->ssh_version = version = ssh_init();
+	ftp->ssh_version = ssh_init();
 	if(ftp->ssh_version == -1) {
 		ftp_err("Couldn't initialise connection to server\n");
 		return -1;
@@ -153,17 +150,17 @@ int ssh_chdir(const char *path)
 	}
 	if(!isdir) {
 		if ((aa = ssh_stat(p)) == 0) {
-			xfree(p);
+			free(p);
 			return -1;
 		}
 		if (!(aa->flags & SSH2_FILEXFER_ATTR_PERMISSIONS)) {
 			ftp_err("Can't change directory: Can't check target");
-			xfree(p);
+			free(p);
 			return -1;
 		}
 		if (!S_ISDIR(aa->perm)) {
 			ftp_err("%s: not a directory\n", p);
-			xfree(p);
+			free(p);
 			return -1;
 		}
 	}
@@ -196,11 +193,11 @@ int ssh_mkdir_verb(const char *path, verbose_t verb)
 	status = ssh_get_status(id);
 	if(status != SSH2_FX_OK) {
 		ftp_err("Couldn't create directory: %s\n", fx2txt(status));
-		xfree(abspath);
+		free(abspath);
 		return -1;
 	}
 	ftp_cache_flush_mark_for(abspath);
-	xfree(abspath);
+	free(abspath);
 
 	return 0;
 }
@@ -219,12 +216,12 @@ int ssh_rmdir(const char *path)
 	status = ssh_get_status(id);
 	if(status != SSH2_FX_OK) {
 		ftp_err("Couldn't remove directory: %s\n", fx2txt(status));
-		xfree(p);
+		free(p);
 		return -1;
 	}
 	ftp_cache_flush_mark(p);
 	ftp_cache_flush_mark_for(p);
-	xfree(p);
+	free(p);
 
 	return 0;
 }
@@ -292,7 +289,7 @@ rdirectory *ssh_read_directory(const char *path)
 	stripslash(p);
 
 	if(ssh_readdir(p, &dir) != 0) {
-		xfree(p);
+		free(p);
 		return 0;
 	}
 
@@ -388,15 +385,15 @@ int ssh_rename(const char *oldname, const char *newname)
 	if(status != SSH2_FX_OK) {
 		ftp_err("Couldn't rename file \"%s\" to \"%s\": %s\n",
 				on, nn, fx2txt(status));
-		xfree(on);
-		xfree(nn);
+		free(on);
+		free(nn);
 		return -1;
 	}
 
 	ftp_cache_flush_mark_for(on);
 	ftp_cache_flush_mark_for(nn);
-	xfree(on);
-	xfree(nn);
+	free(on);
+	free(nn);
 	return 0;
 }
 
@@ -465,7 +462,7 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
 			e += 5;
 			l = strlen(e);
 			if(l) {
-				xfree(ftp->ti.local_name);
+				free(ftp->ti.local_name);
 				if(*e == '\'')
 					ftp->ti.local_name = xstrndup(e+1, l-3);
 				else
@@ -488,7 +485,7 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
 	}
 
 	r = ssh_send_binary(p, fp, hookf, offset);
-	xfree(p);
+	free(p);
 
 	transfer_finished();
 

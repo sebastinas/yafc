@@ -88,6 +88,11 @@ type: string
 Path to local ssh program which will be used in SSH2 connections. Note
 that only SSH version 2 is supported.
 
+@item ssh_options
+type: string
+
+Custom options that will be passed to the SSH program.
+
 @item sftp_server_program
 type: string
 

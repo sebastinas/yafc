@@ -1,4 +1,4 @@
-/* $Id: gvars.c,v 1.19 2002/12/02 12:38:48 mhe Exp $
+/* $Id: gvars.c,v 1.20 2003/07/12 10:22:45 mhe Exp $
  *
  * gvars.c -- global variables
  *
@@ -39,6 +39,9 @@ bool gvWaitingDots = true;
 
 /* path to the SSH program */
 char *gvSSHProgram = 0;
+
+/* various ssh options like -C */
+char *gvSSHOptions = 0;
 
 /* path to the remote sftp-server program
  * leave blank to use sftp subsystem
@@ -171,24 +174,24 @@ bool gvJmpBufSet = false;
 
 void gvars_destroy(void)
 {
-	xfree(gvEditor);
-	xfree(gvAnonPasswd);
-	xfree(gvPrompt1);
-	xfree(gvPrompt2);
-	xfree(gvPrompt3);
-	xfree(gvLocalHomeDir);
-	xfree(gvLocalPrevDir);
-	xfree(gvUsername);
-	xfree(gvHistoryFile);
-	xfree(gvNohupMailAddress);
-	xfree(gvSendmailPath);
-	xfree(gvLocalHost);
-	xfree(gvTransferBeginString);
-	xfree(gvTransferString);
-	xfree(gvTransferEndString);
-	xfree(gvSSHProgram);
-	xfree(gvSFTPServerProgram);
-	xfree(gvWorkingDirectory);
+	free(gvEditor);
+	free(gvAnonPasswd);
+	free(gvPrompt1);
+	free(gvPrompt2);
+	free(gvPrompt3);
+	free(gvLocalHomeDir);
+	free(gvLocalPrevDir);
+	free(gvUsername);
+	free(gvHistoryFile);
+	free(gvNohupMailAddress);
+	free(gvSendmailPath);
+	free(gvLocalHost);
+	free(gvTransferBeginString);
+	free(gvTransferString);
+	free(gvTransferEndString);
+	free(gvSSHProgram);
+	free(gvSFTPServerProgram);
+	free(gvWorkingDirectory);
 	list_free(gvAsciiMasks);
 	list_free(gvAliases);
 	list_free(gvLocalTagList);

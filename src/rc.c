@@ -1,4 +1,4 @@
-/* $Id: rc.c,v 1.19 2002/12/02 12:22:26 mhe Exp $
+/* $Id: rc.c,v 1.20 2003/07/12 10:22:45 mhe Exp $
  *
  * rc.c -- config file parser + autologin lookup
  *
@@ -248,7 +248,7 @@ int parse_rc(const char *file, bool warn)
 	if(!fp) {
 		if(warn)
 			perror(e);
-		xfree(e);
+		free(e);
 		return -1;
 	}
 	current_rcfile = e;
@@ -260,7 +260,7 @@ int parse_rc(const char *file, bool warn)
 			errp(_("As a computer, I find your faith in technology amusing..."
 				   "\nToo many errors\n"));
 			fclose(fp);
-			xfree(current_rcfile);
+			free(current_rcfile);
 			return -1;
 		}
 
@@ -356,11 +356,11 @@ int parse_rc(const char *file, bool warn)
 		} else if(strcasecmp(e, "default_mechanism") == 0) {
 			NEXTSTR;
 			list_free(gvDefaultMechanism);
-			gvDefaultMechanism = list_new((listfunc)xfree);
+			gvDefaultMechanism = list_new((listfunc)free);
 			listify_string(e, gvDefaultMechanism);
 		} else if(strcasecmp(e, "anon_password") == 0) {
 			NEXTSTR;
-			xfree(gvAnonPasswd);
+			free(gvAnonPasswd);
 			gvAnonPasswd = xstrdup(e);
 		} else if(strcasecmp(e, "long_command_time") == 0) {
 			NEXTSTR;
@@ -402,76 +402,80 @@ int parse_rc(const char *file, bool warn)
 			NEXTSTR;
 			rcfile = tilde_expand_home(e, gvLocalHomeDir);
 			if(strcmp(rcfile, current_rcfile) == 0) {
-				xfree(rcfile);
+				free(rcfile);
 				errp(_("Skipping circular include statement: %s\n"), e);
 			} else {
-				xfree(current_rcfile);
+				free(current_rcfile);
 				parse_rc(e, true);
 				current_rcfile = rcfile;
 			}
 		} else if(strcasecmp(e, "prompt1") == 0) {
 			NEXTSTR;
-			xfree(gvPrompt1);
+			free(gvPrompt1);
 			gvPrompt1 = xstrdup(e);
 		} else if(strcasecmp(e, "prompt2") == 0) {
 			NEXTSTR;
-			xfree(gvPrompt2);
+			free(gvPrompt2);
 			gvPrompt2 = xstrdup(e);
 		} else if(strcasecmp(e, "prompt3") == 0) {
 			NEXTSTR;
-			xfree(gvPrompt3);
+			free(gvPrompt3);
 			gvPrompt3 = xstrdup(e);
 		} else if(strcasecmp(e, "ssh_program") == 0) {
 			NEXTSTR;
-			xfree(gvSSHProgram);
+			free(gvSSHProgram);
 			gvSSHProgram = xstrdup(e);
+		} else if(strcasecmp(e, "ssh_options") == 0) {
+			NEXTSTR;
+			free(gvSSHOptions);
+			gvSSHOptions = xstrdup(e);
 		} else if(strcasecmp(e, "sftp_server_program") == 0) {
 			NEXTSTR;
-			xfree(gvSFTPServerProgram);
+			free(gvSFTPServerProgram);
 			gvSFTPServerProgram = xstrdup(e);
 		} else if(strcasecmp(e, "xterm_title_terms") == 0) {
 			NEXTSTR;
-			xfree(gvXtermTitleTerms);
+			free(gvXtermTitleTerms);
 			gvXtermTitleTerms = xstrdup(e);
 		} else if(strcasecmp(e, "xterm_title1") == 0) {
 			NEXTSTR;
-			xfree(gvXtermTitle1);
+			free(gvXtermTitle1);
 			gvXtermTitle1 = xstrdup(e);
 		} else if(strcasecmp(e, "xterm_title2") == 0) {
 			NEXTSTR;
-			xfree(gvXtermTitle2);
+			free(gvXtermTitle2);
 			gvXtermTitle2 = xstrdup(e);
 		} else if(strcasecmp(e, "xterm_title3") == 0) {
 			NEXTSTR;
-			xfree(gvXtermTitle3);
+			free(gvXtermTitle3);
 			gvXtermTitle3 = xstrdup(e);
 		} else if(strcasecmp(e, "transfer_begin_string") == 0) {
 			NEXTSTR;
-			xfree(gvTransferBeginString);
+			free(gvTransferBeginString);
 			gvTransferBeginString = xstrdup(e);
 			unquote_escapes(gvTransferBeginString);
 		} else if(strcasecmp(e, "transfer_string") == 0) {
 			NEXTSTR;
-			xfree(gvTransferString);
+			free(gvTransferString);
 			gvTransferString = xstrdup(e);
 			unquote_escapes(gvTransferString);
 		} else if(strcasecmp(e, "transfer_xterm_string") == 0) {
 			NEXTSTR;
-			xfree(gvTransferXtermString);
+			free(gvTransferXtermString);
 			gvTransferXtermString = xstrdup(e);
 			unquote_escapes(gvTransferXtermString);
 		} else if(strcasecmp(e, "transfer_end_string") == 0) {
 			NEXTSTR;
-			xfree(gvTransferEndString);
+			free(gvTransferEndString);
 			gvTransferEndString = xstrdup(e);
 			unquote_escapes(gvTransferEndString);
 		} else if(strcasecmp(e, "nohup_mailaddress") == 0) {
 			NEXTSTR;
-			xfree(gvNohupMailAddress);
+			free(gvNohupMailAddress);
 			gvNohupMailAddress = xstrdup(e);
 		} else if(strcasecmp(e, "sendmail_path") == 0) {
 			NEXTSTR;
-			xfree(gvSendmailPath);
+			free(gvSendmailPath);
 			gvSendmailPath = xstrdup(e);
 		} else if(strcasecmp(e, "history_max") == 0) {
 			NEXTSTR;
@@ -493,7 +497,7 @@ int parse_rc(const char *file, bool warn)
 				perror(e);
 			else
 				cmd_lpwd(0, 0);
-			xfree(e);
+			free(e);
 		} else if(strcasecmp(e, "alias") == 0) {
 			args_t *args;
 			char *name;
@@ -506,7 +510,7 @@ int parse_rc(const char *file, bool warn)
 			args = args_create();
 			args_push_back(args, e);
 			alias_define(name, args);
-			xfree(name);
+			free(name);
 		}
 		else if(strcasecmp(e, "proxy_type") == 0) {
 			NEXTSTR;
@@ -534,7 +538,7 @@ int parse_rc(const char *file, bool warn)
 			errp(_("Config parse error: '%s'\n"), e);
 	}
 	fclose(fp);
-	xfree(current_rcfile);
+	free(current_rcfile);
 	return 0;
 }
 

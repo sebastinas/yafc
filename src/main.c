@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.22 2002/12/05 22:02:35 mhe Exp $
+/* $Id: main.c,v 1.23 2003/07/12 10:22:45 mhe Exp $
  *
  * main.c -- parses command line options and starts Yafc
  *
@@ -139,6 +139,7 @@ void init_yafc(void)
 		gvLocalHomeDir);
 
 	gvSSHProgram = xstrdup("/usr/bin/ssh");
+	gvSSHOptions = xstrdup("");
 
 	gvAnonPasswd = xstrdup("anonymous@");
 
@@ -146,7 +147,7 @@ void init_yafc(void)
 	init_colors();
 
 	/* choose default security mechanism */
-	gvDefaultMechanism = list_new((listfunc)xfree);
+	gvDefaultMechanism = list_new((listfunc)free);
 #ifdef HAVE_KRB4
 # ifdef HAVE_KRB5
 	listify_string("krb5:krb4:none", gvDefaultMechanism);
@@ -178,10 +179,10 @@ void init_yafc(void)
 
 	gvBookmarks = list_new((listfunc)url_destroy);
 	gvAliases = list_new((listfunc)alias_destroy);
-	gvAsciiMasks = list_new((listfunc)xfree);
-	gvTransferFirstMasks = list_new((listfunc)xfree);
-	gvLocalTagList = list_new((listfunc)xfree);
-	gvProxyExclude = list_new((listfunc)xfree);
+	gvAsciiMasks = list_new((listfunc)free);
+	gvTransferFirstMasks = list_new((listfunc)free);
+	gvLocalTagList = list_new((listfunc)free);
+	gvProxyExclude = list_new((listfunc)free);
 
 	asprintf(&gvHistoryFile, "%s/history", gvWorkingDirectory);
 
@@ -227,7 +228,7 @@ void check_if_first_time(void)
 		}
 		chmod(dir, S_IRUSR|S_IWUSR|S_IXUSR);
 		printf(_("done\n"));
-		xfree(dir);
+		free(dir);
 
 		asprintf(&dir, "%s/nohup", gvWorkingDirectory);
 		printf(_("creating directory %s: "), dir);
@@ -238,7 +239,7 @@ void check_if_first_time(void)
 		}
 		chmod(dir, S_IRUSR|S_IWUSR|S_IXUSR);
 		printf(_("done\n"));
-		xfree(dir);
+		free(dir);
 
 #if 0
 		else {
@@ -250,7 +251,7 @@ void check_if_first_time(void)
 				fp = fopen(, "w");
 				if(!fp) {
 					perror("");
-					xfree(rcdir);
+					free(rcdir);
 					return;
 				}
 				fprintf(fp, "%s", default_yafcrc);
@@ -385,11 +386,11 @@ int main(int argc, char **argv, char **envp)
 
 	if(!override_yafcrc) {
 		char *tmp;
-		parse_rc("/etc/yafcrc", false);
+		parse_rc(SYSCONFDIR "/yafcrc", false);
 		parse_rc(configfile, false);
 		asprintf(&tmp, "%s/bookmarks", gvWorkingDirectory);
 		parse_rc(tmp, false);
-		xfree(tmp);
+		free(tmp);
 	}
 
 	if(gvReadNetrc)
@@ -420,11 +421,13 @@ int main(int argc, char **argv, char **envp)
 		if(ftp_set_trace(tracefile) != 0)
 			fprintf(stderr, _("Couldn't open tracefile '%s': %s\n"),
 					tracefile, strerror(errno));
-		xfree(tracefile);
+		free(tracefile);
 	}
 
 	if(optind < argc) {
+#ifdef HAVE_LIBREADLINE
 		char *s;
+#endif
 		int i;
 
 		if(!gvAutologin)
@@ -446,7 +449,7 @@ int main(int argc, char **argv, char **envp)
 			asprintf(&s, "open %s%s",
 					 argv[i], test(open_opt, OP_ANON) ? " --anon" : "");
 			add_history(s);
-			xfree(s);
+			free(s);
 #endif
 		}
 	}
