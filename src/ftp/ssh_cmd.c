@@ -278,7 +278,7 @@ char *attrib2string(Attrib *a)
 		if(test(a->perm, S_ISGID)) attr[6] = 's';
 		else attr[6] = 'x';
 	} else if(test(a->perm, S_ISGID)) attr[6] = 'S';
-	
+
 	if(test(a->perm, S_IROTH)) attr[7] = 'r';
 	if(test(a->perm, S_IWOTH)) attr[8] = 'w';
 	if(test(a->perm, S_IXOTH)) {
@@ -316,13 +316,13 @@ rdirectory *ssh_read_directory(const char *path)
 
 		rf->perm = attrib2string(&dir[i]->a);
 
-		e = strqsep(&cf, ' ');
-		if(ftp->ssh_version > 2) {
-			e = strqsep(&cf, ' ');
+		e = strqsep(&cf, ' ');  /* skip permissions */
+		e = strqsep(&cf, ' ');  /* nhl? */
+/*		if(ftp->ssh_version > 2) {*/
 			rf->nhl = atoi(e);
-		} else
-			rf->nhl = 0;
-#if 0
+/*		} else*/
+/*			rf->nhl = 0;*/
+#if 1
 		e = strqsep(&cf, ' ');
 		rf->owner = xstrdup(e);
 		e = strqsep(&cf, ' ');
