@@ -98,8 +98,8 @@ typedef enum {
 
 typedef struct transfer_info
 {
-	char *remote_name;     /* name of remote file or 0 */
-	char *local_name;      /* name of local file or 0 */
+	char *remote_name;           /* name of remote file or 0 */
+	char *local_name;            /* name of local file or 0 */
 	long total_size;             /* total size in bytes or -1 */
 	long size;                   /* size in bytes transferred so far */
 	long restart_size;           /* restart size */
@@ -124,6 +124,13 @@ typedef struct Ftp
 	list *cache;             /* list of rdirectory */
 	list *dirs_to_flush;     /* list of (char *) */
 
+	pid_t ssh_pid;           /* process id of ssh program, or 0 if
+							  * ssh is not in use */
+	char **ssh_args;
+	int ssh_in, ssh_out;     /* file descriptors for use by ssh */
+	int ssh_version;
+	unsigned int ssh_id;
+
 	char reply[MAXREPLY+1];  /* last reply string from server */
 
 	code_t code;  /* last reply code (1-5) */
@@ -133,7 +140,6 @@ typedef struct Ftp
 	 * calls ftp_close() and jumps to restart_jmp on timeout
 	 */
 	unsigned int reply_timeout; /* 0 == no timeout */
-
 	unsigned int open_timeout;
 
 	bool connected;
@@ -212,26 +218,19 @@ int ftp_read_reply();
 const char *ftp_getreply(bool withcode);
 
 int ftp_list(const char *cmd, const char *param, FILE *fp);
-
-int ftp_init_receive(const char *path, transfer_mode_t mode,
-					 ftp_transfer_func hookf);
-int ftp_do_receive(FILE *fp,
-				   transfer_mode_t mode, ftp_transfer_func hookf);
 int ftp_receive(const char *path, FILE *fp,
 				transfer_mode_t mode, ftp_transfer_func hookf);
 int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 				transfer_mode_t mode, ftp_transfer_func hookf);
-
-int ftp_send(const char *path, FILE *fp, putmode_t how,
-			 transfer_mode_t mode, ftp_transfer_func hookf);
 int ftp_putfile(const char *infile, const char *outfile, putmode_t how,
 				transfer_mode_t mode, ftp_transfer_func hookf);
-
 int ftp_fxpfile(Ftp *srcftp, const char *srcfile,
 				Ftp *destftp, const char *destfile,
 				fxpmode_t how, transfer_mode_t mode);
 
 int ftp_reset();
+void reset_transfer_info(void);
+void transfer_finished(void);
 
 int ftp_get_verbosity(void);
 void ftp_set_verbosity(int verbosity);
@@ -252,6 +251,7 @@ void ftp_cache_flush(void);
 void ftp_cache_clear(void);
 
 char *ftp_getcurdir(void);
+void ftp_update_curdir_x(const char *p);
 
 int ftp_chdir(const char *path);
 int ftp_mkdir(const char *path);
@@ -266,15 +266,10 @@ unsigned long ftp_filesize(const char *path);
 int ftp_idle(const char *idletime);
 int ftp_noop(void);
 int ftp_help(const char *arg);
-
 int ftp_set_protlevel(const char *protlevel);
-
 char *ftp_path_absolute(const char *path);
-
 void ftp_flush_reply(void);
-
 int ftp_type(transfer_mode_t type);
-
 time_t gmt_mktime(const struct tm *ts);
 
 /* returns:
@@ -283,8 +278,14 @@ time_t gmt_mktime(const struct tm *ts);
  * 2 == is a link not in cache, maybe dir
  */
 int ftp_maybe_isdir(rfile *fp);
+void ftp_pwd(void);
 
 /* in lscolors.h */
 void init_colors(void);
+
+
+
+void connect_to_server(char **args, int *in, int *out, pid_t *sshpid);
+char ** make_ssh_args(char ***args, char *add_arg);
 
 #endif

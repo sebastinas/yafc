@@ -68,6 +68,11 @@ void cmd_user(int argc, char **argv)
 	maxargs(1);
 	need_connected();
 
+	if(ftp->ssh_pid) {
+		printf("Can't do this in SSH\n");
+		return;
+	}
+
 	u = xstrdup(ftp->url->username);
 	p = xstrdup(ftp->url->password);
 
@@ -130,7 +135,8 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 		/* first see if there are any Ftp not connected in the list */
 		for(li=gvFtpList->first; li; li=li->next) {
 			if(!((Ftp *)li->data)->connected
-			   || !sock_connected(((Ftp *)li->data)->ctrl))
+			   || (!sock_connected(((Ftp *)li->data)->ctrl)
+				   && !((Ftp *)li->data)->ssh_pid))
 			{
 				gvCurrentFtp = li;
 				found_unconnected = true;
@@ -202,7 +208,8 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 
 		if(gvConnectAttempts == -1 || i+1 < gvConnectAttempts) {
 			ftp_set_close_handler();
-			fprintf(stderr, _("Sleeping %u seconds before connecting again (attempt #%d)...\n"),
+			fprintf(stderr, _("Sleeping %u seconds before connecting again"
+							  " (attempt #%d)...\n"),
 				   gvConnectWaitTime, i+2);
 			sleep(gvConnectWaitTime);
 			if(ftp_sigints()) {
@@ -224,12 +231,15 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 static void print_open_syntax(void)
 {
 	printf(_("Connect and login to remote host.  Usage:\n"
-			 "  open [options] [ftp://][user[:password]@]hostname[:port][/directory] ...\n"
+			 "  open [options] [ftp://][user[:password]@]hostname[:port]"
+			 "[/directory] ...\n"
 			 "Options:\n"
 			 "  -a, --anon                 try to login anonymously\n"
 			 "  -u, --noauto               disable autologin\n"
-			 "  -U, --noalias              disable bookmark alias lookup and abbreviation\n"
-			 "  -m, --mechanism=MECH       try MECH as security mechanism(s) when logging in\n"
+			 "  -U, --noalias              disable bookmark alias lookup"
+			 " and abbreviation\n"
+			 "  -m, --mechanism=MECH       try MECH as security mechanism(s)"
+			 " when logging in\n"
 			 "  -p, --noproxy              don't connect via proxy\n"
 			 "      --help                 display this help and exit\n"));
 }

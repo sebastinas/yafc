@@ -66,4 +66,6 @@ mode_t str2mode_t(const char *p);
 int rfile_search_filename(rfile *f, const char *filename);
 int rfile_search_path(rfile *f, const char *path);
 
+char *time_to_string(time_t t);
+
 #endif

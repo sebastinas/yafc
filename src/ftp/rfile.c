@@ -276,11 +276,35 @@ if(!e || !*e) { \
     return -1; \
 }
 
+char *time_to_string(time_t t)
+{
+	char *ret;
+	time_t now;
+	char *fmt;
+
+	now = time(0);
+	if(now > t + 6L * 30L * 24L * 60L * 60L  /* Old. */
+	   || now < t - 60L * 60L)   /* In the future. */
+		{
+			/* The file is fairly old or in the future.
+			   POSIX says the cutoff is 6 months old;
+			   approximate this by 6*30 days.
+			   Allow a 1 hour slop factor for what is considered "the future",
+			   to allow for NFS server/client clock disagreement.
+			   Show the year instead of the time of day.  */
+			fmt = "%b %e  %Y";
+		}
+	else
+		fmt = "%b %e %H:%M";
+	ret = (char *)xmalloc(42);
+	strftime(ret, 42, fmt, localtime(&t));
+
+	return ret;
+}
+
 static int rfile_parse_eplf(rfile *f, char *str, const char *dirpath)
 {
-	time_t current_time;
 	char *e;
-	char *fmt;
 
 	if(!str || str[0] != '+')
 		return -1;
@@ -305,22 +329,7 @@ static int rfile_parse_eplf(rfile *f, char *str, const char *dirpath)
 		case 'm':
 			f->mtime = strtoul(e+1, 0, 10);
 			xfree(f->date);
-			current_time = time(0);
-			if (current_time > f->mtime + 6L * 30L * 24L * 60L * 60L  /* Old. */
-		        || current_time < f->mtime - 60L * 60L)   /* In the future. */
-				{
-					/* The file is fairly old or in the future.
-					   POSIX says the cutoff is 6 months old;
-					   approximate this by 6*30 days.
-					   Allow a 1 hour slop factor for what is considered "the future",
-					   to allow for NFS server/client clock disagreement.
-					   Show the year instead of the time of day.  */
-					fmt = "%b %e  %Y";
-				}
-			else
-				fmt = "%b %e %H:%M";
-			f->date = (char *)xmalloc(42);
-			strftime(f->date, 42, fmt, localtime(&f->mtime));
+			f->date = time_to_string(f->mtime);
 			break;
 		case 's':
 			f->size = strtoul(e+1, 0, 10);

@@ -25,6 +25,7 @@
 #include "xmalloc.h"
 #include "ftpsigs.h"
 #include "gvars.h"
+#include "ssh_cmd.h"
 
 static int ftp_pasv(unsigned char result[6])
 {
@@ -115,9 +116,13 @@ static int ftp_init_transfer(void)
 
 int ftp_type(transfer_mode_t type)
 {
+	if(ftp->ssh_pid)
+		/* FIXME: is this relevant for ssh ? */
+		return 0;
+
 	if(type == tmCurrent)
 		return 0;
-	
+
 	if(ftp->prev_type != type) {
 		ftp_cmd("TYPE %c", type == tmAscii ? 'A' : 'I');
 		if(ftp->code != ctComplete)
@@ -136,6 +141,10 @@ int ftp_abort(FILE *fp)
 	char buf[4096];
 	fd_set ready;
 	struct timeval poll;
+
+	if(ftp->ssh_pid)
+		/* FIXME: what? */
+		return 0;
 
 	if(!ftp_connected())
 		return -1;
@@ -505,7 +514,7 @@ static int FILE_send_ascii(FILE *in, FILE *out)
 	return maybe_abort(in, out);
 }
 
-static void reset_transfer_info(void)
+void reset_transfer_info(void)
 {
 	ftp->ti.barelfs = 0;
 	ftp->ti.size = 0L;
@@ -527,6 +536,9 @@ int ftp_list(const char *cmd, const char *param, FILE *fp)
 {
 	if(!cmd || !fp || !ftp_connected())
 		return -1;
+
+	if(ftp->ssh_pid)
+		return ssh_list(cmd, param, fp);
 
 	reset_transfer_info();
 	foo_hookf = 0;
@@ -561,14 +573,15 @@ int ftp_list(const char *cmd, const char *param, FILE *fp)
 	return ftp->code == ctComplete ? 0 : -1;
 }
 
-static void transfer_finished(void)
+void transfer_finished(void)
 {
 	ftp->ti.finished = true;
 	if(foo_hookf)
 		foo_hookf(&ftp->ti);
 }
 
-int ftp_init_receive(const char *path, transfer_mode_t mode, ftp_transfer_func hookf)
+static int ftp_init_receive(const char *path, transfer_mode_t mode,
+							ftp_transfer_func hookf)
 {
 	long rp = ftp->restart_offset;
 	char *e;
@@ -611,7 +624,7 @@ int ftp_init_receive(const char *path, transfer_mode_t mode, ftp_transfer_func h
 			/* try to figure out file size from RETR reply
 			 * Opening BINARY mode data connection for foo.mp3 (14429793 bytes)
 			 *                                                  ^^^^^^^^ aha!
-			 * 
+			 *
 			 * note: this might not be the _total_ filesize if we are RESTarting
 			 */
 			e = strstr(ftp->reply, " bytes");
@@ -625,8 +638,8 @@ int ftp_init_receive(const char *path, transfer_mode_t mode, ftp_transfer_func h
 	return 0;
 }
 
-int ftp_do_receive(FILE *fp,
-				   transfer_mode_t mode, ftp_transfer_func hookf)
+static int ftp_do_receive(FILE *fp,
+						  transfer_mode_t mode, ftp_transfer_func hookf)
 {
 	int r;
 
@@ -655,14 +668,17 @@ int ftp_do_receive(FILE *fp,
 int ftp_receive(const char *path, FILE *fp,
 				transfer_mode_t mode, ftp_transfer_func hookf)
 {
+	if(ftp->ssh_pid)
+		return ssh_do_receive(path, fp, mode, hookf);
+
 	if(ftp_init_receive(path, mode, hookf) != 0)
 		return -1;
 
 	return ftp_do_receive(fp, mode, hookf);
 }
 
-int ftp_send(const char *path, FILE *fp, putmode_t how,
-			 transfer_mode_t mode, ftp_transfer_func hookf)
+static int ftp_send(const char *path, FILE *fp, putmode_t how,
+					transfer_mode_t mode, ftp_transfer_func hookf)
 {
 	int r;
 	long rp = ftp->restart_offset;
@@ -704,7 +720,7 @@ int ftp_send(const char *path, FILE *fp, putmode_t how,
 		ftp_cmd("STOR %s", path);
 		break;
 	}
-	
+
 	if(ftp->code != ctPrelim)
 		return -1;
 
@@ -721,7 +737,8 @@ int ftp_send(const char *path, FILE *fp, putmode_t how,
 					ftp->ti.local_name = xstrndup(e+1, l-3);
 				else
 					ftp->ti.local_name = xstrndup(e, l-1);
-				ftp_trace("parsed unique filename as '%s'\n", ftp->ti.local_name);
+				ftp_trace("parsed unique filename as '%s'\n",
+						  ftp->ti.local_name);
 			}
 		}
 	}
@@ -769,9 +786,14 @@ int ftp_fxpfile(Ftp *srcftp, const char *srcfile,
 	unsigned char addr[6];
 
 	printf("FxP: %s -> %s\n", srcftp->url->hostname, destftp->url->hostname);
-	
+
 	if(srcftp == destftp) {
 		ftp_err(_("FxP between same hosts\n"));
+		return -1;
+	}
+
+	if(ftp->ssh_pid) {
+		ftp_err("FxP with SSH not implemented\n");
 		return -1;
 	}
 
@@ -808,7 +830,8 @@ int ftp_fxpfile(Ftp *srcftp, const char *srcfile,
 		else {
 			ftp->restart_offset = ftp_filesize(destfile);
 			if(ftp->restart_offset == (unsigned long)-1) {
-				ftp_err(_("unable to get remote filesize of '%s', unable to resume\n"),
+				ftp_err(_("unable to get remote filesize of '%s',"
+						  " unable to resume\n"),
 						destfile);
 				ftp->restart_offset = 0L;
 			}
@@ -826,7 +849,7 @@ int ftp_fxpfile(Ftp *srcftp, const char *srcfile,
 		if(ftp->code != ctContinue)
 			return -1;
 	}
-	
+
 	/* issue a STOR command on DESTFTP */
 	ftp_use(destftp);
 	switch(how) {
@@ -911,7 +934,8 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 	/* we need to save this, because ftp_init_receive() sets it to zero */
 	rp = ftp->restart_offset;
 
-	if(ftp_init_receive(infile, mode, hookf) != 0)
+	reset_transfer_info();
+	if(!ftp->ssh_pid && ftp_init_receive(infile, mode, hookf) != 0)
 		return -1;
 
 	if(how == getPipe) {
@@ -929,7 +953,8 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 
 	if(rp > 0L) {
 		if(fseek(fp, rp, SEEK_SET) != 0) {
-			ftp_err(_("%s: %s, transfer cancelled\n"), outfile, strerror(errno));
+			ftp_err(_("%s: %s, transfer cancelled\n"),
+					outfile, strerror(errno));
 			close_func(fp);
 			return -1;
 		}
@@ -940,7 +965,10 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 	ftp->ti.remote_name = xstrdup(infile);
 	ftp->ti.local_name = xstrdup(outfile);
 
-	r = ftp_do_receive(fp, mode, hookf);
+	if(ftp->ssh_pid)
+		r = ssh_do_receive(infile, fp, mode, hookf);
+	else
+		r = ftp_do_receive(fp, mode, hookf);
 	close_func(fp);
 	return r;
 }
@@ -983,7 +1011,8 @@ int ftp_putfile(const char *infile, const char *outfile, putmode_t how,
 		else {
 			ftp->restart_offset = ftp_filesize(outfile);
 			if(ftp->restart_offset == (unsigned long)-1) {
-				ftp_err(_("unable to get remote filesize of '%s', unable to resume\n"),
+				ftp_err(_("unable to get remote filesize of '%s',"
+						  " unable to resume\n"),
 						outfile);
 				ftp->restart_offset = 0L;
 			}
@@ -991,17 +1020,21 @@ int ftp_putfile(const char *infile, const char *outfile, putmode_t how,
 	} else
 		ftp->restart_offset = 0L;
 
-	
+
 	if(ftp->restart_offset > 0L) {
 		if(fseek(fp, ftp->restart_offset, SEEK_SET) != 0) {
-			ftp_err(_("%s: %s, transfer cancelled\n"), outfile, strerror(errno));
+			ftp_err(_("%s: %s, transfer cancelled\n"),
+					outfile, strerror(errno));
 			fclose(fp);
 			return -1;
 		}
 	}
 
 
-	r = ftp_send(outfile, fp, how, mode, hookf);
+	if(ftp->ssh_pid)
+		r = ssh_send(outfile, fp, how, mode, hookf);
+	else
+		r = ftp_send(outfile, fp, how, mode, hookf);
 	fclose(fp);
 	return r;
 }
