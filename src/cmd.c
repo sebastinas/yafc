@@ -55,7 +55,7 @@ void cmd_quit(int argc, char **argv)
 				 "  quit [options]\n"
 				 "Options:\n"
 				 "  -h, --help    show this help\n");
-		
+
 		maxargs(optind - 1);
 	}
 	exit_yafc();
