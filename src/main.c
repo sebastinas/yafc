@@ -157,12 +157,12 @@ void init_yafc(void)
 	gvDefaultMechanism = list_new((listfunc)xfree);
 #ifdef KRB4
 # ifdef KRB5
-	listify_string("krb4:krb5", gvDefaultMechanism);
+	listify_string("krb4:krb5:none", gvDefaultMechanism);
 # else
-	listify_string("krb4", gvDefaultMechanism);
+	listify_string("krb4:none", gvDefaultMechanism);
 # endif
 #elif defined(KRB5)
-	listify_string("krb5", gvDefaultMechanism);
+	listify_string("krb5:none", gvDefaultMechanism);
 #else
 	listify_string("none", gvDefaultMechanism);
 #endif
