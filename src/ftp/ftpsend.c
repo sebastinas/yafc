@@ -1,4 +1,4 @@
-/* $Id: ftpsend.c,v 1.11 2001/07/01 12:53:49 mhe Exp $
+/* $Id: ftpsend.c,v 1.12 2001/07/09 19:15:15 mhe Exp $
  *
  * ftpsend.c -- send/receive files and file listings
  *
@@ -928,7 +928,18 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 	rp = ftp->restart_offset;
 
 	reset_transfer_info();
-	if(!ftp->ssh_pid && ftp_init_receive(infile, mode, hookf) != 0)
+	if(ftp->ssh_pid) {
+		/* we need to stat the remote file, so we are sure we can read it
+		 * this needs to be done before we call ssh_do_receive, because by
+		 * then, the file is created, and would leave a zero-size file opon
+		 * failure
+		 */
+		Attrib *a = ssh_stat(infile);
+		if(a == 0) {
+			ftp_err(_("Unable to stat file '%s'\n"), infile);
+			return -a;
+		}
+	} else if(ftp_init_receive(infile, mode, hookf) != 0)
 		return -1;
 
 	if(how == getPipe) {
