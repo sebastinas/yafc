@@ -6,7 +6,7 @@ dnl
 
 AC_INIT(src/ftp/ftp.c)
 AC_CONFIG_AUX_DIR(support)
-AM_INIT_AUTOMAKE(yafc, 0.6.5)
+AM_INIT_AUTOMAKE(yafc, 0.6.6)
 AM_CONFIG_HEADER(config.h)
 
 CDPATH=""

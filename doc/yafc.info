@@ -3,7 +3,7 @@ This is yafc.info, produced by makeinfo version 4.0 from yafc.texi.
 START-INFO-DIR-ENTRY
 * Yafc: (yafc).  Yet Another FTP Client
 END-INFO-DIR-ENTRY
-   This file documents Yafc version 0.6.5
+   This file documents Yafc version 0.6.6
 
    Copyright (C) 1999-2000 Martin Hedenfalk
 
@@ -25,7 +25,7 @@ translation approved by the copyright holder.
 File: yafc.info,  Node: Top,  Next: Overview,  Up: (dir)
 
    This document describes YAFC, an interactive interface to the FTP
-protocol.  This document applies to version 0.6.5.
+protocol.  This document applies to version 0.6.6.
 
 * Menu:
 
