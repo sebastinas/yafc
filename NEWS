@@ -24,6 +24,7 @@ New in 1.0
 * added option --skip-empty to get/put/fxp (skips empty files)
 * added config option transfer_first_mask (transfers specified files
   before other files)
+* fixed bug in ssh put: --resume truncated file (reported by Eduard Bloch)
 
 
 New in 0.7.10

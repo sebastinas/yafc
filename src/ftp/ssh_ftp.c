@@ -121,16 +121,31 @@ static const char *ssh_cmd2txt(int code)
 static void ssh_print_cmd(Buffer *cmd)
 {
 	char code;
+	void (*pfunc)(const char *fmt, ...);
+	char *e;
 
 	code = buffer_ptr(cmd)[4];
 
-	if(ftp_get_verbosity() == vbDebug) {
-		ftp_err("--> [%s] ", ftp->url ? ftp->url->hostname : "?");
-		ftp_err("%s\n", ssh_cmd2txt(code));
-	} else {
-		ftp_trace("--> [%s] ", ftp->url ? ftp->url->hostname : "?");
-		ftp_trace("%s\n", ssh_cmd2txt(code));
+	if(ftp_get_verbosity() == vbDebug)
+		pfunc = ftp_err;
+	else
+		pfunc = ftp_trace;
+	pfunc("--> [%s] ", ftp->url ? ftp->url->hostname : "?");
+	pfunc("%s", ssh_cmd2txt(code));
+	switch(code) {
+		case SSH2_FXP_OPEN:
+			cmd->offset = 9;
+			e = buffer_get_string(cmd, 0);
+			pfunc("(%s)", e);
+			xfree(e);
+			break;
+		case SSH2_FXP_WRITE:
+			cmd->offset = 9;
+			buffer_consume(cmd, buffer_get_int(cmd));
+			pfunc("(offset %ld)", buffer_get_int64(cmd));
+			break;
 	}
+	pfunc("\n");
 }
 
 /* sends an SSH command on the control channel
@@ -808,7 +823,11 @@ int ssh_send_binary(const char *remote_path, FILE *local_fp,
 	buffer_put_char(&msg, SSH2_FXP_OPEN);
 	buffer_put_int(&msg, id);
 	buffer_put_cstring(&msg, remote_path);
-	buffer_put_int(&msg, SSH2_FXF_WRITE|SSH2_FXF_CREAT|SSH2_FXF_TRUNC);
+	/* if offset > 0, we are either appending or resuming a previous
+	 * download, so we should not truncate the file
+	 */
+	buffer_put_int(&msg, SSH2_FXF_WRITE | SSH2_FXF_CREAT |
+						(offset == 0 ? SSH2_FXF_TRUNC : 0));
 	encode_attrib(&msg, &a);
 	ssh_cmd(&msg);
 
@@ -821,7 +840,6 @@ int ssh_send_binary(const char *remote_path, FILE *local_fp,
 	}
 
 	/* Read from local and write to remote */
-/*	offset = 0;*/
 	while(true) {
 		int len;
 		char data[COPY_SIZE];
@@ -832,7 +850,7 @@ int ssh_send_binary(const char *remote_path, FILE *local_fp,
 		 */
 		do
 			len = read(fileno(local_fp), data, COPY_SIZE);
-		while ((len == -1) && (errno == EINTR || errno == EAGAIN));
+		while((len == -1) && (errno == EINTR || errno == EAGAIN));
 
 		if(len == -1) {
 			ftp_err("Couldn't read from file: %s\n", strerror(errno));
