@@ -71,7 +71,7 @@ static void print_put_syntax(void)
 			 "  -p, --preserve       try to preserve file attributes\n"
 			 "  -P, --parents        append source path to destination\n"
 			 "  -q, --quiet          overrides --verbose\n"
-			 "  -r, --recursive      get directories recursively\n"
+			 "  -r, --recursive      upload directories recursively\n"
 			 "  -R, --resume         resume broken transfer (restart at EOF)\n"
 			 "  -s, --skip-existing  always skip existing files\n"
 			 "  -t, --tagged         transfer (locally) tagged file(s)\n"
