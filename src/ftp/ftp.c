@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.25 2001/05/28 17:13:50 mhe Exp $
+/* $Id: ftp.c,v 1.26 2001/07/01 12:53:17 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -1337,7 +1337,7 @@ rdirectory *ftp_read_directory(const char *path)
 	if(ftp->has_mlsd_command) {
 		char *asdf;
 		asprintf(&asdf, "%s/", dir);
-		/* Hack to get around issue in PureFTPd:
+		/* Hack to get around issue in PureFTPd (up to version 0.98.2):
 		 * doing a 'MLSD link-to-dir' on PureFTPd closes the control
 		 * connection, however, 'MLSD link-to-dir/' works fine.
 		 */
