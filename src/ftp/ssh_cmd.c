@@ -482,7 +482,13 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
 
 	ftp_cache_flush_mark_for(p);
 
+	if(how == putAppend) {
+		ftp_set_tmp_verbosity(vbNone);
+		offset = ftp_filesize(p);
+	}
+
 	r = ssh_send_binary(p, fp, hookf, offset);
+	xfree(p);
 
 	transfer_finished();
 
