@@ -1,8 +1,8 @@
-/* redir.h
+/* tag.h -- tag files
  *
  * This file is part of Yafc, an ftp client.
  * This program is Copyright (C) 1998, 1999, 2000 Martin Hedenfalk
- *
+ * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -12,17 +12,18 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef _REDIR_H_INCLUDED
-#define _REDIR_H_INCLUDED
+#ifndef _tag_h_
+#define _tag_h_
 
-bool reject_ampersand(char *cmd);
-int open_redirection(char *cmd);
-int close_redirection(void);
+void save_taglist(const char *alt_filename);
+void load_taglist(bool showerr, bool always_autoload,
+				  const char *alt_filename);
+
 
 #endif

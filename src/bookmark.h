@@ -1,4 +1,4 @@
-/* redir.h
+/* bookmark.h -- create bookmark(s)
  *
  * This file is part of Yafc, an ftp client.
  * This program is Copyright (C) 1998, 1999, 2000 Martin Hedenfalk
@@ -18,11 +18,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef _REDIR_H_INCLUDED
-#define _REDIR_H_INCLUDED
+#ifndef _bookmark_h_
+#define _bookmark_h_
 
-bool reject_ampersand(char *cmd);
-int open_redirection(char *cmd);
-int close_redirection(void);
+void auto_create_bookmark(void);
 
 #endif

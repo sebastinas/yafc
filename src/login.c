@@ -24,19 +24,12 @@
 #include "commands.h"
 #include "input.h"
 #include "login.h"
-
-/* in bookmark.c */
-void auto_create_bookmark(void);
-
-/* in rc.c */
-url_t *get_autologin_url(const char *host);
+#include "rc.h"
+#include "tag.h"
+#include "bookmark.h"
 
 /* in main.c */
 void init_ftp(void);
-
-/* in tag.c */
-void load_taglist(bool showerr, bool always_autoload,
-				  const char *alt_filename);
 
 static void print_user_syntax(void)
 {

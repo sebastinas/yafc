@@ -26,7 +26,7 @@
 #include "bashline.h"
 #include "input.h"
 
-void print_ltag_syntax(void)
+static void print_ltag_syntax(void)
 {
 	printf(_("Tag local file(s) for later transferring.  Usage:\n"
 			 "  ltag [option(s)] file(s)\n"
@@ -67,7 +67,8 @@ void save_ltaglist(const char *alt_filename)
 	xfree(f);
 }
 
-void load_ltaglist(bool showerr, bool always_autoload, const char *alt_filename)
+void load_ltaglist(bool showerr, bool always_autoload,
+				   const char *alt_filename)
 {
 	FILE *fp;
 	char *f, *e = 0;
@@ -95,7 +96,8 @@ void load_ltaglist(bool showerr, bool always_autoload, const char *alt_filename)
 	}
 
 	if(gvLoadTaglist == 2 && !always_autoload) {
-		c = ask(ASKYES|ASKNO, ASKYES, _("Found saved local taglist, load it now?"));
+		c = ask(ASKYES|ASKNO, ASKYES,
+				_("Found saved local taglist, load it now?"));
 		if(c == ASKNO)
 			return;
 	} /* else gvLoadTaglist == 1 == yes */

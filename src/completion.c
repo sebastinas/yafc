@@ -31,27 +31,6 @@
 
 cpl_t force_completion_type = cpUnset;
 
-void init_host_completion(void)
-{
-	listitem *li;
-
-	list_clear(gvHostCompletion);
-
-	for(li=gvUrlHistory->first; li; li=li->next)
-		list_additem(gvHostCompletion, url_clone((url_t *)li->data));
-
-	for(li=gvBookmarks->first; li; li=li->next) {
-		url_t *up = (url_t *)li->data;
-		listitem *tmp;
-
-		tmp = list_search(gvHostCompletion, (listsearchfunc)urlcmp, up);
-		if(tmp != 0)
-			/* bookmark already exist, replace it */
-			list_delitem(gvHostCompletion, tmp);
-		list_additem(gvHostCompletion, url_clone(up));
-	}
-}
-
 #ifdef HAVE_LIBREADLINE
 
 static bool remote_dir_only = false;
@@ -61,7 +40,7 @@ char *no_completion_function(char *text, int state)
 	return 0;
 }
 
-char *alias_completion_function(char *text, int state)
+static char *alias_completion_function(char *text, int state)
 {
     static int len;
 	alias *ap;
@@ -84,7 +63,8 @@ char *alias_completion_function(char *text, int state)
     return 0;
 }
 
-char *bookmark_completion_function(char *text, int state)
+static char *bookmark_complete_internal(char *text, int state,
+										bool skip_domains)
 {
     static int len;
 	url_t *url;
@@ -101,6 +81,8 @@ char *bookmark_completion_function(char *text, int state)
     while(lip) {
 		url = (url_t *)lip->data;
 		lip = lip->next;
+		if(skip_domains && url->hostname[0] == '.')
+			continue;
 		if(url->alias) {
 			if(strncmp(url->alias, text, len) == 0)
 				return xstrdup(url->alias);
@@ -110,11 +92,22 @@ char *bookmark_completion_function(char *text, int state)
     return 0;
 }
 
+static char *bookmark_completion_function(char *text, int state)
+{
+	return bookmark_complete_internal(text, state, false);
+}
+
+
+static char *hostname_completion_function(char *text, int state)
+{
+	return bookmark_complete_internal(text, state, true);
+}
+
 /* Generator function for command completion.  STATE lets us know whether
  * to start from scratch; without any state (i.e. STATE == 0), then we
  * start at the top of the list.
  */
-char *command_completion_function(char *text, int state)
+static char *command_completion_function(char *text, int state)
 {
     static int list_index, len;
 	static int alias_state;
@@ -137,7 +130,7 @@ char *command_completion_function(char *text, int state)
 	return e;
 }
 
-char *remote_completion_function(char *text, int state)
+static char *remote_completion_function(char *text, int state)
 {
     static int len;             /* length of unquoted */
 	static char *dir;           /* any initial directory in text */
@@ -247,29 +240,6 @@ char *remote_completion_function(char *text, int state)
 	xfree(unquoted);
 	xfree(dir);
 	return 0;
-}
-
-static char *hostname_completion_function(char *text, int state)
-{
-    static int len;
-    char *name;
-	static listitem *lip = 0;
-
-    if(!state) {
-		len = strlen(text);
-		lip = gvHostCompletion->first;
-    }
-
-    while(lip) {
-		url_t *up = (url_t *)lip->data;
-		lip = lip->next;
-		name = up->alias ? up->alias : up->hostname;
-		if(name[0] == '.')
-			continue; /* skip domain names */
-		if(strncmp(name, text, len) == 0)
-			return bash_backslash_quote(name);
-    }
-    return 0;
 }
 
 static char *variable_completion_function(char *text, int state)
@@ -451,11 +421,11 @@ char **the_complete_function(char *text, int start, int end)
 	  case cpHostname:
 		matches = completion_matches(text, hostname_completion_function);
 		break;
-	  case cpAlias:
-		matches = completion_matches(text, alias_completion_function);
-		break;
 	  case cpBookmark:
 		matches = completion_matches(text, bookmark_completion_function);
+		break;
+	  case cpAlias:
+		matches = completion_matches(text, alias_completion_function);
 		break;
 	  case cpVariable:
 		matches = completion_matches(text, variable_completion_function);

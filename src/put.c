@@ -28,13 +28,11 @@
 #include "input.h"
 #include "commands.h"
 #include "lglob.h"
+#include "utils.h"
 
 #ifdef HAVE_REGEX_H
 # include <regex.h>
 #endif
-
-/* in cmd.c */
-void reset_xterm_title(void);
 
 static bool put_batch = false;
 static bool put_owbatch = false;
@@ -79,36 +77,6 @@ static void print_put_syntax(void)
 			 "  -v, --verbose        explain what is being done\n"
 			 "  -u, --unique         store in unique filename (if server supports STOU)\n"
 			 "      --help           display this help\n"));
-}
-
-char* get_mode_string(mode_t m)
-{
-	static char tmp[4];
-
-	strcpy(tmp, "000");
-
-	if(test(m, S_IRUSR))
-		tmp[0] += 4;
-	if(test(m, S_IWUSR))
-		tmp[0] += 2;
-	if(test(m, S_IXUSR))
-		tmp[0]++;
-
-	if(test(m, S_IRGRP))
-		tmp[1] += 4;
-	if(test(m, S_IWGRP))
-		tmp[1] += 2;
-	if(test(m, S_IXGRP))
-		tmp[1]++;
-
-	if(test(m, S_IROTH))
-		tmp[2] += 4;
-	if(test(m, S_IWOTH))
-		tmp[2] += 2;
-	if(test(m, S_IXOTH))
-		tmp[2]++;
-
-	return tmp;
 }
 
 static int do_the_put(const char *src, const char *dest,
@@ -290,13 +258,6 @@ static void putfile(const char *path, struct stat *sb,
 					   strerror(errno));
 		}
 	}
-}
-
-char *get_local_curdir(void)
-{
-	static char buf[PATH_MAX+1];
-	getcwd(buf, PATH_MAX);
-	return buf;
 }
 
 static void putfiles(const list *gl, unsigned opt, const char *output)

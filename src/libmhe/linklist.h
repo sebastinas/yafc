@@ -51,8 +51,8 @@ void list_removeitem(list *lp, listitem *lip);
 void list_additem(list *lp, void *data);
 int list_numitem(list *lp);
 listitem *list_search(list *lp, listsearchfunc cmpfunc, const void *arg);
-void list_sort(list *lp, listsortfunc cmp, bool reverse);
+void list_sort(list *lp, listsortfunc cmp, int reverse);
 list *list_clone(list *lp, listclonefunc clonefunc);
-bool list_equal(list *a, list *b, listsortfunc cmpfunc);
+int list_equal(list *a, list *b, listsortfunc cmpfunc);
 
 #endif

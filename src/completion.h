@@ -21,8 +21,6 @@
 #ifndef _COMPLETION_H_INCLUDED
 #define _COMPLETION_H_INCLUDED
 
-void init_host_completion(void);
-
 char **the_complete_function(char *text, int start, int end);
 char *no_completion_function(char *text, int state);
 

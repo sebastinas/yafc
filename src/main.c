@@ -31,28 +31,15 @@
 #include "completion.h"
 #include "login.h"
 #include "strq.h"
+#include "utils.h"
+#include "rc.h"
+#include "ltag.h"
 
 #ifdef HAVE_LOCALE_H
 # include <locale.h>
 #endif
 
 #include "yafcrc.h"
-
-void listify_string(const char *str, list *lp);
-
-/* in rc.c */
-int parse_rc(const char *file, bool warn);
-
-/* in cmd.c */
-void print_xterm_title(void);
-void reset_xterm_title(void);
-
-/* in put.c */
-char *get_local_curdir(void);
-
-/* in ltag.c */
-void load_ltaglist(bool showerr, bool always_autoload,
-				   const char *alt_filename);
 
 void print_syntax_and_exit(char *argv0)
 {
@@ -189,12 +176,10 @@ void init_yafc(void)
 		gvTerm = xstrdup("dummy");
 	gvXtermTitleTerms = xstrdup("xterm xterm-debian rxvt");
 
-	gvUrlHistory = list_new((listfunc)url_destroy);
 	gvBookmarks = list_new((listfunc)url_destroy);
 	gvAliases = list_new((listfunc)alias_destroy);
 	gvAsciiMasks = list_new((listfunc)xfree);
 	gvLocalTagList = list_new((listfunc)xfree);
-	gvHostCompletion = list_new((listfunc)url_destroy);
 	gvProxyExclude = list_new((listfunc)xfree);
 
 	asprintf(&gvHistoryFile, "%s/history", gvWorkingDirectory);
@@ -407,8 +392,6 @@ int main(int argc, char **argv, char **envp)
 
 	if(gvReadNetrc)
 		parse_rc("~/.netrc", false);
-
-	init_host_completion();
 
 	if(gvProxyType != 0 && gvProxyUrl == 0) {
 		fprintf(stderr, _("No proxy host defined!\n\n"));

@@ -26,9 +26,8 @@
 #include "strq.h"
 #include "gvars.h"
 #include "bashline.h"
-
-/* in bookmark.c */
-void auto_create_bookmark(void);
+#include "utils.h"
+#include "bookmark.h"
 
 #undef __  /* gettext no-op */
 #define __(text) (text)
@@ -886,9 +885,6 @@ void cmd_filesize(int argc, char **argv)
 /* in rc.c */
 int parse_rc(const char *file, bool warn);
 
-/* in completion.c */
-void init_host_completion(void);
-
 /* in main.c */
 void init_ftp(void);
 
@@ -903,9 +899,8 @@ void cmd_source(int argc, char **argv)
 
 	minargs(optind);
 
-	for(i=optind; i<argc; i++)
+	for(i = optind; i < argc; i++)
 		parse_rc(argv[i], true);
-	init_host_completion();
 	init_ftp();
 }
 
@@ -926,40 +921,6 @@ void cmd_system(int argc, char **argv)
 		fprintf(stderr, _("remote system: "));
 	ftp_set_tmp_verbosity(vbCommand);
 	ftp_cmd("SYST");
-}
-
-static int switch_search(const Ftp *f, const char *name)
-{
-	if(f->url->alias) {
-		if(strcmp(f->url->alias, name) == 0)
-			return 0;
-	}
-	return strcmp(f->url->hostname, name);
-}
-
-listitem *ftplist_search(const char *str)
-{
-	if(isdigit((int)str[0]) && strchr(str, '.') == 0) {
-		listitem *li;
-		int i = 1;
-		int n = atoi(str);
-		if(n <= 0 || n > list_numitem(gvFtpList)) {
-			ftp_err(_("invalid connection number: '%d'\n"), n);
-			return 0;
-		}
-		for(li=gvFtpList->first; li; li=li->next, i++) {
-			if(i == n)
-				return li;
-		}
-	} else {
-		listitem *li = list_search(gvFtpList,
-								   (listsearchfunc)switch_search, str);
-		if(li)
-			return li;
-		else
-			ftp_err(_("no such connection open: '%s'\n"), str);
-	}
-	return 0;
 }
 
 void cmd_switch(int argc, char **argv)

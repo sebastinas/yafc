@@ -7,17 +7,19 @@
 # strings must be enclosed in quotes ("" or '') if it contains spaces
 
 
+# You can include any other file using the 'include' statement
+#include ~/.yafc/other_preferences
+
 # set password used for anonymous logins
-# must set this before autologin info
 #anon_password "foo@bar.se"
 
-# attempt to login automagically, using the autologin entries below
+# attempt to login automagically, using login info in bookmarks
 autologin on
 
 # quit program if received EOF (C-d)
 quit_on_eof yes
 
-# read autologin entries from ~/.netrc
+# read bookmark entries from ~/.netrc
 read_netrc yes
 
 # use passive mode connections
@@ -238,81 +240,6 @@ transfer_end_string ""
 # $TERM is defined in xterm_title_terms
 # Use to show dynamic info in the xterm title bar
 transfer_xterm_string "\e]0;%p%% - %R - yafc\x07"
-
-
-#
-# Autologin entries
-#
-
-# Yafc will try to autologin (if autologin is enabled) using
-# the information found here.
-#
-# This is the same format used in the bookmarks file, but
-# information in this file is never modified by yafc.
-#
-# All commands in .netrc are supported, except macdefs.
-# See manpage for ftp(1) for details on the .netrc file.
-#
-# Each entry begins with a 'machine', 'local' or 'default' statement.
-#  recognized keywords:
-#
-#   machine <hostname or .domain>
-#                             match this machine or domain name
-#                              <hostname> can be a valid ftp URL
-#   alias <alias name>        give this entry another name, valid
-#                               only after a machine statement
-#   local                     match local machines, ie hostname w/o a dot
-#   default                   match if no 'machine' or 'local' matched
-#   login <username>          login as <username>
-#   anonymous                 try anonymous login, uses anon_password
-#   password <password>       login with supplied password
-#   account <account name>    not fully supported, anyone using it?
-#   cwd <startup working directory>
-#                             changes to this directory when logged in
-# these two are no-ops if not compiled with Kerberos:
-#   prot <protlevel>          set Kerberos data protection level
-#                               valid protlevels are safe, clear and private)
-#   mech <mechanisms>         try these security mechanisms, in that order
-#                             this is a colon-separated string with any of
-#                             the supported security mechanisms:
-#                              none, krb4 or krb5
-#   passive <true/false>      use passive mode for this host/domain
-#
-# examples:
-
-# as default, login as 'anonymous' and prompt for password
-#default login anonymous
-
-# login as 'sune' on all machines on the local network (machines w/o a '.')
-#local login sune
-
-# login as 'niels' on all hosts on .foo.bar.se domain
-#machine .foo.bar.se login niels
-
-# login as 'slartibartfast' on dent.foo.bar.se and start in directory ~/fjord
-#machine dent.foo.bar.se login slartibartfast cwd ~/fjord
-
-# login as 'anonymous' and automagically supply password from
-# anon_password, connect on non-standard port 4711
-#machine ftp.gurka.com:4711 anonymous
-
-# Login as 'mhe' on newcastle and try Kerberos 5 first, if that fails
-# use Kerberos 4, else use cleartext password. Always use passive mode.
-#machine newcastle login mhe mech krb5:krb4 passive yes
-
-# login anonymously to machine yafc.sourceforge.net with other name yafc
-machine yafc.sourceforge.net anonymous cwd /pub/yafc alias yafc 
-
-machine eclipt.uni-klu.ac.at alias eclipt anonymous
- cwd /pub/linux/internet/yafc
-
-#machine metalab.unc.edu anonymous cwd /pub alias metalab
-#machine ftp.gnu.org cwd /pub/gnu alias gnu anonymous
-#machine ftp.cdrom.com cwd /pub alias cdrom anonymous
-#machine ftp.debian.org cwd /debian/dists/stable/main alias debian anonymous
-
-# You can include any other file using the 'include' statement
-#include ~/.yafc/machines
 
 
 #

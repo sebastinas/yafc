@@ -24,12 +24,7 @@
 #include "strq.h"
 #include "commands.h"
 #include "input.h"
-
-/* in newt_tag.c */
-void newt_tag(void);
-
-/* in transfer.c */
-char *human_size(long size);
+#include "utils.h"
 
 static void print_tag_syntax(void)
 {
@@ -57,7 +52,8 @@ void save_taglist(const char *alt_filename)
 		return;
 
 	if(alt_filename == 0)
-		asprintf(&e, "%s/taglist.%s", gvWorkingDirectory, ftp->host->ohostname);
+		asprintf(&e, "%s/taglist.%s",
+				 gvWorkingDirectory, ftp->host->ohostname);
 	f = tilde_expand_home(alt_filename ? alt_filename : e, gvLocalHomeDir);
 	fp = fopen(f, "w");
 	if(!fp) {
@@ -76,7 +72,8 @@ void save_taglist(const char *alt_filename)
 	xfree(e);
 }
 
-void load_taglist(bool showerr, bool always_autoload, const char *alt_filename)
+void load_taglist(bool showerr, bool always_autoload,
+				  const char *alt_filename)
 {
 	FILE *fp;
 	char *f, *e = 0;
@@ -91,7 +88,8 @@ void load_taglist(bool showerr, bool always_autoload, const char *alt_filename)
 	need_loggedin();
 
 	if(alt_filename == 0)
-		asprintf(&e, "%s/taglist.%s", gvWorkingDirectory, ftp->host->ohostname);
+		asprintf(&e, "%s/taglist.%s",
+				 gvWorkingDirectory, ftp->host->ohostname);
 	f = tilde_expand_home(alt_filename ? alt_filename : e, gvLocalHomeDir);
 	fp = fopen(f, "r");
 	if(!fp) {

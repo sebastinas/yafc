@@ -10,6 +10,10 @@ New in 0.6.5
      confused? look in the manual...
 * use_passive_mode in config file was ignored
 * new option: transfer_xterm_string
+* removed swedish po-file (I don't have time to maintain it)
+* check for circular include statements in config file
+* bookmarks are now always kept in ~/.yafc/bookmarks
+* cleanups; moved small generic funcs to utils.c
 
 
 New in 0.6.4

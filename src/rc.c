@@ -26,8 +26,7 @@
 #include "alias.h"
 #include "commands.h"
 #include "transfer.h"
-
-void listify_string(const char *str, list *lp);
+#include "utils.h"
 
 static int nerr = 0;
 
@@ -222,54 +221,20 @@ static void parse_host(int trig, FILE *fp)
 	}
 
 	if(trig == TRIG_MACHINE) {
-		list *ls;
 		listitem *li;
-		char *tmp;
-
-		asprintf(&tmp, "%s/bookmarks", gvWorkingDirectory);
-		if(strcmp(current_rcfile, tmp) == 0)
-			ls = gvBookmarks;
-		else
-			ls = gvUrlHistory;
-		xfree(tmp);
-
-		li = list_search(ls, (listsearchfunc)urlcmp, up);
-#if 0
-		if(li && !gvReplaceBookmarks) {
-			errp(_("Multiple definitions for '%s', skipping...\n"),
-					 up->alias ? up->alias : up->hostname);
-			url_destroy(up);
-		} else
-#endif
-			{
-			if(li)
-				list_delitem(ls, li);
-			list_additem(ls, up);
-		}
+		li = list_search(gvBookmarks, (listsearchfunc)urlcmp, up);
+		if(li)
+			/* bookmark already exists, overwrite it (delete and create new) */
+			list_delitem(gvBookmarks, li);
+		list_additem(gvBookmarks, up);
 	} else if(trig == TRIG_LOCAL) {
-#if 0
-		if(gvLocalUrl && !gvReplaceBookmarks) {
-			errp(_("Multiple definitions for 'local', skipping...\n"));
-			url_destroy(up);
-		} else
-#endif
-			{
-			if(gvLocalUrl)
-				url_destroy(gvLocalUrl);
-			gvLocalUrl = up;
-		}
+		if(gvLocalUrl)
+			url_destroy(gvLocalUrl);
+		gvLocalUrl = up;
 	} else { /* trig == TRIG_DEFAULT */
-#if 0
-		if(gvDefaultUrl && !gvReplaceBookmarks) {
-			errp(_("Multiple definitions for 'default', skipping...\n"));
-			url_destroy(up);
-		} else
-#endif
-			{
-			if(gvDefaultUrl)
-				url_destroy(gvDefaultUrl);
-			gvDefaultUrl = up;
-		}
+		if(gvDefaultUrl)
+			url_destroy(gvDefaultUrl);
+		gvDefaultUrl = up;
 	}
 }
 
@@ -286,10 +251,9 @@ int parse_rc(const char *file, bool warn)
 		xfree(e);
 		return -1;
 	}
-	xfree(e);
+	current_rcfile = e;
 
 	nerr = 0;
-	current_rcfile = xstrdup(file);
 
 	while(!feof(fp)) {
 		if(nerr>20) {
@@ -401,10 +365,17 @@ int parse_rc(const char *file, bool warn)
 			NEXTSTR;
 			gvConnectionTimeout = (unsigned)atoi(e);
 		} else if(strcasecmp(e, "include") == 0) {
+			char *rcfile;
 			NEXTSTR;
-			xfree(current_rcfile);
-			parse_rc(e, true);
-			current_rcfile = xstrdup(file);
+			rcfile = tilde_expand_home(e, gvLocalHomeDir);
+			if(strcmp(rcfile, current_rcfile) == 0) {
+				xfree(rcfile);
+				errp(_("Skipping circular include statement: %s\n"), e);
+			} else {
+				xfree(current_rcfile);
+				parse_rc(e, true);
+				current_rcfile = rcfile;
+			}
 		} else if(strcasecmp(e, "prompt1") == 0) {
 			NEXTSTR;
 			xfree(gvPrompt1);
@@ -528,7 +499,7 @@ static url_t *get_autologin_url_short(const char *host)
 	url_t *x, *found = 0;
 	listitem *li;
 
-	li = gvHostCompletion->first;
+	li = gvBookmarks->first;
 	while(li) {
 		x = (url_t *)li->data;
 		li = li->next;
@@ -549,7 +520,7 @@ static url_t *get_autologin_url_short(const char *host)
 		return found;
 
 	/* now do the same for hostnames (skip aliases) */
-	li = gvHostCompletion->first;
+	li = gvBookmarks->first;
 	while(li) {
 		x = (url_t *)li->data;
 		li = li->next;
@@ -594,7 +565,7 @@ url_t *get_autologin_url(const char *host)
 
 	/* try to match as much as possible of the domain name */
 	while((dot = strchr(dot, '.')) != 0) {
-		li = gvHostCompletion->first;
+		li = gvBookmarks->first;
 		while(li) {
 			x = (url_t *)li->data;
 

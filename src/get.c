@@ -29,19 +29,11 @@
 #include "transfer.h"
 #include "commands.h"
 #include <modechange.h>  /* in ../lib/ */
+#include "utils.h"
 
 #ifdef HAVE_REGEX_H
 # include <regex.h>
 #endif
-
-/* in commands.c */
-listitem *ftplist_search(const char *str);
-
-/* in cmd.c */
-void reset_xterm_title(void);
-
-char *human_size(long size);
-char *human_time(unsigned int secs);
 
 static bool get_quit = false;
 static bool get_owbatch = false;
@@ -141,23 +133,6 @@ static int do_the_get(const char *src, const char *dest,
 		setproctitle("%s", ftp->url->hostname);
 #endif
 	return r;
-}
-
-char *make_unique_filename(const char *path)
-{
-	char *f = (char *)xmalloc(strlen(path)+10);
-	char *ext;
-	unsigned n = 0;
-
-	strcpy(f, path);
-	ext = f + strlen(f);
-
-	while(1) {
-		if(access(f, F_OK) != 0)
-			break;
-		sprintf(ext, ".%u", ++n);
-	}
-	return f;
 }
 
 static void get_preserve_attribs(const rfile *fi, char *dest)

@@ -23,6 +23,7 @@
 #include "commands.h"
 #include "gvars.h"
 #include "strq.h"
+#include "utils.h"
 
 /* print local working directory */
 void cmd_lpwd(int argc, char **argv)
@@ -79,33 +80,6 @@ void cmd_lcd(int argc, char **argv)
 	}
 	xfree(te);
 	cmd_lpwd(0, 0);
-}
-
-void invoke_shell(char *cmdline)
-{
-	char *shell;
-	pid_t pid;
-
-	ftp_set_signal(SIGINT, SIG_IGN);
-	shell = getenv("SHELL");
-	if(!shell)
-		shell = STD_SHELL;
-	pid = fork();
-	if(pid == 0) { /* child thread */
-		if(cmdline)
-			execl(shell, shell, "-c", cmdline, 0);
-		else {
-			printf(_("Executing '%s', use 'exit' to exit from shell...\n"), shell);
-			execl(shell, shell, 0);
-		}
-		perror(shell);
-		exit(1);
-	}
-	if(pid == -1) {
-		perror("fork()");
-		return;
-	}
-	waitpid(pid, 0, 0);  /* wait for child to finish execution */
 }
 
 /* FIXME: consider the following:

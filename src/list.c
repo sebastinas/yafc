@@ -23,6 +23,7 @@
 #include "strq.h"
 #include "commands.h"
 #include "gvars.h"
+#include "utils.h"
 
 /* ls options */
 #define LS_LONG 1
@@ -45,8 +46,6 @@
 #define LS_LITERAL (1 << 17)
 #define LS_WPATH (1 << 18)
 #define LS_HUMAN_READABLE (1 << 19)
-
-char *human_size(long size);
 
 static void print_ls_syntax(void)
 {

@@ -147,8 +147,7 @@ int open_redirection(char *cmd)
 	return 0;
 }
 
-int
-close_redirection(void)
+int close_redirection(void)
 {
 	if(redir_fp == 0)
 		return -1;

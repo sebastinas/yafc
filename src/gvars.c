@@ -75,13 +75,8 @@ bool gvSighupReceived = false;
 bool gvInTransfer = false;
 bool gvInterrupted = false;
 
-/* list of visited hosts */
-list *gvUrlHistory = 0;  /* list of url_t's */
 /* bookmark list */
 list *gvBookmarks = 0;      /* list of url_t's */
-/* used for host completion */
-list *gvHostCompletion = 0;
-
 url_t *gvDefaultUrl = 0;
 url_t *gvLocalUrl = 0;
 
@@ -174,7 +169,6 @@ void gvars_destroy(void)
 	xfree(gvTransferBeginString);
 	xfree(gvTransferString);
 	xfree(gvTransferEndString);
-	list_free(gvUrlHistory);
 	list_free(gvAsciiMasks);
 	list_free(gvAliases);
 	list_free(gvLocalTagList);

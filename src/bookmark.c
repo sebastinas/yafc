@@ -27,6 +27,8 @@
 #include "commands.h"
 #include "shortpath.h"
 #include "strq.h"
+#include "rc.h"
+#include "utils.h"
 
 #define BM_BOOKMARK 0
 #define BM_SAVE 1
@@ -34,14 +36,6 @@
 #define BM_READ 3
 #define BM_LIST 4
 #define BM_DELETE 5
-
-/* in rc.c */
-int parse_rc(const char *file, bool warn);
-
-/* in local.c */
-void invoke_shell(char *cmdline);
-
-char *stringify_list(list *lp);
 
 static char *xquote_chars(const char *str, const char *qchars)
 {
@@ -61,6 +55,46 @@ static char *xquote_chars(const char *str, const char *qchars)
 	*q++ = 0;
 
 	return oq;
+}
+
+static void bookmark_save_one(FILE *fp, url_t *url)
+{
+	if(url == gvLocalUrl)
+		fprintf(fp, "local");
+	else if(url == gvDefaultUrl)
+		fprintf(fp, "default");
+	else {
+		fprintf(fp, "machine %s:%d", url->hostname,
+				url->port==-1 ? 21 : url->port);
+		if(url->alias) {
+			char *a = xquote_chars(url->alias, "\'\"");
+			fprintf(fp, " alias '%s'", a);
+			xfree(a);
+		}
+	}
+	fprintf(fp, "\n  login %s", url->username);
+
+	if(url->directory)
+		fprintf(fp, " cwd '%s'", url->directory);
+
+	if(url->protlevel)
+		fprintf(fp, " prot %s", url->protlevel);
+	if(url->mech) {
+		char *mech_string = stringify_list(url->mech);
+		if(mech_string) {
+			fprintf(fp, " mech '%s'", mech_string);
+			xfree(mech_string);
+		}
+	}
+	if(url->pasvmode != -1)
+		fprintf(fp, " passive %s", url->pasvmode ? "true" : "false");
+	if(url->password) {
+		char *cq;
+		base64_encode(url->password, strlen(url->password), &cq);
+		fprintf(fp, " password [base64]%s", cq);
+		xfree(cq);
+	}
+	fprintf(fp, "\n\n");
 }
 
 static int bookmark_save(const char *other_bmfile)
@@ -86,40 +120,12 @@ static int bookmark_save(const char *other_bmfile)
 			"# make sure this file isn't world readable if passwords are stored here\n"
 			"\n");
 
-	for(li=gvBookmarks->first; li; li=li->next) {
-		url_t *url = (url_t *)li->data;
-
-		fprintf(fp, "machine %s:%d", url->hostname,
-				url->port==-1 ? 21 : url->port);
-		if(url->alias) {
-			char *a = xquote_chars(url->alias, "\'\"");
-			fprintf(fp, " alias '%s'", a);
-			xfree(a);
-		}
-		fprintf(fp, "\n  login %s", url->username);
-
-		if(url->directory)
-			fprintf(fp, " cwd '%s'", url->directory);
-
-		if(url->protlevel)
-			fprintf(fp, " prot %s", url->protlevel);
-		if(url->mech) {
-			char *mech_string = stringify_list(url->mech);
-			if(mech_string) {
-				fprintf(fp, " mech '%s'", mech_string);
-				xfree(mech_string);
-			}
-		}
-		if(url->pasvmode != -1)
-			fprintf(fp, " passive %s", url->pasvmode ? "true" : "false");
-		if(url->password) {
-			char *cq;
-			base64_encode(url->password, strlen(url->password), &cq);
-			fprintf(fp, " password [base64]%s", cq);
-			xfree(cq);
-		}
-		fprintf(fp, "\n\n");
-	}
+	if(gvDefaultUrl)
+		bookmark_save_one(fp, gvDefaultUrl);
+	if(gvLocalUrl)
+		bookmark_save_one(fp, gvLocalUrl);
+	for(li=gvBookmarks->first; li; li=li->next)
+		bookmark_save_one(fp, (url_t *)li->data);
 	fprintf(fp, "# end of bookmark file\n");
 	fclose(fp);
 	chmod(bmfile, S_IRUSR | S_IWUSR);
@@ -194,12 +200,10 @@ static void create_the_bookmark(url_t *url)
 		list_delitem(gvBookmarks, li);
 	list_additem(gvBookmarks, url);
 
-	init_host_completion();
-
 	bookmark_save(0);
 }
 
-void create_bookmark(const char *guessed_alias)
+static void create_bookmark(const char *guessed_alias)
 {
 	char *default_alias = 0;
 	char *prompt;
@@ -233,20 +237,13 @@ void create_bookmark(const char *guessed_alias)
 		xfree(alias);
 		alias = 0;
 
-		li = list_search(gvUrlHistory, (listsearchfunc)urlcmp, url);
+		li = list_search(gvBookmarks, (listsearchfunc)urlcmp, url);
 		if(li) {
-			printf(_("a bookmark named '%s' already exists, choose another name\n"),
-				   url->alias ? url->alias : url->hostname);
-		} else {
-			li = list_search(gvBookmarks, (listsearchfunc)urlcmp, url);
-			if(li) {
-				a = ask(ASKYES|ASKNO, ASKYES,
-						_("a bookmark named '%s' already exists, overwrite?"),
-						url->alias ? url->alias : url->hostname);
-				if(a == ASKNO)
-					return;
-			}
-			break;
+			a = ask(ASKYES|ASKNO, ASKYES,
+					_("a bookmark named '%s' already exists, overwrite?"),
+					url->alias ? url->alias : url->hostname);
+			if(a == ASKNO)
+				return;
 		}
 	}
 
@@ -299,17 +296,14 @@ void auto_create_bookmark(void)
 		return;
 
 	auto_create = (gvAutoBookmark == 1);
+
 	/* check if bookmark already exists */
-	li = list_search(gvUrlHistory, (listsearchfunc)urlcmp, ftp->url);
-	if(li)
-		/* we can't rewrite yafcrc... */
-		return;
 	li = list_search(gvBookmarks, (listsearchfunc)urlcmp, ftp->url);
 	if(li) {
 		if(!should_update_bookmark((url_t *)li->data))
 			return;
 
-		/* bookmark already exist, overwrite it (updating cwd) */
+		/* bookmark already exist, update it */
 		update = true;
 		auto_create = true;
 		had_passwd = (((url_t *)li->data)->password != 0);
@@ -330,11 +324,6 @@ void auto_create_bookmark(void)
 		url_setalias(url, a);
 		xfree(a);
 		
-		if(list_search(gvUrlHistory, (listsearchfunc)urlcmp, url) != 0) {
-			/* can't rewrite yafcrc */
-			url_destroy(url);
-			return;
-		}
 		li = list_search(gvBookmarks, (listsearchfunc)urlcmp, url);
 		if(li) {
 			/* bookmark already exist, overwrite it */
@@ -344,7 +333,7 @@ void auto_create_bookmark(void)
 				if(xurl->alias && (strcmp(xurl->alias, url->alias) == 0)
 				   && (strcmp(xurl->hostname, url->hostname) != 0))
 				{
-					/* create a new alias 'version', since guessed alias
+					/* create a new version of the alias, since guessed alias
 					 * already exists but for another host
 					 */
 					
@@ -437,7 +426,7 @@ void cmd_bookmark(int argc, char **argv)
 			action = BM_LIST;
 			break;
 		  case 'h':
-			print_bookmark_syntax();;
+			print_bookmark_syntax();
 		  default:
 			return;
 		}
@@ -453,15 +442,16 @@ void cmd_bookmark(int argc, char **argv)
 	}
 	if(action == BM_READ) {
 		char *tmp = 0;
+		int ret;
 		list_clear(gvBookmarks);
 		if(bmfile)
-			parse_rc(bmfile, false);
+			ret = parse_rc(bmfile, true);
 		else {
 			asprintf(&tmp, "%s/bookmarks", gvWorkingDirectory);
-			parse_rc(tmp, false);
+			ret = parse_rc(tmp, false);
 		}
-		init_host_completion();
-		printf(_("bookmarks read from %s\n"), bmfile ? bmfile : tmp);
+		if(ret != -1)
+			printf(_("bookmarks read from %s\n"), bmfile ? bmfile : tmp);
 		xfree(tmp);
 		return;
 	}
@@ -475,13 +465,13 @@ void cmd_bookmark(int argc, char **argv)
 	if(action == BM_LIST) {
 		listitem *li;
 
-		printf(_("%u bookmarks\n"), list_numitem(gvBookmarks));
-		putchar('\n');
-		for(li=gvBookmarks->first; li; li=li->next) {
+		printf(_("%u bookmarks present in memory\n"),
+			   list_numitem(gvBookmarks));
+		for(li = gvBookmarks->first; li; li=li->next) {
 			url_t *u = (url_t *)li->data;
 			/* note: all info not printed */
-			printf("%s: ", u->alias ? u->alias : u->hostname);
-			printf("%s@%s:%d", u->username, u->hostname, u->port);
+			printf("%-20s", u->alias ? u->alias : u->hostname);
+			printf("%s@%s", u->username, u->hostname);
 			if(u->directory)
 				printf("/%s", shortpath(u->directory, 30, 0));
 			putchar('\n');

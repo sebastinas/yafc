@@ -26,7 +26,7 @@
 #include "commands.h"
 #include "strq.h"
 #include "shortpath.h"
-
+#include "utils.h"
 
 #ifdef HAVE_REGEX_H
 # include <regex.h>
@@ -64,15 +64,6 @@ static bool fxp_rx_mask_set = false;
 static regex_t fxp_dir_rx_mask;
 static bool fxp_dir_rx_mask_set = false;
 #endif
-
-/* in put.c, FIXME: clean up! */
-char* get_mode_string(mode_t m);
-
-/* in commands.c */
-listitem *ftplist_search(const char *str);
-
-/* in cmd.c */
-void reset_xterm_title(void);
 
 static void print_fxp_syntax(void)
 {

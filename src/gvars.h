@@ -59,12 +59,8 @@ extern bool gvStartupSyst;
 /* use tab completion for remote files */
 extern bool gvRemoteCompletion;
 
-/* list of visited hosts, used for tab completion */
-extern list *gvUrlHistory;
-
 /* bookmark list */
 extern list *gvBookmarks;      /* list of url_t's */
-extern list *gvHostCompletion;
 
 extern bool gvSighupReceived;
 extern bool gvInTransfer;

@@ -25,9 +25,7 @@
 #include "gvars.h"
 #include "args.h"
 #include "transfer.h"
-
-/* in get.c */
-char *make_unique_filename(const char *path);
+#include "utils.h"
 
 static FILE *logfp = 0;
 static FILE *mailfp = 0;
@@ -35,35 +33,6 @@ static char *nohup_logfile = 0;
 static char *nohup_command = 0;
 static time_t nohup_start_time;
 static time_t nohup_end_time;
-
-char *human_size(long size)
-{
-	static char buf[17];
-
-	if(size < 1024)
-		sprintf(buf, "%lu", size);
-	/* else if(size < 1024*1024) */
-	else if(size < 999.5*1024)
-		sprintf(buf, "%.1fk", (double)size/1024);
-	else if(size < 999.5*1024*1024)
-		sprintf(buf, "%.2fM", (double)size/(1024*1024));
-	else
-		sprintf(buf, "%.2fG", (double)size/(1024*1024*1024));
-	/* they aren't transferring TB with ftp, eh? */
-	
-	return buf;
-}
-
-char *human_time(unsigned int secs)
-{
-	static char buf[17];
-
-	if(secs < 60*60)
-		sprintf(buf, "%u:%02u", secs/60, secs%60);
-	else
-		sprintf(buf, "%u:%02u:%02u", secs/(60*60), (secs/60)%60, secs%60);
-	return buf;
-}
 
 static int max_printf(FILE *fp, int max, const char *fmt, ...)
 {
@@ -284,7 +253,6 @@ void transfer(transfer_info *ti)
 	struct timeval now;
 	unsigned int secs, eta;
 	float bps;
-	const char *e;
 
 	if(gvSighupReceived)
 		return;
@@ -495,39 +463,6 @@ void transfer_end_nohup(void)
 	xfree(nohup_command);
 	gvars_destroy();
 	exit(0);
-}
-
-void listify_string(const char *str, list *lp)
-{
-	char *e;
-	char *s, *orgs;
-
-	orgs = s = xstrdup(str);
-	while((e = strqsep(&s, ':')) != 0) {
-		if(list_search(lp, (listsearchfunc)strcmp, e) == 0)
-			list_additem(lp, xstrdup(e));
-	}
-	xfree(orgs);
-}
-
-char *stringify_list(list *lp)
-{
-	listitem *li;
-	char *str;
-
-	if(!lp)
-		return 0;
-
-	li = lp->first;
-	if(li)
-		str = xstrdup((char *)li->data);
-	else
-		return 0;
-
-	for(li=li->next; li; li=li->next) {
-		asprintf(&str, "%s:%s",  str, (char *)li->data);
-	}
-	return str;
 }
 
 bool ascii_transfer(const char *mask)

@@ -128,7 +128,7 @@ static void list_swap(list *lp, listitem *a, listitem *b)
 }
 
 /* simple bubble-sort */
-void list_sort(list *lp, listsortfunc cmp, bool reverse)
+void list_sort(list *lp, listsortfunc cmp, int reverse)
 {
 	listitem *li, *last = 0;
 	bool swapped = true;
@@ -181,19 +181,19 @@ list *list_clone(list *lp, listclonefunc clonefunc)
 	return cloned;
 }
 
-bool list_equal(list *a, list *b, listsortfunc cmpfunc)
+int list_equal(list *a, list *b, listsortfunc cmpfunc)
 {
 	listitem *ai, *bi;
 
 	if(a == b)
-		return true;
+		return 1;
 
 	if(list_numitem(a) != list_numitem(b) || a == 0 || b == 0)
-		return false;
+		return 0;
 
 	for(ai = a->first, bi = b->first; ai && bi; ai = ai->next, bi = bi->next) {
 		if(cmpfunc(ai->data, bi->data) != 0)
-			return false;
+			return 0;
 	}
-	return true;
+	return 1;
 }

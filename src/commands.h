@@ -168,5 +168,6 @@ DEFCMD(flush);
 #define OPT_HELP(help) { opt_help(argc, argv, _(help)); if(optind == -1) return; }
 
 void opt_help(int argc, char **argv, char *help);
+void expand_alias_parameters(args_t **args, args_t *alias_args);
 
 #endif

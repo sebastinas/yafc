@@ -29,19 +29,13 @@
 #include "transfer.h"
 #include "commands.h"
 #include "alias.h"
+#include "utils.h"
+#include "bookmark.h"
+#include "redir.h"
+#include "prompt.h"
+#include "ltag.h"
 
-/* in bookmark.c */
-void auto_create_bookmark(void);
-/* in redir.c */
-bool reject_ampersand(char *cmd);
-/* in prompt.c */
-char *expand_prompt(const char *fmt);
-/* in ltag.c */
-void save_ltaglist(const char *alt_filename);
-
-void exe_cmdline(char *str, bool aliases_are_expanded);
-void reset_xterm_title(void);
-void expand_alias_parameters(args_t **args, args_t *alias_args);
+static void exe_cmdline(char *str, bool aliases_are_expanded);
 
 void exit_yafc(void)
 {
@@ -65,31 +59,6 @@ void cmd_quit(int argc, char **argv)
 		maxargs(optind - 1);
 	}
 	exit_yafc();
-}
-
-static void print_xterm_title_string(const char *str)
-{
-	if(gvXtermTitleTerms && strstr(gvXtermTitleTerms, gvTerm) != 0 && str)
-		fprintf(stderr, "%s", str);
-}
-
-void print_xterm_title(void)
-{
-	char *xterm_title = expand_prompt(ftp_connected()
-									  ? (ftp_loggedin() ? gvXtermTitle3
-										 : gvXtermTitle2)
-									  : gvXtermTitle1);
-	print_xterm_title_string(xterm_title);
-	xfree(xterm_title);
-}
-
-void reset_xterm_title(void)
-{
-	char *e;
-
-	asprintf(&e, "\x1B]0;%s\x07", gvTerm);
-	print_xterm_title_string(e);
-	xfree(e);
 }
 
 /* main loop, prompts for commands and executes them.
@@ -182,7 +151,7 @@ void command_loop(void)
 		cmd_quit(0, 0);
 }
 
-void exe_cmd(cmd_t *c, args_t *args)
+static void exe_cmd(cmd_t *c, args_t *args)
 {
 	int i;
 	char *e;
@@ -236,7 +205,7 @@ void exe_cmd(cmd_t *c, args_t *args)
 	}
 }
 
-args_t *expand_alias(const char *cmd)
+static args_t *expand_alias(const char *cmd)
 {
 	args_t *args;
 	alias *a;
@@ -259,7 +228,7 @@ args_t *expand_alias(const char *cmd)
  *
  * first call should pass aliases_are_expanded == false
  */
-void exe_cmdline(char *str, bool aliases_are_expanded)
+static void exe_cmdline(char *str, bool aliases_are_expanded)
 {
 	char *e;
 

@@ -23,6 +23,7 @@ src/set.c
 src/tag.c
 src/text2c.c
 src/transfer.c
+src/utils.c
 
 src/ftp/cache.c
 src/ftp/ftp.c
