@@ -38,6 +38,9 @@ extern char *gvWorkingDirectory;
 /* try to login automagically */
 extern bool gvAutologin;
 
+/* automatically reconnect on connection timeout */
+extern bool gvAutoReconnect;
+
 extern bool gvVerbose;
 extern bool gvDebug;
 extern bool gvTrace;

@@ -16,6 +16,9 @@
 # attempt to login automagically, using login info in bookmarks
 autologin on
 
+# attempt to reconnect automatically on timed out connection
+autoreconnect on
+
 # quit program if received EOF (C-d)
 quit_on_eof yes
 

@@ -35,6 +35,9 @@ char *gvWorkingDirectory = 0;
 /* try to login automagically */
 bool gvAutologin = true;
 
+/* automatically reconnect on connection timeout */
+bool gvAutoReconnect = true;
+
 /* issue a SYST command upon login */
 bool gvStartupSyst = false;
 

@@ -269,9 +269,11 @@ int parse_rc(const char *file, bool warn)
 
 		if(strcasecmp(e, "autologin") == 0)
 			gvAutologin = nextbool(fp);
-		else if(strcasecmp(e, "verbose") == 0) {
+		else if(strcasecmp(e, "autoreconnect") == 0)
+			gvAutoReconnect = nextbool(fp);
+		else if(strcasecmp(e, "verbose") == 0)
 			gvVerbose = nextbool(fp);
-		} else if(strcasecmp(e, "debug") == 0)
+		else if(strcasecmp(e, "debug") == 0)
 			gvDebug = nextbool(fp);
 		else if(strcasecmp(e, "trace") == 0)
 			gvTrace = nextbool(fp);
