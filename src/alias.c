@@ -1,4 +1,4 @@
-/* $Id: alias.c,v 1.3 2001/05/12 18:44:37 mhe Exp $
+/* $Id: alias.c,v 1.4 2001/07/27 08:58:22 mhe Exp $
  *
  * alias.c -- define and undefine aliases
  *
@@ -155,6 +155,8 @@ void cmd_alias(int argc, char **argv)
 	if(argc == optind + 1) {  /* print one alias binding */
 		if(!ap)
 			fprintf(stderr, _("no such alias '%s'\n"), argv[optind]);
+		else if(ap == ALIAS_AMBIGUOUS)
+			fprintf(stderr, _("ambiguous alias '%s'\n"), argv[optind]);
 		else {
 			char *f;
 			f = args_cat2(ap->value, 0);

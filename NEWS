@@ -1,3 +1,9 @@
+New in 0.7.3
+------------
+
+* Fixed segfault when doing a 'alias l', where l is an ambiguous alias (thanks Ari Pollak)
+
+
 New in 0.7.2
 ------------
 
