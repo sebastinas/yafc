@@ -1,4 +1,4 @@
-/* $Id: list.c,v 1.7 2001/05/12 18:44:37 mhe Exp $
+/* $Id: list.c,v 1.8 2001/05/22 22:02:12 mhe Exp $
  *
  * list.c -- the remote cached 'ls' command
  *
@@ -285,7 +285,7 @@ static int ls_sort_dirs(rfile *a, rfile *b)
 		return -1;
 	if(!risdir(a) && risdir(b))
 		return 1;
-	return 0;
+	return ls_sort_name(a, b);
 }
 
 static int ls_sort_size(rfile *a, rfile *b)
@@ -468,7 +468,7 @@ void cmd_ls(int argc, char **argv)
 			break;
 		  case 'S':
 			opt |= LS_SORT_SIZE;
-			opt &= ~(LS_SORT_EXT | LS_SORT_DIRS_FIRST | LS_SORT_MTIME);
+			opt &= ~(LS_SORT_EXT | LS_SORT_DIRS_FIRST | LS_SORT_MTIME | LS_SORT_NAME);
 			break;
 		  case 'U':
 			opt &= ~(LS_SORT_NAME | LS_SORT_SIZE | LS_SORT_EXT
@@ -485,11 +485,11 @@ void cmd_ls(int argc, char **argv)
 			break;
 		  case 't':
 			opt |= LS_SORT_MTIME;
-			opt &= ~(LS_SORT_SIZE | LS_SORT_EXT | LS_SORT_DIRS_FIRST);
+			opt &= ~(LS_SORT_SIZE | LS_SORT_EXT | LS_SORT_DIRS_FIRST | LS_SORT_NAME);
 			break;
 		  case 'X':
 			opt |= LS_SORT_EXT;
-			opt &= ~(LS_SORT_SIZE | LS_SORT_DIRS_FIRST | LS_SORT_MTIME);
+			opt &= ~(LS_SORT_SIZE | LS_SORT_DIRS_FIRST | LS_SORT_MTIME | LS_SORT_NAME);
 			break;
 		  case 'c':
 			if(optarg == 0 || strcmp(optarg, "always") == 0) {
@@ -505,7 +505,7 @@ void cmd_ls(int argc, char **argv)
 			break;
 		case '2': /* --dirs-first */
 			opt |= LS_SORT_DIRS_FIRST;
-			opt &= ~(LS_SORT_SIZE | LS_SORT_EXT | LS_SORT_MTIME);
+			opt &= ~(LS_SORT_SIZE | LS_SORT_EXT | LS_SORT_MTIME | LS_SORT_NAME);
 			break;
 		case '3': /* --help */
 			print_ls_syntax();
