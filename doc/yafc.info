@@ -5,7 +5,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
    This file documents Yafc version 0.6.3
 
-   Copyright (C) 1999 Martin Hedenfalk
+   Copyright (C) 1999-2000 Martin Hedenfalk
 
    Permission is granted to make and distribute verbatim copies of this
 manual provided the copyright notice and this permission notice are
@@ -48,15 +48,14 @@ is a console interface to the ftp protocol. If you're looking for a nice
 GUI client, Yafc is not for you. If you, however, use ftp often and
 want a fast, powerful, friendly client Yafc is here for you...
 
-   Some of the features are recursive get/put/ls/rm, nohup transfers,
+   Some of the features are recursive transfers, nohup transfers,
 colored ls, cached directory listings, autologin and bookmarks,
-powerful aliases and extensive tab completion.
-
-   To my knowledge, Yafc is the only ftp client that has colored ls.
+powerful aliases and extensive tab completion. It has also support for
+Kerberos authentication.
 
    This manual is incomplete, and possibly out of date. If you would
 like to improve this manual, please send a message to
-<mhe@stacken.kth.se>.
+<yafc-devel@lists.sourceforge.net>.
 
 * Menu:
 
@@ -70,10 +69,10 @@ File: yafc.info,  Node: Bugs,  Next: Obtaining Yafc,  Up: Overview
 Bugs
 ----
 
-   Please report bugs to <mhe@stacken.kth.se>.  Before reporting a bug,
-please verify you're using the latest version (check the ftp site.) You
-can get the version number of your copy of yafc with the command `yafc
---version'.
+   Please report bugs to <yafc-devel@lists.sourceforge.net>.  Before
+reporting a bug, please verify you're using the latest version (check
+the ftp site.) You can get the version number of your copy of yafc with
+the command `yafc --version'.
 
    When reporting bugs, please include information on what machine and
 operating system, including versions, you are running, an example for
@@ -86,10 +85,13 @@ Obtaining Yafc
 --------------
 
 Yafc homepage
-     `http://www.stacken.kth.se/~mhe/yafc/'
+     `http://yafc.sourceforge.net/'
+
+Yafc SourceForge Project Page
+     `http://sourceforge.net/projects/yafc/'
 
 Yafc official FTP site
-     `ftp://mayer.physto.se/pub/yafc/'
+     `ftp://yafc.sourceforge.net/pub/yafc/'
 
 
 File: yafc.info,  Node: Motivation,  Prev: Obtaining Yafc,  Up: Overview
@@ -119,10 +121,11 @@ Invoking Yafc
 
 `-a'
 `--anon'
-     Try an anonymous login, ie login as "anonymous" and prompt for
-     password.  Your email address (or password set in the config file
-     with "anon_password") is printed as default. Press enter to accept
-     it.
+     Try an anonymous login, ie login as "anonymous" with your email
+     address as password.  Your email address is first looked for in
+     the config file (*Note anon_password::), then in the $EMAIL
+     environment variable. If it's not found, a guess is made from your
+     user- and hostname.
 
 `-d'
 `--debug'
@@ -853,10 +856,15 @@ Configuration
 *************
 
    Yafc will parse a system-wide configuration file, `/etc/yafcrc',
-first. Then, personal settings are read from `~/.yafc/yafcrc'.
+first. Then, personal settings are read from `~/.yafc/yafcrc'
+(overriding the global ones). If none of those files exists, internal
+defaults will be used.
 
    The `--dump-rc' option of Yafc can be used to dump the default
-configuration file on standard output.
+configuration file to standard output. You can create your own config
+file with the command `yafc --dum-rc > ~/.yafc/yafcrc'. You can
+customize it with your favourite editor, it should be quite
+self-explaining if you read the comments.
 
    Yafc also looks for `~/.netrc', and reads autologin information from
 that file. *Note read_netrc::. This file is also used by the standard
@@ -887,6 +895,7 @@ Keywords
 
 * Menu:
 
+* anon_password::               set password for anonymous logins
 * autologin::                   disable the autologin feature
 * quit_on_eof::                 quit Yafc on C-d (end-of-file)
 * read_netrc::                  read the ~/.netrc file for additional autologin entries
@@ -901,6 +910,7 @@ Keywords
 * auto_bookmark_save_passwd::   always save password with bookmarks
 * auto_bookmark_silent::        don't shout
 * default_type::                specify default transfer type
+* default_mechanism::           default security mechanisms to try
 * ascii_transfer_mask::         match files that always should be transferred in ascii mode
 * beep_after_long_command::     ring a bell?
 * long_command_time::           how long is a command?
@@ -926,7 +936,16 @@ Keywords
 * xterm_title_terms::           which $TERM's are xterms?
 
 
-File: yafc.info,  Node: autologin,  Next: quit_on_eof,  Up: Keywords
+File: yafc.info,  Node: anon_password,  Next: autologin,  Up: Keywords
+
+`anon_password'
+---------------
+
+   This is the password used for anonymous logins. It should be your
+email address.
+
+
+File: yafc.info,  Node: autologin,  Next: quit_on_eof,  Prev: anon_password,  Up: Keywords
 
 `autologin'
 -----------
@@ -1046,7 +1065,7 @@ File: yafc.info,  Node: auto_bookmark_silent,  Next: default_type,  Prev: auto_b
 created bookmarks.
 
 
-File: yafc.info,  Node: default_type,  Next: ascii_transfer_mask,  Prev: auto_bookmark_silent,  Up: Keywords
+File: yafc.info,  Node: default_type,  Next: default_mechanism,  Prev: auto_bookmark_silent,  Up: Keywords
 
 `default_type'
 --------------
@@ -1056,7 +1075,17 @@ or `ascii'. Setting this to `ascii' can mess up binary files (ascii
 mode rewrites the end-of-line characters.)  *Note ascii_transfer_mask::.
 
 
-File: yafc.info,  Node: ascii_transfer_mask,  Next: beep_after_long_command,  Prev: default_type,  Up: Keywords
+File: yafc.info,  Node: default_mechanism,  Next: ascii_transfer_mask,  Prev: default_type,  Up: Keywords
+
+`default_mechanism'
+-------------------
+
+   This option specifies which security mechanisms to try, in given
+order.  It is a colon-separated string, supported values are "krb4",
+"krb5" and "none".  Example: `default_mechanism "krb4:krb5"'
+
+
+File: yafc.info,  Node: ascii_transfer_mask,  Next: beep_after_long_command,  Prev: default_mechanism,  Up: Keywords
 
 `ascii_transfer_mask'
 ---------------------
@@ -1492,9 +1521,12 @@ Autologin keywords
 
      This is a no-op if not compiled with Kerberos.
 
-`nokrb'
-     Do no try to authenticate using Kerberos.
+`mech'
+     List the preferred security mechanisms to use. This is the same as
+     for *Note default_mechanism::, except it is only use for this
+     machine.
 
+`passive'
 
 File: yafc.info,  Node: Autologin examples,  Prev: Autologin keywords,  Up: Autologin
 
@@ -1728,117 +1760,119 @@ Proxy
 
 
 Tag Table:
-Node: Top898
-Node: Overview1375
-Node: Bugs2298
-Node: Obtaining Yafc2821
-Node: Motivation3063
-Node: Invoking Yafc3657
-Node: The shell6268
-Node: Yafc commands6833
-Node: !9960
-Node: afslog10078
-Node: alias10175
-Node: bookmark10312
-Node: cache10419
-Node: cat10831
-Node: cd10920
-Node: cdup11006
-Node: chmod11098
-Node: close11195
-Node: copyright11297
-Node: filesize11410
-Node: filetime11524
-Node: get11632
-Node: help13204
-Node: idle13296
-Node: kauth13390
-Node: kdestroy13490
-Node: klist13597
-Node: krbtkfile13702
-Node: lcd13810
-Node: list13905
-Node: lpwd13997
-Node: ls14088
-Node: ltag14175
-Node: luntag14268
-Node: mkdir14368
-Node: mv14557
-Node: nlist14646
-Node: nop14739
-Node: open14830
-Node: prot15362
-Node: put15849
-Node: pwd15938
-Node: quit16093
-Node: quote16186
-Node: rhelp16283
-Node: rm16378
-Node: rmdir16838
-Node: rstatus16935
-Node: set17037
-Node: shell17131
-Node: site17226
-Node: source17322
-Node: status17423
-Node: switch17526
-Node: system17629
-Node: tag17729
-Node: unalias17824
-Node: untag17926
-Node: url18024
-Node: user18115
-Node: version18210
-Node: warranty18316
-Node: Nohup transfers18411
-Node: Configuration19339
-Node: Keywords20392
-Node: autologin22886
-Node: quit_on_eof23122
-Node: read_netrc23292
-Node: use_passive_mode23492
-Node: verbose23741
-Node: debug23899
-Node: trace24124
-Node: inhibit_startup_syst24287
-Node: use_env_string24493
-Node: remote_completion24764
-Node: auto_bookmark24955
-Node: auto_bookmark_save_passwd25331
-Node: auto_bookmark_silent25790
-Node: default_type26040
-Node: ascii_transfer_mask26396
-Node: beep_after_long_command26905
-Node: long_command_time27186
-Node: command_timeout27394
-Node: connection_timeout27612
-Node: connect_attempts27838
-Node: connect_wait_time28148
-Node: use_history28353
-Node: history_max28584
-Node: startup_local_directory28828
-Node: nohup_mailaddress29054
-Node: sendmail_path29314
-Node: prompt129510
-Node: prompt230803
-Node: prompt330957
-Node: transfer_begin_string31119
-Node: transfer_string31964
-Node: transfer_end_string32260
-Node: tilde32497
-Node: xterm_title132682
-Node: xterm_title234264
-Node: xterm_title334504
-Node: xterm_title_terms34771
-Node: Autologin34978
-Node: Autologin keywords35450
-Node: Autologin examples37360
-Node: Aliases38325
-Node: Alias examples38845
-Node: Colors40814
-Node: ANSI attribute codes41478
-Node: Bookmarks42475
-Node: Kerberos43218
-Node: Proxy43915
+Node: Top903
+Node: Overview1380
+Node: Bugs2292
+Node: Obtaining Yafc2829
+Node: Motivation3144
+Node: Invoking Yafc3738
+Node: The shell6429
+Node: Yafc commands6994
+Node: !10121
+Node: afslog10239
+Node: alias10336
+Node: bookmark10473
+Node: cache10580
+Node: cat10992
+Node: cd11081
+Node: cdup11167
+Node: chmod11259
+Node: close11356
+Node: copyright11458
+Node: filesize11571
+Node: filetime11685
+Node: get11793
+Node: help13365
+Node: idle13457
+Node: kauth13551
+Node: kdestroy13651
+Node: klist13758
+Node: krbtkfile13863
+Node: lcd13971
+Node: list14066
+Node: lpwd14158
+Node: ls14249
+Node: ltag14336
+Node: luntag14429
+Node: mkdir14529
+Node: mv14718
+Node: nlist14807
+Node: nop14900
+Node: open14991
+Node: prot15523
+Node: put16010
+Node: pwd16099
+Node: quit16254
+Node: quote16347
+Node: rhelp16444
+Node: rm16539
+Node: rmdir16999
+Node: rstatus17096
+Node: set17198
+Node: shell17292
+Node: site17387
+Node: source17483
+Node: status17584
+Node: switch17687
+Node: system17790
+Node: tag17890
+Node: unalias17985
+Node: untag18087
+Node: url18185
+Node: user18276
+Node: version18371
+Node: warranty18477
+Node: Nohup transfers18572
+Node: Configuration19500
+Node: Keywords20842
+Node: anon_password23469
+Node: autologin23661
+Node: quit_on_eof23919
+Node: read_netrc24089
+Node: use_passive_mode24289
+Node: verbose24538
+Node: debug24696
+Node: trace24921
+Node: inhibit_startup_syst25084
+Node: use_env_string25290
+Node: remote_completion25561
+Node: auto_bookmark25752
+Node: auto_bookmark_save_passwd26128
+Node: auto_bookmark_silent26587
+Node: default_type26837
+Node: default_mechanism27191
+Node: ascii_transfer_mask27540
+Node: beep_after_long_command28054
+Node: long_command_time28335
+Node: command_timeout28543
+Node: connection_timeout28761
+Node: connect_attempts28987
+Node: connect_wait_time29297
+Node: use_history29502
+Node: history_max29733
+Node: startup_local_directory29977
+Node: nohup_mailaddress30203
+Node: sendmail_path30463
+Node: prompt130659
+Node: prompt231952
+Node: prompt332106
+Node: transfer_begin_string32268
+Node: transfer_string33113
+Node: transfer_end_string33409
+Node: tilde33646
+Node: xterm_title133831
+Node: xterm_title235413
+Node: xterm_title335653
+Node: xterm_title_terms35920
+Node: Autologin36127
+Node: Autologin keywords36599
+Node: Autologin examples38624
+Node: Aliases39589
+Node: Alias examples40109
+Node: Colors42078
+Node: ANSI attribute codes42742
+Node: Bookmarks43739
+Node: Kerberos44482
+Node: Proxy45179
 
 End Tag Table

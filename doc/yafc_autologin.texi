@@ -70,8 +70,12 @@ Valid protection levels are @code{safe}, @code{clear} and @code{private}.
 
 This is a no-op if not compiled with Kerberos.
 
-@item nokrb
-Do no try to authenticate using Kerberos.
+@item mech
+List the preferred security mechanisms to use. This is the same as
+for @xref{default_mechanism}, except it is only use for this machine.
+
+@item passive
+
 
 @end table
 

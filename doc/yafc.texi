@@ -15,7 +15,7 @@ END-INFO-DIR-ENTRY
 @end format
 This file documents Yafc version @value{VERSION}
 
-Copyright @copyright{} 1999 Martin Hedenfalk
+Copyright @copyright{} 1999-2000 Martin Hedenfalk
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -51,7 +51,7 @@ by the copyright holder.
 @c  start the copyright page.
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1999 Martin Hedenfalk
+Copyright @copyright{} 1999-2000 Martin Hedenfalk
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -100,10 +100,14 @@ This document applies to version @value{VERSION}.
 
 Yafc will parse a system-wide configuration file,
 @file{/etc/yafcrc}, first. Then, personal settings are read from
-@file{~/.yafc/yafcrc}.
+@file{~/.yafc/yafcrc} (overriding the global ones). If none of those
+files exists, internal defaults will be used.
 
 The @samp{--dump-rc} option of Yafc can be used to dump the default
-configuration file on standard output.
+configuration file to standard output. You can create your own config
+file with the command @code{yafc --dum-rc > ~/.yafc/yafcrc}. You can
+customize it with your favourite editor, it should be quite self-explaining if
+you read the comments.
 
 Yafc also looks for @file{~/.netrc}, and reads autologin information from
 that file. @ref{read_netrc}. This file is also used by the standard ftp

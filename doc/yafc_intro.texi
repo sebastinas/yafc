@@ -6,14 +6,12 @@ It is a console interface to the ftp protocol. If you're looking for a nice
 GUI client, Yafc is not for you. If you, however, use ftp often and want a
 fast, powerful, friendly client Yafc is here for you...
 
-Some of the features are recursive get/put/ls/rm, nohup transfers, colored ls,
+Some of the features are recursive transfers, nohup transfers, colored ls,
 cached directory listings, autologin and bookmarks, powerful aliases and
-extensive tab completion.
-
-To my knowledge, Yafc is the only ftp client that has colored ls.
+extensive tab completion. It has also support for Kerberos authentication.
 
 This manual is incomplete, and possibly out of date. If you would like
-to improve this manual, please send a message to @email{mhe@@stacken.kth.se}.
+to improve this manual, please send a message to @email{yafc-devel@@lists.sourceforge.net}.
 
 @menu
 * Bugs::                Reporting bugs and requests
@@ -25,7 +23,7 @@ to improve this manual, please send a message to @email{mhe@@stacken.kth.se}.
 @node Bugs, Obtaining Yafc, , Overview
 @subsection Bugs
 
-Please report bugs to @email{mhe@@stacken.kth.se}.
+Please report bugs to @email{yafc-devel@@lists.sourceforge.net}.
 Before reporting a bug, please verify you're using the latest version
 (check the ftp site.) You can get the version number of your copy of yafc
 with the command @code{yafc --version}.
@@ -41,10 +39,13 @@ example for me to reproduce (use the @code{--trace} option) and a patch if you h
 @table @asis
 
 @item Yafc homepage
-@uref{http://www.stacken.kth.se/~mhe/yafc/}
+@uref{http://yafc.sourceforge.net/}
+
+@item Yafc SourceForge Project Page
+@uref{http://sourceforge.net/projects/yafc/}
 
 @item Yafc official FTP site
-@uref{ftp://mayer.physto.se/pub/yafc/}
+@uref{ftp://yafc.sourceforge.net/pub/yafc/}
 
 @end table
 

@@ -7,6 +7,7 @@ Documentation missing...
 The configuration keywords are case insensitive.
 
 @menu
+* anon_password::               set password for anonymous logins
 * autologin::                   disable the autologin feature
 * quit_on_eof::                 quit Yafc on C-d (end-of-file)
 * read_netrc::                  read the ~/.netrc file for additional autologin entries
@@ -21,6 +22,7 @@ The configuration keywords are case insensitive.
 * auto_bookmark_save_passwd::   always save password with bookmarks
 * auto_bookmark_silent::        don't shout
 * default_type::                specify default transfer type
+* default_mechanism::           default security mechanisms to try            
 * ascii_transfer_mask::         match files that always should be transferred in ascii mode
 * beep_after_long_command::     ring a bell?
 * long_command_time::           how long is a command?
@@ -45,6 +47,10 @@ The configuration keywords are case insensitive.
 * xterm_title3::                logged in title for xterms
 * xterm_title_terms::           which $TERM's are xterms?
 @end menu
+
+@node anon_password
+@subsection @code{anon_password}
+This is the password used for anonymous logins. It should be your email address.
 
 @node autologin
 @subsection @code{autologin}
@@ -117,6 +123,12 @@ Specifies the default type used for file transfers, either
 @code{binary} or @code{ascii}. Setting this to @code{ascii}
 can mess up binary files (ascii mode rewrites the end-of-line characters.)
 @ref{ascii_transfer_mask}.
+
+@node default_mechanism
+@subsection @code{default_mechanism}
+This option specifies which security mechanisms to try, in given order.
+It is a colon-separated string, supported values are "krb4", "krb5" and "none".
+Example: @code{default_mechanism "krb4:krb5"}
 
 @node ascii_transfer_mask
 @subsection @code{ascii_transfer_mask}

@@ -13,9 +13,10 @@ Options:
 
 @item -a
 @itemx --anon
-Try an anonymous login, ie login as "anonymous" and prompt for password.
-Your email address (or password set in the config file with "anon_password") is
-printed as default. Press enter to accept it.
+Try an anonymous login, ie login as "anonymous" with your email address as password.
+Your email address is first looked for in the config file (@ref{anon_password}),
+then in the $EMAIL environment variable. If it's not found, a guess is made from your
+user- and hostname.
 
 @item -d
 @itemx --debug
