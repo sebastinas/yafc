@@ -1,4 +1,4 @@
-/* $Id: ftpsigs.c,v 1.4 2001/05/12 18:44:04 mhe Exp $
+/* $Id: ftpsigs.c,v 1.5 2001/05/28 09:53:44 mhe Exp $
  *
  * ftpsigs.c -- handles signals
  *
@@ -211,6 +211,7 @@ int ftp_longjmp(
 #else
 	longjmp(restart_jmp, 1);
 #endif
+	return 0; /* make cc happy */
 }
 
 void ftp_initsigs(void)

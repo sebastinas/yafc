@@ -254,7 +254,7 @@ glob_vector (pat, dir)
   register char *nextname, *npat;
   unsigned int count;
   int lose, skip;
-  register char **name_vector;
+  register char **name_vector=0;
   register unsigned int i;
   int flags;		/* Flags passed to fnmatch (). */
 

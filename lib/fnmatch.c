@@ -678,7 +678,7 @@ extmatch (xc, s, se, p, pe, flags)
   char *psub;			/* pointer to sub-pattern */
   char *pnext;			/* pointer to next sub-pattern */
   char *srest;			/* pointer to rest of string */
-  int m1, m2;
+  int m1, m2=0;
 
 #if 0
 fprintf(stderr, "extmatch: xc = %c\n", xc);
