@@ -42,7 +42,7 @@ cmd_t cmds[] = {
 	{"!", 0,0,0, cpLocalFile, __("same as 'shell'"), cmd_shell},
 	CMD(alias, 0,0,1, cpAlias, 0),
 	CMD(bookmark, 0,0,1, cpBookmark, 0),
-	CMD(cache, 1,1,1, cpNone, 0),
+	CMD(cache, 0,0,1, cpNone, 0),
 	CMD(cat, 0,0,1, cpRemoteFile, 0),
 	CMD(cd, 0,0,1, cpRemoteDir, 0),
 	CMD(cdup, 0,0,1, cpNone, 0),
@@ -807,6 +807,9 @@ void cmd_cache(int argc, char **argv)
 		}
 	}
 
+	need_connected();
+	need_loggedin();
+	
 	if(touch) {
 		if(optind < argc) {
 			int i;
