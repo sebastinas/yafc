@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.29 2002/02/15 10:53:32 mhe Exp $
+/* $Id: ftp.c,v 1.30 2002/02/23 13:16:30 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -266,6 +266,7 @@ static RETSIGTYPE ftp_open_handler(int signum)
 int ftp_open_url(url_t *urlp, bool reset_vars)
 {
 	bool use_proxy;
+	int i;
 
 	if(reset_vars)
 		ftp_reset_vars();
@@ -309,6 +310,10 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
 	}
 	urlp->port = ntohs(ftp->host->port);
 
+	fprintf(stderr, "\r               ");
+	i = strlen(use_proxy ? gvProxyUrl->hostname : urlp->hostname);
+	while(i--)
+		fprintf(stderr, " ");
 	fprintf(stderr, "\r");
 	ftp_trace("\n");
 
@@ -707,7 +712,7 @@ void ftp_set_tmp_verbosity(int verbosity)
 		ftp->tmp_verbosity = verbosity;
 }
 
-static int get_username(url_t *url, const char *guessed_username, bool isproxy)
+int get_username(url_t *url, const char *guessed_username, bool isproxy)
 {
 	if(!url->username) {
 		char *prompt, *e;

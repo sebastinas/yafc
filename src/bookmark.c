@@ -1,4 +1,4 @@
-/* $Id: bookmark.c,v 1.14 2001/07/09 18:27:42 mhe Exp $
+/* $Id: bookmark.c,v 1.15 2002/02/23 13:16:30 mhe Exp $
  *
  * bookmark.c -- create bookmark(s)
  *
@@ -29,6 +29,7 @@
 #define BM_READ 3
 #define BM_LIST 4
 #define BM_DELETE 5
+#define BM_TOGGLE_NOUPDATE 6
 
 static char *xquote_chars(const char *str, const char *qchars)
 {
@@ -100,6 +101,8 @@ static void bookmark_save_one(FILE *fp, url_t *url)
 		fprintf(fp, " passive %s", url->pasvmode ? "true" : "false");
 	if(url->sftp_server)
 		fprintf(fp, " sftp %s", url->sftp_server);
+	if(url->noupdate)
+		fprintf(fp, " noupdate");
 	fprintf(fp, "\n\n");
 }
 
@@ -274,6 +277,9 @@ static void create_bookmark(const char *guessed_alias)
 /* check if anything has changed for this bookmark */
 static bool should_update_bookmark(url_t *url)
 {
+	if(url->noupdate)
+		return false;
+
 	/* don't update bookmark if username has changed */
 	if(strcmp(url->username, ftp->url->username) != 0)
 		return false;
@@ -405,6 +411,7 @@ static void print_bookmark_syntax(void)
 			 "  -r, --read[=FILE]      re-read bookmarks FILE\n"
 			 "  -d, --delete           delete specified bookmarks from file\n"
 			 "  -l, --list             list bookmarks in memory\n"
+			 "  -u, --noupdate         toggle noupdate flag\n"
 			 "  -h, --help             show this help\n"));
 }
 
@@ -416,6 +423,7 @@ void cmd_bookmark(int argc, char **argv)
 		{"read", optional_argument, 0, 'r'},
 		{"delete", no_argument, 0, 'd'},
 		{"list", no_argument, 0, 'l'},
+		{"noupdate", no_argument, 0, 'u'},
 		{"help", no_argument, 0, 'h'},
 		{0, 0, 0, 0}
 	};
@@ -424,31 +432,34 @@ void cmd_bookmark(int argc, char **argv)
 	char *bmfile = 0;
 
 	optind = 0;
-	while((c=getopt_long(argc, argv, "s::er::dlh", longopts, 0)) != EOF) {
+	while((c=getopt_long(argc, argv, "s::er::dluh", longopts, 0)) != EOF) {
 		switch(c) {
-		  case 's':
-			action = BM_SAVE;
-			xfree(bmfile);
-			bmfile = xstrdup(optarg);
-			break;
-		  case 'e':
-			action = BM_EDIT;
-			break;
-		  case 'r':
-			action = BM_READ;
-			xfree(bmfile);
-			bmfile = xstrdup(optarg);
-			break;
-		  case 'd':
-			action = BM_DELETE;
-			break;
-		  case 'l':
-			action = BM_LIST;
-			break;
-		  case 'h':
-			print_bookmark_syntax();
-		  default:
-			return;
+			case 's':
+				action = BM_SAVE;
+				xfree(bmfile);
+				bmfile = xstrdup(optarg);
+				break;
+			case 'e':
+				action = BM_EDIT;
+				break;
+			case 'r':
+				action = BM_READ;
+				xfree(bmfile);
+				bmfile = xstrdup(optarg);
+				break;
+			case 'd':
+				action = BM_DELETE;
+				break;
+			case 'l':
+				action = BM_LIST;
+				break;
+			case 'u':
+				action = BM_TOGGLE_NOUPDATE;
+				break;
+			case 'h':
+				print_bookmark_syntax();
+			default:
+				return;
 		}
 	}
 
@@ -503,6 +514,8 @@ void cmd_bookmark(int argc, char **argv)
 		int i;
 		bool del_done = false;
 
+		minargs(optind);
+
 		for(i = optind; i < argc; i++) {
 			listitem *li;
 
@@ -519,6 +532,40 @@ void cmd_bookmark(int argc, char **argv)
 		}
 
 		if(del_done) {
+			bookmark_save(0);
+			printf(_("bookmarks saved in %s/bookmarks\n"), gvWorkingDirectory);
+		}
+
+		return;
+	}
+	if(action == BM_TOGGLE_NOUPDATE) {
+		int i;
+		bool toggle_done = false;
+
+		if(argc == optind) {
+			ftp->url->noupdate = !ftp->url->noupdate;
+			printf(_("%s: noupdate: %s\n"),
+				   ftp->url->alias ? ftp->url->alias : ftp->url->hostname,
+				   ftp->url->noupdate ? _("yes") : _("no"));
+		}
+
+		for(i = optind; i < argc; i++) {
+			listitem *li;
+
+			li = list_search(gvBookmarks,
+							 (listsearchfunc)urlcmp_name,
+							 argv[i]);
+			if(li) {
+				url_t *u = (url_t *)li->data;
+				u->noupdate = !u->noupdate;
+				printf(_("%s: noupdate: %s\n"),
+					   u->alias ? u->alias : u->hostname,
+					   u->noupdate ? _("yes") : _("no"));
+				toggle_done = true;
+			}
+		}
+
+		if(toggle_done) {
 			bookmark_save(0);
 			printf(_("bookmarks saved in %s/bookmarks\n"), gvWorkingDirectory);
 		}

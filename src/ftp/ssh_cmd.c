@@ -41,6 +41,7 @@ int ssh_open_url(url_t *urlp)
 {
 	char *sftp = gvSFTPServerProgram;
 	char *s;
+	int r;
 
 	args_clear(ftp->ssh_args);
 
@@ -49,6 +50,10 @@ int ssh_open_url(url_t *urlp)
 
 	args_push_back(ftp->ssh_args, gvSSHProgram);
 	args_push_back(ftp->ssh_args, urlp->hostname);
+
+	r = get_username(urlp, gvUsername, false);
+	if(r != 0)
+		return r;
 
 	if(urlp->username) {
 		args_push_back(ftp->ssh_args, "-l");
@@ -73,9 +78,9 @@ int ssh_open_url(url_t *urlp)
 	/* no subsystem if the server-spec contains a '/' */
 	if(sftp == 0 || strchr(sftp, '/') == 0)
 		args_push_back(ftp->ssh_args, "-s");
-	args_push_back(ftp->ssh_args, "-oForwardX11=no");
-	args_push_back(ftp->ssh_args, "-oForwardAgent=no");
-	args_push_back(ftp->ssh_args, "-oProtocol=2");
+/*	args_push_back(ftp->ssh_args, "-oForwardX11=no");*/
+/*	args_push_back(ftp->ssh_args, "-oForwardAgent=no");*/
+/*	args_push_back(ftp->ssh_args, "-oProtocol=2");*/
 
 	/* Otherwise finish up and return the arg array */
 	if(sftp != 0)
@@ -176,21 +181,26 @@ int ssh_mkdir_verb(const char *path, verbose_t verb)
 {
 	Attrib a;
 	u_int status, id;
+	char *abspath;
 
 	attrib_clear(&a);
 	a.flags |= SSH2_FILEXFER_ATTR_PERMISSIONS;
 	a.perm = 0777;
 
 	id = ftp->ssh_id++;
-	ssh_send_string_attrs_request(id, SSH2_FXP_MKDIR, path,
-								  strlen(path), &a);
+	abspath = ftp_path_absolute(path);
+	stripslash(abspath);
+	ssh_send_string_attrs_request(id, SSH2_FXP_MKDIR, abspath,
+								  strlen(abspath), &a);
 
 	status = ssh_get_status(id);
 	if(status != SSH2_FX_OK) {
 		ftp_err("Couldn't create directory: %s\n", fx2txt(status));
+		xfree(abspath);
 		return -1;
 	}
-	ftp_cache_flush_mark_for(path);
+	ftp_cache_flush_mark_for(abspath);
+	xfree(abspath);
 
 	return 0;
 }
@@ -200,7 +210,7 @@ int ssh_rmdir(const char *path)
 	char *p;
 	u_int status, id;
 
-	p = xstrdup(path);
+	p = ftp_path_absolute(path);
 	stripslash(p);
 
 	id = ftp->ssh_id++;

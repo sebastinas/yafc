@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.18 2001/05/28 10:13:41 mhe Exp $
+/* $Id: main.c,v 1.19 2002/02/23 13:16:30 mhe Exp $
  *
  * main.c -- parses command line options and starts Yafc
  *
@@ -140,11 +140,7 @@ void init_yafc(void)
 
 	gvSSHProgram = xstrdup("/usr/bin/ssh");
 
-	gvAnonPasswd = getenv("EMAIL");
-	if(gvAnonPasswd)
-		gvAnonPasswd = xstrdup(gvAnonPasswd);
-	else
-		asprintf(&gvAnonPasswd, "%s@%s", gvUsername, gvLocalHost);
+	gvAnonPasswd = xstrdup("anonymous@");
 
 	/* init colors from LS_COLORS for ls */
 	init_colors();

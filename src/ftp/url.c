@@ -1,4 +1,4 @@
-/* $Id: url.c,v 1.7 2001/05/21 19:54:00 mhe Exp $
+/* $Id: url.c,v 1.8 2002/02/23 13:16:30 mhe Exp $
  *
  * url.c -- splits an URL into its components
  *
@@ -28,6 +28,7 @@ url_t *url_create(void)
 	urlp->port = -1;
 	urlp->pasvmode = -1;
 	urlp->mech = list_new((listfunc)xfree);
+	urlp->noupdate = false;
 
 	return urlp;
 }
@@ -58,6 +59,7 @@ url_t *url_clone(const url_t *urlp)
 		cloned->mech = list_clone(urlp->mech, (listclonefunc)xstrdup);
 		cloned->pasvmode = urlp->pasvmode;
 		cloned->sftp_server = xstrdup(urlp->sftp_server);
+		cloned->noupdate = urlp->noupdate;
 	}
 
 	return cloned;

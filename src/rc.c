@@ -1,4 +1,4 @@
-/* $Id: rc.c,v 1.14 2001/05/21 19:53:42 mhe Exp $
+/* $Id: rc.c,v 1.15 2002/02/23 13:16:30 mhe Exp $
  *
  * rc.c -- config file parser + autologin lookup
  *
@@ -206,6 +206,8 @@ static void parse_host(int trig, FILE *fp)
 		} else if(strcasecmp(e, "sftp") == 0) {
 			NEXTSTR;
 			url_setsftp(up, e);
+		} else if(strcasecmp(e, "noupdate") == 0) {
+			up->noupdate = true;
 		} else if(strcasecmp(e, "macdef") == 0) {
 			while(e) { /* FIXME: macdef: this is not really true */
 				NEXTSTR;

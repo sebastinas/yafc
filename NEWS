@@ -1,7 +1,22 @@
+New in 0.7.7
+------------
+
+* Applied patch from Decklin Foster, fixing segfault on connecting with a
+  'default' statement in config file (reported by Ari Pollak)
+
+
 New in 0.7.6
 ------------
 
-* Replaced yafc.spec from Ryan Weaver with one by Mandrake (UNTESTED!!!)
+* Replaced yafc.spec from Ryan Weaver with one by Mandrake (untested!)
+* applied patch from Eduardo Pérez, now yafc by default doesn't send
+  email address as anonymous password
+* fixed bug with mkdir/rmdir in wrong directory in ssh mode
+* 'yafc ssh://hostname -u' now asks for username
+* fixed wrong number of days per month
+* removed -o options to ssh when connecting in ssh mode
+* added bookmark option 'noupdate' and bookmark -u option (toggles force
+  disable auto update of bookmark)
 
 
 New in 0.7.5

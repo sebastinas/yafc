@@ -1,4 +1,4 @@
-/* $Id: url.h,v 1.8 2001/05/21 19:54:00 mhe Exp $
+/* $Id: url.h,v 1.9 2002/02/23 13:16:30 mhe Exp $
  *
  * url.h -- splits an URL into its components
  *
@@ -27,8 +27,9 @@ typedef struct url_t {
 	int port;         /* port in host byte order */
 	list *mech;       /* requested security mechanisms to try */
 	bool noproxy;     /* don't connect via the configured proxy */
-	int pasvmode;    /* true if passive mode is requested */
+	int pasvmode;     /* true if passive mode is requested */
 	char *sftp_server; /* path to remote sftp_server program */
+	bool noupdate;    /* true if this bookmark should not be updated */
 } url_t;
 
 url_t *url_create(void);

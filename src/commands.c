@@ -1,4 +1,4 @@
-/* $Id: commands.c,v 1.13 2001/08/24 08:57:02 mhe Exp $
+/* $Id: commands.c,v 1.14 2002/02/23 13:16:30 mhe Exp $
  *
  * commands.c --
  *
@@ -752,8 +752,8 @@ void cmd_chmod(int argc, char **argv)
 	}
 
 	for(li=gl->first; li; li=li->next) {
-		ftp_chmod(((rfile *)li->data)->path, argv[optind]);
-		printf("%s: %s\n", ((rfile *)li->data)->path, ftp_getreply(false));
+		if(ftp_chmod(((rfile *)li->data)->path, argv[optind]) != 0)
+			printf("%s: %s\n", ((rfile *)li->data)->path, ftp_getreply(false));
 	}
 	rglob_destroy(gl);
 }

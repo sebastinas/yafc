@@ -1,4 +1,4 @@
-/* $Id: login.c,v 1.17 2001/07/09 18:47:54 mhe Exp $
+/* $Id: login.c,v 1.18 2002/02/23 13:16:30 mhe Exp $
  *
  * login.c -- connect and login
  *
@@ -113,21 +113,6 @@ void yafc_open(const char *host, unsigned int opt,
 		return;
 	}
 
-#if 0
-	if(ftp_connected()) {
-		if(gvPromptOnDisconnect) {
-			int a = ask(ASKYES|ASKNO, ASKYES,
-						_("Disconnect from %s?"), ftp->host->hostname);
-			if(a == ASKNO) {
-				url_destroy(url);
-				return;
-			}
-		}
-		auto_create_bookmark();
-		ftp_quit();
-		gvars_reset();
-	}
-#else
 	if(ftp_connected()) {
 		listitem *li;
 		bool found_unconnected = false;
@@ -154,7 +139,6 @@ void yafc_open(const char *host, unsigned int opt,
 		ftp_initsigs();
 		init_ftp();
 	}
-#endif
 
 	if(test(opt, OP_ANON) && (!url->protocol ||
 							  strcmp(url->protocol, "ssh") != 0)) {
@@ -174,8 +158,11 @@ void yafc_open(const char *host, unsigned int opt,
 	if(xurl) {
 		url_sethostname(url, xurl->hostname);
 		url_setalias(url, xurl->alias);
-		if(!url->protocol)
+		if(!url->protocol) {
 			url_setprotocol(url, xurl->protocol);
+			if(xurl->protocol && strcmp(xurl->protocol, "ssh") == 0)
+				url_setport(url, 22);
+		}
 
 		if(!test(opt, OP_NOAUTO)) {
 			url_setprotlevel(url, xurl->protlevel);
@@ -186,7 +173,8 @@ void yafc_open(const char *host, unsigned int opt,
 			if(!url->password && url->username && xurl->username
 			   && strcmp(url->username, xurl->username) == 0)
 				url_setpassword(url, xurl->password);
-			if(url->port == -1)
+			if(url->port == -1 && url->protocol && xurl->protocol
+			   && strcmp(url->protocol, xurl->protocol) == 0)
 				url_setport(url, xurl->port);
 			if(!url->mech)
 				url->mech = list_clone(xurl->mech, (listclonefunc)xstrdup);
