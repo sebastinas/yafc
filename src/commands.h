@@ -1,4 +1,4 @@
-/* $Id: commands.h,v 1.8 2002/12/05 22:13:55 mhe Exp $
+/* $Id: commands.h,v 1.9 2003/07/12 10:25:41 mhe Exp $
  *
  * commands.h --
  *
@@ -25,7 +25,7 @@
     fooargs = args_cat(argc, argv, n+1); \
     fprintf(stderr, _("unexpected arguments -- '%s', try '%s --help'" \
 					  " for more information\n"), fooargs, argv[0]); \
-    xfree(fooargs); \
+    free(fooargs); \
     return; \
   }
 
@@ -34,7 +34,7 @@
     char *fooargs; \
     fooargs = args_cat(argc, argv, n+1); \
     fprintf(stderr, _("unexpected arguments -- '%s'\n"), fooargs); \
-    xfree(fooargs); \
+    free(fooargs); \
     return; \
   }
 

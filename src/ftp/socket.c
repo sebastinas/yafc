@@ -1,4 +1,4 @@
-/* $Id: socket.c,v 1.4 2001/05/27 20:30:53 mhe Exp $
+/* $Id: socket.c,v 1.5 2003/07/12 10:25:41 mhe Exp $
  *
  * socket.c --
  *
@@ -62,7 +62,7 @@ void sock_destroy(Socket *sockp)
 
 	if(sockp->connected)
 		close(sockp->handle);
-	xfree(sockp);
+	free(sockp);
 }
 
 int sock_connect_addr(Socket *sockp, struct sockaddr_in *sa)

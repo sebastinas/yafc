@@ -1,4 +1,4 @@
-/* $Id: fxp.c,v 1.11 2002/12/02 12:21:19 mhe Exp $
+/* $Id: fxp.c,v 1.12 2003/07/12 10:25:41 mhe Exp $
  *
  * fxp.c -- transfer files between hosts
  *
@@ -183,7 +183,7 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 	if(test(opt, FXP_PARENTS)) {
 		char *p = base_dir_xptr(fi->path);
 		asprintf(&dest, "%s/%s/%s", output, p, base_name_ptr(fi->path));
-		xfree(p);
+		free(p);
 	} else if(test(opt, FXP_OUTPUT_FILE))
 		dest = xstrdup(output);
 	else
@@ -198,12 +198,12 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 	dest_dir = ftp_path_absolute(dpath);
 	q_dest_dir = bash_backslash_quote(dest_dir);
 	r = ftp_mkpath(q_dest_dir);
-	xfree(q_dest_dir);
-	xfree(dest_dir);
+	free(q_dest_dir);
+	free(dest_dir);
 	if(r == -1) {
 		transfer_mail_msg(_("failed to create directory %s\n"), dest_dir);
-		xfree(dpath);
-		xfree(dest);
+		free(dpath);
+		free(dest);
 		ftp_use(thisftp);
 		return -1;
 	}
@@ -216,7 +216,7 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 		if(f && risdir(f)) {
 			/* can't overwrite a directory */
 			printf(_("%s: is a directory\n"), dest);
-			xfree(dest);
+			free(dest);
 			return 0;
 		}
 	}
@@ -227,7 +227,7 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 		if(test(opt, FXP_SKIP_EXISTING)) {
 			printf(_("Remote file '%s' exists, skipping...\n"),
 				   shortpath(dest, 42, ftp->homedir));
-			xfree(dest);
+			free(dest);
 			ftp_use(thisftp);
 			return 0;
 		}
@@ -244,7 +244,7 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 			if(src_ft != (time_t)-1 && dst_ft != (time_t)-1 && dst_ft >= src_ft) {
 				printf(_("Remote file '%s' is newer than local, skipping...\n"),
 					   shortpath(dest, 42, ftp->homedir));
-				xfree(dest);
+				free(dest);
 				ftp_use(thisftp);
 				return 0;
 			}
@@ -257,12 +257,12 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 							shortpath(dest, 42, ftp->homedir));
 				if(a == ASKCANCEL) {
 					fxp_quit = true;
-					xfree(dest);
+					free(dest);
 					ftp_use(thisftp);
 					return 0;
 				}
 				else if(a == ASKNO) {
-					xfree(dest);
+					free(dest);
 					ftp_use(thisftp);
 					return 0;
 				}
@@ -283,7 +283,7 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 		how = fxpUnique;
 
 	r = do_the_fxp(thisftp, fi->path, fxp_target, dest, how, opt);
-	xfree(dest);
+	free(dest);
 	if(r != 0) {
 		ftp_use(thisftp);
 		return -1;
@@ -386,7 +386,7 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 				char *xcurdir = base_dir_xptr(opath);
 				link = path_absolute(fp->link, xcurdir, ftp->homedir);
 				stripslash(link);
-				xfree(xcurdir);
+				free(xcurdir);
 				ftp_trace("found link: '%s' -> '%s'\n", opath, link);
 			}
 
@@ -446,13 +446,13 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 						q_recurs_mask = bash_backslash_quote(recurs_mask);
 						rglob_glob(rgl, q_recurs_mask, true, true,
 								   fxp_exclude_func);
-						xfree(q_recurs_mask);
+						free(q_recurs_mask);
 						if(list_numitem(rgl) > 0)
 							fxpfiles(rgl, opt, recurs_output);
 						if(test(opt, FXP_PRESERVE))
 							fxp_preserve_attribs(fp, recurs_output);
 						rglob_destroy(rgl);
-						xfree(recurs_output);
+						free(recurs_output);
 					}
 			} else if(test(opt, FXP_VERBOSE)) {
 				fprintf(stderr, _("%s: omitting directory\n"),
@@ -533,11 +533,11 @@ void cmd_fxp(int argc, char **argv)
 	};
 
 	if(fxp_glob_mask) {
-		xfree(fxp_glob_mask);
+		free(fxp_glob_mask);
 		fxp_glob_mask = 0;
 	}
 	if(fxp_dir_glob_mask) {
-		xfree(fxp_dir_glob_mask);
+		free(fxp_dir_glob_mask);
 		fxp_dir_glob_mask = 0;
 	}
 #ifdef HAVE_REGEX
@@ -580,7 +580,7 @@ void cmd_fxp(int argc, char **argv)
 				  fxp_skip_empty = true;
 				  break;
 			case '3': /* --dir-mask=GLOB */
-				xfree(fxp_dir_glob_mask);
+				free(fxp_dir_glob_mask);
 				fxp_dir_glob_mask = xstrdup(optarg);
 				unquote(fxp_dir_glob_mask);
 				break;
@@ -608,12 +608,12 @@ void cmd_fxp(int argc, char **argv)
 				opt |= FXP_INTERACTIVE;
 				break;
 			case 'L': /* --logfile=FILE */
-				xfree(logfile);
+				free(logfile);
 				logfile = xstrdup(optarg);
 				unquote(logfile);
 				break;
 			case 'm': /* --mask=GLOB */
-				xfree(fxp_glob_mask);
+				free(fxp_glob_mask);
 				fxp_glob_mask = xstrdup(optarg);
 				unquote(fxp_glob_mask);
 				break;
@@ -778,7 +778,7 @@ void cmd_fxp(int argc, char **argv)
 			if(ftp->taglist && test(opt, FXP_TAGGED))
 				fxpfiles(ftp->taglist, opt, fxp_output);
 
-			xfree(fxp_output);
+			free(fxp_output);
 
 			transfer_end_nohup();
 		}
@@ -802,6 +802,6 @@ void cmd_fxp(int argc, char **argv)
 	if(ftp->taglist && test(opt, FXP_TAGGED))
 		fxpfiles(ftp->taglist, opt, fxp_output);
 
-	xfree(fxp_output);
+	free(fxp_output);
 	gvInTransfer = false;
 }

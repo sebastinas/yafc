@@ -1,4 +1,4 @@
-/* $Id: get.c,v 1.15 2002/12/02 12:21:18 mhe Exp $
+/* $Id: get.c,v 1.16 2003/07/12 10:25:41 mhe Exp $
  *
  * get.c -- get file(s) from remote
  *
@@ -132,7 +132,7 @@ static int do_the_get(const char *src, const char *dest,
 			transfer_mail_msg(_("failed to receive %s: %s\n"),
 							  src, ftp_getreply(false));
 	}
-	xfree(fulldest);
+	free(fulldest);
 #if 0 && (defined(HAVE_SETPROCTITLE) || defined(linux))
 	if(gvUseEnvString && ftp_connected())
 		setproctitle("%s", ftp->url->hostname);
@@ -191,7 +191,7 @@ static int getfile(const rfile *fi, unsigned int opt,
 	if(test(opt, GET_PARENTS)) {
 		char *apath = base_dir_xptr(fi->path);
 		asprintf(&dest, "%s%s/%s", output, apath, destname);
-		xfree(apath);
+		free(apath);
 	} else {
 		/* check if -o option is given, if GET_OUTPUT_FILE is set, we only
 		 * transfer one file and output is set to the filename. However, if
@@ -222,7 +222,7 @@ static int getfile(const rfile *fi, unsigned int opt,
 			if(r != 0) {
 				transfer_mail_msg(_("failed to create directory %s\n"),
 								  destdir);
-				xfree(destdir);
+				free(destdir);
 				return -1;
 			}
 			/* change permission and group, if requested */
@@ -237,7 +237,7 @@ static int getfile(const rfile *fi, unsigned int opt,
 				if(chown(destdir, -1, group_change) != 0)
 					perror(dest);
 			}
-			xfree(destdir);
+			free(destdir);
 		}
 	}
 
@@ -283,7 +283,7 @@ static int getfile(const rfile *fi, unsigned int opt,
 						shortpath(dest, 42, gvLocalHomeDir),
 						sb.st_size, e ? e : "unknown date",
 						ftp_filesize(fi->path), ctime(&ft));
-				xfree(e);
+				free(e);
 				if(a == ASKCANCEL) {
 					get_quit = true;
 					return 0;
@@ -371,7 +371,7 @@ static int getfile(const rfile *fi, unsigned int opt,
 	}
 
 	if(free_dest)
-		xfree(dest);
+		free(dest);
 
 	return ret;
 }
@@ -453,7 +453,7 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
 				char *xcurdir = base_dir_xptr(opath);
 				link = path_absolute(fp->link, xcurdir, ftp->homedir);
 				stripslash(link);
-				xfree(xcurdir);
+				free(xcurdir);
 				ftp_trace("found link: '%s' -> '%s'\n", opath, link);
 			}
 
@@ -514,13 +514,13 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
 						asprintf(&recurs_mask, "%s/*", opath);
 						q_recurs_mask = bash_backslash_quote(recurs_mask);
 						rglob_glob(rgl, q_recurs_mask, true, true, get_exclude_func);
-						xfree(q_recurs_mask);
+						free(q_recurs_mask);
 						if(list_numitem(rgl) > 0)
 							getfiles(rgl, opt, recurs_output);
 						if(test(opt, GET_PRESERVE))
 							get_preserve_attribs(fp, recurs_output);
 						rglob_destroy(rgl);
-						xfree(recurs_output);
+						free(recurs_output);
 					}
 			} else if(test(opt, GET_VERBOSE)) {
 				fprintf(stderr, _("%s: omitting directory\n"),
@@ -610,11 +610,11 @@ void cmd_get(int argc, char **argv)
 	}
 
 	if(get_glob_mask) {
-		xfree(get_glob_mask);
+		free(get_glob_mask);
 		get_glob_mask = 0;
 	}
 	if(get_dir_glob_mask) {
-		xfree(get_dir_glob_mask);
+		free(get_dir_glob_mask);
 		get_dir_glob_mask = 0;
 	}
 #ifdef HAVE_REGEX
@@ -684,7 +684,7 @@ void cmd_get(int argc, char **argv)
 			  get_skip_empty = true;
 			  break;
 		case '3': /* --dir-mask=GLOB */
-			xfree(get_dir_glob_mask);
+			free(get_dir_glob_mask);
 			get_dir_glob_mask = xstrdup(optarg);
 			unquote(get_dir_glob_mask);
 			break;
@@ -711,7 +711,7 @@ void cmd_get(int argc, char **argv)
 			opt |= GET_FORCE;
 			break;
 		case 'm': /* --mask */
-			xfree(get_glob_mask);
+			free(get_glob_mask);
 			get_glob_mask = xstrdup(optarg);
 			unquote(get_glob_mask);
 			break;
@@ -774,7 +774,7 @@ void cmd_get(int argc, char **argv)
 			opt |= GET_UNIQUE;
 			break;
 		  case 'L':
-			  xfree(logfile);
+			  free(logfile);
 			  logfile = xstrdup(optarg);
 			  unquote(logfile);
 			  break;
@@ -864,7 +864,7 @@ void cmd_get(int argc, char **argv)
 			rglob_destroy(gl);
 			if(ftp->taglist && test(opt, GET_TAGGED))
 				getfiles(ftp->taglist, opt, get_output);
-			xfree(get_output);
+			free(get_output);
 
 			transfer_end_nohup();
 		}
@@ -886,7 +886,7 @@ void cmd_get(int argc, char **argv)
 	rglob_destroy(gl);
 	if(ftp->taglist && test(opt, GET_TAGGED))
 		getfiles(ftp->taglist, opt, get_output);
-	xfree(get_output);
+	free(get_output);
 	mode_free(cmod);
 	cmod = 0;
 	gvInTransfer = false;

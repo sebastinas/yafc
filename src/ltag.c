@@ -1,4 +1,4 @@
-/* $Id: ltag.c,v 1.5 2002/11/06 11:58:34 mhe Exp $
+/* $Id: ltag.c,v 1.6 2003/07/12 10:25:41 mhe Exp $
  *
  * ltag.c -- tag local files
  *
@@ -44,11 +44,11 @@ void save_ltaglist(const char *alt_filename)
 	if(alt_filename == 0)
 		asprintf(&e, "%s/taglist.local", gvWorkingDirectory);
 	f = tilde_expand_home(alt_filename ? alt_filename : e, gvLocalHomeDir);
-	xfree(e);
+	free(e);
 	fp = fopen(f, "w");
 	if(!fp) {
 		perror(_("Unable to save local taglist file"));
-		xfree(f);
+		free(f);
 		return;
 	}
 
@@ -57,7 +57,7 @@ void save_ltaglist(const char *alt_filename)
 		fprintf(fp, "%s\n", (char *)li->data);
 	fclose(fp);
 	fprintf(stderr, _("Saved local taglist to %s\n"), f);
-	xfree(f);
+	free(f);
 }
 
 void load_ltaglist(bool showerr, bool always_autoload,
@@ -75,7 +75,7 @@ void load_ltaglist(bool showerr, bool always_autoload,
 	if(alt_filename == 0)
 		asprintf(&e, "%s/taglist.local", gvWorkingDirectory);
 	f = tilde_expand_home(alt_filename ? alt_filename : e, gvLocalHomeDir);
-	xfree(e);
+	free(e);
 	fp = fopen(f, "r");
 	if(!fp) {
 		if(showerr) {
@@ -84,7 +84,7 @@ void load_ltaglist(bool showerr, bool always_autoload,
 			else
 				fprintf(stderr, _("No saved local taglist\n"));
 		}
-		xfree(f);
+		free(f);
 		return;
 	}
 
@@ -118,7 +118,7 @@ void load_ltaglist(bool showerr, bool always_autoload,
 	fclose(fp);
 	if(alt_filename == 0)
 		unlink(f);
-	xfree(f);
+	free(f);
 }
 
 static void show_ltaglist(void)

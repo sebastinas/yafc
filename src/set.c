@@ -1,4 +1,4 @@
-/* $Id: set.c,v 1.7 2001/05/12 18:44:37 mhe Exp $
+/* $Id: set.c,v 1.8 2003/07/12 10:25:41 mhe Exp $
  *
  * set.c -- sets and shows variables from within Yafc
  *
@@ -105,7 +105,7 @@ static void set_type(void *val)
 static void set_anonpass(void *val)
 {
 	if(val) {
-		xfree(gvAnonPasswd);
+		free(gvAnonPasswd);
 		gvAnonPasswd = xstrdup((char *)val);
 	}
 	printf(_("anonymous password is '%s'\n"), gvAnonPasswd);

@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.35 2002/12/05 22:13:30 mhe Exp $
+/* $Id: ftp.c,v 1.36 2003/07/12 10:25:41 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -45,7 +45,7 @@ Ftp *ftp_create(void)
 	ftp->tmp_verbosity = vbUnset;
 	ftp->last_mkpath = 0;
 	ftp->cache = list_new((listfunc)rdir_destroy);
-	ftp->dirs_to_flush = list_new((listfunc)xfree);
+	ftp->dirs_to_flush = list_new((listfunc)free);
 	ftp->reply_timeout = 30;
 	ftp->open_timeout = 30;
 	ftp->taglist = list_new((listfunc)rfile_destroy);
@@ -125,9 +125,9 @@ void ftp_destroy(Ftp *ftp)
 	ftp->data = ftp->ctrl = 0;
 	url_destroy(ftp->url);
 	ftp->url = 0;
-	xfree(ftp->homedir);
-	xfree(ftp->curdir);
-	xfree(ftp->prevdir);
+	free(ftp->homedir);
+	free(ftp->curdir);
+	free(ftp->prevdir);
 	list_free(ftp->taglist);
 	args_destroy(ftp->ssh_args);
 	ftp->ssh_args = 0;
@@ -136,7 +136,7 @@ void ftp_destroy(Ftp *ftp)
 	sec_end();
 #endif
 
-	xfree(ftp);
+	free(ftp);
 }
 
 static int proxy_type(url_t *url)
@@ -204,7 +204,7 @@ void ftp_reset_vars(void)
 	ftp->has_mlsd_command = true;
 
 	list_free(ftp->dirs_to_flush);
-	ftp->dirs_to_flush = list_new((listfunc)xfree);
+	ftp->dirs_to_flush = list_new((listfunc)free);
 
 	list_free(ftp->cache);
 	ftp->cache = list_new((listfunc)rdir_destroy);
@@ -217,7 +217,7 @@ void ftp_reset_vars(void)
 
 	ftp->reply_timeout = gvCommandTimeout;
 
-	xfree(ftp->last_mkpath);
+	free(ftp->last_mkpath);
 	ftp->last_mkpath = 0;
 
 #ifdef SECFTP
@@ -732,9 +732,9 @@ int get_username(url_t *url, const char *guessed_username, bool isproxy)
 		else
 			prompt = xstrdup(_("login (anonymous): "));
 		e = ftp->getuser_hook(prompt);
-		xfree(prompt);
+		free(prompt);
 		if(e && *e == 0) {
-			xfree(e);
+			free(e);
 			e = 0;
 		}
 
@@ -747,7 +747,7 @@ int get_username(url_t *url, const char *guessed_username, bool isproxy)
 			url_setusername(url, guessed_username);
 		} else {
 			url_setusername(url, e);
-			xfree(e);
+			free(e);
 		}
 	}
 	return 0;
@@ -768,10 +768,10 @@ static int get_password(url_t *url, const char *anonpass, bool isproxy)
 				else
 					prompt = xstrdup(_("password: "));
 				e = ftp->getuser_hook(prompt);
-				xfree(prompt);
+				free(prompt);
 			}
 			if(!e || !*e) {
-				xfree(e);
+				free(e);
 				e = xstrdup(anonpass);
 			}
 		} else {
@@ -786,7 +786,7 @@ static int get_password(url_t *url, const char *anonpass, bool isproxy)
 			return -1;
 		}
 		url_setpassword(url, e);
-		xfree(e);
+		free(e);
 	}
 	return 0;
 }
@@ -1082,7 +1082,7 @@ char *ftp_getcurdir(void)
 
 void ftp_update_curdir_x(const char *p)
 {
-	xfree(ftp->prevdir);
+	free(ftp->prevdir);
 	ftp->prevdir = ftp->curdir;
 	ftp->curdir = xstrdup(p);
 	path_dos2unix(ftp->curdir);
@@ -1090,7 +1090,7 @@ void ftp_update_curdir_x(const char *p)
 
 static void ftp_update_curdir(void)
 {
-	xfree(ftp->prevdir);
+	free(ftp->prevdir);
 	ftp->prevdir = ftp->curdir;
 	ftp->curdir = ftp_getcurdir();
 }
@@ -1127,7 +1127,7 @@ int ftp_chdir(const char *path)
 					char *e = xstrndup(sdq+1, edq-sdq-1);
 					stripslash(e);
 					ftp_update_curdir_x(e);
-					xfree(e);
+					free(e);
 					ftp_trace("Parsed cwd '%s' from reply\n", ftp->curdir);
 				}
 			}
@@ -1171,7 +1171,7 @@ static int ftp_mkdir_verb(const char *path, verbose_t verb)
 	ftp_cmd("MKD %s", p);
 	if(ftp->code == ctComplete)
 		ftp_cache_flush_mark_for(p);
-	xfree(p);
+	free(p);
 	return ftp->code == ctComplete ? 0 : -1;
 }
 
@@ -1195,7 +1195,7 @@ int ftp_rmdir(const char *path)
 		ftp_cache_flush_mark(p);
 		ftp_cache_flush_mark_for(p);
 	}
-	xfree(p);
+	free(p);
 	return ftp->code == ctComplete ? 0 : -1;
 }
 
@@ -1325,7 +1325,7 @@ rdirectory *ftp_read_directory(const char *path)
 
 	asprintf(&e, "%s/yafclist.tmp", gvWorkingDirectory);
 	tmpfilename = make_unique_filename(e);
-	xfree(e);
+	free(e);
 	fp = fopen(tmpfilename, "w+");
 
 	if(fp == 0) {
@@ -1336,8 +1336,8 @@ rdirectory *ftp_read_directory(const char *path)
 
 		if(fp == 0) {
 			ftp_err("%s: %s\n", tmpfilename, strerror(errno));
-			xfree(dir);
-			xfree(tmpfilename);
+			free(dir);
+			free(tmpfilename);
 			return 0;
 		}
 	}
@@ -1370,7 +1370,7 @@ rdirectory *ftp_read_directory(const char *path)
 		 * connection, however, 'MLSD link-to-dir/' works fine.
 		 */
 		_failed = (ftp_list("MLSD", asdf, fp) != 0);
-		xfree(asdf);
+		free(asdf);
 #else
 		_failed = (ftp_list("MLSD", 0, fp) != 0);
 #endif
@@ -1399,17 +1399,17 @@ rdirectory *ftp_read_directory(const char *path)
 	fclose(fp);
 	ftp_trace("added directory '%s' to cache\n", dir);
 	list_additem(ftp->cache, rdir);
-	xfree(dir);
+	free(dir);
 	unlink(tmpfilename);
-	xfree(tmpfilename);
+	free(tmpfilename);
 	return rdir;
 
   failed: /* forgive me father, for I have goto'ed */
-	xfree(dir);
+	free(dir);
 	if(fp)
 		fclose(fp);
 	unlink(tmpfilename);
-	xfree(tmpfilename);
+	free(tmpfilename);
 	return 0;
 }
 
@@ -1424,7 +1424,7 @@ rdirectory *ftp_get_directory(const char *path)
 	rdir = ftp_cache_get_directory(ap);
 	if(!rdir)
 		rdir = ftp_read_directory(ap);
-	xfree(ap);
+	free(ap);
 	return rdir;
 }
 
@@ -1447,11 +1447,11 @@ rfile *ftp_get_file(const char *path)
 	if(!f) {
 		char *p = base_dir_xptr(ap);
 		rdirectory *rdir = ftp_get_directory(p);
-		xfree(p);
+		free(p);
 		if(rdir)
 			f = rdir_get_file(rdir, base_name_ptr(ap));
 	}
-	xfree(ap);
+	free(ap);
 	return f;
 }
 
@@ -1521,7 +1521,7 @@ int ftp_mkpath(const char *path)
 		else
 			foo = xstrdup(tmp);
 
-		xfree(e);
+		free(e);
 		e = foo;
 
 
@@ -1539,11 +1539,11 @@ int ftp_mkpath(const char *path)
 		}
 	}
 
-	xfree(ftp->last_mkpath);
+	free(ftp->last_mkpath);
 	ftp->last_mkpath = path_absolute(path, ftp->curdir, ftp->homedir);
 
-	xfree(e);
-	xfree(orgp);
+	free(e);
+	free(orgp);
 	return one_created;
 }
 
@@ -1597,7 +1597,7 @@ int ftp_rename(const char *oldname, const char *newname)
 	stripslash(on);
 	ftp_cmd("RNFR %s", on);
 	if(ftp->code != ctContinue) {
-		xfree(on);
+		free(on);
 		return -1;
 	}
 
@@ -1605,8 +1605,8 @@ int ftp_rename(const char *oldname, const char *newname)
 	stripslash(nn);
 	ftp_cmd("RNTO %s", nn);
 	if(ftp->code != ctComplete) {
-		xfree(on);
-		xfree(nn);
+		free(on);
+		free(nn);
 		return -1;
 	}
 
@@ -1751,8 +1751,8 @@ int ftp_maybe_isdir(rfile *fp)
 		char *adir = base_dir_xptr(fp->path);
 		char *ap = path_absolute(fp->link, adir, ftp->homedir);
 		rfile *lnfp = ftp_cache_get_file(ap);
-		xfree(adir);
-		xfree(ap);
+		free(adir);
+		free(ap);
 		if(lnfp)
 			return risdir(lnfp) ? 1 : 0;
 		else

@@ -1,4 +1,4 @@
-/* $Id: utils.c,v 1.3 2001/05/12 18:44:37 mhe Exp $
+/* $Id: utils.c,v 1.4 2003/07/12 10:25:41 mhe Exp $
  *
  * utils.c -- small (generic) functions
  *
@@ -28,7 +28,7 @@ void listify_string(const char *str, list *lp)
 		if(list_search(lp, (listsearchfunc)strcmp, e) == 0)
 			list_additem(lp, xstrdup(e));
 	}
-	xfree(orgs);
+	free(orgs);
 }
 
 char *stringify_list(list *lp)
@@ -110,7 +110,7 @@ void print_xterm_title(void)
 										 : gvXtermTitle2)
 									  : gvXtermTitle1);
 	print_xterm_title_string(xterm_title);
-	xfree(xterm_title);
+	free(xterm_title);
 }
 
 void reset_xterm_title(void)
@@ -119,7 +119,7 @@ void reset_xterm_title(void)
 
 	asprintf(&e, "\x1B]0;%s\x07", gvTerm);
 	print_xterm_title_string(e);
-	xfree(e);
+	free(e);
 }
 
 char* get_mode_string(mode_t m)

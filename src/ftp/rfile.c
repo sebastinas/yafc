@@ -1,4 +1,4 @@
-/* $Id: rfile.c,v 1.10 2002/12/02 12:26:29 mhe Exp $
+/* $Id: rfile.c,v 1.11 2003/07/12 10:25:41 mhe Exp $
  *
  * rfile.c -- representation of a remote file
  *
@@ -43,13 +43,13 @@ rfile *rfile_clone(const rfile *f)
 
 void rfile_clear(rfile *f)
 {
-	xfree(f->perm);
-	xfree(f->owner);
-	xfree(f->group);
-	xfree(f->color);
-	xfree(f->date);
-	xfree(f->link);
-	xfree(f->path);
+	free(f->perm);
+	free(f->owner);
+	free(f->group);
+	free(f->color);
+	free(f->date);
+	free(f->link);
+	free(f->path);
 	f->perm = f->owner = f->group = f->color = 0;
 	f->date = f->link = f->path = 0;
 	f->nhl = 0;
@@ -62,7 +62,7 @@ void rfile_destroy(rfile *f)
 	if(!f)
 		return;
 	rfile_clear(f);
-	xfree(f);
+	free(f);
 }
 
 bool risdir(const rfile *f)
@@ -116,17 +116,17 @@ void rfile_fake(rfile *f, const char *path)
 {
 	ftp_trace("faking file '%s'\n", path);
 
-	xfree(f->perm);
+	free(f->perm);
 	f->perm = xstrdup("-rw-r-r-");
-	xfree(f->owner);
+	free(f->owner);
 	f->owner = xstrdup("owner");
-	xfree(f->group);
+	free(f->group);
 	f->group = xstrdup("group");
-	xfree(f->link);
+	free(f->link);
 	f->link = 0;
-	xfree(f->path);
+	free(f->path);
 	f->path = xstrdup(path);
-	xfree(f->date);
+	free(f->date);
 	f->date = xstrdup("Jan  0  1900");
 	f->mtime = 0;
 	f->nhl = 0;
@@ -264,9 +264,9 @@ if(!e || !*e) { \
 #define NEXT_FIELD2 \
 e = strqsep(&cf, ' '); \
 if(!e || !*e) { \
-    xfree(m); \
-    xfree(d); \
-    xfree(y); \
+    free(m); \
+    free(d); \
+    free(y); \
     return -1; \
 }
 
@@ -322,7 +322,7 @@ static int rfile_parse_eplf(rfile *f, char *str, const char *dirpath)
 			break;
 		case 'm':
 			f->mtime = strtoul(e+1, 0, 10);
-			xfree(f->date);
+			free(f->date);
 			f->date = time_to_string(f->mtime);
 			break;
 		case 's':
@@ -436,11 +436,11 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 	{
 		/* ls -l */
 		f->nhl = atoi(saved_field[0]);
-		xfree(saved_field[0]);
+		free(saved_field[0]);
 		f->owner = saved_field[1];
 		f->group = saved_field[2];
 		f->size = atol(saved_field[3]);
-		xfree(saved_field[3]);
+		free(saved_field[3]);
 		m = saved_field[4];
 		NEXT_FIELD2;
 		d = xstrdup(e);
@@ -450,23 +450,23 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 	{
 		/* ls -lG */
 		f->nhl = atoi(saved_field[0]);
-		xfree(saved_field[0]);
+		free(saved_field[0]);
 		f->owner = saved_field[1];
 		f->group = xstrdup("group");
 		f->size = atol(saved_field[2]);
-		xfree(saved_field[2]);
+		free(saved_field[2]);
 		m = saved_field[3];
 		d = saved_field[4];
 		NEXT_FIELD2;
 		y = xstrdup(e);
 	} else if(month_number(saved_field[2]) != -1)
 	{
-		xfree(saved_field[0]);
+		free(saved_field[0]);
 		f->nhl = 0;
 		f->owner = xstrdup("owner");;
 		f->group = xstrdup("group");
 		f->size = atol(saved_field[1]);
-		xfree(saved_field[1]);
+		free(saved_field[1]);
 		m = saved_field[2];
 		d = saved_field[3];
 		y = saved_field[4];
@@ -477,12 +477,12 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 			im -= 1; /* should be 0-based */
 
 			f->nhl = atoi(saved_field[0]);
-			xfree(saved_field[0]);
+			free(saved_field[0]);
 			f->owner = saved_field[1];
 			f->group = saved_field[2];
 			f->size = atol(saved_field[3]);
-			xfree(saved_field[3]);
-			xfree(saved_field[4]);
+			free(saved_field[3]);
+			free(saved_field[4]);
 
 			e = strqsep(&cf, ' '); /* HH:MM */
 			sscanf(e, "%d:%d", &ih, &imin);
@@ -516,11 +516,11 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 				time_parsed = true;
 			}
 		} else {
-			xfree(saved_field[0]);
-			xfree(saved_field[1]);
-			xfree(saved_field[2]);
-			xfree(saved_field[3]);
-			xfree(saved_field[4]);
+			free(saved_field[0]);
+			free(saved_field[1]);
+			free(saved_field[2]);
+			free(saved_field[3]);
+			free(saved_field[4]);
 			return -1;
 		}
 	}
@@ -530,9 +530,9 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 		rfile_parse_time(f, m, d, y);
 		if(f->mtime == (time_t)-1)
 			ftp_trace("rfile_parse_time failed! date == '%s'\n", f->date);
-		xfree(m);
-		xfree(d);
-		xfree(y);
+		free(m);
+		free(d);
+		free(y);
 	}
 
 	if(!cf)
@@ -703,16 +703,16 @@ static int rfile_parse_mlsd(rfile *f, char *str, const char *dirpath)
 			ts.tm_year -= 1900;
 			ts.tm_mon--;
 			f->mtime = gmt_mktime(&ts);
-			xfree(f->date);
+			free(f->date);
 			f->date = time_to_string(f->mtime);
 		} else if(strcasecmp(factname, "UNIX.mode") == 0) {
-			xfree(f->perm);
+			free(f->perm);
 			f->perm = perm2string(strtoul(value, 0, 8));
 		} else if(strcasecmp(factname, "UNIX.gid") == 0) {
-			xfree(f->group);
+			free(f->group);
 			f->group = xstrdup(value);
 		} else if(strcasecmp(factname, "UNIX.uid") == 0) {
-			xfree(f->owner);
+			free(f->owner);
 			f->owner = xstrdup(value);
 		}
 	}
@@ -736,7 +736,7 @@ int rfile_parse(rfile *f, char *str, const char *dirpath, bool is_mlsd)
 	if(is_mlsd) {
 		char *tmp = xstrdup(str);
 		r = rfile_parse_mlsd(f, tmp, dirpath);
-		xfree(tmp);
+		free(tmp);
 		return r;
 	}
 
@@ -755,7 +755,7 @@ int rfile_parse(rfile *f, char *str, const char *dirpath, bool is_mlsd)
 /*		else if(ftp->LIST_type == ltMlsd)
 		r = rfile_parse_mlsd(f, tmp, dirpath);*/
 
-		xfree(tmp);
+		free(tmp);
 
 		if(r == -1) {
 			rfile_clear(f);

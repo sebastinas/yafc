@@ -48,7 +48,7 @@
 # define KRB_TICKET_GRANTING_TICKET "krbtgt"
 #endif
 
-/*RCSID("$Id: kauth.c,v 1.5 2002/12/05 22:12:37 mhe Exp $");*/
+/*RCSID("$Id: kauth.c,v 1.6 2003/07/12 10:25:41 mhe Exp $");*/
 
 void cmd_kauth(int argc, char **argv)
 {
@@ -115,7 +115,7 @@ void cmd_kauth(int argc, char **argv)
     asprintf(&pwbuf, _("Password for %s:"), name);
     if (des_read_pw_string (passwd, sizeof(passwd)-1, pwbuf, 0))
         *passwd = '\0';
-	xfree(pwbuf);
+	free(pwbuf);
     des_string_to_key(passwd, &key);
 
     des_key_sched(&key, schedule);
@@ -145,7 +145,7 @@ void cmd_kauth(int argc, char **argv)
     }
     memset (tktcopy.dat, 0, tktcopy.length);
     ret = ftp_cmd("SITE KAUTH %s %s", name, p);
-    xfree(p);
+    free(p);
 	set_command_prot(save);
 }
 

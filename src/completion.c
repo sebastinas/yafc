@@ -1,4 +1,4 @@
-/* $Id: completion.c,v 1.9 2002/11/04 14:16:13 mhe Exp $
+/* $Id: completion.c,v 1.10 2003/07/12 10:25:41 mhe Exp $
  *
  * completion.c -- readline completion functions
  *
@@ -176,7 +176,7 @@ static char *remote_completion_function(const char *text, int state)
 		dir_is_cached = (rdir != 0);
 		if(!rdir)
 			rdir = ftp_read_directory(ap);
-		xfree(ap);
+		free(ap);
 
 		if(gvWaitingDots)
 			rl_do_undo(); /* remove the dots */
@@ -185,7 +185,7 @@ static char *remote_completion_function(const char *text, int state)
 			rl_forced_update_display();
 
 		if(!rdir) {
-			xfree(dir);
+			free(dir);
 			return 0;
 		}
 		unquoted = bash_dequote_filename(base_name_ptr(text), 0);
@@ -225,7 +225,7 @@ static char *remote_completion_function(const char *text, int state)
 				char *tmp;
 				tmp = ret;
 				asprintf(&ret, "%s/", tmp);
-				xfree(tmp);
+				free(tmp);
 #endif
 			} else {
 #if (HAVE_LIBREADLINE >= 210)
@@ -235,8 +235,8 @@ static char *remote_completion_function(const char *text, int state)
 			return ret;
 		}
     }
-	xfree(unquoted);
-	xfree(dir);
+	free(unquoted);
+	free(dir);
 	return 0;
 }
 
@@ -381,14 +381,14 @@ char **the_complete_function(char *text, int start, int end)
 				e = strqsep(&c, ' ');
 				cp = find_func(e, false);
 				if(!cp) {
-					xfree(orgc);
+					free(orgc);
 					return 0;
 				}
 				cpl = cp->cpltype;
 			}
 		} else
 			cpl = cpCommand;
-		xfree(orgc);
+		free(orgc);
 	} else
 		cpl = force_completion_type;
 
@@ -439,7 +439,7 @@ char **the_complete_function(char *text, int start, int end)
 										local_taglist_completion_function);
 		break;
 	}
-	xfree(text);
+	free(text);
     return matches;
 }
 

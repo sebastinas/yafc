@@ -1,4 +1,4 @@
-/* $Id: list.c,v 1.12 2002/05/31 07:41:03 mhe Exp $
+/* $Id: list.c,v 1.13 2003/07/12 10:25:41 mhe Exp $
  *
  * list.c -- the remote cached 'ls' command
  *
@@ -102,7 +102,7 @@ static int print_filename(rfile *fi, unsigned opt, bool doclr)
 			: xstrdup(base_name_ptr(fi->path));
 		fix_unprintable(e);
 		len += printf("%s", e);
-		xfree(e);
+		free(e);
 	}
 	if(doclr && fi->color)
 		printf("%s", endcolor());
@@ -146,12 +146,12 @@ static void ls_long(list *gl, unsigned opt, bool doclr)
 			char *lnpath = path_absolute(fi->link, fipath, ftp->homedir);
 			rfile *lnfi = ftp_cache_get_file(lnpath);
 			print_filename(fi, opt & ~LS_CLASSIFY, doclr);
-			xfree(lnpath);
-			xfree(fipath);
+			free(lnpath);
+			free(fipath);
 			printf(" -> ");
 			if(lnfi) {
 				lnfi = rfile_clone(lnfi);
-				xfree(lnfi->path);
+				free(lnfi->path);
 				lnfi->path = xstrdup(fi->link);
 				print_filename(lnfi, opt|LS_WPATH, doclr);
 			} else {
@@ -554,7 +554,7 @@ void cmd_ls(int argc, char **argv)
 						isdir = true;
 					else {
 						rf = ftp_get_file(q);
-						xfree(q);
+						free(q);
 						if(rf && ftp_maybe_isdir(rf) == 1)
 							isdir = true;
 					}
@@ -566,7 +566,7 @@ void cmd_ls(int argc, char **argv)
 			if(isdir) {
 				asprintf(&f, "%s/*", e);
 				rglob_glob(gl, f, false, false, dontlist);
-				xfree(f);
+				free(f);
 			} else
 				rglob_glob(gl, e, false, false, dontlist);
 		}

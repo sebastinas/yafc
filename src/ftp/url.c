@@ -1,4 +1,4 @@
-/* $Id: url.c,v 1.9 2002/05/09 13:50:44 mhe Exp $
+/* $Id: url.c,v 1.10 2003/07/12 10:25:41 mhe Exp $
  *
  * url.c -- splits an URL into its components
  *
@@ -27,7 +27,7 @@ url_t *url_create(void)
 	urlp = (url_t *)xmalloc(sizeof(url_t));
 	urlp->port = -1;
 	urlp->pasvmode = -1;
-	urlp->mech = list_new((listfunc)xfree);
+	urlp->mech = list_new((listfunc)free);
 	urlp->noupdate = false;
 
 	return urlp;
@@ -68,18 +68,18 @@ url_t *url_clone(const url_t *urlp)
 void url_destroy(url_t *urlp)
 {
 	if(urlp) {
-		xfree(urlp->protocol);
-		xfree(urlp->username);
+		free(urlp->protocol);
+		free(urlp->username);
 		if(urlp->password)
 			memset(urlp->password, 0, strlen(urlp->password));
-		xfree(urlp->password);
-		xfree(urlp->hostname);
-		xfree(urlp->alias);
-		xfree(urlp->directory);
-		xfree(urlp->protlevel);
+		free(urlp->password);
+		free(urlp->hostname);
+		free(urlp->alias);
+		free(urlp->directory);
+		free(urlp->protlevel);
 		list_free(urlp->mech);
-		xfree(urlp->sftp_server);
-		xfree(urlp);
+		free(urlp->sftp_server);
+		free(urlp);
 	}
 }
 
@@ -128,14 +128,14 @@ void url_parse(url_t *urlp, const char *str)
 	unquote(adr);
 	url_sethostname(urlp, adr);
 
-	xfree(_adr);
+	free(_adr);
 }
 
 void url_setprotocol(url_t *urlp, const char *protocol)
 {
 	int i;
 
-	xfree(urlp->protocol);
+	free(urlp->protocol);
 	urlp->protocol = xstrdup(protocol);
 	for(i=0;urlp->protocol && urlp->protocol[i];i++)
 		/* RFC 1738 says this should be lowercase */
@@ -144,30 +144,30 @@ void url_setprotocol(url_t *urlp, const char *protocol)
 
 void url_sethostname(url_t *urlp, const char *hostname)
 {
-	xfree(urlp->hostname);
+	free(urlp->hostname);
 	urlp->hostname = decode_rfc1738(hostname);
 }
 
 void url_setalias(url_t *urlp, const char *alias)
 {
-	xfree(urlp->alias);
+	free(urlp->alias);
 	urlp->alias = decode_rfc1738(alias);
 }
 
 void url_setusername(url_t *urlp, const char *username)
 {
-	xfree(urlp->username);
+	free(urlp->username);
 	urlp->username = decode_rfc1738(username);
 }
 
 void url_setpassword(url_t *urlp, const char *password)
 {
-	xfree(urlp->password);
+	free(urlp->password);
 	if(password && strncmp(password, "[base64]", 8) == 0) {
 		urlp->password = (char *)xmalloc(strlen(password+8)*2+1);
 		if(base64_decode(password+8, urlp->password) < 0) {
 			fprintf(stderr, "failed to decode password\n");
-			xfree(urlp->password);
+			free(urlp->password);
 			urlp->password = 0;
 		}
 	}
@@ -177,13 +177,13 @@ void url_setpassword(url_t *urlp, const char *password)
 
 void url_setdirectory(url_t *urlp, const char *directory)
 {
-	xfree(urlp->directory);
+	free(urlp->directory);
 	urlp->directory = decode_rfc1738(directory);
 }
 
 void url_setprotlevel(url_t *urlp, const char *protlevel)
 {
-	xfree(urlp->protlevel);
+	free(urlp->protlevel);
 	urlp->protlevel = decode_rfc1738(protlevel);
 }
 
@@ -201,14 +201,14 @@ void url_setpassive(url_t *urlp, int passive)
 
 void url_setsftp(url_t *urlp, const char *sftp_server)
 {
-	xfree(urlp->sftp_server);
+	free(urlp->sftp_server);
 	urlp->sftp_server = decode_rfc1738(sftp_server);
 }
 
 void url_setmech(url_t *urlp, const char *mech_string)
 {
 	list_free(urlp->mech);
-	urlp->mech = list_new((listfunc)xfree);
+	urlp->mech = list_new((listfunc)free);
 	listify_string(mech_string, urlp->mech);
 }
 

@@ -1,4 +1,4 @@
-/* $Id: host.c,v 1.4 2001/05/12 18:44:04 mhe Exp $
+/* $Id: host.c,v 1.5 2003/07/12 10:25:41 mhe Exp $
  *
  * host.c -- DNS lookups of hostnames
  *
@@ -38,10 +38,10 @@ Host *host_create(const url_t *urlp)
 void host_destroy(Host *hostp)
 {
 	if(hostp) {
-		xfree(hostp->ipnum);
-		xfree(hostp->hostname);
-		xfree(hostp->ohostname);
-		xfree(hostp);
+		free(hostp->ipnum);
+		free(hostp->hostname);
+		free(hostp->ohostname);
+		free(hostp);
 	}
 }
 

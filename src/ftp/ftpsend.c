@@ -1,4 +1,4 @@
-/* $Id: ftpsend.c,v 1.14 2002/11/05 22:51:58 mhe Exp $
+/* $Id: ftpsend.c,v 1.15 2003/07/12 10:25:41 mhe Exp $
  *
  * ftpsend.c -- send/receive files and file listings
  *
@@ -344,7 +344,7 @@ static int FILE_recv_binary(FILE *in, FILE *out)
 		}
 	}
 
-	xfree(buf);
+	free(buf);
 	ftp_set_close_handler();
 
 	return maybe_abort(in, out);
@@ -397,7 +397,7 @@ static int FILE_send_binary(FILE *in, FILE *out)
 	sec_fflush(out);
 #endif
 
-	xfree(buf);
+	free(buf);
 
 	return maybe_abort(in, out);
 }
@@ -458,7 +458,7 @@ static int FILE_recv_ascii(FILE *in, FILE *out)
 		}
 	}
 
-	xfree(buf);
+	free(buf);
 
 	return maybe_abort(in, out);
 }
@@ -503,7 +503,7 @@ static int FILE_send_ascii(FILE *in, FILE *out)
 		}
 	}
 
-	xfree(buf);
+	free(buf);
 
 	return maybe_abort(in, out);
 }
@@ -726,7 +726,7 @@ static int ftp_send(const char *path, FILE *fp, putmode_t how,
 			e += 5;
 			l = strlen(e);
 			if(l) {
-				xfree(ftp->ti.local_name);
+				free(ftp->ti.local_name);
 				if(*e == '\'')
 					ftp->ti.local_name = xstrndup(e+1, l-3);
 				else
@@ -972,8 +972,8 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 		}
 	}
 
-	xfree(ftp->ti.remote_name);
-	xfree(ftp->ti.local_name);
+	free(ftp->ti.remote_name);
+	free(ftp->ti.local_name);
 	ftp->ti.remote_name = xstrdup(infile);
 	ftp->ti.local_name = xstrdup(outfile);
 
@@ -1011,8 +1011,8 @@ int ftp_putfile(const char *infile, const char *outfile, putmode_t how,
 	}
 
 	ftp->ti.total_size = statbuf.st_size;
-	xfree(ftp->ti.remote_name);
-	xfree(ftp->ti.local_name);
+	free(ftp->ti.remote_name);
+	free(ftp->ti.local_name);
 	ftp->ti.remote_name = xstrdup(infile); /* actually local file, or _target_ */
 	ftp->ti.local_name = xstrdup(outfile); /* actually remote file, or _source_ */
 

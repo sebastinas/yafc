@@ -3,7 +3,7 @@ Detta är yafc.info, skapad av makeinfo version 4.2 från yafc.texi.
 START-INFO-DIR-ENTRY
 * Yafc: (yafc).  Yet Another FTP Client
 END-INFO-DIR-ENTRY
-   This file documents Yafc version 1.0
+   This file documents Yafc version 1.1
 
    Copyright (C) 1999-2000 Martin Hedenfalk
 
@@ -25,7 +25,7 @@ translation approved by the copyright holder.
 File: yafc.info,  Node: Top,  Next: Overview,  Up: (dir)
 
    This document describes YAFC, an interactive interface to the FTP
-protocol.  This document applies to version 1.0.
+protocol.  This document applies to version 1.1.
 
 * Menu:
 
@@ -1512,8 +1512,9 @@ File: yafc.info,  Node: Configuration,  Next: Bookmarks,  Prev: The shell,  Up: 
 Configuration
 *************
 
-   Yafc will parse a system-wide configuration file, `/etc/yafcrc',
-first. Then, personal settings are read from `~/.yafc/yafcrc'
+   Yafc will parse a system-wide configuration file, `/etc/yafcrc' (or
+whatever you set with the `--sysconfdir' option to the configure
+script), first. Then, personal settings are read from `~/.yafc/yafcrc'
 (overriding the global ones). If none of those files exists, internal
 defaults will be used.
 
@@ -1631,6 +1632,11 @@ on/off. The keywords are case insensitive.
 
      Path to local ssh program which will be used in SSH2 connections.
      Note that only SSH version 2 is supported.
+
+`ssh_options'
+     type: string
+
+     Custom options that will be passed to the SSH program.
 
 `sftp_server_program'
      type: string
@@ -2427,16 +2433,16 @@ Node: version33454
 Node: warranty33589
 Node: Nohup transfers33713
 Node: Configuration34550
-Node: Keywords35946
-Node: Prompt codes46422
-Node: Transfer codes47713
-Node: Aliases48780
-Node: Alias examples49305
-Node: Colors50870
-Node: ANSI attribute codes51575
-Node: Bookmarks52572
-Node: Bookmark keywords53807
-Node: Bookmark examples56295
-Node: Kerberos57609
+Node: Keywords36023
+Node: Prompt codes46593
+Node: Transfer codes47884
+Node: Aliases48951
+Node: Alias examples49476
+Node: Colors51041
+Node: ANSI attribute codes51746
+Node: Bookmarks52743
+Node: Bookmark keywords53978
+Node: Bookmark examples56466
+Node: Kerberos57780
 
 End Tag Table

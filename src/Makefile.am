@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.10 2002/12/05 21:56:05 mhe Exp $
+## $Id: Makefile.am,v 1.11 2003/07/12 10:25:41 mhe Exp $
 
 SUBDIRS = libmhe ftp
 
@@ -24,7 +24,7 @@ yafc_DEPENDENCIES = $(yafc_LDADD) yafcrc.h
 INCLUDES = -I. -I.. -I$(srcdir) -I$(top_srcdir)/lib \
 -I$(top_srcdir)/src/ftp -I$(top_srcdir)/src/libmhe
 
-DEFS=@DEFS@
+DEFS = -DSYSCONFDIR=\"@sysconfdir@\" @DEFS@
 
 CLEANFILES=*~ \#*\#
 DISTCLEANFILES=.deps/* yafcrc.h

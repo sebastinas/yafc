@@ -14,7 +14,6 @@ TODO list for Yafc
 * 'insgesamt 679748' (locale settings in LISTing -> parsing failed)
    I'm not sure how to fix this
 * doesn't compile with socks5 ?
-+ a way of passing arguments to ssh (suggested by Tore Anderson)
 + fix --chgrp / --chmod for directories (get)
 + support HTTP proxy (eg, http://www.squid-cache.org)
    (suggested by Linder Erik)

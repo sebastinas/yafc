@@ -137,7 +137,7 @@ static void ssh_print_cmd(Buffer *cmd)
 			cmd->offset = 9;
 			e = buffer_get_string(cmd, 0);
 			pfunc("(%s)", e);
-			xfree(e);
+			free(e);
 			break;
 		case SSH2_FXP_WRITE:
 			cmd->offset = 9;
@@ -288,8 +288,8 @@ int ssh_init(void)
 		char *value = buffer_get_string(&msg, NULL);
 
 		ftp_err("Init extension: \"%s\"\n", name);
-		xfree(name);
-		xfree(value);
+		free(name);
+		free(value);
 	}
 
 	buffer_free(&msg);
@@ -340,7 +340,7 @@ char *ssh_realpath(char *path)
 	longname = buffer_get_string(&msg, NULL);
 	a = decode_attrib(&msg);
 
-	xfree(longname);
+	free(longname);
 
 	buffer_free(&msg);
 
@@ -513,14 +513,14 @@ int ssh_readdir(char *path, SFTP_DIRENT ***dir)
 				(*dir)[++ents] = NULL;
 			}
 
-			xfree(filename);
-			xfree(longname);
+			free(filename);
+			free(longname);
 		}
 	}
 
 	buffer_free(&msg);
 	ssh_close(handle, handle_len);
-	xfree(handle);
+	free(handle);
 
 	return 0;
 }
@@ -530,11 +530,11 @@ void ssh_free_dirents(SFTP_DIRENT **s)
 	int i;
 
 	for(i = 0; s[i]; i++) {
-		xfree(s[i]->filename);
-		xfree(s[i]->longname);
-		xfree(s[i]);
+		free(s[i]->filename);
+		free(s[i]->longname);
+		free(s[i]);
 	}
-	xfree(s);
+	free(s);
 }
 
 int ssh_close(char *handle, u_int handle_len)
@@ -760,12 +760,12 @@ int ssh_recv_binary(const char *remote_path, FILE *local_fp,
 			ssh_close(handle, handle_len);
 			ftp->ti.ioerror = true;
 			status = -1;
-			xfree(data);
+			free(data);
 			goto done;
 		}
 
 		offset += len;
-		xfree(data);
+		free(data);
 
 		ftp->ti.size += len;
 
@@ -783,7 +783,7 @@ int ssh_recv_binary(const char *remote_path, FILE *local_fp,
 
 done:
 	buffer_free(&msg);
-	xfree(handle);
+	free(handle);
 	return status;
 }
 
@@ -891,7 +891,7 @@ int ssh_send_binary(const char *remote_path, FILE *local_fp,
 	status = ssh_close(handle, handle_len);
 
 done:
-	xfree(handle);
+	free(handle);
 	buffer_free(&msg);
 	return status;
 }
@@ -939,7 +939,7 @@ char *ssh_readlink(char *path)
 	longname = buffer_get_string(&msg, 0);
 	a = decode_attrib(&msg);
 
-	xfree(longname);
+	free(longname);
 
 	buffer_free(&msg);
 

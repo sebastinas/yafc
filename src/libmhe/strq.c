@@ -1,4 +1,4 @@
-/* $Id: strq.c,v 1.5 2001/05/21 21:48:16 mhe Exp $
+/* $Id: strq.c,v 1.6 2003/07/12 10:25:42 mhe Exp $
  *
  * strq.c -- string functions, handles quoted text
  *
@@ -247,7 +247,7 @@ void unquote(char *str)
 {
 	char *dq = bash_dequote_filename(str, 0);
 	strcpy(str, dq);
-	xfree(dq);
+	free(dq);
 }
 
 char *path_absolute(const char *path, const char *curdir, const char *homedir)
@@ -489,7 +489,7 @@ char *encode_url_directory(const char *str)
 		char *tmp = (char *)xmalloc(strlen(e) + 3);
 		strcpy(tmp, "%2F");
 		strcat(tmp, e+1);
-		xfree(e);
+		free(e);
 		return tmp;
 	} else
 		return e;

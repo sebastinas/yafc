@@ -41,7 +41,7 @@ void
 buffer_free(Buffer *buffer)
 {
 	memset(buffer->buf, 0, buffer->alloc);
-	xfree(buffer->buf);
+	free(buffer->buf);
 }
 
 /*

@@ -1,4 +1,4 @@
-/* $Id: cmd.c,v 1.10 2002/05/09 12:30:12 mhe Exp $
+/* $Id: cmd.c,v 1.11 2003/07/12 10:25:41 mhe Exp $
  *
  * cmd.c -- read and execute commands, this is the main loop
  *
@@ -104,7 +104,7 @@ void command_loop(void)
 		print_xterm_title();
 
 		cmdstr = input_read_string(p);
-		xfree(p);
+		free(p);
 
 		if(!cmdstr) {  /* bare EOF received */
 			fputc('\n', stderr);
@@ -116,7 +116,7 @@ void command_loop(void)
 		s = strip_blanks(cmdstr);
 		if(!*s) {
 			/* blank line */
-			xfree(cmdstr);
+			free(cmdstr);
 			continue;
 		}
 #ifdef HAVE_LIBREADLINE
@@ -128,7 +128,7 @@ void command_loop(void)
 #endif
 		ftp_trace("yafc: '%s'\n", s);
 		exe_cmdline(s, false);
-		xfree(cmdstr);
+		free(cmdstr);
 
 #ifdef HAVE_GETTIMEOFDAY
 		gettimeofday(&end, 0);
@@ -165,7 +165,7 @@ static void exe_cmd(cmd_t *c, args_t *args)
 				/* remove pipe/redir from command parameters */
 				args_del(args, i, args->argc);
 				ret = open_redirection(e); /* modifies stdout and/or stderr */
-				xfree(e);
+				free(e);
 				if(ret != 0)
 					return;
 				break;
@@ -184,7 +184,7 @@ static void exe_cmd(cmd_t *c, args_t *args)
 		{
 			char *e = args_cat(args->argc, args->argv, 1);
 			bool b = reject_ampersand(e);
-			xfree(e);
+			free(e);
 			if(b)
 				return;
 		}
@@ -280,7 +280,7 @@ static void exe_cmdline(char *str, bool aliases_are_expanded)
 			else if(expanded_cmd == (args_t *)ALIAS_AMBIGUOUS) {
 				fprintf(stderr, _("ambiguous alias '%s'\n"), cmd);
 				args_destroy(args);
-				xfree(cmd);
+				free(cmd);
 				continue;
 			} else {
 				args_t *alias_args;
@@ -303,11 +303,11 @@ static void exe_cmdline(char *str, bool aliases_are_expanded)
 				}
 			}
 
-			xfree(cmd);
+			free(cmd);
 
 			xstr = args_cat2(expanded_cmd, 0);
 			exe_cmdline(xstr, true);
-			xfree(xstr);
+			free(xstr);
 			args_destroy(expanded_cmd);
 		}
 	}

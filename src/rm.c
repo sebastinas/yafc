@@ -1,4 +1,4 @@
-/* $Id: rm.c,v 1.4 2002/11/05 22:51:57 mhe Exp $
+/* $Id: rm.c,v 1.5 2003/07/12 10:25:41 mhe Exp $
  *
  * rm.c -- remove files, the 'rm' command
  *
@@ -96,11 +96,11 @@ static void remove_files(const list *gl, unsigned opt)
 				asprintf(&recurs_mask, "%s/*", f->path);
 				q_recurs_mask = bash_backslash_quote(recurs_mask);
 				rglob_glob(rgl, q_recurs_mask, false, true, 0);
-				xfree(q_recurs_mask);
+				free(q_recurs_mask);
 				if(list_numitem(rgl) > 0)
 					remove_files(rgl, opt);
 				rglob_destroy(rgl);
-				xfree(recurs_mask);
+				free(recurs_mask);
 				ftp_rmdir(f->path);
 				if(test(opt, RM_VERBOSE)) {
 					fprintf(stderr, "%s", shortpath(f->path, 40,

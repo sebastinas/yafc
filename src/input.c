@@ -1,4 +1,4 @@
-/* $Id: input.c,v 1.8 2002/12/05 22:13:44 mhe Exp $
+/* $Id: input.c,v 1.9 2003/07/12 10:25:41 mhe Exp $
  *
  * input.c -- string input and readline stuff
  *
@@ -170,7 +170,7 @@ int input_read_args(args_t **args, const char *prompt)
 	s = strip_blanks(e);
 
 	if(!*s) {  /* blank line */
-		xfree(e);
+		free(e);
 		return 0;
 	}
 
@@ -179,7 +179,7 @@ int input_read_args(args_t **args, const char *prompt)
 	add_history(s);
 #endif
 	args_push_back(*args, s);
-	xfree(e);
+	free(e);
 	return (*args)->argc;
 }
 

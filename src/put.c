@@ -1,4 +1,4 @@
-/* $Id: put.c,v 1.14 2002/12/02 12:21:19 mhe Exp $
+/* $Id: put.c,v 1.15 2003/07/12 10:25:41 mhe Exp $
  *
  * put.c -- upload files
  *
@@ -150,7 +150,7 @@ static void putfile(const char *path, struct stat *sb,
 	if(test(opt, PUT_PARENTS)) {
 		char *p = base_dir_xptr(path);
 		asprintf(&dest, "%s/%s/%s", output, p, base_name_ptr(path));
-		xfree(p);
+		free(p);
 	} else if(test(opt, PUT_OUTPUT_FILE))
 		dest = xstrdup(output);
 	else
@@ -163,12 +163,12 @@ static void putfile(const char *path, struct stat *sb,
 	dest_dir = ftp_path_absolute(dpath);
 	q_dest_dir = bash_backslash_quote(dest_dir);
 	r = ftp_mkpath(q_dest_dir);
-	xfree(q_dest_dir);
-	xfree(dest_dir);
+	free(q_dest_dir);
+	free(dest_dir);
 	if(r == -1) {
 		transfer_mail_msg(_("failed to create directory %s\n"), dest_dir);
-		xfree(dpath);
-		xfree(dest);
+		free(dpath);
+		free(dest);
 		return;
 	}
 	dir_created = (r == 1);
@@ -180,7 +180,7 @@ static void putfile(const char *path, struct stat *sb,
 		if(f && risdir(f)) {
 			/* can't overwrite a directory */
 			printf(_("%s: is a directory\n"), dest);
-			xfree(dest);
+			free(dest);
 			return;
 		}
 	}
@@ -191,7 +191,7 @@ static void putfile(const char *path, struct stat *sb,
 		if(test(opt, PUT_SKIP_EXISTING)) {
 			printf(_("Remote file '%s' exists, skipping...\n"),
 				   shortpath(dest, 42, ftp->homedir));
-			xfree(dest);
+			free(dest);
 			return;
 		}
 		else if(test(opt, PUT_NEWER)) {
@@ -199,7 +199,7 @@ static void putfile(const char *path, struct stat *sb,
 			if(ft != (time_t)-1 && ft >= sb->st_mtime) {
 				printf(_("Remote file '%s' is newer than local, skipping...\n"),
 					   shortpath(dest, 42, ftp->homedir));
-				xfree(dest);
+				free(dest);
 				return;
 			}
 		}
@@ -221,14 +221,14 @@ static void putfile(const char *path, struct stat *sb,
 						shortpath(dest, 42, ftp->homedir),
 						sb->st_size, e ? e : "unknown date",
 						ftp_filesize(f->path), ctime(&ft));
-				xfree(e);
+				free(e);
 				if(a == ASKCANCEL) {
 					put_quit = true;
-					xfree(dest);
+					free(dest);
 					return;
 				}
 				else if(a == ASKNO) {
-					xfree(dest);
+					free(dest);
 					return;
 				}
 				else if(a == ASKUNIQUE)
@@ -248,7 +248,7 @@ static void putfile(const char *path, struct stat *sb,
 		how = putUnique;
 
 	r = do_the_put(path, dest, how, opt);
-	xfree(dest);
+	free(dest);
 	if(r != 0)
 		return;
 
@@ -374,11 +374,11 @@ static void putfiles(list *gl, unsigned opt, const char *output)
 						rgl = lglob_create();
 						r = lglob_glob(rgl, recurs_mask, true,
 									   put_exclude_func);
-						xfree(recurs_mask);
+						free(recurs_mask);
 
 						if(list_numitem(rgl) > 0)
 							putfiles(rgl, opt, recurs_output);
-						xfree(recurs_output);
+						free(recurs_output);
 					}
 			} else
 				fprintf(stderr, _("%s: omitting directory\n"),
@@ -454,11 +454,11 @@ void cmd_put(int argc, char **argv)
 	};
 
 	if(put_glob_mask) {
-		xfree(put_glob_mask);
+		free(put_glob_mask);
 		put_glob_mask = 0;
 	}
 	if(put_dir_glob_mask) {
-		xfree(put_dir_glob_mask);
+		free(put_dir_glob_mask);
 		put_dir_glob_mask = 0;
 	}
 #ifdef HAVE_REGEX
@@ -490,7 +490,7 @@ void cmd_put(int argc, char **argv)
 			  put_skip_empty = true;
 			  break;
 		case '3': /* --dir-mask=GLOB */
-			xfree(put_dir_glob_mask);
+			free(put_dir_glob_mask);
 			put_dir_glob_mask = xstrdup(optarg);
 			unquote(put_dir_glob_mask);
 			break;
@@ -519,12 +519,12 @@ void cmd_put(int argc, char **argv)
 			opt |= PUT_NOHUP;
 			break;
 		case 'L':
-			xfree(logfile);
+			free(logfile);
 			logfile = xstrdup(optarg);
 			unquote(logfile);
 			break;
 		case 'm': /* --mask */
-			xfree(put_glob_mask);
+			free(put_glob_mask);
 			put_glob_mask = xstrdup(optarg);
 			break;
 #ifdef HAVE_REGEX
@@ -637,7 +637,7 @@ void cmd_put(int argc, char **argv)
 		}
 	}
 
-	xfree(ftp->last_mkpath);
+	free(ftp->last_mkpath);
 	ftp->last_mkpath = 0;
 
 	put_quit = false;
@@ -680,7 +680,7 @@ void cmd_put(int argc, char **argv)
 				putfiles(gvLocalTagList, opt, put_output);
 				list_clear(gvLocalTagList);
 			}
-			xfree(put_output);
+			free(put_output);
 
 			transfer_end_nohup();
 		}
@@ -703,6 +703,6 @@ void cmd_put(int argc, char **argv)
 		putfiles(gvLocalTagList, opt, put_output);
 		list_clear(gvLocalTagList);
 	}
-	xfree(put_output);
+	free(put_output);
 	gvInTransfer = false;
 }

@@ -1,4 +1,4 @@
-/* $Id: alias.c,v 1.4 2001/07/27 08:58:22 mhe Exp $
+/* $Id: alias.c,v 1.5 2003/07/12 10:25:41 mhe Exp $
  *
  * alias.c -- define and undefine aliases
  *
@@ -35,12 +35,12 @@ void alias_destroy(alias *ap)
 	if(!ap)
 		return;
 	alias_clear(ap);
-	xfree(ap);
+	free(ap);
 }
 
 void alias_clear(alias *ap)
 {
-	xfree(ap->name);
+	free(ap->name);
 	ap->name = 0;
 	args_destroy(ap->value);
 	ap->value = 0;
@@ -143,7 +143,7 @@ void cmd_alias(int argc, char **argv)
 				char *f;
 				f = args_cat2(((alias *)li->data)->value, 0);
 				printf("%s = '%s'\n", ((alias *)li->data)->name, f);
-				xfree(f);
+				free(f);
 				li = li->next;
 			}
 		}
@@ -161,7 +161,7 @@ void cmd_alias(int argc, char **argv)
 			char *f;
 			f = args_cat2(ap->value, 0);
 			printf("%s = '%s'\n", ap->name, f);
-			xfree(f);
+			free(f);
 		}
 		return;
 	}

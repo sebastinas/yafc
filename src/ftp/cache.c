@@ -1,4 +1,4 @@
-/* $Id: cache.c,v 1.5 2002/12/02 14:32:21 mhe Exp $
+/* $Id: cache.c,v 1.6 2003/07/12 10:25:41 mhe Exp $
  *
  * cache.c -- remote directory cache
  *
@@ -56,11 +56,11 @@ void ftp_cache_flush_mark_for(const char *path)
 {
 	char *e = base_dir_xptr(path);
 	if(!e) {
-		xfree(e);
+		free(e);
 		e = xstrdup(ftp->curdir);
 	}
 	ftp_cache_flush_mark(e);
-	xfree(e);
+	free(e);
 }
 
 static int cache_search(rdirectory *rdir, const char *arg)
@@ -122,7 +122,7 @@ rdirectory *ftp_cache_get_directory(const char *path)
 				  dir_to_search_for);
 		ftp_cache_flush_mark(dir_to_search_for);
 	}
-	xfree(dir_to_search_for);
+	free(dir_to_search_for);
 
 	if(!li)
 		return 0;
@@ -143,7 +143,7 @@ rfile *ftp_cache_get_file(const char *path)
 
 	dir = base_dir_xptr(path);
 	rdir = ftp_cache_get_directory(dir);
-	xfree(dir);
+	free(dir);
 
 	if(rdir) {
 		f = rdir_get_file(rdir, base_name_ptr(path));

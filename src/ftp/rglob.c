@@ -1,4 +1,4 @@
-/* $Id: rglob.c,v 1.6 2002/12/02 14:32:21 mhe Exp $
+/* $Id: rglob.c,v 1.7 2003/07/12 10:25:41 mhe Exp $
  *
  * rglob.c -- remote glob functions
  *
@@ -75,7 +75,7 @@ int rglob_glob(list *gl, const char *mask, bool cpifnomatch,
 	else unquote(d);
 
 	rdir = ftp_get_directory(d);
-	xfree(d);
+	free(d);
 
 	if(rdir) {
 		lip = rdir->files->first;
@@ -116,7 +116,7 @@ int rglob_glob(list *gl, const char *mask, bool cpifnomatch,
 		bool ignore_item;
 
 		if(!cpifnomatch || mp == 0 || *mp == 0 || contains_wildcards(mp)) {
-			xfree(mp);
+			free(mp);
 			return -1;
 		}
 		p = ftp_path_absolute(path);
@@ -133,11 +133,11 @@ int rglob_glob(list *gl, const char *mask, bool cpifnomatch,
 			rfile_fake(nfi, p);
 			list_additem(gl, (void *)nfi);
 		}
-		xfree(p);
+		free(p);
 	}
 
-	xfree(mp);
-	xfree(path);
+	free(mp);
+	free(path);
 	return 0;
 }
 

@@ -1,4 +1,4 @@
-/* $Id: prompt.c,v 1.3 2001/05/12 18:44:37 mhe Exp $
+/* $Id: prompt.c,v 1.4 2003/07/12 10:25:41 mhe Exp $
  *
  * prompt.c -- expands the prompt
  *
@@ -186,10 +186,9 @@ char *expand_prompt(const char *fmt)
 				strcpy(tmp, prompt);
 				strcat(tmp, ins);
 				cp = tmp + strlen(prompt) + strlen(ins);
-				xfree(prompt);
+				free(prompt);
 				prompt = tmp;
-				if(freeins)
-					xfree(ins);
+				free(ins);
 			}
 		} else
 			*cp++ = *fmt;

@@ -1,4 +1,4 @@
-/* $Id: commands.c,v 1.16 2002/12/05 22:13:54 mhe Exp $
+/* $Id: commands.c,v 1.17 2003/07/12 10:25:41 mhe Exp $
  *
  * commands.c --
  *
@@ -143,7 +143,7 @@ int rearrange_args(args_t *args, const char *rchars)
 			num = (size_t)(e - args->argv[i]);
 			a = xstrndup(args->argv[i], num);
 			args_insert_string(args, i, a);
-			xfree(a);
+			free(a);
 			strpull(args->argv[i+1], num);
 			break;
 		}
@@ -221,14 +221,14 @@ void expand_alias_parameters(args_t **args, args_t *alias_args)
 
 			if(ep != e && n < alias_args->argc && n >= 0) {
 				ins = deleted->argv[n];
-				xfree(alias_args->argv[n]);
+				free(alias_args->argv[n]);
 				alias_args->argv[n] = 0;
 			} else
 				ins = 0;
 
 			/* insert the parameter in this argument */
 			asprintf(&tmp, "%s%s%s", new_args->argv[i], ins ? ins : "", ep);
-			xfree(new_args->argv[i]);
+			free(new_args->argv[i]);
 			new_args->argv[i] = tmp;
 		}
 
@@ -345,7 +345,7 @@ void cmd_list(int argc, char **argv)
 
 		args = args_cat(argc, argv, optind);
 		ftp_list("LIST", args, stdout);
-		xfree(args);
+		free(args);
 	}
 }
 
@@ -365,7 +365,7 @@ void cmd_nlist(int argc, char **argv)
 
 		args = args_cat(argc, argv, optind);
 		ftp_list("NLST", args, stdout);
-		xfree(args);
+		free(args);
 	}
 }
 
@@ -459,7 +459,7 @@ void cmd_cd(int argc, char **argv)
 		e = argv[1];
 	e = tilde_expand_home(e, ftp->homedir);
 	ftp_chdir(e);
-	xfree(e);
+	free(e);
 }
 
 void cmd_cdup(int argc, char **argv)
@@ -554,7 +554,7 @@ void cmd_url(int argc, char **argv)
 	if(!url_isanon(ftp->url)) {
 		char *e = encode_url_username(ftp->url->username);
 		printf("%s@", e);
-		xfree(e);
+		free(e);
 	}
 	printf("%s", ftp->url->hostname);
 	if(ftp->url->port != 21)
@@ -568,7 +568,7 @@ void cmd_url(int argc, char **argv)
 #endif
 		d = encode_url_directory(e);
 		printf("/%s", d);
-		xfree(d);
+		free(d);
 	}
 	printf("\n");
 }
@@ -597,7 +597,7 @@ void cmd_rhelp(int argc, char **argv)
 
 	e = args_cat(argc, argv, 1);
 	ftp_help(e);
-	xfree(e);
+	free(e);
 }
 
 void cmd_mkdir(int argc, char **argv)
@@ -717,7 +717,7 @@ void cmd_site(int argc, char **argv)
 	e = args_cat(argc, argv, 1);
 	ftp_set_tmp_verbosity(vbCommand);
 	ftp_cmd("SITE %s", e);
-	xfree(e);
+	free(e);
 }
 
 void cmd_chmod(int argc, char **argv)
@@ -842,7 +842,7 @@ void cmd_quote(int argc, char **argv)
 	e = args_cat(argc, argv, optind);
 	ftp_set_tmp_verbosity(vbDebug);
 	ftp_cmd("%s", e);
-	xfree(e);
+	free(e);
 }
 
 void cmd_filetime(int argc, char **argv)

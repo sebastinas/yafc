@@ -92,8 +92,8 @@ decode_attrib(Buffer *b)
 			type = buffer_get_string(b, NULL);
 			data = buffer_get_string(b, NULL);
 			ftp_err("Got file attribute \"%s\"", type);
-			xfree(type);
-			xfree(data);
+			free(type);
+			free(data);
 		}
 	}
 	return &a;

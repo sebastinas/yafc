@@ -1,4 +1,4 @@
-/* $Id: rdirectory.c,v 1.5 2002/12/02 12:27:55 mhe Exp $
+/* $Id: rdirectory.c,v 1.6 2003/07/12 10:25:41 mhe Exp $
  *
  * rdirectory.c -- representation of a remote directory
  *
@@ -31,8 +31,8 @@ void rdir_destroy(rdirectory *rdir)
 	if(!rdir)
 		return;
 	list_free(rdir->files);
-	xfree(rdir->path);
-	xfree(rdir);
+	free(rdir->path);
+	free(rdir);
 }
 
 unsigned long int rdir_size(rdirectory *rdir)
@@ -47,7 +47,7 @@ int rdir_parse(rdirectory *rdir, FILE *fp, const char *path, bool is_mlsd)
 	int r;
 	bool failed = false;
 
-	xfree(rdir->path);
+	free(rdir->path);
 	rdir->path = 0;
 	list_clear(rdir->files);
 	rdir->timestamp = time(0);

@@ -1,4 +1,4 @@
-/* $Id: lglob.c,v 1.6 2002/12/02 12:39:41 mhe Exp $
+/* $Id: lglob.c,v 1.7 2003/07/12 10:25:41 mhe Exp $
  *
  * lglob.c -- local glob functions
  *
@@ -37,7 +37,7 @@
 list *lglob_create(void)
 {
 	list *gl;
-	gl = list_new((listfunc)xfree);
+	gl = list_new((listfunc)free);
 	return gl;
 }
 
@@ -99,7 +99,7 @@ int lglob_glob(list *gl, const char *mask, bool ignore_multiples,
 			}
 			found = true;
 		}
-		xfree(path);
+		free(path);
 	}
 	closedir(dp);
 

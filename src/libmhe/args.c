@@ -1,4 +1,4 @@
-/* $Id: args.c,v 1.4 2001/05/21 21:47:55 mhe Exp $
+/* $Id: args.c,v 1.5 2003/07/12 10:25:42 mhe Exp $
  *
  * args.c -- handles command arguments
  *
@@ -24,7 +24,7 @@ args_t *args_create(void)
 void args_destroy(args_t *args)
 {
 	args_clear(args);
-	xfree(args);
+	free(args);
 }
 
 void args_clear(args_t *args)
@@ -33,7 +33,7 @@ void args_clear(args_t *args)
 		return;
 
 	args_del(args, 0, args->argc);
-	xfree(args->argv);
+	free(args->argv);
 	args->argv = 0;
 	args->argc = 0;
 }
@@ -84,7 +84,7 @@ void args_del(args_t *args, unsigned int first, unsigned int n)
 		return;
 
 	for(i=first; deleted<n && i<args->argc; i++, deleted++)
-		xfree(args->argv[i]);
+		free(args->argv[i]);
 
 	for(i=first+n; i<args->argc; i++) {
 		args->argv[i-n] = args->argv[i];
@@ -133,7 +133,7 @@ static args_t *split_args(const char *str)
 
 	args->argv = xrealloc(args->argv, args->argc * sizeof(char *));
 
-	xfree(orgc);
+	free(orgc);
 	return args;
 }
 
@@ -161,7 +161,7 @@ void args_add_args3(args_t *args, const args_t *add_args, unsigned int first,
 	for(i=first; i <last; i++)
 		argv[argc++] = xstrdup(add_args->argv[i]);
 
-	xfree(args->argv);
+	free(args->argv);
 	args->argv = argv;
 	args->argc = argc;
 }
@@ -200,7 +200,7 @@ void args_push_front(args_t *args, const char *str)
 	args_clear(args);
 	args->argc = a->argc;
 	args->argv = a->argv;
-	xfree(a);
+	free(a);
 }
 
 /* removes zero-length arguments
@@ -244,7 +244,7 @@ void args_insert_string(args_t *args, unsigned int index, const char *str)
 	args_del(args, index, args->argc - index);
 	args_push_back(args, str);
 	args_add_args(args, a);
-	xfree(a);
+	free(a);
 }
 
 /* inserts INSARGS between FIRST and LAST (and ALWAYS?) into ARGS at index INDEX
@@ -265,5 +265,5 @@ void args_insert_args(args_t *args, unsigned int index, const args_t *insargs,
 	args_del(args, index, args->argc - index);
 	args_add_args3(args, insargs, first, last);
 	args_add_args(args, a);
-	xfree(a);
+	free(a);
 }

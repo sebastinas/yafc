@@ -1,4 +1,4 @@
-/* $Id: transfer.c,v 1.9 2002/12/02 12:22:26 mhe Exp $
+/* $Id: transfer.c,v 1.10 2003/07/12 10:25:41 mhe Exp $
  *
  * transfer.c --
  *
@@ -70,7 +70,7 @@ static int max_printf(FILE *fp, int max, const char *fmt, ...)
 	} else
 		ret += fprintf(fp, "%s", e);
 
-	xfree(e);
+	free(e);
 	return ret;
 }
 
@@ -316,7 +316,7 @@ int transfer_init_nohup(const char *str)
 	logfp = fopen(nohup_logfile, "w");
 	if(!logfp) {
 		perror(nohup_logfile);
-		xfree(nohup_logfile);
+		free(nohup_logfile);
 		logfp = 0;
 		return -1;
 	}
@@ -391,7 +391,7 @@ void transfer_mail_msg(const char *fmt, ...)
 
 		asprintf(&e, "%s/yafcmail.tmp", gvWorkingDirectory);
 		tmpfilename = make_unique_filename(e);
-		xfree(e);
+		free(e);
 
 		mailfp = fopen(tmpfilename, "w+");
 		opened = true;
@@ -456,8 +456,8 @@ void transfer_end_nohup(void)
 
 	ftp_quit_all();
 	list_free(gvFtpList);
-	xfree(nohup_logfile);
-	xfree(nohup_command);
+	free(nohup_logfile);
+	free(nohup_command);
 	gvars_destroy();
 	exit(0);
 }

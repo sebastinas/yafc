@@ -1,4 +1,4 @@
-/* $Id: tag.c,v 1.5 2001/05/12 18:44:37 mhe Exp $
+/* $Id: tag.c,v 1.6 2003/07/12 10:25:41 mhe Exp $
  *
  * tag.c -- tag files
  *
@@ -51,8 +51,8 @@ void save_taglist(const char *alt_filename)
 	fp = fopen(f, "w");
 	if(!fp) {
 		perror(_("Unable to save taglist file"));
-		xfree(f);
-		xfree(e);
+		free(f);
+		free(e);
 		return;
 	}
 
@@ -61,8 +61,8 @@ void save_taglist(const char *alt_filename)
 		fprintf(fp, "%s\n", ((rfile *)li->data)->path);
 	fclose(fp);
 	fprintf(stderr, _("Saved taglist to %s\n"), f);
-	xfree(f);
-	xfree(e);
+	free(f);
+	free(e);
 }
 
 void load_taglist(bool showerr, bool always_autoload,
@@ -93,8 +93,8 @@ void load_taglist(bool showerr, bool always_autoload,
 				fprintf(stderr, _("No saved taglist for %s\n"),
 						ftp->host->ohostname);
 		}
-		xfree(e);
-		xfree(f);
+		free(e);
+		free(f);
 		return;
 	}
 
@@ -131,11 +131,11 @@ void load_taglist(bool showerr, bool always_autoload,
 	}
 	if(n)
 		fprintf(stderr, "Loaded %u files from saved taglist %s\n", n, f);
-	xfree(e);
+	free(e);
 	fclose(fp);
 	if(alt_filename == 0)
 		unlink(f);
-	xfree(f);
+	free(f);
 }
 
 

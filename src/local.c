@@ -1,4 +1,4 @@
-/* $Id: local.c,v 1.4 2001/05/12 18:44:37 mhe Exp $
+/* $Id: local.c,v 1.5 2003/07/12 10:25:41 mhe Exp $
  *
  * local.c -- local commands
  *
@@ -68,10 +68,10 @@ void cmd_lcd(int argc, char **argv)
 	if(chdir(te) == -1)
 		perror(te);
 	else {
-		xfree(gvLocalPrevDir);
+		free(gvLocalPrevDir);
 		gvLocalPrevDir = xstrdup(tmp);
 	}
-	xfree(te);
+	free(te);
 	cmd_lpwd(0, 0);
 }
 
@@ -95,5 +95,5 @@ void cmd_shell(int argc, char **argv)
 	if(argc > 1)
 		e = args_cat(argc, argv, 1);
 	invoke_shell(e);
-	xfree(e);
+	free(e);
 }

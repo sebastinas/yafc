@@ -1,4 +1,4 @@
-/* $Id: xmalloc.h,v 1.3 2001/05/12 18:42:42 mhe Exp $
+/* $Id: xmalloc.h,v 1.4 2003/07/12 10:25:41 mhe Exp $
  *
  * xmalloc.h -- wrapper for malloc etc.
  *
@@ -18,7 +18,6 @@
 
 void *xmalloc(size_t size);
 void *xrealloc(void *ptr, size_t size);
-void xfree(void *ptr);
 char *xstrdup(const char *s);
 char *xstrndup(const char *s, size_t n);
 char *xstrncpy(char *dest, const char *src, size_t n);

@@ -1,4 +1,4 @@
-/* $Id: bookmark.c,v 1.19 2002/11/08 11:04:16 mhe Exp $
+/* $Id: bookmark.c,v 1.20 2003/07/12 10:25:41 mhe Exp $
  *
  * bookmark.c -- create bookmark(s)
  *
@@ -65,7 +65,7 @@ static void bookmark_save_one(FILE *fp, url_t *url)
 		if(url->alias) {
 			char *a = xquote_chars(url->alias, "\'\"");
 			fprintf(fp, " alias '%s'", a);
-			xfree(a);
+			free(a);
 		}
 	}
 	if(url_isanon(url) && url->password
@@ -80,7 +80,7 @@ static void bookmark_save_one(FILE *fp, url_t *url)
 				char *cq;
 				base64_encode(url->password, strlen(url->password), &cq);
 				fprintf(fp, " password [base64]%s", cq);
-				xfree(cq);
+				free(cq);
 			}
 		}
 	}
@@ -94,7 +94,7 @@ static void bookmark_save_one(FILE *fp, url_t *url)
 		char *mech_string = stringify_list(url->mech);
 		if(mech_string) {
 			fprintf(fp, " mech '%s'", mech_string);
-			xfree(mech_string);
+			free(mech_string);
 		}
 	}
 	if(url->pasvmode != -1)
@@ -119,7 +119,7 @@ static int bookmark_save(const char *other_bmfile)
 	fp = fopen(bmfile, "w");
 	if(fp == 0) {
 		perror(bmfile);
-		xfree(bmfile);
+		free(bmfile);
 		return -1;
 	}
 
@@ -140,7 +140,7 @@ static int bookmark_save(const char *other_bmfile)
 	fprintf(fp, "# end of bookmark file\n");
 	fclose(fp);
 	chmod(bmfile, S_IRUSR | S_IWUSR);
-	xfree(bmfile);
+	free(bmfile);
 	return 0;
 }
 
@@ -181,7 +181,7 @@ static char *guess_alias(url_t *url)
 		}
 	}
 	p = xstrdup(maxp);
-	xfree(o);
+	free(o);
 	return p;
 }
 
@@ -203,7 +203,7 @@ static void create_the_bookmark(url_t *url)
 		char *tmp;
 		asprintf(&tmp, "%s/bookmarks", gvWorkingDirectory);
 		parse_rc(tmp, false);
-		xfree(tmp);
+		free(tmp);
 	}
 
 	li = list_search(gvBookmarks, (listsearchfunc)urlcmp, url);
@@ -236,16 +236,16 @@ static void create_bookmark(const char *guessed_alias)
 
 			force_completion_type = cpBookmark;
 			alias = input_read_string(prompt);
-			xfree(prompt);
+			free(prompt);
 			if(!alias || !*alias)
 				alias = default_alias;
 			else
-				xfree(default_alias);
+				free(default_alias);
 		}
 
 		url = url_clone(ftp->url);
 		url_setalias(url, alias);
-		xfree(alias);
+		free(alias);
 		alias = 0;
 
 		li = list_search(gvBookmarks, (listsearchfunc)urlcmp, url);
@@ -352,7 +352,7 @@ void auto_create_bookmark(void)
 		url = url_clone(ftp->url);
 		a = guess_alias(ftp->url);
 		url_setalias(url, a);
-		xfree(a);
+		free(a);
 
 		li = list_search(gvBookmarks, (listsearchfunc)urlcmp, url);
 		if(li) {
@@ -379,7 +379,7 @@ void auto_create_bookmark(void)
 						asprintf(&a, "%s(%d)", url->alias, ver + 1);
 					}
 					url_setalias(url, a);
-					xfree(a);
+					free(a);
 				} else {
 					update = true;
 					had_passwd = (xurl->password != 0);
@@ -443,7 +443,7 @@ void cmd_bookmark(int argc, char **argv)
 		switch(c) {
 			case 's':
 				action = BM_SAVE;
-				xfree(bmfile);
+				free(bmfile);
 				bmfile = xstrdup(optarg);
 				break;
 			case 'e':
@@ -451,7 +451,7 @@ void cmd_bookmark(int argc, char **argv)
 				break;
 			case 'r':
 				action = BM_READ;
-				xfree(bmfile);
+				free(bmfile);
 				bmfile = xstrdup(optarg);
 				break;
 			case 'd':
@@ -491,14 +491,14 @@ void cmd_bookmark(int argc, char **argv)
 		}
 		if(ret != -1)
 			printf(_("bookmarks read from %s\n"), bmfile ? bmfile : tmp);
-		xfree(tmp);
+		free(tmp);
 		return;
 	}
 	if(action == BM_EDIT) {
 		char *cmdline;
 		asprintf(&cmdline, "%s %s/bookmarks", gvEditor, gvWorkingDirectory);
 		invoke_shell(cmdline);
-		xfree(cmdline);
+		free(cmdline);
 		return;
 	}
 	if(action == BM_LIST) {

@@ -1,4 +1,4 @@
-/* $Id: lscolors.c,v 1.4 2002/11/07 18:08:15 mhe Exp $
+/* $Id: lscolors.c,v 1.5 2003/07/12 10:25:41 mhe Exp $
  *
  * lscolors.c -- parsing of env variable LS_COLORS
  *
@@ -88,7 +88,7 @@ void init_colors(void)
 				i++;
 		}
 		number_of_colors = i;
-		xfree(org);
+		free(org);
 		if(!ec) {
 			ec = xmalloc(strlen(lc)+strlen(ficlr)+strlen(rc)+1);
 			sprintf(ec, "%s%s%s", lc, ficlr, rc);

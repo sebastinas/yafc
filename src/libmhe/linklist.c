@@ -1,4 +1,4 @@
-/* $Id: linklist.c,v 1.7 2001/05/12 18:43:01 mhe Exp $
+/* $Id: linklist.c,v 1.8 2003/07/12 10:25:42 mhe Exp $
  *
  * linklist.c -- generic linked list
  *
@@ -36,7 +36,7 @@ void list_free(list *lp)
 		return;
 	while(lp->first)
 		list_delitem(lp, lp->first);
-	xfree(lp);
+	free(lp);
 }
 
 void list_clear(list *lp)
