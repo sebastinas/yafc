@@ -1,3 +1,37 @@
+New in 1.0
+----------
+
+* bumped version to 1.0 (at last!)
+* applied patch from John Fremlin that adds an option to disable the
+  dots (...) while waiting for directory download when completing
+* compare filesize & -date if file already exists (suggested by Steve Grecni)
+* added cache timeout feature (suggested by Cameron W Johnston)
+* made sftp:// an alias to ssh:// (suggested by Marcel Prisi)
+* put --append didn't work in ssh mode, fixed
+* fxp now uses other connection as default target (if there are
+  exactly two open connections) (suggested by Phyber)
+* fixed get/put/fxp/rm on directories with apostrophes and other chars
+  that need to be quoted (reported by Morra)
+* bookmark -u (w/o host) now also updates the saved bookmarks file
+* added option auto_bookmark_update: specifies handling of updating
+  existing bookmarks (suggested by Aleksander Adamowski)
+* the ltag command now ignores multiples just as tag does
+* only tries to parse MLSD if MLSD command given
+* directory listing can now partly fail (if not all lines failed, yafc
+  will show the files that it could parse),
+* support for iso date and time format in unix directory listing
+  (YYYY-MM-DD HH:mm)
+* added option --skip-empty to get/put/fxp (skips empty files)
+* added config option transfer_first_mask (transfers specified files
+  before other files)
+
+
+New in 0.7.10
+-------------
+
+* fixed segfault in list.c
+
+
 New in 0.7.9
 ------------
 

@@ -1,36 +1,46 @@
 TODO list for Yafc
 ------------------
 
-_________________
-Mark Schreiber (mark7):
+before 1.0:
+-----------
 
-yafc can compile a working yafc with Kerberos support on Red Hat 7.2
-(with krb-libs installed), but it requires manually enabling the
-kerberos options in config.h and adding the paths to the
-Makefiles. It'd be nice if autoconf worked with RH's setup. Autoconf
-thinks that Heimdall (instead of MIT) is installed and even if mit is
-forced by altering configure.in, fails on every test after that.
-
-kerb libs on RH are in /usr/kerberos/lib, includes in
-/usr/kerberos/include/krb5 and /usr/kerberos/include/krb5/libs.
-------------------
-
-
-* 'insgesamt 679748' (locale settings in LISTing -> parsing failed)
-? if the output can't be parsed, yafc should just dump it out raw.
-+ option (in bookmarks?) to control LIST parameters (-a needed for PureFTPd)
-! Ctrl-C with SSH breaks ssh program *and* yafc, anyone?
-? config option for default answers to questions (get/put/fxp/...)
-* fix --chgrp / --chmod for directories (get)
-* ltag should ignore multiples just as tag does
-? FTP over SSL support (rfc2228)
-+ IPv6 support (help highly appreciated)
-? keep-alive (send NOOP or similar when idle)
-+ EPSV and EPRT support (RFC2428)
-* problems to get directories with double quotes (") in the name
-* completion doesn't work correctly with rels (need to be expanded?)
-! improve documentation (help wanted)
+* make autoconf recognize kerberos on redhat 7.2 (Mark Schreiber)
+  kerb libs on RH are in /usr/kerberos/lib, includes in
+  /usr/kerberos/include/krb5 and /usr/kerberos/include/krb5/libs.
+* doesn't compile with socks5 ?
++ fix --chgrp / --chmod for directories (get)
 * no bugs ;)
+
+
+after 1.0:
+----------
+
+* check and apply Eduard Blochs large file support patch
+* clean up source directory structure
+* update autoconf stuff to latest version
+* put/get/fxp/rm shouldn't remove tagged items that failed to transfer
+  (eg, directories if -r option not given)
+* remove [l]untag: create [l]tag --remove file(s) instead
+* completion doesn't work correctly with rels (need to be expanded?)
+* improve documentation (help wanted)
+* Ctrl-C in ssh mode breaks ssh program *and* yafc, anyone?
+* look into the 'set' command; only a subset of the settings are
+  handled, and they aren't saved either, is it needed?
+* 'insgesamt 679748' (locale settings in LISTing -> parsing failed)
+   I'm not sure how to fix this
++ a way of passing arguments to ssh (suggested by Tore Anderson)
++ support HTTP proxy (eg, http://www.squid-cache.org)
+   (suggested by Linder Erik)
++ use libConfuse (will break config file)
++ ability to specify preferred protocol (ssh/ftp) (Steve Grecni)
++ automatically retry failed download (bullet-proof transfers)
++ stop and retry transfer if it hangs (zero bytes in a configurable time)
++ IPv6 support, EPSV and EPRT support (RFC2428)
+? option (in bookmarks?) to control LIST parameters (-a needed for PureFTPd)
+? skiplist: add files/dirs which shouldn't be transfered (Marcus Schommer)
+? if the LIST output can't be parsed, yafc should just dump it out raw.
+? config option for default answers to questions (get/put/fxp/...)
+? FTP over SSL/TLS support (rfc2228)
 
 
 Legend:
@@ -38,4 +48,3 @@ Legend:
 * fix bug
 + add feature
 ? questionable
-! urgent

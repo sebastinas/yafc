@@ -1,6 +1,8 @@
-known BUGS (aka undocumented features ;)
-----------------------------------------
+known BUGS
+----------
 
+* can't parse some internationalized date/time formats (especially
+  i18n'ized month names)
 * links are not recognized correctly in SSH mode
   this is a bug in OpenSSH (<= 2.9) and has been reported
 * aliases with multiple commands may get wrong completion type
@@ -16,6 +18,7 @@ Please report bugs to the Yafc development mailing list:
     <yafc-devel@lists.sourceforge.net>
 
 Before reporting a bug, please verify you're using the latest version
-(check the ftp site.) When reporting bugs, please include information on
-what machine and operating system, including versions, you are running, an
-example for me to reproduce (use the --trace option) and a patch if you have one.
+(check the ftp site.) When reporting bugs, please include information
+on what machine and operating system, including versions, you are
+running, an example for me to reproduce (use the --trace option) and a
+patch if you have one.
