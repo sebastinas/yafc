@@ -1,4 +1,4 @@
-/* $Id: input.c,v 1.5 2001/05/13 11:50:17 mhe Exp $
+/* $Id: input.c,v 1.6 2001/10/16 18:49:07 mhe Exp $
  *
  * input.c -- string input and readline stuff
  *
@@ -185,7 +185,7 @@ static char ask_shortcut(const struct foo *bar)
 
 static char *choice_str(int opt, int def)
 {
-	static char tmp[17];
+	static char tmp[32];
 	int i, j;
 
 	for(j=i=0; question[i].str; i++) {
@@ -197,8 +197,8 @@ static char *choice_str(int opt, int def)
 			tmp[j++] = ((def == (1 << i)) ? toupper((int)sc) : sc);
 		}
 	}
-	tmp[j++] = '?';
 	tmp[j] = '\0';
+	strcat(tmp, ", ? for help");
 	return tmp;
 }
 
