@@ -636,8 +636,7 @@ void cmd_put(int argc, char **argv)
 	if(test(opt, PUT_FORCE))
 		opt &= ~PUT_INTERACTIVE;
 
-	
-	if(!test(opt, PUT_RECURSIVE) && list_numitem(gl) +
+	if(put_output && !test(opt, PUT_RECURSIVE) && list_numitem(gl) +
 	   (test(opt, PUT_TAGGED) ? list_numitem(gvLocalTagList) : 0) == 1)
 		{
 			opt |= PUT_OUTPUT_FILE;

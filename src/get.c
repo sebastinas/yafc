@@ -790,7 +790,7 @@ void cmd_get(int argc, char **argv)
 	if(test(opt, GET_FORCE))
 		opt &= ~GET_INTERACTIVE;
 
-	if(!test(opt, GET_RECURSIVE) && list_numitem(gl) +
+	if(get_output && !test(opt, GET_RECURSIVE) && list_numitem(gl) +
 	   (test(opt, GET_TAGGED) ? list_numitem(ftp->taglist) : 0) == 1)
 		{
 			opt |= GET_OUTPUT_FILE;
