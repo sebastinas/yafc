@@ -1,4 +1,4 @@
-/* $Id: input.c,v 1.6 2001/10/16 18:49:07 mhe Exp $
+/* $Id: input.c,v 1.7 2002/02/15 11:03:24 mhe Exp $
  *
  * input.c -- string input and readline stuff
  *
@@ -53,6 +53,7 @@ char *input_read_string(const char *prompt)
 #endif
 }
 
+#if 1
 char *getpass_hook(const char *prompt)
 {
 #if defined(KRB4) || defined(KRB5)
@@ -64,6 +65,85 @@ char *getpass_hook(const char *prompt)
 	return xstrdup(getpass(prompt));
 #endif
 }
+#else
+
+/* This is contributed, untested code from an anonymous sender from
+ * sourceforge. It didn't compile right away so I commented it out. This is
+ * probably a good idea, but I just don't have the time.
+ */
+
+# include <fcntl.h> 
+# include <sys/ioctl.h> 
+# include <termio.h> 
+
+char *getpass_hook(const char *prompt)
+{
+#if defined(KRB4) || defined(KRB5)
+	char tmp[80];
+	des_read_pw_string(tmp, sizeof(tmp), (char *)prompt,
+					   0);
+	tmp[79] = 0;
+	return xstrdup(tmp);
+#else
+	int c, n = 0;
+	char tmp[1024];
+	struct termio tbuf, tbufsave;
+	FILE *fd;
+
+	if((fd = fopen("/dev/tty", "rb")) == NULL) {
+		perror("fopen /dev/tty");
+		return NULL;
+	}
+	if (ioctl(fileno(fd), TCGETA, &tbuf) < 0) {
+		perror("ioctl get");
+		fclose(fd);
+		return NULL;
+	}
+	tbufsave = tbuf;
+	tbuf.c_iflag &= ~(IUCLC | ISTRIP | IXON | IXOFF);
+	tbuf.c_lflag &= ~(ICANON | ISIG | ECHO);
+	tbuf.c_cc[4] = 1; /* MIN */
+	if (ioctl(fileno(fd), TCSETA, &tbuf) < 0) {
+		perror("ioctl set");
+		fclose(fd);
+		return NULL;
+	}
+	fprintf(stderr, "%s", prompt);
+	while ((c = getc(fd)) != '\n') {
+		switch (c) {
+			case '\b':
+				if (n > 0) {
+					--n;
+					fprintf(stderr, "\b \b");
+				} else {
+					fprintf(stderr, "\a");
+				}
+				break;
+			default:
+				if (n < sizeof(tmp)-1) {
+					tmp[n++] = c;
+					fprintf(stderr, "*");
+				} else {
+					fprintf(stderr, "\a");
+				}
+		}
+		fflush(stderr);
+	}
+	tmp[n] = '\0';
+	if (ioctl(fileno(fd), TCSETA, &tbufsave) < 0) {
+		perror("ioctl restore");
+		fclose(fd);
+		return NULL;
+	}
+	if (fclose(fd) < 0) {
+		perror("fclose /dev/tty");
+		return NULL;
+	}
+	fprintf(stderr, "\n");
+	return xstrdup(tmp);
+#endif
+}
+#endif
 
 char *getuser_hook(const char *prompt)
 {
