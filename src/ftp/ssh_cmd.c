@@ -4,7 +4,7 @@
 
 #include "buffer.h"
 #include "bufaux.h"
-#include "pathnames.h"
+/*#include "pathnames.h"*/
 #include "ssh_ftp.h"
 
 int version;
@@ -14,10 +14,26 @@ int ssh_open_url(url_t *urlp)
 	ftp->ssh_args = 0;
 
 	ssh_make_args(&ftp->ssh_args, urlp->hostname);
+
+	if(urlp->username) {
+		ssh_make_args(&ftp->ssh_args, "-l");
+		ssh_make_args(&ftp->ssh_args, urlp->username);
+	}
+
+	if(urlp->port) {
+		char *p;
+		asprintf(&p, "-p %d", urlp->port);
+		ssh_make_args(&ftp->ssh_args, p);
+		xfree(p);
+	}
+
 	ssh_make_args(&ftp->ssh_args, 0);
 
-	ssh_connect(ftp->ssh_args, &ftp->ssh_in, &ftp->ssh_out,
-				&ftp->ssh_pid);
+	if(ssh_connect(ftp->ssh_args, &ftp->ssh_in, &ftp->ssh_out,
+				   &ftp->ssh_pid) == -1)
+		{
+			return -1;
+		}
 
 	ftp->ssh_version = version = ssh_init();
 	if(ftp->ssh_version == -1) {
@@ -30,24 +46,6 @@ int ssh_open_url(url_t *urlp)
 
 	ftp->homedir = ftp_getcurdir();
 
-#if 0
-	if(ftp->connected) {
-		void (*tracefunq)(const char *fmt, ...);
-		unsigned char *a;
-
-
-		tracefunq = (ftp->verbosity == vbDebug ? ftp_err : ftp_trace);
-
-		a = (unsigned char *)&ftp->ctrl->remote_addr.sin_addr;
-		tracefunq("remote address: %d.%d.%d.%d\n", a[0], a[1], a[2], a[3]);
-		a = (unsigned char *)&ftp->ctrl->local_addr.sin_addr;
-		tracefunq("local address: %d.%d.%d.%d\n", a[0], a[1], a[2], a[3]);
-		return 0;
-	} else {
-		ftp_close();
-		return 1;
-	}
-#endif
 	url_destroy(ftp->url);
 	ftp->url = url_clone(urlp);
 
@@ -250,6 +248,9 @@ rdirectory *ssh_read_directory(const char *path)
 		rf->size = dir[i]->a.size;
 		rfile_parse_colors(rf);
 
+/*		if(rislink(rf))
+			rf->link = ssh_readlink(rf->path);
+*/
 		list_additem(rdir->files, (void *)rf);
 	}
 
@@ -324,16 +325,18 @@ int ssh_do_receive(const char *infile, FILE *fp, getmode_t mode,
 {
 	int r;
 	rfile *f;
+	u_int64_t offset = ftp->restart_offset;
 
+	ftp->ti.size = ftp->ti.restart_size = offset;
 	ftp->restart_offset = 0L;
 
 	f = ftp_cache_get_file(infile);
 	if(f)
 		ftp->ti.total_size = f->size;
 	else
-		ftp->ti.total_size = 0; /* FIXME */
+		ftp->ti.total_size = ssh_filesize(infile);
 
-	r = ssh_recv_binary(infile, fp, hookf);
+	r = ssh_recv_binary(infile, fp, hookf, offset);
 
 	transfer_finished();
 
@@ -344,9 +347,10 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
 			 transfer_mode_t mode, ftp_transfer_func hookf)
 {
 	int r;
-	long rp = ftp->restart_offset;
+	long offset = ftp->restart_offset;
 	char *p;
 
+	ftp->ti.size = ftp->ti.restart_size = offset;
 	ftp->restart_offset = 0L;
 
 	reset_transfer_info();
@@ -380,7 +384,7 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
 
 	ftp_cache_flush_mark_for(p);
 
-	r = ssh_send_binary(p, fp, hookf);
+	r = ssh_send_binary(p, fp, hookf, offset);
 
 	transfer_finished();
 
