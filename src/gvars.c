@@ -1,4 +1,4 @@
-/* $Id: gvars.c,v 1.13 2001/05/12 18:44:37 mhe Exp $
+/* $Id: gvars.c,v 1.14 2001/05/13 12:24:25 mhe Exp $
  *
  * gvars.c -- global variables
  *
@@ -33,6 +33,11 @@ bool gvReverseDNS = true;
 
 /* path to the SSH program */
 char *gvSSHProgram = 0;
+
+/* path to the remote sftp-server program
+ * leave blank to use sftp subsystem
+ */
+char *gvSFTPServerProgram = 0;
 
 /* automatically reconnect on connection timeout */
 bool gvAutoReconnect = true;

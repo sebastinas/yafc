@@ -1,4 +1,4 @@
-/* $Id: rc.c,v 1.12 2001/05/12 18:44:37 mhe Exp $
+/* $Id: rc.c,v 1.13 2001/05/13 12:24:25 mhe Exp $
  *
  * rc.c -- config file parser + autologin lookup
  *
@@ -397,6 +397,10 @@ int parse_rc(const char *file, bool warn)
 			NEXTSTR;
 			xfree(gvSSHProgram);
 			gvSSHProgram = xstrdup(e);
+		} else if(strcasecmp(e, "sftp_server_program") == 0) {
+			NEXTSTR;
+			xfree(gvSFTPServerProgram);
+			gvSFTPServerProgram = xstrdup(e);
 		} else if(strcasecmp(e, "xterm_title_terms") == 0) {
 			NEXTSTR;
 			xfree(gvXtermTitleTerms);

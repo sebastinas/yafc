@@ -36,8 +36,6 @@
 #include "gvars.h"
 
 int use_ssh1 = 0;
-/*char *ssh_program = _PATH_SSH_PROGRAM;*/
-char *sftp_server = NULL;
 
 #define COPY_SIZE 8192
 
@@ -117,15 +115,15 @@ char **ssh_make_args(char ***args, char *add_arg)
 	}
 
 	/* no subsystem if the server-spec contains a '/' */
-	if (sftp_server == NULL || strchr(sftp_server, '/') == NULL)
+	if(gvSFTPServerProgram == NULL || strchr(gvSFTPServerProgram, '/') == NULL)
 		ssh_make_args(args, "-s");
 	ssh_make_args(args, "-oForwardX11=no");
 	ssh_make_args(args, "-oForwardAgent=no");
 	ssh_make_args(args, use_ssh1 ? "-oProtocol=1" : "-oProtocol=2");
 
 	/* Otherwise finish up and return the arg array */
-	if (sftp_server != NULL)
-		ssh_make_args(args, sftp_server);
+	if (gvSFTPServerProgram != NULL)
+		ssh_make_args(args, gvSFTPServerProgram);
 	else
 		ssh_make_args(args, "sftp");
 
