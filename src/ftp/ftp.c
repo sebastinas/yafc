@@ -24,6 +24,7 @@
 #include "xmalloc.h"
 #include "strq.h"
 #include "gvars.h"
+#include "ssh_cmd.h"
 
 /* in cmd.c */
 void exit_yafc(void);
@@ -59,6 +60,7 @@ Ftp *ftp_create(void)
 /*	ftp->out_buffer = 0;*/
 #endif
 	ftp->LIST_type = ltUnknown;
+	ftp->ssh_id = 1;
 
 	return ftp;
 }
@@ -181,6 +183,15 @@ void ftp_reset_vars(void)
 	host_destroy(ftp->host);
 	ftp->host = 0;
 
+	if(ftp->ssh_pid) {
+		ftp->ssh_pid = 0;
+		close(ftp->ssh_in);
+		close(ftp->ssh_out);
+		xfree(ftp->ssh_args);
+		ftp->ssh_args = 0;
+		ftp->ssh_id = 0;
+	}
+
 	url_destroy(ftp->url);
 	ftp->url = 0;
 
@@ -277,13 +288,6 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
 
 	use_proxy = (proxy_type(urlp) != 0);
 
-	if(urlp->protocol && strcmp(urlp->protocol, "ftp") != 0) {
-		ftp_err(_("Sorry, don't know how to handle your '%s' protocol\n"
-				  "trying 'ftp' instead...\n"),
-				urlp->protocol);
-		url_setprotocol(urlp, 0);
-	}
-
 	ftp_err(_("Looking up %s... "),
 			use_proxy ? gvProxyUrl->hostname : urlp->hostname);
 
@@ -296,6 +300,19 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
 		return -1;
 	}
 	urlp->port = ntohs(ftp->host->port);
+
+	if(urlp->protocol && strcmp(urlp->protocol, "ssh") == 0) {
+		int ret = ssh_open_url(urlp);
+		alarm(0);
+		return ret;
+	}
+
+	if(urlp->protocol && strcmp(urlp->protocol, "ftp") != 0) {
+		ftp_err(_("Sorry, don't know how to handle your '%s' protocol\n"
+				  "trying 'ftp' instead...\n"),
+				urlp->protocol);
+		url_setprotocol(urlp, 0);
+	}
 
 	fprintf(stderr, "\r");
 	ftp_trace("\n");
@@ -581,7 +598,7 @@ static void ftp_print_cmd(const char *cmd, va_list ap)
 	}
 }
 
-/* sends a ftp command on the control channel
+/* sends an FTP command on the control channel
  * returns reply status code on success or -1 on error
  */
 int ftp_cmd(const char *cmd, ...)
@@ -651,7 +668,7 @@ int ftp_cmd(const char *cmd, ...)
 
 void ftp_quit(void)
 {
-	if(ftp_connected()) {
+	if(ftp_connected() && !ftp->ssh_pid) {
 		ftp_reply_timeout(10);
 		ftp_set_tmp_verbosity(vbCommand);
 		ftp_cmd("QUIT");
@@ -803,6 +820,10 @@ int ftp_login(const char *guessed_username, const char *anonpass)
 
 	if(!ftp->url)
 		return -1;
+
+	if(ftp->ssh_pid)
+		/* login authentication is performed by the ssh program */
+		return 0;
 
 	ptype = proxy_type(ftp->url);
 	if(purl) {
@@ -1004,11 +1025,14 @@ bool ftp_loggedin(void)
 
 bool ftp_connected(void)
 {
-	return (ftp->connected && sock_connected(ftp->ctrl));
+	return (ftp->connected && (sock_connected(ftp->ctrl) || ftp->ssh_pid));
 }
 
 char *ftp_getcurdir(void)
 {
+	if(ftp->ssh_pid)
+		return ssh_getcurdir();
+
 	ftp_set_tmp_verbosity(vbNone);
 	ftp_cmd("PWD");
 	if(ftp->code == ctComplete) {
@@ -1030,7 +1054,7 @@ char *ftp_getcurdir(void)
 	return xstrdup("CWD?");
 }
 
-static void ftp_update_curdir_x(const char *p)
+void ftp_update_curdir_x(const char *p)
 {
 	xfree(ftp->prevdir);
 	ftp->prevdir = ftp->curdir;
@@ -1047,6 +1071,9 @@ static void ftp_update_curdir(void)
 
 int ftp_chdir(const char *path)
 {
+	if(ftp->ssh_pid)
+		return ssh_chdir(path);
+
 	ftp_set_tmp_verbosity(vbCommand);
 	ftp_cmd("CWD %s", path);
 	if(ftp->code == ctComplete) {
@@ -1082,6 +1109,9 @@ int ftp_chdir(const char *path)
 
 int ftp_cdup(void)
 {
+	if(ftp->ssh_pid)
+		return ssh_cdup();
+
 	ftp_set_tmp_verbosity(vbCommand);
 	ftp_cmd("CDUP");
 	if(ftp->code == ctComplete) {
@@ -1093,7 +1123,12 @@ int ftp_cdup(void)
 
 static int ftp_mkdir_verb(const char *path, verbose_t verb)
 {
-	char *p = xstrdup(path);
+	char *p;
+
+	if(ftp->ssh_pid)
+		return ssh_mkdir_verb(path, verb);
+
+	p = xstrdup(path);
 	stripslash(p);
 
 	ftp_set_tmp_verbosity(verb);
@@ -1113,6 +1148,9 @@ int ftp_rmdir(const char *path)
 {
 	char *p;
 
+	if(ftp->ssh_pid)
+		return ssh_rmdir(path);
+
 	p = xstrdup(path);
 	stripslash(p);
 	ftp_set_tmp_verbosity(vbError);
@@ -1127,6 +1165,9 @@ int ftp_rmdir(const char *path)
 
 int ftp_unlink(const char *path)
 {
+	if(ftp->ssh_pid)
+		return ssh_unlink(path);
+
 	ftp_cmd("DELE %s", path);
 	if(ftp->code == ctComplete) {
 		ftp_cache_flush_mark_for(path);
@@ -1137,6 +1178,9 @@ int ftp_unlink(const char *path)
 
 int ftp_chmod(const char *path, const char *mode)
 {
+	if(ftp->ssh_pid)
+		return ssh_chmod(path, mode);
+
 	if(ftp->has_site_chmod_command) {
 		ftp_set_tmp_verbosity(vbNone);
 		ftp_cmd("SITE CHMOD %s %s", mode, path);
@@ -1159,6 +1203,9 @@ void ftp_reply_timeout(unsigned int secs)
 
 int ftp_idle(const char *idletime)
 {
+	if(ftp->ssh_pid)
+		return ssh_idle(idletime);
+
 	if(!ftp->has_site_idle_command) {
 		ftp_err(_("Server doesn't support SITE IDLE\n"));
 		return -1;
@@ -1177,6 +1224,9 @@ int ftp_idle(const char *idletime)
 
 int ftp_noop(void)
 {
+	if(ftp->ssh_pid)
+		return ssh_noop();
+
 	ftp_set_tmp_verbosity(vbCommand);
 	ftp_cmd("NOOP");
 	return ftp->code == ctComplete ? 0 : -1;
@@ -1184,6 +1234,9 @@ int ftp_noop(void)
 
 int ftp_help(const char *arg)
 {
+	if(ftp->ssh_pid)
+		return ssh_help(arg);
+
 	ftp_set_tmp_verbosity(vbCommand);
 	if(arg)
 		ftp_cmd("HELP %s", arg);
@@ -1195,6 +1248,9 @@ int ftp_help(const char *arg)
 unsigned long ftp_filesize(const char *path)
 {
 	unsigned long ret;
+
+	if(ftp->ssh_pid)
+		return ssh_filesize(path);
 
 	if(!ftp->has_size_command)
 		return -1;
@@ -1220,8 +1276,12 @@ rdirectory *ftp_read_directory(const char *path)
 	bool is_curdir = false;
 	char *tmpfilename, *e;
 	bool _failed = false;
+	char *dir;
 
-	char *dir = ftp_path_absolute(path);
+	if(ftp->ssh_pid)
+		return ssh_read_directory(path);
+
+	dir = ftp_path_absolute(path);
 	stripslash(dir);
 
 	is_curdir = (strcmp(dir, ftp->curdir) == 0);
@@ -1435,6 +1495,9 @@ void ftp_flush_reply(void)
 	if(!ftp_connected())
 		return;
 
+	if(ftp->ssh_pid)
+		return;
+
 /*	ftp_set_signal(SIGINT, SIG_IGN);*/
 	fprintf(stderr, "flushing replies...\r");
 
@@ -1461,6 +1524,9 @@ int ftp_rename(const char *oldname, const char *newname)
 {
 	char *on;
 	char *nn;
+
+	if(ftp->ssh_pid)
+		return ssh_rename(oldname, newname);
 
 	on = xstrdup(oldname);
 	stripslash(on);
@@ -1582,6 +1648,10 @@ time_t ftp_filetime(const char *filename)
 
 	if(!ftp_connected())
 		return -1;
+
+	if(ftp->ssh_pid)
+		return ssh_filetime(filename);
+
 	if(!ftp->has_mdtm_command)
 		return -1;
 
@@ -1625,4 +1695,13 @@ int ftp_maybe_isdir(rfile *fp)
 			return 2;
 	}
 	return 0;
+}
+
+void ftp_pwd(void)
+{
+	if(ftp->ssh_pid)
+		return ssh_pwd();
+
+	ftp_set_tmp_verbosity(vbCommand);
+	ftp_cmd("PWD");
 }
