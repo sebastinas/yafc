@@ -1,4 +1,4 @@
-/* $Id: syshdr.h,v 1.7 2001/05/13 11:49:43 mhe Exp $
+/* $Id: syshdr.h,v 1.8 2001/05/16 15:11:21 mhe Exp $
  *
  * syshdr.h -- includes global header files etc.
  *
@@ -20,6 +20,43 @@
 
 #ifdef HAVE_SYS_TYPES_H
 # include <sys/types.h>
+#endif
+/* data type checks stolen from openssh-2.9p1 */
+#ifdef HAVE_SYS_BITYPES_H
+# include <sys/bitypes.h> /* For u_intXX_t */
+#endif
+/* If sys/types.h does not supply u_intXX_t, supply them ourselves */
+#ifndef HAVE_U_INTXX_T
+# ifdef HAVE_UINTXX_T
+typedef uint8_t u_int8_t;
+typedef uint16_t u_int16_t;
+typedef uint32_t u_int32_t;
+# define HAVE_U_INTXX_T 1
+# else
+#  if (SIZEOF_CHAR == 1)
+typedef unsigned char u_int8_t;
+#  else
+#   error "8 bit int type not found."
+#  endif
+#  if (SIZEOF_SHORT_INT == 2)
+typedef unsigned short int u_int16_t;
+#  else
+#   ifdef _CRAY
+typedef unsigned long  u_int16_t;
+#   else
+#    error "16 bit int type not found."
+#   endif
+#  endif
+#  if (SIZEOF_INT == 4)
+typedef unsigned int u_int32_t;
+#  else
+#   ifdef _CRAY
+typedef unsigned long  u_int32_t;
+#   else
+#    error "32 bit int type not found."
+#   endif
+#  endif
+# endif
 #endif
 
 #include <stdio.h>

@@ -1,3 +1,43 @@
+dnl mhe_CHECK_TYPES
+dnl stolen from configure.in in openssh-2.9p1
+
+AC_DEFUN(mhe_CHECK_TYPES,
+[
+  dnl Checks for data types
+  AC_CHECK_SIZEOF(char, 1)
+  AC_CHECK_SIZEOF(short int, 2)
+  AC_CHECK_SIZEOF(int, 4)
+  AC_CHECK_SIZEOF(long int, 4)
+  AC_CHECK_SIZEOF(long long int, 8)
+
+  AC_CACHE_CHECK([for u_intXX_t types], ac_cv_have_u_intxx_t, [
+    AC_TRY_COMPILE(
+      [ #include <sys/types.h> ],
+      [ u_int8_t a; u_int16_t b; u_int32_t c; a = b = c = 1;],
+      [ ac_cv_have_u_intxx_t="yes" ],
+      [ ac_cv_have_u_intxx_t="no" ]
+    )
+  ])
+  if test "x$ac_cv_have_u_intxx_t" = "xyes" ; then
+    AC_DEFINE(HAVE_U_INTXX_T)
+    have_u_intxx_t=1
+  fi
+
+  if test -z "$have_u_intxx_t" ; then
+    AC_CACHE_CHECK([for uintXX_t types], ac_cv_have_uintxx_t, [
+      AC_TRY_COMPILE(
+        [#include <sys/types.h>],
+        [ uint8_t a; uint16_t b; uint32_t c; a = b = c = 1; ], 
+        [ ac_cv_have_uintxx_t="yes" ],
+        [ ac_cv_have_uintxx_t="no" ]
+      )
+    ])
+    if test "x$ac_cv_have_uintxx_t" = "xyes" ; then
+      AC_DEFINE(HAVE_UINTXX_T)
+    fi
+  fi
+])
+
 dnl mhe_CHECK_PROTO
 dnl checks if function $1 needs a prototype
 dnl Syntax: mhe_CHECK_PROTO(function, includes)

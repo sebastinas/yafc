@@ -54,3 +54,7 @@
 #undef HAVE_LIBDES
 
 #undef HOSTTYPE
+
+#undef HAVE_U_INTXX_T
+
+#undef HAVE_UINTXX_T
