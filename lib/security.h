@@ -34,7 +34,7 @@
  * SUCH DAMAGE. 
  */
 
-/* $Id: security.h,v 1.2 2000/10/05 15:19:36 mhe Exp $ */
+/* $Id: security.h,v 1.3 2000/10/06 10:30:40 mhe Exp $ */
 
 #ifndef __security_h__
 #define __security_h__
@@ -69,19 +69,11 @@ struct sec_client_mech {
 #define AUTH_CONTINUE	1
 #define AUTH_ERROR	2
 
-#ifdef FTP_SERVER
-extern struct sec_server_mech krb4_server_mech, gss_server_mech;
-#else
-extern struct sec_client_mech krb4_client_mech, gss_client_mech;
-#endif
+extern struct sec_client_mech krb4_client_mech;
+extern struct sec_client_mech gss_client_mech;
+extern struct sec_client_mech ssl_client_mech;
 
 /*extern int sec_complete;*/
-
-#ifdef FTP_SERVER
-extern char *ftp_command;
-void new_ftp_command(char*);
-void delete_ftp_command(void);
-#endif
 
 /* ---- */
 
@@ -97,29 +89,14 @@ int sec_fprintf2(FILE *f, const char *fmt, ...);
 int sec_vfprintf2(FILE *, const char *, va_list);
 int sec_write (int, char *, int);
 
-#ifdef FTP_SERVER
-void adat (char *);
-void auth (char *);
-void ccc (void);
-void mec (char *, enum protection_level);
-void pbsz (int);
-void prot (char *);
-void delete_ftp_command (void);
-void new_ftp_command (char *);
-int sec_userok (char *);
-int secure_command (void);
-enum protection_level get_command_prot(void);
-#else
 void sec_end (void);
-int sec_login (char *);
+int sec_login(char *host, const char *mech_to_try);
 void sec_prot (int, char **);
 int sec_request_prot (char *);
 void sec_set_protection_level (void);
 void sec_status (void);
 
 enum protection_level set_command_prot(enum protection_level);
-
-#endif
 
 const char *level_to_name(enum protection_level level);
 enum protection_level name_to_level(const char *name);

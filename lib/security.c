@@ -35,25 +35,17 @@
  * SUCH DAMAGE.
  */
 
-#ifdef FTP_SERVER
-#include "ftpd_locl.h"
-#else
-# include "syshdr.h"
-# include "ftp.h"
-# include "base64.h"
-# include "commands.h"
-#endif
+#include "syshdr.h"
+#include "ftp.h"
+#include "base64.h"
+#include "commands.h"
 
-/*RCSID("$Id: security.c,v 1.2 2000/10/05 15:19:36 mhe Exp $");*/
+/*RCSID("$Id: security.c,v 1.3 2000/10/06 10:30:40 mhe Exp $");*/
 
 /*static enum protection_level command_prot;*/
-
 /*static enum protection_level data_prot;*/
-
 /*static size_t buffer_size;*/
-
 /*static struct buffer in_buffer, out_buffer;*/
-
 /*int sec_complete;*/
 
 static struct
@@ -78,7 +70,6 @@ const char *level_to_name(enum protection_level level)
 	return _("unknown");
 }
 
-#ifndef FTP_SERVER				/* not used in server */
 enum protection_level name_to_level(const char *name)
 {
 	int i;
@@ -88,13 +79,6 @@ enum protection_level name_to_level(const char *name)
 			return level_names[i].level;
 	return (enum protection_level)-1;
 }
-#endif
-
-#ifdef FTP_SERVER
-
-/* snip */
-
-#else
 
 static struct sec_client_mech *mechs[] = {
 #ifdef KRB5
@@ -103,14 +87,11 @@ static struct sec_client_mech *mechs[] = {
 #ifdef KRB4
 	&krb4_client_mech,
 #endif
+#ifdef SSL
+	&ssl_client_mech,
+#endif
 	NULL
 };
-
-/*static struct sec_client_mech *mech;*/
-
-#endif
-
-/*static void *app_data;*/
 
 int sec_getc(FILE * F)
 {
@@ -377,21 +358,12 @@ int sec_vfprintf(FILE * f, const char *fmt, va_list ap)
 		printf(_("Out of memory base64-encoding.\n"));
 		return -1;
 	}
-#ifdef FTP_SERVER
-	if (command_prot == prot_safe)
-		fprintf(f, "631 %s\r\n", buf);
-	else if (command_prot == prot_private)
-		fprintf(f, "632 %s\r\n", buf);
-	else if (command_prot == prot_confidential)
-		fprintf(f, "633 %s\r\n", buf);
-#else
 	if (ftp->command_prot == prot_safe)
 		fprintf(f, "MIC %s", buf);
 	else if (ftp->command_prot == prot_private)
 		fprintf(f, "ENC %s", buf);
 	else if (ftp->command_prot == prot_confidential)
 		fprintf(f, "CONF %s", buf);
-#endif
 	free(buf);
 	return 0;
 }
@@ -408,12 +380,6 @@ int sec_fprintf(FILE * f, const char *fmt, ...)
 }
 
 /* end common stuff */
-
-#ifdef FTP_SERVER
-
-/* snip */
-
-#else /* FTP_SERVER */
 
 void sec_status(void)
 {
@@ -436,8 +402,6 @@ static int sec_prot_internal(int level)
 	char *p;
 	unsigned int s = 1048576;
 
-/*    int old_verbose = verbose;
-      verbose = 0;*/
 	ftp_set_tmp_verbosity(vbError);
 
 	if (!ftp->sec_complete) {
@@ -459,7 +423,6 @@ static int sec_prot_internal(int level)
 			ftp->buffer_size = s;
 	}
 
-/*    verbose = old_verbose;*/
 	ret = ftp_cmd("PROT %c", level["CSEP"]);	/* XXX :-) */
 	if (ftp->code != ctComplete) {
 		printf(_("Failed to set protection level.\n"));
@@ -494,8 +457,6 @@ void cmd_prot(int argc, char **argv)
 
 	if (!ftp->sec_complete) {
 		printf(_("No security data exchange has taken place\n"));
-
-/*	code = -1;*/
 		return;
 	}
 	level = name_to_level(argv[argc - 1]);
@@ -508,16 +469,12 @@ void cmd_prot(int argc, char **argv)
 	if ((*ftp->mech->check_prot) (ftp->app_data, level)) {
 		printf(_("%s does not implement %s protection\n"),
 			   ftp->mech->name, level_to_name(level));
-
-/*	code = -1;*/
 		return;
 	}
 
 	if (argc == optind + 1 || strncasecmp(argv[optind], "data",
 										  strlen(argv[optind])) == 0) {
 		if (sec_prot_internal(level) < 0) {
-
-/*	    code = -1;*/
 			return;
 		}
 	} else if (strncasecmp(argv[optind], "command", strlen(argv[optind])) ==
@@ -527,7 +484,6 @@ void cmd_prot(int argc, char **argv)
 			   argv[0]);
 	}
 
-/*    code = 0;*/
 	return;
 }
 
@@ -549,66 +505,77 @@ int sec_request_prot(char *level)
 	return 0;
 }
 
-int sec_login(char *host, const char *mechs)
+static struct sec_client_mech **find_mech(const char *name)
+{
+	struct sec_client_mech **m;
+
+	if(!name || strcasecmp(name, "none") == 0)
+		return 0;
+
+	for (m = mechs; *m && (*m)->name; m++) {
+		if(!name || strcmp(name, (*m)->name) != 0)
+			return m;
+	}
+	return 0;
+}
+
+/* return values:
+ * 0 - success
+ * 1 - failed, try another mechanism
+ * -1 - failed, security extensions not supported
+ */
+int sec_login(char *host, const char *mech_to_try)
 {
 	int ret;
 	struct sec_client_mech **m;
+	void *tmp;
 
-/*    int old_verbose = verbose;*/
-
-/*    verbose = -1;*//* shut up all messages this will produce (they
-   are usually not very user friendly) */
+	/* shut up all messages this will produce (they
+	 are usually not very user friendly) */
 	ftp_set_tmp_verbosity(vbError);
 
-	for (m = mechs;
-		 *m && (*m)->name && (!mechs || strstr(mechs, (*m)->name) != 0); m++) {
-		void *tmp;
+	m = find_mech(mech_to_try);
+	if(!m)
+		return 1;
 
-		tmp = realloc(ftp->app_data, (*m)->size);
-		if (tmp == NULL) {
-			ftp_err(_("realloc %u failed"), (*m)->size);
+	tmp = realloc(ftp->app_data, (*m)->size);
+	if (tmp == NULL) {
+		ftp_err(_("realloc %u failed"), (*m)->size);
+		return -1;
+	}
+	ftp->app_data = tmp;
+
+	if ((*m)->init && (*(*m)->init) (ftp->app_data) != 0) {
+		printf(_("Skipping %s...\n"), (*m)->name);
+		return 1;
+	}
+	printf(_("Trying %s...\n"), (*m)->name);
+	ret = ftp_cmd("AUTH %s", (*m)->name);
+	if (ftp->code != ctContinue) {
+		if (ret == 504) {
+			printf(_("%s is not supported by the server.\n"), (*m)->name);
+		} else if (ret == 534) {
+			printf(_("%s rejected as security mechanism.\n"), (*m)->name);
+		} else if (ftp->code == ctError) {
+			printf(_("The server doesn't support the FTP "
+					 "security extensions.\n"));
 			return -1;
 		}
-		ftp->app_data = tmp;
-
-		if ((*m)->init && (*(*m)->init) (ftp->app_data) != 0) {
-			printf(_("Skipping %s...\n"), (*m)->name);
-			continue;
-		}
-		printf(_("Trying %s...\n"), (*m)->name);
-		ret = ftp_cmd("AUTH %s", (*m)->name);
-		if (ftp->code != ctContinue) {
-			if (ret == 504) {
-				printf(_("%s is not supported by the server.\n"), (*m)->name);
-			} else if (ret == 534) {
-				printf(_("%s rejected as security mechanism.\n"), (*m)->name);
-			} else if (ftp->code == ctError) {
-				printf(_("The server doesn't support the FTP "
-						 "security extensions.\n"));
-
-/*		verbose = old_verbose;*/
-				return -1;
-			}
-			continue;
-		}
-
-		ret = (*(*m)->auth) (ftp->app_data, host);
-
-		if (ret == AUTH_CONTINUE)
-			continue;
-		else if (ret != AUTH_OK) {
-			/* mechanism is supposed to output error string */
-
-/*	    verbose = old_verbose;*/
-			return -1;
-		}
-		ftp->mech = *m;
-		ftp->sec_complete = 1;
-		ftp->command_prot = prot_safe;
-		break;
+		return 1;
 	}
 
-/*    verbose = old_verbose;*/
+	ret = (*(*m)->auth) (ftp->app_data, host);
+
+	if (ret == AUTH_CONTINUE)
+		return 1;
+	else if (ret != AUTH_OK) {
+		/* mechanism is supposed to output error string */
+		return -1;
+	}
+	ftp->mech = *m;
+	ftp->sec_complete = 1;
+	ftp->command_prot = prot_safe;
+
 	return *m == NULL;
 }
 
@@ -624,5 +591,3 @@ void sec_end(void)
 	ftp->sec_complete = false;
 	ftp->data_prot = (enum protection_level)0;
 }
-
-#endif /* FTP_SERVER */
