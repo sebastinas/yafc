@@ -38,66 +38,65 @@ void auto_create_bookmark(void);
  {#NAME, NC, NL, AU, CPL, HINT, cmd_ ## NAME}
 
 cmd_t cmds[] = {
-	CMD(flush, 1,1,1, cpNone, __("flushes replies")),
+	CMD(flush, 0,0,1, cpNone, 0),
 	{"!", 0,0,0, cpLocalFile, __("same as 'shell'"), cmd_shell},
 	CMD(alias, 0,0,1, cpAlias, 0),
 	CMD(bookmark, 0,0,1, cpBookmark, 0),
 	CMD(cache, 1,1,1, cpNone, 0),
-	CMD(cat, 1,1,1, cpRemoteFile, __("view a remote file\n usage: cat <remote file>")),
-	CMD(cd, 1,1,1, cpRemoteDir, __("change remote working directory\n usage: cd [directory]\n cd without parameters changes to home directory\n Use 'cd -' for previous directory")),
-	CMD(cdup, 1,1,1, cpNone, __("change remote working directory to parent directory\n usage: cdup")),
-	CMD(chmod, 1,1,0, cpRemoteFile, __("change permissions on remote file(s)")),
+	CMD(cat, 0,0,1, cpRemoteFile, 0),
+	CMD(cd, 0,0,1, cpRemoteDir, 0),
+	CMD(cdup, 0,0,1, cpNone, 0),
+	CMD(chmod, 0,0,0, cpRemoteFile, 0),
 	CMD(close, 0,0,1, cpNone, 0),
 	CMD(copyright, 0,0,1, cpNone, __("show copyright notice\n usage: copyright")),
-	CMD(filesize, 1,1,1, cpRemoteFile, __("show remote file's size in bytes")),
-	CMD(filetime, 1,1,1, cpRemoteFile, __("show remote file's time")),
+	CMD(filesize, 0,0,1, cpRemoteFile, 0),
+	CMD(filetime, 0,0,1, cpRemoteFile, 0),
 	CMD(fxp, 0,0,0, cpRemoteFile, 0),
 	CMD(get, 0,0,0, cpRemoteFile, 0),
 	CMD(help, 0,0,1, cpCommand, __("DON'T PANIC\n usage: help [command(s)]")),
 	CMD(lcd, 0,0,1, cpLocalFile, 0),
-	CMD(list, 1,1,1, cpRemoteFile, __("send a LIST command\n usage: list [options]")),
+	CMD(list, 0,0,1, cpRemoteFile, 0),
 	CMD(lpwd, 0,0,1, cpNone, 0),
 	CMD(ls, 0,0,0, cpRemoteFile, 0),
 	CMD(ltag, 0,0,1, cpLocalFile, 0),
 	CMD(luntag, 0,0,0, cpLocalTaglist, 0),
-	CMD(mkdir, 1,1,1, cpNone, __("create remote directory")),
-	CMD(nlist, 1,1,1, cpRemoteFile, __("send a NLST command")),
-	CMD(nop, 1,0,1, cpNone, __("send a NOOP command to server (does nothing)")),
-	CMD(idle, 1,1,1, cpNone, __("get or set idle timeout")),
+	CMD(mkdir, 0,0,1, cpNone, 0),
+	CMD(nlist, 0,0,1, cpRemoteFile, 0),
+	CMD(nop, 0,0,1, cpNone, 0),
+	CMD(idle, 0,0,1, cpNone, 0),
 	CMD(open, 0,0,1, cpHostname, 0),
 	CMD(put, 0,0,1, cpLocalFile, 0),
-	CMD(pwd, 1,1,1, cpNone, __("print current (remote) working directory")),
+	CMD(pwd, 0,0,1, cpNone, 0),
 	CMD(quit, 0,0,1, cpNone, 0),
-	CMD(quote, 1,0,1, cpNone, __("send arbitrary ftp command")),
-	CMD(mv, 1,1,1, cpRemoteFile, __("rename a remote file or directory\n usage: mv <from> <to>")),
+	CMD(quote, 0,0,1, cpNone, 0),
+	CMD(mv, 0,0,1, cpRemoteFile, 0),
 	CMD(rhelp, 1,0,1, cpNone, __("get remote help\n usage: rhelp [command]")),
 	CMD(rm, 0,0,1, cpRemoteFile, 0),
-	CMD(rmdir, 1,1,1, cpRemoteDir, __("remove remote directory\n usage: rmdir <remote directory>")),
-	CMD(rstatus, 1,0,1, cpRemoteFile, __("show remote status")),
+	CMD(rmdir, 0,0,1, cpRemoteDir, 0),
+	CMD(rstatus, 0,0,1, cpRemoteFile, 0),
 	CMD(set, 0,0,1, cpVariable, __("set program variables\n usage: set [variable] [value]")),
 	CMD(shell, 0,0,0, cpLocalFile, __("execute shell command or invoke shell\n usage: shell [shell command]")),
-	CMD(site, 1,1,1, cpNone, __("send site specific command (try 'site help' or 'rhelp site')")),
+	CMD(site, 0,0,1, cpNone, 0),
 	CMD(source, 0,0,1, cpLocalFile, 0),
 	CMD(status, 0,0,1, cpNone, 0),
 	CMD(switch, 0,0,0, cpFtpList, 0),
-	CMD(system, 1,1,0, cpNone, __("show type of remote system")),
+	CMD(system, 0,0,0, cpNone, 0),
 	CMD(tag, 0,0,0, cpRemoteFile, 0),
 	CMD(unalias, 0,0,1, cpAlias, 0),
-	CMD(untag, 1,1,1, cpTaglist, __("untag file(s) in the tag list")),
-	CMD(url, 1,1,1, cpNone, __("show URL")),
-	CMD(user, 1,0,1, cpNone, __("send new user information\n usage: user [username]")),
+	CMD(untag, 0,0,1, cpTaglist, 0),
+	CMD(url, 0,0,1, cpNone, 0),
+	CMD(user, 0,0,1, cpNone, 0),
 	CMD(version, 0,0,1, cpNone, __("show version")),
 	CMD(warranty, 0,0,1, cpNone, __("show warranty (or lack of)")),
-	CMD(zcat, 1,1,1, cpRemoteFile, __("view a compressed remote file")),
 #if defined(KRB4) || defined(KRB5)
 	CMD(prot, 1,1,1, cpNone, __("set protection level")),
 #endif
 #ifdef KRB4
-	CMD(afslog, 1,1,1, cpNone, __("obtain remote AFS tokens")),
-	CMD(klist, 1,1,1, cpNone, __("show remote tickets")),
-	CMD(kauth, 1,1,1, cpNone, __("get remote tokens")),
-	CMD(kdestroy, 1,1,1, cpNone, __("destroy remote tickets")),
-	CMD(krbtkfile, 1,1,1, cpNone, __("set filename of remote tickets")),
+	CMD(afslog, 0,0,1, cpNone, 0),
+	CMD(klist, 0,0,1, cpNone, 0),
+	CMD(kauth, 0,0,1, cpNone, 0),
+	CMD(kdestroy, 0,0,1, cpNone, 0),
+	CMD(krbtkfile, 0,0,1, cpNone, 0),
 #endif
 
     /* this _must_ be the last entry, unless you like segfaults ;) */
@@ -342,6 +341,8 @@ void cmd_list(int argc, char **argv)
 			 "  list [options] [file]\n"
 			 "Options:\n"
 			 "  -h, --help    show this help\n");
+	need_connected();
+	need_loggedin();
 
 	if(argc == optind + 1)
 		ftp_list("LIST", 0, stdout);
@@ -360,6 +361,8 @@ void cmd_nlist(int argc, char **argv)
 			 "  nlist [options] [file]\n"
 			 "Options:\n"
 			 "  -h, --help    show this help\n");
+	need_connected();
+	need_loggedin();
 
 	if(argc == optind + 1)
 		ftp_list("NLST", 0, stdout);
@@ -384,6 +387,8 @@ void cmd_cat(int argc, char **argv)
 			 "  -h, --help    show this help\n");
 
 	minargs(optind);
+	need_connected();
+	need_loggedin();
 
 	for(i=optind;i<argc;i++) {
 		listitem *gli;
@@ -398,24 +403,6 @@ void cmd_cat(int argc, char **argv)
 				ftp_receive(rf->path, stdout, tmBinary, 0);
 		}
 		rglob_destroy(gl);
-	}
-}
-
-/* FIXME: is zcat needed? why not use 'cat | gunzip -c' or something
- */
-void cmd_zcat(int argc, char **argv)
-{
-	int i;
-
-	minargs(1);
-
-	for(i=1; i<argc; i++) {
-		char *cmd = "zcat";
-		char *e = strrchr(argv[i], '.');
-		if(e && strcmp(e+1, "bz2") == 0)
-			cmd = "bunzip2";
-
-		ftp_getfile(argv[i], cmd, getPipe, tmBinary, 0);
 	}
 }
 
@@ -434,6 +421,8 @@ void cmd_cd(int argc, char **argv)
 #endif
 
 	maxargs(1);
+	need_connected();
+	need_loggedin();
 
 	if(argc <= 1)
 		e = ftp->homedir;
@@ -455,6 +444,8 @@ void cmd_cdup(int argc, char **argv)
 			 "Options:\n"
 			 "  -h, --help    show this help\n");
 	maxargs(optind - 1);
+	need_connected();
+	need_loggedin();
 	ftp_cdup();
 }
 
@@ -486,6 +477,8 @@ void cmd_pwd(int argc, char **argv)
 			 "  -h, --help     show this help\n");
 
 	maxargs(optind - 1);
+	need_connected();
+	need_loggedin();
 
 	ftp_set_tmp_verbosity(vbCommand);
 	ftp_cmd("PWD");
@@ -520,6 +513,8 @@ void cmd_url(int argc, char **argv)
 	}
 
 	maxargs(optind - 1);
+	need_connected();
+	need_loggedin();
 
 	printf("ftp://");
 
@@ -588,6 +583,8 @@ void cmd_mkdir(int argc, char **argv)
 			 "Options:\n"
 			 "  -h, --help    show this help\n");
 	minargs(optind);
+	need_connected();
+	need_loggedin();
 
 	for(i=optind; i<argc; i++)
 		ftp_mkdir(argv[i]);
@@ -601,6 +598,8 @@ void cmd_rmdir(int argc, char **argv)
 			 "Options:\n"
 			 "  -h, --help    show this help\n");
 	minargs(optind);
+	need_connected();
+	need_loggedin();
 
 	for(i=optind; i<argc; i++)
 		ftp_rmdir(argv[i]);
@@ -614,6 +613,8 @@ void cmd_idle(int argc, char **argv)
 			 "  -h, --help    show this help\n"
 			 "Without the timeout option, print the current idle timeout\n");
 	maxargs(optind);
+	need_connected();
+	need_loggedin();
 
 	if(argc - 1 == optind)
 		ftp_idle(argv[optind]);
@@ -628,6 +629,7 @@ void cmd_nop(int argc, char **argv)
 			 "Options:\n"
 			 "  -h, --help    show this help\n");
 	maxargs(optind - 1);
+	need_connected();
 
 	ftp_noop();
 }
@@ -640,6 +642,8 @@ void cmd_rstatus(int argc, char **argv)
 			 "  -h, --help    show this help\n");
 
 	maxargs(optind - 1);
+	need_connected();
+
 	ftp_set_tmp_verbosity(vbCommand);
 	ftp_cmd("STAT");
 }
@@ -678,6 +682,7 @@ void cmd_site(int argc, char **argv)
 			 "try 'site help' or 'rhelp site' for more information\n");
 
 	minargs(optind);
+	need_connected();
 
 	e = args_cat(argc, argv, optind);
 	ftp_set_tmp_verbosity(vbCommand);
@@ -698,6 +703,8 @@ void cmd_chmod(int argc, char **argv)
 			 "<mode> is the permission mode, in octal (ex 644)\n");
 
 	minargs(optind + 1);
+	need_connected();
+	need_loggedin();
 
 	gl = rglob_create();
 	for(i=optind+1; i<argc; i++) {
@@ -721,6 +728,8 @@ void cmd_mv(int argc, char **argv)
 
 	minargs(optind + 1);
 	maxargs(optind + 1);
+	need_connected();
+	need_loggedin();
 
 	ftp_set_tmp_verbosity(vbError);
 	if(ftp_rename(argv[optind], argv[optind + 1]) == 0)
@@ -789,6 +798,8 @@ void cmd_quote(int argc, char **argv)
 			 "  -h, --help    show this help\n");
 
 	minargs(optind);
+	need_connected();
+
 	e = args_cat(argc, argv, optind);
 	ftp_set_tmp_verbosity(vbDebug);
 	ftp_cmd("%s", e);
@@ -805,6 +816,8 @@ void cmd_filetime(int argc, char **argv)
 			 "  -h, --help    show this help\n");
 
 	minargs(optind);
+	need_connected();
+	need_loggedin();
 
 	for(i=optind;i<argc;i++) {
 		time_t t = ftp_filetime(argv[i]);
@@ -825,6 +838,8 @@ void cmd_filesize(int argc, char **argv)
 			 "  -h, --help    show this help\n");
 
 	minargs(optind);
+	need_connected();
+	need_loggedin();
 
 	for(i=optind;i<argc;i++) {
 		unsigned long s = ftp_filesize(argv[i]);
@@ -869,6 +884,8 @@ void cmd_system(int argc, char **argv)
 
 		maxargs(optind - 1);
 	}
+	need_connected();
+	need_loggedin();
 
 	if(ftp_get_verbosity() != vbDebug)
 		fprintf(stderr, _("remote system: "));
@@ -945,6 +962,8 @@ void cmd_flush(int argc, char **argv)
 			 "  -h, --help    show this help\n");
 
 	maxargs(0);
+	need_connected();
+	need_loggedin();
 
 	ftp_flush_reply();
 }

@@ -245,6 +245,8 @@ void cmd_untag(int argc, char **argv)
 			 "  -h, --help    show this help\n");
 
 	minargs(optind);
+	need_connected();
+	need_loggedin();
 
 	if(list_numitem(ftp->taglist)==0) {
 		puts(_("nothing tagged -- use 'tag' to tag files"));

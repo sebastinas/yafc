@@ -61,7 +61,7 @@ static void set_pasvmode(void *val)
 			ftp->url->pasvmode = gvPasvmode;
 	}
 
-	if(gvPasvmode)
+	if((ftp && ftp->url) ? ftp->url->pasvmode : gvPasvmode)
 		puts(_("passive mode is on"));
 	else
 		puts(_("passive mode is off"));

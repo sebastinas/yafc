@@ -73,6 +73,7 @@ void cmd_user(int argc, char **argv)
 	}
 
 	maxargs(1);
+	need_connected();
 
 	u = xstrdup(ftp->url->username);
 	p = xstrdup(ftp->url->password);
