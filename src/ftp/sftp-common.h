@@ -28,6 +28,8 @@
 #ifndef _sftp_common_h_
 #define _sftp_common_h_
 
+#include "ssh_ftp.h"
+
 /* Clear contents of attributes structure */
 void attrib_clear(Attrib *a);
 
