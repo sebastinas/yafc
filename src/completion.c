@@ -35,7 +35,7 @@ cpl_t force_completion_type = cpUnset;
 
 static bool remote_dir_only = false;
 
-char *no_completion_function(char *text, int state)
+char *no_completion_function(const char *text, int state)
 {
 	return 0;
 }

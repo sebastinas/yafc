@@ -130,6 +130,13 @@ char *strchr (), *strrchr ();
 # include <readline/history.h>
 #endif
 
+#if HAVE_LIBREADLINE < 420
+# define rl_completion_matches completion_matches
+# define rl_filename_completion_function filename_completion_function
+# define rl_compentry_func_t Function
+# define rl_dequote_func_t CPFunction
+#endif
+
 #include "glob.h"  /* we always use GNU glob now */
 
 /*#if defined(HAVE_FNMATCH) && defined(HAVE_FNMATCH_H)*/

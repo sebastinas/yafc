@@ -127,7 +127,7 @@ void input_init(void)
 	rl_outstream = stderr;
     /* Allow conditional parsing of the ~/.inputrc file. */
     rl_readline_name = PACKAGE;
-    rl_completion_entry_function = (Function *)no_completion_function;
+    rl_completion_entry_function = (rl_compentry_func_t *)no_completion_function;
     /* Tell the completer that we want a crack first. */
     rl_attempted_completion_function = (CPPFunction *)the_complete_function;
 
@@ -138,7 +138,7 @@ void input_init(void)
 	rl_filename_quote_characters = " \t\n\\\"'@<>=;|&()#$`?*[]!:";
 #endif
 	rl_filename_quoting_function = bash_quote_filename;
-	rl_filename_dequoting_function = bash_dequote_filename;
+	rl_filename_dequoting_function = (rl_dequote_func_t *)bash_dequote_filename;
 	rl_char_is_quoted_p = char_is_quoted;
 
 	force_completion_type = cpUnset;
