@@ -87,6 +87,7 @@ dnl the License for details.
 dnl
 dnl checks for rl_function_of_keyseq (appeared in 2.0)
 dnl checks for rl_completion_append_character (appeared in 2.1)
+dnl check for rl_completion_matches (renamed from completion_matches in 4.2)
 
 AC_DEFUN(mhe_CHECK_READLINE,
 [
@@ -117,10 +118,23 @@ AC_DEFUN(mhe_CHECK_READLINE,
 			)
 			LIBS="$mhe_LIBS"
 		fi
+
+		if test "$mhe_cv_lib_readline" = "210"; then
+			mhe_LIBS="$LIBS"
+		    LIBS="-lreadline $LIBS"
+	    	AC_TRY_LINK(
+				[extern void rl_completion_matches();],
+				[rl_completion_matches();],
+				mhe_cv_lib_readline=420
+			)
+			LIBS="$mhe_LIBS"
+		fi
 	])
 
 	if test "$mhe_cv_lib_readline" != "no"; then
-		if test "$mhe_cv_lib_readline" = "210"; then
+		if test "$mhe_cv_lib_readline" = "420"; then
+		    AC_MSG_RESULT(version 4.2 or higher)
+		elif test "$mhe_cv_lib_readline" = "210"; then
 		    AC_MSG_RESULT(version 2.1 or higher)
 		else
 		    AC_MSG_RESULT(version 2.0)
