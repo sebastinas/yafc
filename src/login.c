@@ -1,4 +1,4 @@
-/* $Id: login.c,v 1.16 2001/07/01 11:38:42 mhe Exp $
+/* $Id: login.c,v 1.17 2001/07/09 18:47:54 mhe Exp $
  *
  * login.c -- connect and login
  *
@@ -52,7 +52,12 @@ void cmd_user(int argc, char **argv)
 			print_user_syntax();
 			return;
 		  case 'm':
+#ifdef SECFTP
 			  mech = xstrdup(optarg);
+#else
+			  ftp_err(_("Yafc was not compiled with security extensions.\n"));
+			  ftp_err(_("*** Using plaintext username and password ***\n"));
+#endif
 			break;
 		  case '?':
 			return;
@@ -290,7 +295,12 @@ void cmd_open(int argc, char **argv)
 				opt |= OP_NOALIAS;
 				break;
 			case 'm': /* --mechanism=MECH */
+#ifdef SECFTP
 				mech = xstrdup(optarg);
+#else
+				ftp_err(_("Yafc was not compiled with security extensions.\n"));
+				ftp_err(_("*** Using plaintext username and password ***\n"));
+#endif
 				break;
 			case 'p':
 				opt |= OP_NOPROXY;

@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.26 2001/07/01 12:53:17 mhe Exp $
+/* $Id: ftp.c,v 1.27 2001/07/09 18:47:54 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -791,9 +791,15 @@ static const char *secext_name(const char *mech)
 		const char *short_name;
 		const char *real_name;
 	} names[] = {
+#ifdef KRB4
 		{"krb4", "KERBEROS_V4"},
+#endif
+#ifdef KRB5
 		{"krb5", "GSSAPI"},
+#endif
+#ifdef SSL
 		{"ssl", "SSL"},
+#endif
 		{"none", "none"},
 		{0, 0}
 	};
