@@ -1,4 +1,4 @@
-/* $Id: put.h,v 1.4 2001/05/12 18:44:37 mhe Exp $
+/* $Id: put.h,v 1.5 2002/12/02 12:21:19 mhe Exp $
  *
  * put.h -- upload files
  *
@@ -31,5 +31,6 @@
 #define PUT_TAGGED 16384
 #define PUT_ASCII 32768
 #define PUT_BINARY 65536
+#define PUT_SKIP_EMPTY 131072
 
 #endif

@@ -1,4 +1,4 @@
-/* $Id: get.c,v 1.14 2002/11/05 22:51:57 mhe Exp $
+/* $Id: get.c,v 1.15 2002/12/02 12:21:18 mhe Exp $
  *
  * get.c -- get file(s) from remote
  *
@@ -34,6 +34,7 @@ static bool get_owbatch = false;
 static bool get_delbatch = false;
 static struct mode_change *cmod = 0;
 static gid_t group_change = -1;
+static bool get_skip_empty = false;
 
 static char *get_glob_mask = 0;
 static char *get_dir_glob_mask = 0;
@@ -58,6 +59,7 @@ static void print_get_syntax(void)
 			 "      --dir-rx-mask=REGEXP\n"
 			 "                       enter only directories matching REGEXP pattern\n"
 			 "  -f, --force          overwrite existing destinations, never prompt\n"
+			 "  -e, --skip-empty     skip empty files\n"
 			 "  -H, --nohup          transfer files in background (nohup mode), quits yafc\n"
 			 "  -i, --interactive    prompt before each transfer\n"
 			 "  -L, --logfile=FILE   use FILE as logfile instead of ~/.yafc/nohup/nohup.<pid>\n"
@@ -76,6 +78,15 @@ static void print_get_syntax(void)
 			 "  -u, --unique         always store as unique local file\n"
 			 "  -v, --verbose        explain what is being done\n"
 			 "      --help           display this help\n"));
+}
+
+static bool get_exclude_func(rfile *f)
+{
+	if(risdotdir(f))
+		return true;
+	if(get_skip_empty == true && !risdir(f) && f->size == 0)
+	   return true;
+	return false;
 }
 
 /* just gets the file SRC and store in local file DEST
@@ -367,6 +378,18 @@ static int getfile(const rfile *fi, unsigned int opt,
 
 static bool get_batch = false;
 
+int get_sort_func(const void *a, const void *b)
+{
+   const rfile *ra = (const rfile *)a;
+   const rfile *rb = (const rfile *)b;
+   bool tfa = transfer_first(ra->path);
+   bool tfb = transfer_first(rb->path);
+
+   if(tfa)
+	  return tfb ? 0 : -1;
+   return tfb ? 1 : 0;
+}
+
 static void getfiles(list *gl, unsigned int opt, const char *output)
 {
 	listitem *li;
@@ -374,6 +397,8 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
 	const char *opath, *ofile;
 	char *link = 0;
 	int r;
+
+	list_sort(gl, get_sort_func, false);
 
 	li = gl->first;
 	while(li && !get_quit) {
@@ -488,7 +513,7 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
 						rgl = rglob_create();
 						asprintf(&recurs_mask, "%s/*", opath);
 						q_recurs_mask = bash_backslash_quote(recurs_mask);
-						rglob_glob(rgl, q_recurs_mask, true, true, 0);
+						rglob_glob(rgl, q_recurs_mask, true, true, get_exclude_func);
 						xfree(q_recurs_mask);
 						if(list_numitem(rgl) > 0)
 							getfiles(rgl, opt, recurs_output);
@@ -555,6 +580,7 @@ void cmd_get(int argc, char **argv)
 		{"dir-rx-mask", required_argument, 0, '4'},
 #endif
 		{"interactive", no_argument, 0, 'i'},
+		{"skip-empty", no_argument, 0, 'e'},
 		{"force", no_argument, 0, 'f'},
 		{"logfile", required_argument, 0, 'L'},
 		{"mask", required_argument, 0, 'm'},
@@ -602,8 +628,10 @@ void cmd_get(int argc, char **argv)
 	}
 #endif
 
+	get_skip_empty = false;
+
 	optind = 0; /* force getopt() to re-initialize */
-	while((c=getopt_long(argc, argv, "abHc:dDio:fL:tnpPvqrRsuT:m:M:",
+	while((c=getopt_long(argc, argv, "abHc:dDeio:fL:tnpPvqrRsuT:m:M:",
 						 longopts, 0)) != EOF)
 	{
 		switch(c) {
@@ -651,6 +679,10 @@ void cmd_get(int argc, char **argv)
 		  case 'd':
 			opt |= GET_NO_DEREFERENCE;
 			break;
+		   case 'e':
+			  opt |= GET_SKIP_EMPTY;
+			  get_skip_empty = true;
+			  break;
 		case '3': /* --dir-mask=GLOB */
 			xfree(get_dir_glob_mask);
 			get_dir_glob_mask = xstrdup(optarg);
@@ -770,7 +802,7 @@ void cmd_get(int argc, char **argv)
 	gl = rglob_create();
 	while(optind < argc) {
 		stripslash(argv[optind]);
-		if(rglob_glob(gl, argv[optind], true, true, 0) == -1)
+		if(rglob_glob(gl, argv[optind], true, true, get_exclude_func) == -1)
 			fprintf(stderr, _("%s: no matches found\n"), argv[optind]);
 		optind++;
 	}

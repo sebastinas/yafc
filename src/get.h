@@ -1,4 +1,4 @@
-/* $Id: get.h,v 1.4 2001/05/12 18:44:37 mhe Exp $
+/* $Id: get.h,v 1.5 2002/12/02 12:21:19 mhe Exp $
  *
  * get.h -- get file(s) from remote
  *
@@ -35,5 +35,6 @@
 #define GET_CHMOD (1 << 18)
 #define GET_CHGRP (1 << 19)
 #define GET_OUTPUT_FILE (1 << 20)  /* --output=FILE (else --output=DIR) */
+#define GET_SKIP_EMPTY (1 << 21)
 
 #endif

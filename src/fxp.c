@@ -1,4 +1,4 @@
-/* $Id: fxp.c,v 1.10 2002/11/05 22:51:57 mhe Exp $
+/* $Id: fxp.c,v 1.11 2002/12/02 12:21:19 mhe Exp $
  *
  * fxp.c -- transfer files between hosts
  *
@@ -44,12 +44,14 @@
 #define FXP_ASCII (1 << 15)
 #define FXP_BINARY (1 << 16)
 #define FXP_OUTPUT_FILE (1 << 17)
+#define FXP_SKIP_EMPTY (1 << 18)
 
 static Ftp *fxp_target = 0;
 static bool fxp_batch = false;
 static bool fxp_owbatch = false;
 static bool fxp_delbatch = false;
 static bool fxp_quit = false;
+static bool fxp_skip_empty = false;
 
 static char *fxp_glob_mask = 0;
 static char *fxp_dir_glob_mask = 0;
@@ -59,6 +61,9 @@ static bool fxp_rx_mask_set = false;
 static regex_t fxp_dir_rx_mask;
 static bool fxp_dir_rx_mask_set = false;
 #endif
+
+/* in get.c */
+extern int get_sort_func(const void *a, const void *b);
 
 static void print_fxp_syntax(void)
 {
@@ -71,6 +76,7 @@ static void print_fxp_syntax(void)
 			 "      --dir-rx-mask=REGEXP\n"
 			 "                       enter only directories matching REGEXP pattern\n"
 			 "  -f, --force          overwrite existing destinations, never prompt\n"
+			 "  -e, --skip-empty     skip empty files\n"
 			 "  -H, --nohup          transfer files in background (nohup mode), quits yafc\n"
 			 "  -i, --interactive    prompt before each transfer\n"
 			 "  -L, --logfile=FILE   use FILE as logfile instead of ~/.yafc/nohup/nohup.<pid>\n"
@@ -90,6 +96,15 @@ static void print_fxp_syntax(void)
 			 "  -u, --unique         store in unique filename (if target supports STOU)\n"
 			 "  -v, --verbose        explain what is being done\n"
 			 "      --help           display this help\n"));
+}
+
+static bool fxp_exclude_func(rfile *f)
+{
+	if(risdotdir(f))
+		return true;
+	if(fxp_skip_empty == true && !risdir(f) && f->size == 0)
+	   return true;
+	return false;
 }
 
 static void fxp_preserve_attribs(const rfile *fi, char *dest)
@@ -323,6 +338,8 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 	char *link = 0;
 	int r;
 
+	list_sort(gl, get_sort_func, false);
+
 	li = gl->first;
 	while(li && !fxp_quit) {
 		fp = (rfile *)li->data;
@@ -427,7 +444,8 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 						rgl = rglob_create();
 						asprintf(&recurs_mask, "%s/*", opath);
 						q_recurs_mask = bash_backslash_quote(recurs_mask);
-						rglob_glob(rgl, q_recurs_mask, true, true, 0);
+						rglob_glob(rgl, q_recurs_mask, true, true,
+								   fxp_exclude_func);
 						xfree(q_recurs_mask);
 						if(list_numitem(rgl) > 0)
 							fxpfiles(rgl, opt, recurs_output);
@@ -541,8 +559,10 @@ void cmd_fxp(int argc, char **argv)
 	} else
 		fxp_target = 0;
 
+	fxp_skip_empty = false;
+
 	optind = 0; /* force getopt() to re-initialize */
-	while((c=getopt_long(argc, argv, "aDfHiL:M:no:pPqrRstT:uvh",
+	while((c=getopt_long(argc, argv, "aDefHiL:M:no:pPqrRstT:uvh",
 						 longopts, 0)) != EOF)
 		{
 			switch(c) {
@@ -555,6 +575,10 @@ void cmd_fxp(int argc, char **argv)
 			case 'f': /* --force */
 				opt |= FXP_FORCE;
 				break;
+			   case 'e': /* --skip-empty */
+				  opt |= FXP_SKIP_EMPTY;
+				  fxp_skip_empty = true;
+				  break;
 			case '3': /* --dir-mask=GLOB */
 				xfree(fxp_dir_glob_mask);
 				fxp_dir_glob_mask = xstrdup(optarg);
@@ -695,7 +719,7 @@ void cmd_fxp(int argc, char **argv)
 	gl = rglob_create();
 	while(optind < argc) {
 		stripslash(argv[optind]);
-		if(rglob_glob(gl, argv[optind], true, true, 0) == -1)
+		if(rglob_glob(gl, argv[optind], true, true, fxp_exclude_func) == -1)
 			fprintf(stderr, _("%s: no matches found\n"), argv[optind]);
 		optind++;
 	}

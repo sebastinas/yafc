@@ -1,4 +1,4 @@
-/* $Id: put.c,v 1.13 2002/11/06 11:58:34 mhe Exp $
+/* $Id: put.c,v 1.14 2002/12/02 12:21:19 mhe Exp $
  *
  * put.c -- upload files
  *
@@ -32,6 +32,7 @@ static bool put_batch = false;
 static bool put_owbatch = false;
 static bool put_delbatch = false;
 static bool put_quit = false;
+static bool put_skip_empty = false;
 
 static char *put_glob_mask = 0;
 static char *put_dir_glob_mask = 0;
@@ -52,6 +53,7 @@ static void print_put_syntax(void)
 			 "      --dir-mask=GLOB  enter only directories matching GLOB pattern\n"
 			 "      --dir-rx-mask=REGEXP\n"
 			 "                       enter only directories matching REGEXP pattern\n"
+			 "  -e, --skip-empty     skip empty files\n"
 			 "  -f, --force          overwrite existing destinations, never prompt\n"
 			 "  -H, --nohup          transfer files in background (nohup mode), quits yafc\n"
 			 "  -i, --interactive    prompt before transferring each file\n"
@@ -71,6 +73,19 @@ static void print_put_syntax(void)
 			 "  -v, --verbose        explain what is being done\n"
 			 "  -u, --unique         store in unique filename (if server supports STOU)\n"
 			 "      --help           display this help\n"));
+}
+
+static bool put_exclude_func(char *path)
+{
+	if(lglob_exclude_dotdirs(path))
+		return true;
+	if(put_skip_empty == true) {
+		struct stat stbuf;
+		stat(path, &stbuf);
+		if(!S_ISDIR(stbuf.st_mode) && stbuf.st_size == 0)
+			return true;
+	}
+	return false;
 }
 
 static int do_the_put(const char *src, const char *dest,
@@ -272,12 +287,24 @@ static void putfile(const char *path, struct stat *sb,
 	}
 }
 
-static void putfiles(const list *gl, unsigned opt, const char *output)
+static int put_sort_func(const void *a, const void *b)
+{
+   bool tfa = transfer_first((char *)a);
+   bool tfb = transfer_first((char *)b);
+
+   if(tfa)
+	  return tfb ? 0 : -1;
+   return tfb ? 1 : 0;
+}
+
+static void putfiles(list *gl, unsigned opt, const char *output)
 {
 	struct stat sb;
 	char *path = 0;
 	const char *file;
 	listitem *li;
+
+	list_sort(gl, put_sort_func, false);
 
 	for(li=gl->first; li && !put_quit; li=li->next) {
 
@@ -346,7 +373,7 @@ static void putfiles(const list *gl, unsigned opt, const char *output)
 						asprintf(&recurs_mask, "%s/*", path);
 						rgl = lglob_create();
 						r = lglob_glob(rgl, recurs_mask, true,
-									   lglob_exclude_dotdirs);
+									   put_exclude_func);
 						xfree(recurs_mask);
 
 						if(list_numitem(rgl) > 0)
@@ -401,6 +428,7 @@ void cmd_put(int argc, char **argv)
 #ifdef HAVE_REGEX
 		{"dir-rx-mask", required_argument, 0, '4'},
 #endif
+		{"skip-empty", no_argument, 0, 'e'},
 		{"force", no_argument, 0, 'f'},
 		{"nohup", no_argument, 0, 'H'},
 		{"interactive", no_argument, 0, 'i'},
@@ -444,9 +472,11 @@ void cmd_put(int argc, char **argv)
 	}
 #endif
 
+	put_skip_empty = false;
+
 	optind = 0; /* force getopt() to re-initialize */
 	while((c = getopt_long(argc, argv,
-						   "aDfHiL:no:pPqrRstvum:M:", longopts, 0)) != EOF)
+						   "aDefHiL:no:pPqrRstvum:M:", longopts, 0)) != EOF)
 	{
 		switch(c) {
 		case 'i':
@@ -455,6 +485,10 @@ void cmd_put(int argc, char **argv)
 		case 'f':
 			opt |= PUT_FORCE;
 			break;
+		   case 'e':
+			  opt |= PUT_SKIP_EMPTY;
+			  put_skip_empty = true;
+			  break;
 		case '3': /* --dir-mask=GLOB */
 			xfree(put_dir_glob_mask);
 			put_dir_glob_mask = xstrdup(optarg);
@@ -588,7 +622,7 @@ void cmd_put(int argc, char **argv)
 
 		f = tilde_expand_home(argv[optind], gvLocalHomeDir);
 		stripslash(f);
-		lglob_glob(gl, f, true, lglob_exclude_dotdirs);
+		lglob_glob(gl, f, true, put_exclude_func);
 		optind++;
 	}
 
