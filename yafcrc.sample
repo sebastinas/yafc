@@ -30,6 +30,9 @@ read_netrc yes
 # if you get the message "Host doesn't support passive mode", set to false
 use_passive_mode yes
 
+# do reverse DNS lookups?
+reverse_dns yes
+
 # show some more information (all replies)
 verbose off
 # print ftp commands sent to server + all replies
