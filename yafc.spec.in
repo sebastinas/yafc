@@ -36,6 +36,7 @@ FEATURES
 * redirection to local command or file ('>', '>>' and '|')
 * uses autoconf and automake
 * proxy support
+* Kerberos authentication
 * more...
 
 %prep

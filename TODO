@@ -1,12 +1,12 @@
 TODO list for Yafc
 ------------------
 
-* add documentation for --mechanism option
+* 'get/put onefile -o othername' instead of 'get/put onefile -o otherdir'
 * fix --chgrp / --chmod for directories (get)
-* remove more hints from cmds[]
 * ls -r doesn't work (no sorting done)
 * ltag should ignore multiples just as tag does
 * keep-alive (send NOOP or similar when idle)
+* SSL support
 * IPv6 support
 * EPSV and EPRT support (RFC2428)
 * LANGuage support (RFC2640)

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-10-13 23:19+0200\n"
+"POT-Creation-Date: 2000-10-14 13:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -120,7 +120,7 @@ msgstr "startade om kommando-loopen, anslutningen stängd\n"
 msgid "restarted command loop, command aborted\n"
 msgstr "startade om kommando-loopen, kommandot avbrutet\n"
 
-#: src/cmd.c:131 src/commands.c:659
+#: src/cmd.c:131 src/commands.c:663
 msgid "not connected"
 msgstr "ej ansluten"
 
@@ -136,50 +136,14 @@ msgstr "Ej inloggad. Pröva \"user --help\" för mer information.\n"
 msgid "input redirection not supported\n"
 msgstr "Omdirigering av indata ej tillåten\n"
 
-#: src/cmd.c:321 src/commands.c:283
+#: src/cmd.c:321 src/commands.c:282
 #, c-format
 msgid "ambiguous alias '%s'\n"
 msgstr "tvetydigt alias \"%s\"\n"
 
-#: src/commands.c:41
-msgid "flushes replies"
-msgstr "skippar svar"
-
 #: src/commands.c:42
 msgid "same as 'shell'"
 msgstr "samma som \"shell\""
-
-#: src/commands.c:46
-msgid ""
-"view a remote file\n"
-" usage: cat <remote file>"
-msgstr ""
-"visa en fil på värddatorn\n"
-" användning: cat <fil>"
-
-#: src/commands.c:47
-msgid ""
-"change remote working directory\n"
-" usage: cd [directory]\n"
-" cd without parameters changes to home directory\n"
-" Use 'cd -' for previous directory"
-msgstr ""
-"ändra aktuell katalog på värddatorn\n"
-" användning: cd [katalog]\n"
-" cd utan argument går till hemkatalogen\n"
-" använd \"cd -\" för att gå till senaste katalogen"
-
-#: src/commands.c:48
-msgid ""
-"change remote working directory to parent directory\n"
-" usage: cdup"
-msgstr ""
-"ändrar aktuell katalog till katalogen ovanför\n"
-" användning: cdup"
-
-#: src/commands.c:49
-msgid "change permissions on remote file(s)"
-msgstr "ändra rättigheter på fil(er) på värddatorn"
 
 #: src/commands.c:51
 msgid ""
@@ -189,14 +153,6 @@ msgstr ""
 "visa copyright-information\n"
 " användning: copyright"
 
-#: src/commands.c:52
-msgid "show remote file's size in bytes"
-msgstr "visa storleken på en fil i bytes"
-
-#: src/commands.c:53
-msgid "show remote file's time"
-msgstr "visa tidstämpel på en fil"
-
 #: src/commands.c:56
 msgid ""
 "DON'T PANIC\n"
@@ -204,45 +160,6 @@ msgid ""
 msgstr ""
 "INGEN PANIK\n"
 " användning: help [kommando(n)]"
-
-#: src/commands.c:58
-msgid ""
-"send a LIST command\n"
-" usage: list [options]"
-msgstr ""
-
-#: src/commands.c:63
-msgid "create remote directory"
-msgstr ""
-
-#: src/commands.c:64
-msgid "send a NLST command"
-msgstr ""
-
-#: src/commands.c:65
-msgid "send a NOOP command to server (does nothing)"
-msgstr ""
-
-#: src/commands.c:66
-msgid "get or set idle timeout"
-msgstr ""
-
-#: src/commands.c:69
-msgid "print current (remote) working directory"
-msgstr ""
-
-#: src/commands.c:71
-msgid "send arbitrary ftp command"
-msgstr ""
-
-#: src/commands.c:72
-#, fuzzy
-msgid ""
-"rename a remote file or directory\n"
-" usage: mv <from> <to>"
-msgstr ""
-"visa en fil på värddatorn\n"
-" användning: cat <fil>"
 
 #: src/commands.c:73
 #, fuzzy
@@ -252,16 +169,6 @@ msgid ""
 msgstr ""
 "INGEN PANIK\n"
 " användning: help [kommando(n)]"
-
-#: src/commands.c:75
-msgid ""
-"remove remote directory\n"
-" usage: rmdir <remote directory>"
-msgstr ""
-
-#: src/commands.c:76
-msgid "show remote status"
-msgstr ""
 
 #: src/commands.c:77
 msgid ""
@@ -275,29 +182,6 @@ msgid ""
 " usage: shell [shell command]"
 msgstr ""
 
-#: src/commands.c:79
-msgid "send site specific command (try 'site help' or 'rhelp site')"
-msgstr ""
-"skicka värddatorspecifikt kommando (pröva \"site help\" eller \"rhelp site\")"
-
-#: src/commands.c:83
-msgid "show type of remote system"
-msgstr ""
-
-#: src/commands.c:86
-msgid "untag file(s) in the tag list"
-msgstr ""
-
-#: src/commands.c:87
-msgid "show URL"
-msgstr "visa URL:en"
-
-#: src/commands.c:88
-msgid ""
-"send new user information\n"
-" usage: user [username]"
-msgstr ""
-
 #: src/commands.c:89
 msgid "show version"
 msgstr "visa versionsnummer"
@@ -306,65 +190,41 @@ msgstr "visa versionsnummer"
 msgid "show warranty (or lack of)"
 msgstr ""
 
-#: src/commands.c:91
-msgid "view a compressed remote file"
-msgstr ""
-
-#: src/commands.c:93
+#: src/commands.c:92
 msgid "set protection level"
 msgstr ""
 
-#: src/commands.c:96
-msgid "obtain remote AFS tokens"
-msgstr ""
-
-#: src/commands.c:97
-msgid "show remote tickets"
-msgstr ""
-
-#: src/commands.c:98
-msgid "get remote tokens"
-msgstr ""
-
-#: src/commands.c:99
-msgid "destroy remote tickets"
-msgstr ""
-
-#: src/commands.c:100
-msgid "set filename of remote tickets"
-msgstr ""
-
-#: src/commands.c:273
+#: src/commands.c:272
 #, c-format
 msgid "No such command '%s', try 'help'\n"
 msgstr "Det finns inget kommando \"%s\", pröva med \"help\"\n"
 
-#: src/commands.c:291
+#: src/commands.c:290
 #, c-format
 msgid "ambiguous command '%s'\n"
 msgstr "tvetydigt kommando \"%s\"\n"
 
-#: src/commands.c:314
+#: src/commands.c:313
 #, c-format
 msgid "ambiguous alias/command '%s'\n"
 msgstr "tvetydigt alias/kommando \"%s\"\n"
 
-#: src/commands.c:323
+#: src/commands.c:322
 #, c-format
 msgid "No such command '%s' (expanded alias '%s')\n"
 msgstr "Det finns inget kommando \"%s\" (expanderat alias \"%s\")\n"
 
-#: src/commands.c:329
+#: src/commands.c:328
 #, c-format
 msgid "ambiguous command '%s' (expanded alias '%s')\n"
 msgstr "tvetydigt kommando \"%s\" (expanderat alias \"%s\")\n"
 
-#: src/commands.c:393 src/get.c:766 src/ltag.c:236 src/tag.c:267
+#: src/commands.c:398 src/get.c:766 src/ltag.c:236 src/tag.c:269
 #, c-format
 msgid "%s: no matches found\n"
 msgstr ""
 
-#: src/commands.c:508
+#: src/commands.c:501
 msgid ""
 "Print the current URL.  Usage:\n"
 "  url [options]\n"
@@ -373,22 +233,22 @@ msgid ""
 "  -h, --help           show this help\n"
 msgstr ""
 
-#: src/commands.c:657
+#: src/commands.c:661
 #, c-format
 msgid "connected to '%s'\n"
 msgstr "ansluten till \"%s\"\n"
 
-#: src/commands.c:661
+#: src/commands.c:665
 #, c-format
 msgid "logged in as '%s'\n"
 msgstr "loggade in som \"%s\"\n"
 
-#: src/commands.c:667
+#: src/commands.c:671
 #, c-format
 msgid "There are totally %u connections open\n"
 msgstr "Det är totalt %u anslutningar öppna\n"
 
-#: src/commands.c:755
+#: src/commands.c:764
 msgid ""
 "Control the directory cache.  Usage:\n"
 "  cache [option] [directories]\n"
@@ -400,21 +260,21 @@ msgid ""
 "  -h, --help         show this help\n"
 msgstr ""
 
-#: src/commands.c:832
+#: src/commands.c:847
 #, c-format
 msgid "%s: %lu bytes\n"
 msgstr "%s: %lu bytes\n"
 
-#: src/commands.c:874
+#: src/commands.c:891
 msgid "remote system: "
 msgstr "värddatorsystem: "
 
-#: src/commands.c:895
+#: src/commands.c:912
 #, c-format
 msgid "invalid connection number: '%d'\n"
 msgstr ""
 
-#: src/commands.c:908
+#: src/commands.c:925
 #, c-format
 msgid "no such connection open: '%s'\n"
 msgstr ""
@@ -737,11 +597,11 @@ msgid ""
 "      --help             display this help\n"
 msgstr ""
 
-#: src/login.c:106
+#: src/login.c:107
 msgid "Connect to what!? Need a hostname!\n"
 msgstr "Anslut till vadå? Vill ha ett värddatornamn!\n"
 
-#: src/login.c:112
+#: src/login.c:113
 msgid ""
 "Ambiguous alias/hostname, use 'open --noalias' to skip bookmark alias "
 "lookup\n"
@@ -749,21 +609,21 @@ msgstr ""
 "Tvetydigt alias/värddatornamn, använd \"open --noalias\" för att inte "
 "använda alias för bokmärken\n"
 
-#: src/login.c:120
+#: src/login.c:121
 #, c-format
 msgid "Disconnect from %s?"
 msgstr ""
 
-#: src/login.c:210
+#: src/login.c:211
 #, c-format
 msgid "Sleeping %u seconds before connecting again (attempt #%d)...\n"
 msgstr "Väntar %u sekunder innan nästa anslutning (försök #%d)...\n"
 
-#: src/login.c:214
+#: src/login.c:215
 msgid "connection aborted\n"
 msgstr "anslutningen avbröts\n"
 
-#: src/login.c:231
+#: src/login.c:232
 msgid ""
 "Connect and login to remote host.  Usage:\n"
 "  open [options] [ftp://][user[:password]@]hostname[:port][/directory] ...\n"
@@ -1293,7 +1153,7 @@ msgstr "%lu bytes (%s) i %u filer är taggade\n"
 msgid "%lu directories tagged\n"
 msgstr "%lu kataloger taggade\n"
 
-#: src/tag.c:250
+#: src/tag.c:252
 msgid "nothing tagged -- use 'tag' to tag files"
 msgstr "inga filer taggade -- använd \"tag\" för att tagga filer"
 
@@ -1613,7 +1473,7 @@ msgstr ""
 msgid "Forced passive mode on\n"
 msgstr "passivt läge är på"
 
-#: lib/kauth.c:131 lib/krb4.c:215
+#: lib/kauth.c:138 lib/krb4.c:215
 msgid "Out of memory base64-encoding\n"
 msgstr ""
 
@@ -1734,20 +1594,15 @@ msgstr ""
 msgid "The server doesn't support the FTP security extensions.\n"
 msgstr ""
 
-#: lib/kauth.c:65
-#, c-format
-msgid "usage: %s [principal]\n"
-msgstr ""
-
-#: lib/kauth.c:83 lib/kauth.c:99
+#: lib/kauth.c:89 lib/kauth.c:105
 msgid "Bad reply from server\n"
 msgstr ""
 
-#: lib/kauth.c:90
+#: lib/kauth.c:96
 msgid "Failed to decode base64 in reply\n"
 msgstr ""
 
-#: lib/kauth.c:107
+#: lib/kauth.c:113
 #, fuzzy, c-format
 msgid "Password for %s:"
 msgstr "lösenord (%s): "
@@ -1770,6 +1625,58 @@ msgstr ""
 #, c-format
 msgid "Unrecognized response code: %d\n"
 msgstr ""
+
+#~ msgid "flushes replies"
+#~ msgstr "skippar svar"
+
+#~ msgid ""
+#~ "view a remote file\n"
+#~ " usage: cat <remote file>"
+#~ msgstr ""
+#~ "visa en fil på värddatorn\n"
+#~ " användning: cat <fil>"
+
+#~ msgid ""
+#~ "change remote working directory\n"
+#~ " usage: cd [directory]\n"
+#~ " cd without parameters changes to home directory\n"
+#~ " Use 'cd -' for previous directory"
+#~ msgstr ""
+#~ "ändra aktuell katalog på värddatorn\n"
+#~ " användning: cd [katalog]\n"
+#~ " cd utan argument går till hemkatalogen\n"
+#~ " använd \"cd -\" för att gå till senaste katalogen"
+
+#~ msgid ""
+#~ "change remote working directory to parent directory\n"
+#~ " usage: cdup"
+#~ msgstr ""
+#~ "ändrar aktuell katalog till katalogen ovanför\n"
+#~ " användning: cdup"
+
+#~ msgid "change permissions on remote file(s)"
+#~ msgstr "ändra rättigheter på fil(er) på värddatorn"
+
+#~ msgid "show remote file's size in bytes"
+#~ msgstr "visa storleken på en fil i bytes"
+
+#~ msgid "show remote file's time"
+#~ msgstr "visa tidstämpel på en fil"
+
+#, fuzzy
+#~ msgid ""
+#~ "rename a remote file or directory\n"
+#~ " usage: mv <from> <to>"
+#~ msgstr ""
+#~ "visa en fil på värddatorn\n"
+#~ " användning: cat <fil>"
+
+#~ msgid "send site specific command (try 'site help' or 'rhelp site')"
+#~ msgstr ""
+#~ "skicka värddatorspecifikt kommando (pröva \"site help\" eller \"rhelp site\")"
+
+#~ msgid "show URL"
+#~ msgstr "visa URL:en"
 
 #, fuzzy
 #~ msgid "Yafc was not compiled with Kerberos support\n"

@@ -1,8 +1,17 @@
+New in 0.6.5
+------------
+
+* 
+
+
 New in 0.6.4
 ------------
 
 * removed lib/setproctitle.[ch] due to licensing problems
 * moved src/bashline.[ch] to lib/
+* updated manpage
+* more manual updates
+* zcat removed (use 'cat | zcat' or 'cat | bunzip2 -c')
 
 
 New in 0.6.3

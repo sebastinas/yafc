@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-10-13 23:19+0200\n"
+"POT-Creation-Date: 2000-10-14 13:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -112,7 +112,7 @@ msgstr ""
 msgid "restarted command loop, command aborted\n"
 msgstr ""
 
-#: src/cmd.c:131 src/commands.c:659
+#: src/cmd.c:131 src/commands.c:663
 msgid "not connected"
 msgstr ""
 
@@ -128,41 +128,13 @@ msgstr ""
 msgid "input redirection not supported\n"
 msgstr ""
 
-#: src/cmd.c:321 src/commands.c:283
+#: src/cmd.c:321 src/commands.c:282
 #, c-format
 msgid "ambiguous alias '%s'\n"
 msgstr ""
 
-#: src/commands.c:41
-msgid "flushes replies"
-msgstr ""
-
 #: src/commands.c:42
 msgid "same as 'shell'"
-msgstr ""
-
-#: src/commands.c:46
-msgid ""
-"view a remote file\n"
-" usage: cat <remote file>"
-msgstr ""
-
-#: src/commands.c:47
-msgid ""
-"change remote working directory\n"
-" usage: cd [directory]\n"
-" cd without parameters changes to home directory\n"
-" Use 'cd -' for previous directory"
-msgstr ""
-
-#: src/commands.c:48
-msgid ""
-"change remote working directory to parent directory\n"
-" usage: cdup"
-msgstr ""
-
-#: src/commands.c:49
-msgid "change permissions on remote file(s)"
 msgstr ""
 
 #: src/commands.c:51
@@ -171,70 +143,16 @@ msgid ""
 " usage: copyright"
 msgstr ""
 
-#: src/commands.c:52
-msgid "show remote file's size in bytes"
-msgstr ""
-
-#: src/commands.c:53
-msgid "show remote file's time"
-msgstr ""
-
 #: src/commands.c:56
 msgid ""
 "DON'T PANIC\n"
 " usage: help [command(s)]"
 msgstr ""
 
-#: src/commands.c:58
-msgid ""
-"send a LIST command\n"
-" usage: list [options]"
-msgstr ""
-
-#: src/commands.c:63
-msgid "create remote directory"
-msgstr ""
-
-#: src/commands.c:64
-msgid "send a NLST command"
-msgstr ""
-
-#: src/commands.c:65
-msgid "send a NOOP command to server (does nothing)"
-msgstr ""
-
-#: src/commands.c:66
-msgid "get or set idle timeout"
-msgstr ""
-
-#: src/commands.c:69
-msgid "print current (remote) working directory"
-msgstr ""
-
-#: src/commands.c:71
-msgid "send arbitrary ftp command"
-msgstr ""
-
-#: src/commands.c:72
-msgid ""
-"rename a remote file or directory\n"
-" usage: mv <from> <to>"
-msgstr ""
-
 #: src/commands.c:73
 msgid ""
 "get remote help\n"
 " usage: rhelp [command]"
-msgstr ""
-
-#: src/commands.c:75
-msgid ""
-"remove remote directory\n"
-" usage: rmdir <remote directory>"
-msgstr ""
-
-#: src/commands.c:76
-msgid "show remote status"
 msgstr ""
 
 #: src/commands.c:77
@@ -249,28 +167,6 @@ msgid ""
 " usage: shell [shell command]"
 msgstr ""
 
-#: src/commands.c:79
-msgid "send site specific command (try 'site help' or 'rhelp site')"
-msgstr ""
-
-#: src/commands.c:83
-msgid "show type of remote system"
-msgstr ""
-
-#: src/commands.c:86
-msgid "untag file(s) in the tag list"
-msgstr ""
-
-#: src/commands.c:87
-msgid "show URL"
-msgstr ""
-
-#: src/commands.c:88
-msgid ""
-"send new user information\n"
-" usage: user [username]"
-msgstr ""
-
 #: src/commands.c:89
 msgid "show version"
 msgstr ""
@@ -279,65 +175,41 @@ msgstr ""
 msgid "show warranty (or lack of)"
 msgstr ""
 
-#: src/commands.c:91
-msgid "view a compressed remote file"
-msgstr ""
-
-#: src/commands.c:93
+#: src/commands.c:92
 msgid "set protection level"
 msgstr ""
 
-#: src/commands.c:96
-msgid "obtain remote AFS tokens"
-msgstr ""
-
-#: src/commands.c:97
-msgid "show remote tickets"
-msgstr ""
-
-#: src/commands.c:98
-msgid "get remote tokens"
-msgstr ""
-
-#: src/commands.c:99
-msgid "destroy remote tickets"
-msgstr ""
-
-#: src/commands.c:100
-msgid "set filename of remote tickets"
-msgstr ""
-
-#: src/commands.c:273
+#: src/commands.c:272
 #, c-format
 msgid "No such command '%s', try 'help'\n"
 msgstr ""
 
-#: src/commands.c:291
+#: src/commands.c:290
 #, c-format
 msgid "ambiguous command '%s'\n"
 msgstr ""
 
-#: src/commands.c:314
+#: src/commands.c:313
 #, c-format
 msgid "ambiguous alias/command '%s'\n"
 msgstr ""
 
-#: src/commands.c:323
+#: src/commands.c:322
 #, c-format
 msgid "No such command '%s' (expanded alias '%s')\n"
 msgstr ""
 
-#: src/commands.c:329
+#: src/commands.c:328
 #, c-format
 msgid "ambiguous command '%s' (expanded alias '%s')\n"
 msgstr ""
 
-#: src/commands.c:393 src/get.c:766 src/ltag.c:236 src/tag.c:267
+#: src/commands.c:398 src/get.c:766 src/ltag.c:236 src/tag.c:269
 #, c-format
 msgid "%s: no matches found\n"
 msgstr ""
 
-#: src/commands.c:508
+#: src/commands.c:501
 msgid ""
 "Print the current URL.  Usage:\n"
 "  url [options]\n"
@@ -346,22 +218,22 @@ msgid ""
 "  -h, --help           show this help\n"
 msgstr ""
 
-#: src/commands.c:657
+#: src/commands.c:661
 #, c-format
 msgid "connected to '%s'\n"
 msgstr ""
 
-#: src/commands.c:661
+#: src/commands.c:665
 #, c-format
 msgid "logged in as '%s'\n"
 msgstr ""
 
-#: src/commands.c:667
+#: src/commands.c:671
 #, c-format
 msgid "There are totally %u connections open\n"
 msgstr ""
 
-#: src/commands.c:755
+#: src/commands.c:764
 msgid ""
 "Control the directory cache.  Usage:\n"
 "  cache [option] [directories]\n"
@@ -373,21 +245,21 @@ msgid ""
 "  -h, --help         show this help\n"
 msgstr ""
 
-#: src/commands.c:832
+#: src/commands.c:847
 #, c-format
 msgid "%s: %lu bytes\n"
 msgstr ""
 
-#: src/commands.c:874
+#: src/commands.c:891
 msgid "remote system: "
 msgstr ""
 
-#: src/commands.c:895
+#: src/commands.c:912
 #, c-format
 msgid "invalid connection number: '%d'\n"
 msgstr ""
 
-#: src/commands.c:908
+#: src/commands.c:925
 #, c-format
 msgid "no such connection open: '%s'\n"
 msgstr ""
@@ -679,31 +551,31 @@ msgid ""
 "      --help             display this help\n"
 msgstr ""
 
-#: src/login.c:106
+#: src/login.c:107
 msgid "Connect to what!? Need a hostname!\n"
 msgstr ""
 
-#: src/login.c:112
+#: src/login.c:113
 msgid ""
 "Ambiguous alias/hostname, use 'open --noalias' to skip bookmark alias "
 "lookup\n"
 msgstr ""
 
-#: src/login.c:120
+#: src/login.c:121
 #, c-format
 msgid "Disconnect from %s?"
 msgstr ""
 
-#: src/login.c:210
+#: src/login.c:211
 #, c-format
 msgid "Sleeping %u seconds before connecting again (attempt #%d)...\n"
 msgstr ""
 
-#: src/login.c:214
+#: src/login.c:215
 msgid "connection aborted\n"
 msgstr ""
 
-#: src/login.c:231
+#: src/login.c:232
 msgid ""
 "Connect and login to remote host.  Usage:\n"
 "  open [options] [ftp://][user[:password]@]hostname[:port][/directory] ...\n"
@@ -1134,7 +1006,7 @@ msgstr ""
 msgid "%lu directories tagged\n"
 msgstr ""
 
-#: src/tag.c:250
+#: src/tag.c:252
 msgid "nothing tagged -- use 'tag' to tag files"
 msgstr ""
 
@@ -1437,7 +1309,7 @@ msgstr ""
 msgid "Forced passive mode on\n"
 msgstr ""
 
-#: lib/kauth.c:131 lib/krb4.c:215
+#: lib/kauth.c:138 lib/krb4.c:215
 msgid "Out of memory base64-encoding\n"
 msgstr ""
 
@@ -1558,20 +1430,15 @@ msgstr ""
 msgid "The server doesn't support the FTP security extensions.\n"
 msgstr ""
 
-#: lib/kauth.c:65
-#, c-format
-msgid "usage: %s [principal]\n"
-msgstr ""
-
-#: lib/kauth.c:83 lib/kauth.c:99
+#: lib/kauth.c:89 lib/kauth.c:105
 msgid "Bad reply from server\n"
 msgstr ""
 
-#: lib/kauth.c:90
+#: lib/kauth.c:96
 msgid "Failed to decode base64 in reply\n"
 msgstr ""
 
-#: lib/kauth.c:107
+#: lib/kauth.c:113
 #, c-format
 msgid "Password for %s:"
 msgstr ""
