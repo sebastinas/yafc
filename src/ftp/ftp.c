@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.21 2001/05/24 19:14:07 mhe Exp $
+/* $Id: ftp.c,v 1.22 2001/05/27 20:28:54 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -49,7 +49,7 @@ Ftp *ftp_create(void)
 	ftp->reply_timeout = 30;
 	ftp->open_timeout = 30;
 	ftp->taglist = list_new((listfunc)rfile_destroy);
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 	ftp->app_data = 0;
 /*	ftp->in_buffer = 0;*/
 /*	ftp->out_buffer = 0;*/
@@ -132,7 +132,7 @@ void ftp_destroy(Ftp *ftp)
 	args_destroy(ftp->ssh_args);
 	ftp->ssh_args = 0;
 
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 	sec_end();
 #endif
 
@@ -219,7 +219,7 @@ void ftp_reset_vars(void)
 	xfree(ftp->last_mkpath);
 	ftp->last_mkpath = 0;
 
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 	sec_end();
 	ftp->request_data_prot = 0;
 	ftp->buffer_size = 0;
@@ -268,6 +268,8 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
 
 	if(reset_vars)
 		ftp_reset_vars();
+	/* don't assume server is in ascii mode initially even if RFC says so */
+	ftp->prev_type = '?';
 
 #ifdef HAVE_POSIX_SIGSETJMP
 	if(sigsetjmp(open_timeout_jmp, 1))
@@ -469,7 +471,7 @@ static int ftp_gets(void)
 
 	ftp->reply[i] = '\0';
 	ftp->fullcode = atoi(ftp->reply);
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 	{
 		int r = 0;
 		switch(ftp->fullcode) { /* handle protected responses 6xx */
@@ -780,7 +782,7 @@ static int get_password(url_t *url, const char *anonpass, bool isproxy)
 	return 0;
 }
 
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 
 static const char *secext_name(const char *mech)
 {
@@ -790,7 +792,7 @@ static const char *secext_name(const char *mech)
 	} names[] = {
 		{"krb4", "KERBEROS_V4"},
 		{"krb5", "GSSAPI"},
-/*		{"ssl", "SSL"},*/
+		{"ssl", "SSL"},
 		{"none", "none"},
 		{0, 0}
 	};
@@ -814,10 +816,14 @@ static bool mech_unsupported(const char *mech)
 	if(strcasecmp(mech, "GSSAPI") == 0)
 		return true;
 #endif
+#ifndef USE_SSL
+	if(strcasecmp(mech, "SSL") == 0)
+		return true;
+#endif
 	return false;
 }
 
-#endif /* KRB4 or KRB5 */
+#endif /* SECFTP */
 
 int ftp_login(const char *guessed_username, const char *anonpass)
 {
@@ -851,7 +857,7 @@ int ftp_login(const char *guessed_username, const char *anonpass)
 			return r;
 	}
 
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 	ftp->sec_complete = false;
 	ftp->data_prot = prot_clear;
 
@@ -1003,7 +1009,7 @@ int ftp_login(const char *guessed_username, const char *anonpass)
 	}
 	if(ftp->code == ctComplete) {
 		ftp->loggedin = true;
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 		/* we are logged in, now set the requested data protection level
 		 * requested from the autologin information in the config file,
 		 * if any, else uses default protection level 'clear', ie
@@ -1086,9 +1092,19 @@ int ftp_chdir(const char *path)
 	ftp_set_tmp_verbosity(vbCommand);
 	ftp_cmd("CWD %s", path);
 	if(ftp->code == ctComplete) {
+		/* Now, try to be smart ;-)
+		 * Many ftp servers include the current directory in the CWD reply
+		 * try to parse it, so we don't need to issue a PWD command
+		 */
+
 		if(strncasecmp(ftp->reply, "250 Changed to ", 15) == 0) {
 			/* this is what Troll-ftpd replies: 250 Changed to /foo/bar */
 			ftp_update_curdir_x(ftp->reply+15);
+			ftp_trace("Parsed cwd '%s' from reply\n", ftp->curdir);
+		} else if(strncasecmp(ftp->reply,
+							  "250 OK. Current directory is ", 29) == 0) {
+			/* PureFTPd responds: "250 OK. Current directory is /foo/bar */
+			ftp_update_curdir_x(ftp->reply+29);
 			ftp_trace("Parsed cwd '%s' from reply\n", ftp->curdir);
 		} else if(strstr(ftp->reply, " is current directory") != 0) {
 			/* WarFTPD answers: 250 "/foo/bar/" is current directory */
