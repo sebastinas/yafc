@@ -1,10 +1,11 @@
 @node Keywords, Prompt codes, , Configuration
 @section Keywords
 
-The configuration file consists of keywords with an argument, separated with
-a space. There are three types of arguments: strings, booleans and integers.
-Strings must be enclosed in quotes if they contains spaces. Boolean arguments
-can be written as 0/1, true/false of on/off. The keywords are case insensitive.
+The configuration file consists of keywords with an argument,
+separated with a space. There are three types of arguments: strings,
+booleans and integers.  Strings must be enclosed in quotes if they
+contains spaces. Boolean arguments can be written as 0/1, true/false
+or on/off. The keywords are case insensitive.
 
 These are the supported keywords:
 
@@ -47,6 +48,12 @@ type: boolean
 If true, use passive mode data connections. You might have to do this
 if you are behind a proxy.
 
+@item reverse_dns
+type: boolean
+
+If this option is true, IP addresses will be reverse looked up in the
+DNS for a hostname, which can be slow. Set to false to skip this.
+
 @item verbose
 type: boolean
 
@@ -55,13 +62,25 @@ Show all replies received from remote host.
 @item debug
 type: boolean
 
-Show exactly what is going on. Prints all FTP commands sent to
-remote host and all replies received, including response code.
+Show exactly what is going on. Prints all FTP commands sent to remote
+host and all replies received, including response code.
 
 @item trace
 type: string
 
 Create trace files in @file{~/.yafc/trace/trace.<pid>}.
+
+@item ssh_program
+type: string
+
+Path to local ssh program which will be used in SSH2 connections. Note
+that only SSH version 2 is supported.
+
+@item sftp_server_program
+type: string
+
+Path to remote sftp-server program. Leave commented to use the sftp
+subsystem.
 
 @item inhibit_startup_syst
 type: boolean

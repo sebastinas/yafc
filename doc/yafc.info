@@ -114,7 +114,10 @@ Invoking Yafc
 *************
 
    Usage:
-     yafc [options] [ftp://][USER[:PASSWORD]@]HOSTNAME[:PORT][/DIRECTORY]
+     yafc [options] [proto://][USER[:PASSWORD]@]HOSTNAME[:PORT][/DIRECTORY]
+
+   The 'proto' keyword can be either 'ftp' for ordinary FTP protocol, or
+'ssh' for SSH2 protocol (sftp).
 
    Options:
 
@@ -1519,7 +1522,7 @@ Keywords
    The configuration file consists of keywords with an argument,
 separated with a space. There are three types of arguments: strings,
 booleans and integers.  Strings must be enclosed in quotes if they
-contains spaces. Boolean arguments can be written as 0/1, true/false of
+contains spaces. Boolean arguments can be written as 0/1, true/false or
 on/off. The keywords are case insensitive.
 
    These are the supported keywords:
@@ -1561,6 +1564,13 @@ on/off. The keywords are case insensitive.
      If true, use passive mode data connections. You might have to do
      this if you are behind a proxy.
 
+`reverse_dns'
+     type: boolean
+
+     If this option is true, IP addresses will be reverse looked up in
+     the DNS for a hostname, which can be slow. Set to false to skip
+     this.
+
 `verbose'
      type: boolean
 
@@ -1576,6 +1586,18 @@ on/off. The keywords are case insensitive.
      type: string
 
      Create trace files in `~/.yafc/trace/trace.<pid>'.
+
+`ssh_program'
+     type: string
+
+     Path to local ssh program which will be used in SSH2 connections.
+     Note that only SSH version 2 is supported.
+
+`sftp_server_program'
+     type: string
+
+     Path to remote sftp-server program. Leave commented to use the sftp
+     subsystem.
 
 `inhibit_startup_syst'
      type: boolean
@@ -2277,77 +2299,77 @@ Node: Bugs2246
 Node: Obtaining Yafc2783
 Node: Motivation3098
 Node: Invoking Yafc3692
-Node: The shell6265
-Node: Yafc commands6830
-Node: !10202
-Node: afslog10336
-Node: alias10463
-Node: bookmark10586
-Node: cache11595
-Node: cat12126
-Node: cd12648
-Node: cdup13003
-Node: chmod13174
-Node: close13437
-Node: copyright13568
-Node: filesize13701
-Node: filetime13844
-Node: flush13983
-Node: fxp14111
-Node: get17860
-Node: help20565
-Node: idle20686
-Node: kauth20814
-Node: kdestroy20944
-Node: klist21081
-Node: krbtkfile21213
-Node: lcd21361
-Node: list21492
-Node: lpwd21600
-Node: ls21726
-Node: ltag23365
-Node: luntag23479
-Node: mkdir23602
-Node: mv23792
-Node: nlist23910
-Node: nop24032
-Node: open24312
-Node: prot25045
-Node: put25557
-Node: pwd28077
-Node: quit28232
-Node: quote28354
-Node: reopen28481
-Node: rhelp28617
-Node: rm28742
-Node: rmdir29202
-Node: rstatus29328
-Node: set29459
-Node: shell29582
-Node: site29706
-Node: source29921
-Node: status30051
-Node: switch30183
-Node: system30657
-Node: tag30797
-Node: unalias31656
-Node: untag31787
-Node: url31914
-Node: user32190
-Node: version32316
-Node: warranty32451
-Node: Nohup transfers32575
-Node: Configuration33412
-Node: Keywords34808
-Node: Prompt codes43827
-Node: Transfer codes45118
-Node: Aliases46185
-Node: Alias examples46710
-Node: Colors48275
-Node: ANSI attribute codes48980
-Node: Bookmarks49977
-Node: Bookmark keywords51055
-Node: Bookmark examples53247
-Node: Kerberos54561
+Node: The shell6373
+Node: Yafc commands6938
+Node: !10310
+Node: afslog10444
+Node: alias10571
+Node: bookmark10694
+Node: cache11703
+Node: cat12234
+Node: cd12756
+Node: cdup13111
+Node: chmod13282
+Node: close13545
+Node: copyright13676
+Node: filesize13809
+Node: filetime13952
+Node: flush14091
+Node: fxp14219
+Node: get17968
+Node: help20673
+Node: idle20794
+Node: kauth20922
+Node: kdestroy21052
+Node: klist21189
+Node: krbtkfile21321
+Node: lcd21469
+Node: list21600
+Node: lpwd21708
+Node: ls21834
+Node: ltag23473
+Node: luntag23587
+Node: mkdir23710
+Node: mv23900
+Node: nlist24018
+Node: nop24140
+Node: open24420
+Node: prot25153
+Node: put25665
+Node: pwd28185
+Node: quit28340
+Node: quote28462
+Node: reopen28589
+Node: rhelp28725
+Node: rm28850
+Node: rmdir29310
+Node: rstatus29436
+Node: set29567
+Node: shell29690
+Node: site29814
+Node: source30029
+Node: status30159
+Node: switch30291
+Node: system30765
+Node: tag30905
+Node: unalias31764
+Node: untag31895
+Node: url32022
+Node: user32298
+Node: version32424
+Node: warranty32559
+Node: Nohup transfers32683
+Node: Configuration33520
+Node: Keywords34916
+Node: Prompt codes44405
+Node: Transfer codes45696
+Node: Aliases46763
+Node: Alias examples47288
+Node: Colors48853
+Node: ANSI attribute codes49558
+Node: Bookmarks50555
+Node: Bookmark keywords51633
+Node: Bookmark examples53825
+Node: Kerberos55139
 
 End Tag Table

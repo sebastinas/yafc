@@ -4,8 +4,11 @@
 
 Usage:
 @example
-yafc [options] [ftp://][@var{user}[:@var{password}]@@]@var{hostname}[:@var{port}][/@var{directory}]
+yafc [options] [proto://][@var{user}[:@var{password}]@@]@var{hostname}[:@var{port}][/@var{directory}]
 @end example
+
+The 'proto' keyword can be either 'ftp' for ordinary FTP protocol, or
+'ssh' for SSH2 protocol (sftp).
 
 Options:
 
