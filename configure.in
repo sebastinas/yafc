@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce an m4 configure script.
-dnl $Id: configure.in,v 1.24 2001/08/24 09:11:46 mhe Exp $
+dnl $Id: configure.in,v 1.25 2002/02/15 11:08:59 mhe Exp $
 
 dnl
 dnl init
@@ -7,7 +7,7 @@ dnl
 
 AC_INIT(src/ftp/ftp.c)
 AC_CONFIG_AUX_DIR(support)
-AM_INIT_AUTOMAKE(yafc, 0.7.4)
+AM_INIT_AUTOMAKE(yafc, 0.7.6)
 AM_CONFIG_HEADER(config.h)
 
 CDPATH=""
@@ -29,7 +29,8 @@ AC_MINIX
 
 AM_PROG_CC_STDC
 AC_PROG_INSTALL
-AC_PROG_RANLIB
+dnl AC_PROG_RANLIB
+AM_PROG_LIBTOOL
 
 # check if to use pipes or socketpair in src/ftp/ssh_ftp.c
 # checks taken from openssh-2.9p1
@@ -97,9 +98,9 @@ AC_SEARCH_LIBS(socket, socket, ,
 AC_SEARCH_LIBS(gethostbyname, resolv nsl, ,
  AC_WARN(can't find resolver functions))
 
-AC_CHECK_HEADERS(dirent.h ndir.h sys/ndir.h sys/dir.h memory.h)
+AC_CHECK_HEADERS(dirent.h, , [AC_CHECK_HEADERS(ndir.h sys/ndir.h sys/dir.h)])
+AC_CHECK_HEADERS(memory.h)
 AC_CHECK_FUNCS(strcoll)
-
 dnl AC_CHECK_FUNCS(setproctitle)
 AC_REPLACE_FUNCS(vasprintf)
 AC_REPLACE_FUNCS(strlcat)
@@ -346,7 +347,8 @@ else
 fi
 
 AC_OUTPUT([Makefile doc/Makefile lib/Makefile src/Makefile
-           src/ftp/Makefile src/libmhe/Makefile yafc.spec])
+           src/ftp/Makefile src/libmhe/Makefile contrib/yafc-rw.spec
+           contrib/yafc-mandrake.spec])
 
 echo "------ configure complete ------"
 echo "Compiling with $CC $CFLAGS"
