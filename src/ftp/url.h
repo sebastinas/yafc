@@ -1,4 +1,4 @@
-/* $Id: url.h,v 1.7 2001/05/12 18:44:04 mhe Exp $
+/* $Id: url.h,v 1.8 2001/05/21 19:54:00 mhe Exp $
  *
  * url.h -- splits an URL into its components
  *
@@ -28,6 +28,7 @@ typedef struct url_t {
 	list *mech;       /* requested security mechanisms to try */
 	bool noproxy;     /* don't connect via the configured proxy */
 	int pasvmode;    /* true if passive mode is requested */
+	char *sftp_server; /* path to remote sftp_server program */
 } url_t;
 
 url_t *url_create(void);
@@ -46,6 +47,7 @@ void url_setprotlevel(url_t *urlp, const char *protlevel);
 void url_setport(url_t *urlp, int port);
 void url_setmech(url_t *urlp, const char *mech_string);
 void url_setpassive(url_t *urlp, int passive);
+void url_setsftp(url_t *urlp, const char *sftp_server);
 
 bool url_isanon(const url_t *url);
 

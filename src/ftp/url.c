@@ -1,4 +1,4 @@
-/* $Id: url.c,v 1.6 2001/05/12 18:44:04 mhe Exp $
+/* $Id: url.c,v 1.7 2001/05/21 19:54:00 mhe Exp $
  *
  * url.c -- splits an URL into its components
  *
@@ -57,6 +57,7 @@ url_t *url_clone(const url_t *urlp)
 		cloned->noproxy = urlp->noproxy;
 		cloned->mech = list_clone(urlp->mech, (listclonefunc)xstrdup);
 		cloned->pasvmode = urlp->pasvmode;
+		cloned->sftp_server = xstrdup(urlp->sftp_server);
 	}
 
 	return cloned;
@@ -75,6 +76,7 @@ void url_destroy(url_t *urlp)
 		xfree(urlp->directory);
 		xfree(urlp->protlevel);
 		list_free(urlp->mech);
+		xfree(urlp->sftp_server);
 		xfree(urlp);
 	}
 }
@@ -193,6 +195,12 @@ void url_setport(url_t *urlp, int port)
 void url_setpassive(url_t *urlp, int passive)
 {
 	urlp->pasvmode = passive;
+}
+
+void url_setsftp(url_t *urlp, const char *sftp_server)
+{
+	xfree(urlp->sftp_server);
+	urlp->sftp_server = decode_rfc1738(sftp_server);
 }
 
 void url_setmech(url_t *urlp, const char *mech_string)

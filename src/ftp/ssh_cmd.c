@@ -39,14 +39,19 @@ int version;
 
 int ssh_open_url(url_t *urlp)
 {
+	char *sftp = gvSFTPServerProgram;
+
 	xfree(ftp->ssh_args);
 	ftp->ssh_args = 0;
 
-	ssh_make_args(&ftp->ssh_args, urlp->hostname);
+	if(urlp->sftp_server)
+		sftp = urlp->sftp_server;
+
+	ssh_make_args(&ftp->ssh_args, urlp->hostname, sftp);
 
 	if(urlp->username) {
-		ssh_make_args(&ftp->ssh_args, "-l");
-		ssh_make_args(&ftp->ssh_args, urlp->username);
+		ssh_make_args(&ftp->ssh_args, "-l", sftp);
+		ssh_make_args(&ftp->ssh_args, urlp->username, sftp);
 	} else {
 		/* we need a username, otherwise other functions will fail
 		 */
@@ -56,14 +61,14 @@ int ssh_open_url(url_t *urlp)
 	if(urlp->port) {
 		char *p;
 		asprintf(&p, "-p %d", urlp->port);
-		ssh_make_args(&ftp->ssh_args, p);
+		ssh_make_args(&ftp->ssh_args, p, sftp);
 		xfree(p);
 	}
 
 	if(ftp_get_verbosity() == vbDebug)
-		ssh_make_args(&ftp->ssh_args, "-v");
+		ssh_make_args(&ftp->ssh_args, "-v", sftp);
 
-	ssh_make_args(&ftp->ssh_args, 0);
+	ssh_make_args(&ftp->ssh_args, 0, sftp);
 
 	if(ssh_connect(ftp->ssh_args, &ftp->ssh_in, &ftp->ssh_out,
 				   &ftp->ssh_pid) == -1)

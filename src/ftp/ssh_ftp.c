@@ -90,7 +90,7 @@ int ssh_connect(char **args, int *in, int *out, pid_t *sshpid)
 	return 0;
 }
 
-char **ssh_make_args(char ***args, char *add_arg)
+char **ssh_make_args(char ***args, char *add_arg, const char *sftp_server)
 {
 	static int nargs = 0;
 	char debug_buf[4096];
@@ -115,17 +115,18 @@ char **ssh_make_args(char ***args, char *add_arg)
 	}
 
 	/* no subsystem if the server-spec contains a '/' */
-	if(gvSFTPServerProgram == NULL || strchr(gvSFTPServerProgram, '/') == NULL)
-		ssh_make_args(args, "-s");
-	ssh_make_args(args, "-oForwardX11=no");
-	ssh_make_args(args, "-oForwardAgent=no");
-	ssh_make_args(args, use_ssh1 ? "-oProtocol=1" : "-oProtocol=2");
+	if(sftp_server == NULL || strchr(sftp_server, '/') == NULL)
+		ssh_make_args(args, "-s", sftp_server);
+	ssh_make_args(args, "-oForwardX11=no", sftp_server);
+	ssh_make_args(args, "-oForwardAgent=no", sftp_server);
+	ssh_make_args(args, use_ssh1 ? "-oProtocol=1" : "-oProtocol=2",
+				  sftp_server);
 
 	/* Otherwise finish up and return the arg array */
-	if (gvSFTPServerProgram != NULL)
-		ssh_make_args(args, gvSFTPServerProgram);
+	if (sftp_server != NULL)
+		ssh_make_args(args, sftp_server, sftp_server);
 	else
-		ssh_make_args(args, "sftp");
+		ssh_make_args(args, "sftp", sftp_server);
 
 	/* XXX: overflow - doesn't grow debug_buf */
 	debug_buf[0] = '\0';

@@ -1,4 +1,4 @@
-/* $Id: bookmark.c,v 1.12 2001/05/12 18:44:37 mhe Exp $
+/* $Id: bookmark.c,v 1.13 2001/05/21 19:53:25 mhe Exp $
  *
  * bookmark.c -- create bookmark(s)
  *
@@ -98,6 +98,8 @@ static void bookmark_save_one(FILE *fp, url_t *url)
 	}
 	if(url->pasvmode != -1)
 		fprintf(fp, " passive %s", url->pasvmode ? "true" : "false");
+	if(url->sftp_server)
+		fprintf(fp, " sftp %s", url->sftp_server);
 	fprintf(fp, "\n\n");
 }
 
@@ -291,6 +293,8 @@ static bool should_update_bookmark(url_t *url)
 	if(url->pasvmode != ftp->url->pasvmode && ftp->url->pasvmode != -1)
 		return true;
 	if(xstrcmp(url->protocol, ftp->url->protocol) != 0)
+		return true;
+	if(xstrcmp(url->sftp_server, ftp->url->sftp_server) != 0)
 		return true;
 	return false;
 }
