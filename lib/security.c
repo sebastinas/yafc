@@ -43,7 +43,7 @@
 #include "base64.h"
 #include "commands.h"
 
-/*RCSID("$Id: security.c,v 1.7 2000/10/20 09:35:29 mhe Exp $");*/
+/*RCSID("$Id: security.c,v 1.8 2000/10/20 13:50:18 mhe Exp $");*/
 
 /*static enum protection_level command_prot;*/
 /*static enum protection_level data_prot;*/
@@ -408,14 +408,14 @@ static int sec_prot_internal(int level)
 	ftp_set_tmp_verbosity(vbError);
 
 	if (!ftp->sec_complete) {
-		printf(_("No security data exchange has taken place.\n"));
+		ftp_err(_("No security data exchange has taken place.\n"));
 		return -1;
 	}
 
 	if (level) {
 		ret = ftp_cmd("PBSZ %u", s);
 		if (ftp->code != ctComplete) {
-			printf(_("Failed to set protection buffer size.\n"));
+			ftp_err(_("Failed to set protection buffer size.\n"));
 			return -1;
 		}
 		ftp->buffer_size = s;
@@ -428,11 +428,12 @@ static int sec_prot_internal(int level)
 
 	ret = ftp_cmd("PROT %c", level["CSEP"]);	/* XXX :-) */
 	if (ftp->code != ctComplete) {
-		printf(_("Failed to set protection level.\n"));
+		ftp_err(_("Failed to set protection level.\n"));
 		return -1;
 	}
 
 	ftp->data_prot = (enum protection_level)level;
+	url_setprotlevel(ftp->url, level_to_name(ftp->data_prot));
 	return 0;
 }
 
@@ -459,18 +460,18 @@ void cmd_prot(int argc, char **argv)
 	maxargs(optind + 1);
 
 	if (!ftp->sec_complete) {
-		printf(_("No security data exchange has taken place\n"));
+		ftp_err(_("No security data exchange has taken place\n"));
 		return;
 	}
 	level = name_to_level(argv[argc - 1]);
 
 	if (level == -1) {
-		printf(_("Unrecognized protection level %s\n"), argv[argc - 1]);
+		ftp_err(_("Unrecognized protection level %s\n"), argv[argc - 1]);
 		return;
 	}
 
 	if ((*ftp->mech->check_prot) (ftp->app_data, level)) {
-		printf(_("%s does not implement %s protection\n"),
+		ftp_err(_("%s does not implement %s protection\n"),
 			   ftp->mech->name, level_to_name(level));
 		return;
 	}
@@ -483,7 +484,7 @@ void cmd_prot(int argc, char **argv)
 	} else if (strncasecmp(argv[optind], "command", strlen(argv[optind])) ==
 			   0) set_command_prot(level);
 	else {
-		printf(_("Syntax error, try %s --help for more information\n"),
+		ftp_err(_("Syntax error, try %s --help for more information\n"),
 			   argv[0]);
 	}
 
