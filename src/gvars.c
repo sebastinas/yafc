@@ -120,7 +120,7 @@ bool gvTrace = false;
 bool gvPasvmode = false;
 bool gvReadNetrc = false;
 
-int gvAutoBookmark = 0; /* 0 = no, 1 = yes, 2 = ask */
+int gvAutoBookmark = 1; /* 0 = no, 1 = yes, 2 = ask */
 bool gvAutoBookmarkSilent = false;
 bool gvAutoBookmarkSavePasswd = false;
 
