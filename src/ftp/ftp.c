@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.34 2002/12/02 12:25:23 mhe Exp $
+/* $Id: ftp.c,v 1.35 2002/12/05 22:13:30 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -799,15 +799,10 @@ static const char *secext_name(const char *mech)
 		const char *short_name;
 		const char *real_name;
 	} names[] = {
-#ifdef KRB4
 		{"krb4", "KERBEROS_V4"},
-#endif
-#ifdef KRB5
 		{"krb5", "GSSAPI"},
-#endif
-#ifdef SSL
-		{"ssl", "SSL"},
-#endif
+		{"gssapi", "GSSAPI"},
+/*		{"ssl", "SSL"},*/
 		{"none", "none"},
 		{0, 0}
 	};
@@ -823,11 +818,11 @@ static const char *secext_name(const char *mech)
 
 static bool mech_unsupported(const char *mech)
 {
-#ifndef KRB4
+#ifndef HAVE_KRB4
 	if(strcasecmp(mech, "KERBEROS_V4") == 0)
 		return true;
 #endif
-#ifndef KRB5
+#ifndef HAVE_KRB5
 	if(strcasecmp(mech, "GSSAPI") == 0)
 		return true;
 #endif

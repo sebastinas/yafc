@@ -1,4 +1,4 @@
-/* $Id: commands.h,v 1.7 2001/07/01 11:27:57 mhe Exp $
+/* $Id: commands.h,v 1.8 2002/12/05 22:13:55 mhe Exp $
  *
  * commands.h --
  *
@@ -150,11 +150,11 @@ DEFCMD(lpwd);
 DEFCMD(lcd);
 DEFCMD(shell);
 
-#if defined(KRB4) || defined(KRB5)
+#ifdef SECFTP
 /* in ../lib/security.c */
 DEFCMD(prot);
 #endif
-#ifdef KRB4
+#ifdef HAVE_KRB4
 /* in ../lib/kauth.c */
 DEFCMD(kauth);
 DEFCMD(kdestroy);

@@ -1,4 +1,4 @@
-/* $Id: help.c,v 1.8 2001/07/01 11:29:14 mhe Exp $
+/* $Id: help.c,v 1.9 2002/12/05 22:13:44 mhe Exp $
  *
  * help.c -- local help and info
  *
@@ -53,12 +53,6 @@ void cmd_version(int argc, char **argv)
 
 	printf(FULLVER "\n");
 
-#if defined(KRB4) || defined(KRB5)
-	printf(_("This product includes software developed by the"
-			 " Kungliga Tekniska\n"
-			 "Högskolan and its contributors.\n\n"));
-#endif
-
 	printf(_("Compiled " __TIME__ " " __DATE__ " (" HOSTTYPE ")\n"));
 #if (HAVE_LIBREADLINE >= 210)
 	printf(_("Using Readline version %s\n"), rl_library_version);
@@ -77,10 +71,4 @@ void cmd_copyright(int argc, char **argv)
 {
 	maxargs_nohelp(0);
 	puts(COPYRIGHT);
-
-#if defined(KRB4) || defined(KRB5)
-	puts(_("This product includes software developed by the"
-		   " Kungliga Tekniska\n" \
-         "Högskolan and its contributors.\n"));
-#endif
 }

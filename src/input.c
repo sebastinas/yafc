@@ -1,4 +1,4 @@
-/* $Id: input.c,v 1.7 2002/02/15 11:03:24 mhe Exp $
+/* $Id: input.c,v 1.8 2002/12/05 22:13:44 mhe Exp $
  *
  * input.c -- string input and readline stuff
  *
@@ -56,7 +56,7 @@ char *input_read_string(const char *prompt)
 #if 1
 char *getpass_hook(const char *prompt)
 {
-#if defined(KRB4) || defined(KRB5)
+#ifdef KERBEROS
 	char tmp[80];
 	des_read_pw_string(tmp, sizeof(tmp), (char *)prompt, 0);
 	tmp[79] = 0;
@@ -78,7 +78,7 @@ char *getpass_hook(const char *prompt)
 
 char *getpass_hook(const char *prompt)
 {
-#if defined(KRB4) || defined(KRB5)
+#ifdef KERBEROS
 	char tmp[80];
 	des_read_pw_string(tmp, sizeof(tmp), (char *)prompt,
 					   0);

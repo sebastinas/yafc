@@ -1,4 +1,4 @@
-/* $Id: commands.c,v 1.15 2002/05/09 12:30:49 mhe Exp $
+/* $Id: commands.c,v 1.16 2002/12/05 22:13:54 mhe Exp $
  *
  * commands.c --
  *
@@ -79,10 +79,10 @@ cmd_t cmds[] = {
 	CMD(user, 0,0,1, cpNone),
 	CMD(version, 0,0,1, cpNone),
 	CMD(warranty, 0,0,1, cpNone),
-#if defined(KRB4) || defined(KRB5)
+#ifdef HAVE_KERBEROS
 	CMD(prot, 1,1,1, cpNone),
 #endif
-#ifdef KRB4
+#ifdef HAVE_KRB4
 	CMD(afslog, 0,0,1, cpNone),
 	CMD(klist, 0,0,1, cpNone),
 	CMD(kauth, 0,0,1, cpNone),
@@ -693,7 +693,7 @@ void cmd_status(int argc, char **argv)
 		puts(_("not connected"));
 	if(ftp_loggedin())
 		printf(_("logged in as '%s'\n"), ftp->url->username);
-#if defined(KRB4) || defined(KRB5)
+#ifdef HAVE_KERBEROS
 	if(ftp_connected())
 		sec_status();
 #endif
@@ -705,15 +705,6 @@ void cmd_status(int argc, char **argv)
 void cmd_site(int argc, char **argv)
 {
 	char *e;
-
-#if 0
-	OPT_HELP("Send site specific command.  Usage:\n"
-			 "  site [options] [command]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n"
-			 "[command] should be a valid SITE argument\n"
-			 "try 'site help' or 'rhelp site' for more information\n");
-#endif
 
 	minargs_nohelp(1);
 	need_connected();

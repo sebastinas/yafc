@@ -1,4 +1,4 @@
-/* $Id: syshdr.h,v 1.12 2001/09/07 09:08:16 mhe Exp $
+/* $Id: syshdr.h,v 1.13 2002/12/05 22:14:15 mhe Exp $
  *
  * syshdr.h -- includes global header files etc.
  *
@@ -87,18 +87,14 @@ typedef unsigned long long int u_int64_t;
 
 #include <sys/ioctl.h>
 
-#ifdef NEED_herror_PROTO
+#if defined HAVE_DECL_HERROR && !HAVE_DECL_HERROR
 void herror(const char *s);
 #endif
-#ifdef NEED_vasprintf_PROTO
-int vasprintf(char **strp, const char *format, va_list ap);
-#endif
-#ifdef NEED_asprintf_PROTO
+#if defined HAVE_DECL_ASPRINTF && !HAVE_DECL_ASPRINTF
 int asprintf(char **strp, const char *format, ...);
 #endif
-
-#if 0 && (!defined(HAVE_SETPROCTITLE) && defined(linux))
-# include "setproctitle.h"
+#if defined HAVE_DECL_VASPRINTF && !HAVE_DECL_VASPRINTF
+int vasprintf(char **strp, const char *format, va_list ap);
 #endif
 
 #ifdef STDC_HEADERS
@@ -196,11 +192,7 @@ Function *rl_named_function();
 extern int rl_filename_completion_desired;
 #endif
 
-/*#if defined(HAVE_FNMATCH) && defined(HAVE_FNMATCH_H)*/
-/*# include <fnmatch.h>*/
-/*#else*/
 #include "fnmatch.h"  /* our own, in lib/ */
-/*#endif*/
 
 #if defined(HAVE_GETOPT_LONG) && defined(HAVE_GETOPT_H)
 # include <getopt.h>
@@ -214,25 +206,12 @@ extern int rl_filename_completion_desired;
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
-#if defined(KRB4) || defined(KRB5) || defined(USE_SSL)
+#ifdef HAVE_KERBEROS
 # define SECFTP
-# ifdef HAVE_DES_H
-#  include <des.h>
-# endif
-# ifdef HAVE_KRB_H
-#  include <krb.h>
-# endif
-# ifdef HAVE_KRB5_H
-#  include <krb5.h>
-# endif
 # include "security.h"  /* our own, in lib/ */
 # ifndef HAVE_STRLCPY
 size_t strlcpy (char *dst, const char *src, size_t dst_sz);
 # endif
-#endif
-
-#ifndef HAVE_STRLCAT
-size_t strlcat(char *dst, const char *src, size_t siz);
 #endif
 
 /* NLS stuff (Native Language Support) */
