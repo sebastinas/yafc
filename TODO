@@ -1,6 +1,21 @@
 TODO list for Yafc
 ------------------
 
+_________________
+Mark Schreiber (mark7):
+
+yafc can compile a working yafc with Kerberos support on Red Hat 7.2
+(with krb-libs installed), but it requires manually enabling the
+kerberos options in config.h and adding the paths to the
+Makefiles. It'd be nice if autoconf worked with RH's setup. Autoconf
+thinks that Heimdall (instead of MIT) is installed and even if mit is
+forced by altering configure.in, fails on every test after that.
+
+kerb libs on RH are in /usr/kerberos/lib, includes in
+/usr/kerberos/include/krb5 and /usr/kerberos/include/krb5/libs.
+------------------
+
+
 * 'insgesamt 679748' (locale settings in LISTing -> parsing failed)
 ? if the output can't be parsed, yafc should just dump it out raw.
 + option (in bookmarks?) to control LIST parameters (-a needed for PureFTPd)

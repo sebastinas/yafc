@@ -1,3 +1,4 @@
 @set UPDATED 11 December 2001
-@set EDITION 0.7.7
-@set VERSION 0.7.7
+@set UPDATED-MONTH December 2001
+@set EDITION 0.7.9
+@set VERSION 0.7.9

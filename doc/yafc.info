@@ -1,9 +1,9 @@
-This is yafc.info, produced by makeinfo version 4.1 from yafc.texi.
+Detta är yafc.info, skapad av makeinfo version 4.1 från yafc.texi.
 
 START-INFO-DIR-ENTRY
 * Yafc: (yafc).  Yet Another FTP Client
 END-INFO-DIR-ENTRY
-   This file documents Yafc version 0.7.7
+   This file documents Yafc version 0.7.9
 
    Copyright (C) 1999-2000 Martin Hedenfalk
 
@@ -25,7 +25,7 @@ translation approved by the copyright holder.
 File: yafc.info,  Node: Top,  Next: Overview,  Up: (dir)
 
    This document describes YAFC, an interactive interface to the FTP
-protocol.  This document applies to version 0.7.7.
+protocol.  This document applies to version 0.7.9.
 
 * Menu:
 
@@ -708,14 +708,19 @@ File: yafc.info,  Node: get,  Next: help,  Prev: fxp,  Up: Yafc commands
 `-o DEST'
 `--output=DEST'
      Specify other destination. If more than one file is transferred,
-     or option `--recursive' is given, DEST denotes a directory.
-     Otherwise (if only one file is to be transferred), DEST denotes a
-     filename.
+     option `--recursive' is given, or DEST ends in a slash, then DEST
+     denotes a directory. Otherwise (if only one file is to be
+     transferred), DEST denotes a filename. However, if DEST already
+     exists and is a directory, DEST denotes a directory.
 
      Examples:
-          get foo.tar.gz -o bar.tar.gz
-     will transfer the remote file `foo.tar.gz' to the local file
-     `bar.tar.gz'.
+          get README -o readme
+     will transfer the remote file `README' to the local file `readme'
+     if `readme' is not an existing local directory.
+
+          get README -o readme/
+     will transfer the remote file `README' to the local directory
+     `readme'.
 
           get *.tar.gz -o foo
      will transfer all remote `*.tar.gz' files to a local directory
@@ -2300,82 +2305,82 @@ automagically set the protection level for a specific host.
 
 
 Tag Table:
-Node: Top903
-Node: Overview1334
-Node: Bugs2246
-Node: Obtaining Yafc2783
-Node: Motivation3098
-Node: Invoking Yafc3692
-Node: The shell6373
-Node: Yafc commands6938
-Node: !10254
-Node: afslog10388
-Node: alias10515
-Node: bookmark10638
-Node: cache11647
-Node: cat12178
-Node: cd12700
-Node: cdup13055
-Node: chmod13226
-Node: close13489
-Node: copyright13620
-Node: filetime13753
-Node: flush13893
-Node: fxp14021
-Node: get17770
-Node: help20475
-Node: idle20601
-Node: kauth20729
-Node: kdestroy20859
-Node: klist20996
-Node: krbtkfile21128
-Node: lcd21276
-Node: list21407
-Node: lpwd21515
-Node: ls21641
-Node: ltag23280
-Node: luntag23394
-Node: mkdir23517
-Node: mv23707
-Node: nlist23825
-Node: nop23947
-Node: open24227
-Node: prot25543
-Node: put26055
-Node: pwd28575
-Node: quit28730
-Node: quote28852
-Node: reopen28979
-Node: rhelp29115
-Node: rm29240
-Node: rmdir29700
-Node: rstatus29826
-Node: set29957
-Node: shell30080
-Node: site30204
-Node: source30419
-Node: status30549
-Node: switch30681
-Node: system31155
-Node: tag31295
-Node: unalias32154
-Node: untag32285
-Node: url32412
-Node: user32688
-Node: version32814
-Node: warranty32949
-Node: Nohup transfers33073
-Node: Configuration33910
-Node: Keywords35306
-Node: Prompt codes44818
-Node: Transfer codes46109
-Node: Aliases47176
-Node: Alias examples47701
-Node: Colors49266
-Node: ANSI attribute codes49971
-Node: Bookmarks50968
-Node: Bookmark keywords52046
-Node: Bookmark examples54238
-Node: Kerberos55552
+Node: Top902
+Node: Overview1333
+Node: Bugs2245
+Node: Obtaining Yafc2782
+Node: Motivation3097
+Node: Invoking Yafc3691
+Node: The shell6372
+Node: Yafc commands6937
+Node: !10253
+Node: afslog10387
+Node: alias10514
+Node: bookmark10637
+Node: cache11646
+Node: cat12177
+Node: cd12699
+Node: cdup13054
+Node: chmod13225
+Node: close13488
+Node: copyright13619
+Node: filetime13752
+Node: flush13892
+Node: fxp14020
+Node: get17769
+Node: help20730
+Node: idle20856
+Node: kauth20984
+Node: kdestroy21114
+Node: klist21251
+Node: krbtkfile21383
+Node: lcd21531
+Node: list21662
+Node: lpwd21770
+Node: ls21896
+Node: ltag23535
+Node: luntag23649
+Node: mkdir23772
+Node: mv23962
+Node: nlist24080
+Node: nop24202
+Node: open24482
+Node: prot25798
+Node: put26310
+Node: pwd28830
+Node: quit28985
+Node: quote29107
+Node: reopen29234
+Node: rhelp29370
+Node: rm29495
+Node: rmdir29955
+Node: rstatus30081
+Node: set30212
+Node: shell30335
+Node: site30459
+Node: source30674
+Node: status30804
+Node: switch30936
+Node: system31410
+Node: tag31550
+Node: unalias32409
+Node: untag32540
+Node: url32667
+Node: user32943
+Node: version33069
+Node: warranty33204
+Node: Nohup transfers33328
+Node: Configuration34165
+Node: Keywords35561
+Node: Prompt codes45073
+Node: Transfer codes46364
+Node: Aliases47431
+Node: Alias examples47956
+Node: Colors49521
+Node: ANSI attribute codes50226
+Node: Bookmarks51223
+Node: Bookmark keywords52301
+Node: Bookmark examples54493
+Node: Kerberos55807
 
 End Tag Table

@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.6 2002/02/23 13:16:30 mhe Exp $
+## $Id: Makefile.am,v 1.7 2002/05/28 09:47:51 mhe Exp $
 
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = BUGS THANKS COPYRIGHT acconfig.h \
@@ -14,8 +14,8 @@ SUPPORT_FILES = config.guess config.sub depcomp install-sh ltconfig \
  ltmain.sh mdate-sh missing mkinstalldirs texinfo.tex
 
 dist-hook:
-	mkdir $(distdir)/contrib
-	for cf in $(CONTRIB_FILES); do \
+	test -d $(distdir)/contrib || mkdir $(distdir)/contrib; \
+	for cf in $(CONTRIB_FILES) ; do \
 		cp -p $(top_srcdir)/contrib/$$cf $(distdir)/contrib ; done
 	test -d $(distdir)/support || mkdir $(distdir)/support; \
 	for sf in $(SUPPORT_FILES) ; do \

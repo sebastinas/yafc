@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce an m4 configure script.
-dnl $Id: configure.in,v 1.27 2002/04/07 18:45:08 mhe Exp $
+dnl $Id: configure.in,v 1.28 2002/05/28 09:47:51 mhe Exp $
 
 dnl
 dnl init
@@ -7,7 +7,7 @@ dnl
 
 AC_INIT(src/ftp/ftp.c)
 AC_CONFIG_AUX_DIR(support)
-AM_INIT_AUTOMAKE(yafc, 0.7.8)
+AM_INIT_AUTOMAKE(yafc, 0.7.9)
 AM_CONFIG_HEADER(config.h)
 
 CDPATH=""
