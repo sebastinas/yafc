@@ -6,7 +6,7 @@ dnl
 
 AC_INIT(src/ftp/ftp.c)
 AC_CONFIG_AUX_DIR(support)
-AM_INIT_AUTOMAKE(yafc, 0.6.7)
+AM_INIT_AUTOMAKE(yafc, 0.7)
 AM_CONFIG_HEADER(config.h)
 
 CDPATH=""
@@ -85,6 +85,7 @@ AC_CHECK_FUNCS(strcoll)
 
 dnl AC_CHECK_FUNCS(setproctitle)
 AC_REPLACE_FUNCS(vasprintf)
+AC_REPLACE_FUNCS(strlcat)
 
 AC_CHECK_FUNCS(getopt_long)
 if test "$ac_cv_func_getopt_long" != "yes"; then
