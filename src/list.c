@@ -1,8 +1,8 @@
 /* list.c -- the remote cached 'ls' command
- * 
+ *
  * This file is part of Yafc, an ftp client.
  * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -12,7 +12,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
@@ -261,7 +261,7 @@ static void ls_wide(list *gl, unsigned opt, bool doclr)
 				}
 				if(br)
 					break;
-			
+
 				while(left--)
 					putchar(' ');
 			}
@@ -293,7 +293,7 @@ static int ls_sort_dirs(rfile *a, rfile *b)
 		return 1;
 	return 0;
 }
-	
+
 static int ls_sort_size(rfile *a, rfile *b)
 {
 	if(a->size > b->size)
@@ -332,6 +332,11 @@ static int ls_sort_mtime(rfile *a, rfile *b)
 	return 0;
 }
 
+static int ls_sort_name(rfile *a, rfile *b)
+{
+	return strcmp(a->path, b->path);
+}
+
 static void ls_all(list *gl, unsigned opt, bool doclr)
 {
 	if(list_numitem(gl) == 0)
@@ -345,6 +350,8 @@ static void ls_all(list *gl, unsigned opt, bool doclr)
 		list_sort(gl, (listsortfunc)ls_sort_ext, test(opt, LS_SORT_REVERSE));
 	else if(test(opt, LS_SORT_MTIME))
 		list_sort(gl, (listsortfunc)ls_sort_mtime, test(opt, LS_SORT_REVERSE));
+	else
+		list_sort(gl, (listsortfunc)ls_sort_name, test(opt, LS_SORT_REVERSE));
 
 	if(test(opt, LS_LONG))
 		ls_long(gl, opt, doclr);
@@ -527,7 +534,7 @@ void cmd_ls(int argc, char **argv)
 		 * if dir, append '*' and glob, else glob that file
 		 * if not listing directory contents just glob that file
 		 */
-		
+
 		while(optind < argc) {
 			char *e, *f;
 			bool isdir = false;
@@ -539,13 +546,19 @@ void cmd_ls(int argc, char **argv)
 					*f = 0; /* we'll put it back below */
 					isdir = true;
 				} else {
+					rdirectory *rdir;
 					rfile *rf;
 					char *q = xstrdup(e);
 					unquote(q);
-					rf = ftp_get_file(q);
-					xfree(q);
-					if(rf && ftp_maybe_isdir(rf) == 1)
+					rdir = ftp_get_directory(q);
+					if(rdir)
 						isdir = true;
+					else {
+						rf = ftp_get_file(q);
+						xfree(q);
+						if(rf && ftp_maybe_isdir(rf) == 1)
+							isdir = true;
+					}
 				}
 			} else
 				/* prevent rglob_glob() from appending "*" */
