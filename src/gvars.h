@@ -38,6 +38,9 @@ extern char *gvWorkingDirectory;
 /* try to login automagically */
 extern bool gvAutologin;
 
+/* path to the SSH program */
+extern char *gvSSHProgram ;
+
 /* automatically reconnect on connection timeout */
 extern bool gvAutoReconnect;
 

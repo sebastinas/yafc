@@ -1,8 +1,8 @@
 /* rc.c -- config file parser + autologin lookup
- * 
+ *
  * This file is part of Yafc, an ftp client.
  * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -12,7 +12,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
@@ -112,7 +112,7 @@ static char *nextstr(FILE *fp)
 	}
 	return e;
 }
-	
+
 static bool nextbool(FILE *fp)
 {
 	char *e;
@@ -149,7 +149,7 @@ static void parse_host(int trig, FILE *fp)
 	if(trig == TRIG_MACHINE) {
 		if((e=nextstr(fp)) == 0)
 			return;
-		
+
 		if(e[0] == 0) {
 			errp(_("'machine' directive needs a hostname\n"));
 			url_destroy(up);
@@ -392,6 +392,10 @@ int parse_rc(const char *file, bool warn)
 			NEXTSTR;
 			xfree(gvPrompt3);
 			gvPrompt3 = xstrdup(e);
+		} else if(strcasecmp(e, "ssh_program") == 0) {
+			NEXTSTR;
+			xfree(gvSSHProgram);
+			gvSSHProgram = xstrdup(e);
 		} else if(strcasecmp(e, "xterm_title_terms") == 0) {
 			NEXTSTR;
 			xfree(gvXtermTitleTerms);
@@ -462,7 +466,7 @@ int parse_rc(const char *file, bool warn)
 			name = xstrdup(e);
 
 			NEXTSTR;
-			
+
 			args = args_create();
 			args_push_back(args, e);
 			alias_define(name, args);

@@ -37,6 +37,9 @@ debug off
 # create trace files
 trace off
 
+# path to the SSH program
+ssh_program "/usr/bin/ssh"
+
 # set to true to skip query of remote system on connect
 inhibit_startup_syst no
 
