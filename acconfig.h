@@ -45,6 +45,8 @@
 
 #undef KRB5
 
+#undef USE_SSL
+
 /* Define this if we're using MIT's implementation of krb5 */
 #undef KRB5_MIT
 
@@ -60,5 +62,7 @@
 #undef HAVE_UINTXX_T
 
 #undef HAVE_U_INT64_T
+
+#undef HAVE_UINT64_T
 
 #undef USE_PIPES

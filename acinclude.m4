@@ -4,11 +4,6 @@ dnl stolen from configure.in in openssh-2.9p1
 AC_DEFUN(mhe_CHECK_TYPES,
 [
   dnl Checks for data types
-  AC_CHECK_SIZEOF(char, 1)
-  AC_CHECK_SIZEOF(short int, 2)
-  AC_CHECK_SIZEOF(int, 4)
-  AC_CHECK_SIZEOF(long int, 4)
-  AC_CHECK_SIZEOF(long long int, 8)
 
   AC_CACHE_CHECK([for u_intXX_t types], ac_cv_have_u_intxx_t, [
     AC_TRY_COMPILE(
@@ -34,10 +29,17 @@ AC_DEFUN(mhe_CHECK_TYPES,
     ])
     if test "x$ac_cv_have_uintxx_t" = "xyes" ; then
       AC_DEFINE(HAVE_UINTXX_T)
+      have_u_intxx_t=1
     fi
   fi
 
-  AC_CACHE_CHECK([for u_int64_t types], ac_cv_have_u_int64_t, [
+  if test -z "$have_u_intxx_t" ; then
+    AC_CHECK_SIZEOF(char, 1)
+    AC_CHECK_SIZEOF(short int, 2)
+    AC_CHECK_SIZEOF(int, 4)
+  fi
+
+  AC_CACHE_CHECK([for u_int64_t type], ac_cv_have_u_int64_t, [
     AC_TRY_COMPILE(
       [ #include <sys/types.h> ],
       [ u_int64_t a; a = 1;],
@@ -49,6 +51,27 @@ AC_DEFUN(mhe_CHECK_TYPES,
     AC_DEFINE(HAVE_U_INT64_T)
     have_u_int64_t=1
   fi
+
+  if test -z "$have_u_int64_t" ; then
+    AC_CACHE_CHECK([for uint64_t type], ac_cv_have_uint64_t, [
+      AC_TRY_COMPILE(
+        [ #include <sys/types.h> ],
+        [ uint64_t a; a = 1;],
+        [ ac_cv_have_uint64_t="yes" ],
+        [ ac_cv_have_uint64_t="no" ]
+      )
+    ])
+    if test "x$ac_cv_have_uint64_t" = "xyes" ; then
+      AC_DEFINE(HAVE_UINT64_T)
+      have_u_int64_t=1
+    fi
+  fi
+
+  if test -z "$have_u_int64_t" ; then
+    AC_CHECK_SIZEOF(long int, 4)
+    AC_CHECK_SIZEOF(long long int, 8)
+  fi
+
 ])
 
 dnl mhe_CHECK_PROTO

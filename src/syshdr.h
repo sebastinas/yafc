@@ -1,4 +1,4 @@
-/* $Id: syshdr.h,v 1.10 2001/05/27 20:29:32 mhe Exp $
+/* $Id: syshdr.h,v 1.11 2001/05/28 09:51:57 mhe Exp $
  *
  * syshdr.h -- includes global header files etc.
  *
@@ -62,14 +62,15 @@ typedef unsigned long  u_int32_t;
 #endif
 /* 64-bit types */
 #ifndef HAVE_U_INT64_T
-# if (SIZEOF_LONG_INT == 8)
+# ifdef HAVE_UINT64_T
+typedef uint64_t u_int64_t;
+#  define HAVE_U_INT64_T 1
+# elif (SIZEOF_LONG_INT == 8)
 typedef unsigned long int u_int64_t;
-#   define HAVE_U_INT64_T 1
-# else
-#  if (SIZEOF_LONG_LONG_INT == 8)
+#  define HAVE_U_INT64_T 1
+# elif (SIZEOF_LONG_LONG_INT == 8)
 typedef unsigned long long int u_int64_t;
-#   define HAVE_U_INT64_T 1
-#  endif
+#  define HAVE_U_INT64_T 1
 # endif
 #endif
 
