@@ -321,7 +321,43 @@ File: yafc.info,  Node: bookmark,  Next: cache,  Prev: alias,  Up: Yafc commands
 `bookmark'
 ----------
 
-   Documentation missing...
+   Handle bookmarks. If no options are given, the default action is to
+create a bookmark for the current open connection. If no bookmark name
+is given on the command line, the bookmark will be given an alias based
+upon the hostname.
+
+   Usage:
+     bookmark [options] [bookmark name ...]
+
+   Options:
+
+`-s[FILE]'
+`--save[=FILE]'
+     Save bookmarks in memory to file. If the optional parameter FILE is
+     omitted, save to default bookmarks file `WORKDIR/bookmarks'.
+
+`-e'
+`--edit'
+     Start editor (found in $EDITOR environment variable) with your
+     bookmarks file.
+
+`-r[FILE]'
+`--read[=FILE]'
+     Read bookmarks from bookmarks file, or file given by optional
+     parameter FILE.
+
+`-d'
+`--delete'
+     Delete bookmarks given as arguments to `bookmark'. The bookmarks
+     file will be rewritten.
+
+`-l'
+`--list'
+     List bookmarks in memory.
+
+`-h'
+`--help'
+     Show short syntax description.
 
 
 File: yafc.info,  Node: cache,  Next: cat,  Prev: bookmark,  Up: Yafc commands
@@ -936,17 +972,25 @@ File: yafc.info,  Node: mv,  Next: nlist,  Prev: mkdir,  Up: Yafc commands
 `mv'
 ----
 
+   Documentation missing...
+
 
 File: yafc.info,  Node: nlist,  Next: nop,  Prev: mv,  Up: Yafc commands
 
 `nlist'
 -------
 
+   Documentation missing...
+
 
 File: yafc.info,  Node: nop,  Next: open,  Prev: nlist,  Up: Yafc commands
 
 `nop'
 -----
+
+   Send a NOOP command to remote. This does nothing except checking if
+the connection is still open. It may be used to reset the servers idle
+timeout (though some servers ignore it).
 
 
 File: yafc.info,  Node: open,  Next: prot,  Prev: nop,  Up: Yafc commands
@@ -990,10 +1034,17 @@ File: yafc.info,  Node: prot,  Next: put,  Prev: open,  Up: Yafc commands
 ------
 
    Changes the data protection level for data transfers. The protection
-level defines how data transfers are handled by Kerberos. The control
-connection (where commands are sent and received) are always private.
+level defines how data transfers are handled by the security mechanism.
 
-   Usage: `prot <protlevel>'
+   Usage:
+     prot [options] [command | data] protlevel
+
+   Options:
+
+`-h'
+
+`--help'
+     Show short syntax description.
 
    Valid protection levels are:
 
@@ -1265,7 +1316,22 @@ File: yafc.info,  Node: switch,  Next: system,  Prev: status,  Up: Yafc commands
 `switch'
 --------
 
-   documentation missing...
+   Switch between open connections.
+
+   Usage:
+     switch [options] [connection]
+
+   Options:
+
+`-h'
+`--help'
+     Show short syntax description.
+
+   The connection argument specifies which connection to switch to. It
+can be specified either as the connection number or with the name
+(hostname or alias).
+
+   If no argument is given, switch to the next open connection.
 
 
 File: yafc.info,  Node: system,  Next: tag,  Prev: switch,  Up: Yafc commands
@@ -1273,7 +1339,7 @@ File: yafc.info,  Node: system,  Next: tag,  Prev: switch,  Up: Yafc commands
 `system'
 --------
 
-   documentation missing...
+   Show the type of the remote system.
 
 
 File: yafc.info,  Node: tag,  Next: unalias,  Prev: system,  Up: Yafc commands
@@ -1281,7 +1347,42 @@ File: yafc.info,  Node: tag,  Next: unalias,  Prev: system,  Up: Yafc commands
 `tag'
 -----
 
-   documentation missing...
+   Tag files for later transferring or removal.
+
+   Usage:
+     tag [options] file ...
+
+   Options:
+
+`-c'
+`--clear'
+     Clear the taglist.
+
+`-i'
+`--info'
+     Show some information about the tagged files. This includes the
+     total size of all tagged file, how many files and how many
+     directories are tagged.
+
+`-l'
+
+`--list'
+     List tagged files.
+
+`-L[FILE]'
+`--load[=FILE]'
+     Load saved taglist file. If optional parameter FILE is omitted, the
+     taglist for this host is loaded (from the file
+     `WORKDIR/taglist.HOSTNAME').
+
+`-s[FILE]'
+`--save[=FILE]'
+     Save taglist to file. If optional parameter FILE is omitted, the
+     taglist is saved in the default file `WORKDIR/taglist.HOSTNAME'.
+
+`-h'
+`--help'
+     Show short syntax description.
 
 
 File: yafc.info,  Node: unalias,  Next: untag,  Prev: tag,  Up: Yafc commands
@@ -1305,7 +1406,20 @@ File: yafc.info,  Node: url,  Next: user,  Prev: untag,  Up: Yafc commands
 `url'
 -----
 
-   documentation missing...
+   Show the current URL.
+
+   Usage:
+     url [options]
+
+   Options:
+
+`-e'
+`--no-encoding'
+     Don't encode the URL as RFC1738 says.
+
+`-h'
+`--help'
+     Show short syntax description.
 
 
 File: yafc.info,  Node: user,  Next: version,  Prev: url,  Up: Yafc commands
@@ -1313,7 +1427,7 @@ File: yafc.info,  Node: user,  Next: version,  Prev: url,  Up: Yafc commands
 `user'
 ------
 
-   documentation missing...
+   Send new user information.
 
 
 File: yafc.info,  Node: version,  Next: warranty,  Prev: user,  Up: Yafc commands
@@ -2153,70 +2267,70 @@ Node: !10145
 Node: afslog10279
 Node: alias10406
 Node: bookmark10529
-Node: cache10665
-Node: cat11196
-Node: cd11718
-Node: cdup12073
-Node: chmod12244
-Node: close12507
-Node: copyright12638
-Node: filesize12771
-Node: filetime12914
-Node: flush13053
-Node: fxp13181
-Node: get16930
-Node: help19635
-Node: idle19756
-Node: kauth19884
-Node: kdestroy20014
-Node: klist20151
-Node: krbtkfile20283
-Node: lcd20431
-Node: list20562
-Node: lpwd20670
-Node: ls20796
-Node: ltag22435
-Node: luntag22549
-Node: mkdir22672
-Node: mv22862
-Node: nlist22951
-Node: nop23044
-Node: open23135
-Node: prot23868
-Node: put24355
-Node: pwd26875
-Node: quit27030
-Node: quote27152
-Node: rhelp27278
-Node: rm27402
-Node: rmdir27862
-Node: rstatus27988
-Node: set28119
-Node: shell28242
-Node: site28366
-Node: source28581
-Node: status28711
-Node: switch28843
-Node: system28975
-Node: tag29104
-Node: unalias29228
-Node: untag29359
-Node: url29486
-Node: user29606
-Node: version29730
-Node: warranty29865
-Node: Nohup transfers29989
-Node: Configuration30826
-Node: Keywords32222
-Node: Prompt codes41025
-Node: Transfer codes42316
-Node: Aliases43383
-Node: Alias examples43908
-Node: Colors45473
-Node: ANSI attribute codes46178
-Node: Bookmarks47175
-Node: Bookmark keywords48253
-Node: Bookmark examples50445
-Node: Kerberos51759
+Node: cache11538
+Node: cat12069
+Node: cd12591
+Node: cdup12946
+Node: chmod13117
+Node: close13380
+Node: copyright13511
+Node: filesize13644
+Node: filetime13787
+Node: flush13926
+Node: fxp14054
+Node: get17803
+Node: help20508
+Node: idle20629
+Node: kauth20757
+Node: kdestroy20887
+Node: klist21024
+Node: krbtkfile21156
+Node: lcd21304
+Node: list21435
+Node: lpwd21543
+Node: ls21669
+Node: ltag23308
+Node: luntag23422
+Node: mkdir23545
+Node: mv23735
+Node: nlist23853
+Node: nop23975
+Node: open24250
+Node: prot24983
+Node: put25495
+Node: pwd28015
+Node: quit28170
+Node: quote28292
+Node: rhelp28418
+Node: rm28542
+Node: rmdir29002
+Node: rstatus29128
+Node: set29259
+Node: shell29382
+Node: site29506
+Node: source29721
+Node: status29851
+Node: switch29983
+Node: system30457
+Node: tag30597
+Node: unalias31456
+Node: untag31587
+Node: url31714
+Node: user31990
+Node: version32116
+Node: warranty32251
+Node: Nohup transfers32375
+Node: Configuration33212
+Node: Keywords34608
+Node: Prompt codes43411
+Node: Transfer codes44702
+Node: Aliases45769
+Node: Alias examples46294
+Node: Colors47859
+Node: ANSI attribute codes48564
+Node: Bookmarks49561
+Node: Bookmark keywords50639
+Node: Bookmark examples52831
+Node: Kerberos54145
 
 End Tag Table

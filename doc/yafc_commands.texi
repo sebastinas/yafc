@@ -84,7 +84,48 @@ Define an alias.
 @c -----------------------------------------------------
 @node bookmark
 @subsection @code{bookmark}
-Documentation missing...
+Handle bookmarks. If no options are given, the default action is to
+create a bookmark for the current open connection. If no bookmark name is given
+on the command line, the bookmark will be given an alias based upon the
+hostname.
+
+Usage:
+@example
+bookmark [options] [bookmark name ...]
+@end example
+
+Options:
+
+@table @samp
+
+@item -s[@var{FILE}]
+@itemx --save[=@var{FILE}]
+Save bookmarks in memory to file. If the optional parameter @var{FILE} is
+omitted, save to default bookmarks file @file{@var{workdir}/bookmarks}.
+
+@item -e
+@itemx --edit
+Start editor (found in $EDITOR environment variable) with your bookmarks file.
+
+@item -r[@var{FILE}]
+@itemx --read[=@var{FILE}]
+Read bookmarks from bookmarks file, or file given by optional parameter
+@var{FILE}.
+
+@item -d
+@itemx --delete
+Delete bookmarks given as arguments to @code{bookmark}. The bookmarks file
+will be rewritten.
+
+@item -l
+@itemx --list
+List bookmarks in memory.
+
+@item -h
+@itemx --help
+Show short syntax description.
+
+@end table
 
 @c -----------------------------------------------------
 @node cache
@@ -663,14 +704,19 @@ mkdir directory
 @c -----------------------------------------------------
 @node mv
 @subsection @code{mv}
+Documentation missing...
 
 @c -----------------------------------------------------
 @node nlist
 @subsection @code{nlist}
+Documentation missing...
 
 @c -----------------------------------------------------
 @node nop
 @subsection @code{nop}
+Send a NOOP command to remote. This does nothing except checking if the
+connection is still open. It may be used to reset the servers idle
+timeout (though some servers ignore it).
 
 @c -----------------------------------------------------
 @node open
@@ -714,10 +760,20 @@ Show a short syntax description.
 
 Changes the data protection level for data transfers. The
 protection level defines how data transfers are handled
-by Kerberos. The control connection (where commands are
-sent and received) are always private.
+by the security mechanism.
 
-Usage: @code{prot <protlevel>}
+Usage:
+@example
+prot [options] [command | data] protlevel
+@end example
+
+Options:
+
+@table @samp
+@item -h
+@item --help
+Show short syntax description.
+@end table
 
 Valid protection levels are:
 
@@ -971,17 +1027,75 @@ documentation missing...
 @c -----------------------------------------------------
 @node switch
 @subsection @code{switch}
-documentation missing...
+Switch between open connections.
+
+Usage:
+@example
+switch [options] [connection]
+@end example
+
+Options:
+
+@table @samp
+@item -h
+@itemx --help
+Show short syntax description.
+@end table
+
+The connection argument specifies which connection to switch to. It can be
+specified either as the connection number or with the name (hostname or alias).
+
+If no argument is given, switch to the next open connection.
 
 @c -----------------------------------------------------
 @node system
 @subsection @code{system}
-documentation missing...
+Show the type of the remote system.
 
 @c -----------------------------------------------------
 @node tag
 @subsection @code{tag}
-documentation missing...
+Tag files for later transferring or removal.
+
+Usage:
+@example
+tag [options] file ...
+@end example
+
+Options:
+
+@table @samp
+
+@item -c
+@itemx --clear
+Clear the taglist.
+
+@item -i
+@itemx --info
+Show some information about the tagged files. This includes the total
+size of all tagged file, how many files and how many directories are tagged.
+
+@item -l
+@item --list
+List tagged files.
+
+@item -L[@var{FILE}]
+@itemx --load[=@var{FILE}]
+Load saved taglist file. If optional parameter @var{FILE} is omitted, the
+taglist for this host is loaded (from the file
+@file{@var{workdir}/taglist.@var{hostname}}).
+
+@item -s[@var{FILE}]
+@itemx --save[=@var{FILE}]
+Save taglist to file. If optional parameter @var{fILE} is omitted, the
+taglist is saved in the default file
+@file{@var{workdir}/taglist.@var{hostname}}.
+
+@item -h
+@itemx --help
+Show short syntax description.
+
+@end table
 
 @c -----------------------------------------------------
 @node unalias
@@ -996,12 +1110,31 @@ documentation missing...
 @c -----------------------------------------------------
 @node url
 @subsection @code{url}
-documentation missing...
+Show the current URL.
+
+Usage:
+@example
+url [options]
+@end example
+
+Options:
+
+@table @samp
+
+@item -e
+@itemx --no-encoding
+Don't encode the URL as RFC1738 says.
+
+@item -h
+@itemx --help
+Show short syntax description.
+
+@end table
 
 @c -----------------------------------------------------
 @node user
 @subsection @code{user}
-documentation missing...
+Send new user information.
 
 @c -----------------------------------------------------
 @node version
