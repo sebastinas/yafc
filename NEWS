@@ -7,7 +7,7 @@ New in 0.7
 * new option: autoreconnect true/false
 * new command: reopen
 * SSH2 support (incorporated code from sftp/OpenSSH)
-   try "open ssh://username:host"
+   try "open ssh://username@host"
 * now stores protocol in bookmarks file
 * updates bookmarks if protocol changed (eg, from "ftp" to "ssh")
 * ls now always sorts on name (if no other sort method is specified)
