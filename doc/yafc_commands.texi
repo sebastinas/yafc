@@ -466,16 +466,24 @@ Only get file if remote is newer than local file.
 
 @item -o @var{DEST}
 @itemx --output=@var{DEST}
-Specify other destination. If more than one file is transferred, or option
-@samp{--recursive} is given, @var{DEST} denotes a directory. Otherwise (if only
-one file is to be transferred), @var{DEST} denotes a filename.
+Specify other destination. If more than one file is transferred,
+option @samp{--recursive} is given, or @var{DEST} ends in a slash,
+then @var{DEST} denotes a directory. Otherwise (if only one file is to
+be transferred), @var{DEST} denotes a filename. However, if @var{DEST}
+already exists and is a directory, @var{DEST} denotes a directory.
 
 Examples:
 @example
-get foo.tar.gz -o bar.tar.gz
+get README -o readme
 @end example
-will transfer the remote file @file{foo.tar.gz} to the local file
-@file{bar.tar.gz}.
+will transfer the remote file @file{README} to the local file
+@file{readme} if @file{readme} is not an existing local directory.
+
+@example
+get README -o readme/
+@end example
+will transfer the remote file @file{README} to the local directory
+@file{readme}.
 
 @example
 get *.tar.gz -o foo

@@ -1,3 +1,12 @@
+New in 0.7.9
+------------
+
+* Changed get -o function; if the argument ends with a slash it is
+  always considered a directory, if only one file is transferred and the
+  destination already exists and is a directory the file is put in that
+  directory (thanks David Harris)
+
+
 New in 0.7.8
 ------------
 

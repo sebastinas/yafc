@@ -1,4 +1,4 @@
-/* $Id: get.c,v 1.11 2001/10/12 08:52:30 mhe Exp $
+/* $Id: get.c,v 1.12 2002/04/11 07:58:18 mhe Exp $
  *
  * get.c -- get file(s) from remote
  *
@@ -180,10 +180,25 @@ static int getfile(const rfile *fi, unsigned int opt,
 		char *apath = base_dir_xptr(fi->path);
 		asprintf(&dest, "%s%s/%s", output, apath, destname);
 		xfree(apath);
-	} else if(test(opt, GET_OUTPUT_FILE))
-		dest = xstrdup(output);
-	else
-		asprintf(&dest, "%s/%s", output, destname);
+	} else {
+		/* check if -o option is given, if GET_OUTPUT_FILE is set, we only
+		 * transfer one file and output is set to the filename. However, if
+		 * the destination already exists and is a directory, we assume
+		 * that the user meant a directory */
+
+		int dest_is_file = test(opt, GET_OUTPUT_FILE);
+
+		if(stat(output, &sb) == 0) {
+			if(S_ISDIR(sb.st_mode)) {
+				dest_is_file = false;
+			}
+		}
+
+		if(dest_is_file)
+			dest = xstrdup(output);
+		else
+			asprintf(&dest, "%s/%s", output, destname);
+	}
 
 	/* make sure destination directory exists */
 	{
@@ -205,8 +220,7 @@ static int getfile(const rfile *fi, unsigned int opt,
 					m = mode_adjust(m, cmod);
 					if(chmod(destdir, m) != 0)
 						perror(destdir);
-				}
-			}
+				}			}
 			if(test(opt, GET_CHGRP)) {
 				if(chown(destdir, -1, group_change) != 0)
 					perror(dest);
@@ -673,7 +687,7 @@ void cmd_get(int argc, char **argv)
 #endif
 		  case 'o':
 			get_output = tilde_expand_home(optarg, gvLocalHomeDir);
-			stripslash(get_output);
+			//stripslash(get_output);
 			unquote(get_output);
 			break;
 		  case 'v':
@@ -768,7 +782,12 @@ void cmd_get(int argc, char **argv)
 	if(get_output && !test(opt, GET_RECURSIVE) && list_numitem(gl) +
 	   (test(opt, GET_TAGGED) ? list_numitem(ftp->taglist) : 0) == 1)
 		{
-			opt |= GET_OUTPUT_FILE;
+			/* if the argument to --output ends with a slash, we assume the
+			 * user wants the destination to be a directory
+			 */
+			char *e = strrchr(get_output, 0);
+			if(e && e[-1] != '/')
+				opt |= GET_OUTPUT_FILE;
 		}
 
 	gvInTransfer = true;
