@@ -239,9 +239,13 @@ static void create_bookmark(const char *guessed_alias)
 
 		li = list_search(gvBookmarks, (listsearchfunc)urlcmp, url);
 		if(li) {
-			a = ask(ASKYES|ASKNO, ASKYES,
+			a = ask(ASKYES|ASKNO|ASKCANCEL, ASKYES,
 					_("a bookmark named '%s' already exists, overwrite?"),
 					url->alias ? url->alias : url->hostname);
+			if(a == ASKCANCEL) {
+				url_destroy(url);
+				return;
+			}
 			if(a == ASKYES)
 				break;
 		} else
