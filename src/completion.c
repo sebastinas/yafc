@@ -1,4 +1,4 @@
-/* $Id: completion.c,v 1.7 2001/05/13 11:51:23 mhe Exp $
+/* $Id: completion.c,v 1.8 2002/05/09 12:30:49 mhe Exp $
  *
  * completion.c -- readline completion functions
  *
@@ -298,7 +298,7 @@ static char *taglist_completion_function(const char *text, int state)
 		rfile *f = (rfile *)lip->data;
 		lip = lip->next;
 		if(strncmp(f->path, text, len) == 0)
-			return bash_backslash_quote(f->path);
+			return xstrdup(f->path);
 	}
 	return 0;
 }
@@ -325,7 +325,7 @@ static char *local_taglist_completion_function(const char *text, int state)
 		char *p = (char *)lip->data;
 		lip = lip->next;
 		if(strncmp(p, text, len) == 0)
-			return bash_backslash_quote(p);
+			return xstrdup(p); /* bash_backslash_quote(p); */
 	}
 	return 0;
 }
