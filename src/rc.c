@@ -203,6 +203,12 @@ static void parse_host(int trig, FILE *fp)
 		} else if(strcasecmp(e, "prot") == 0) {
 			NEXTSTR;
 			url_setprotlevel(up, e);
+		} else if(strcasecmp(e, "passive") == 0) {
+			bool b;
+			NEXTSTR;
+			b = str2bool(e);
+			if(b != -1)
+				url_setpassive(up, b);
 		} else if(strcasecmp(e, "macdef") == 0) {
 			while(e) { /* FIXME: macdef: this is not really true */
 				NEXTSTR;

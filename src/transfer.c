@@ -490,6 +490,8 @@ char *stringify_list(list *lp)
 	li = lp->first;
 	if(li)
 		str = xstrdup((char *)li->data);
+	else
+		return 0;
 
 	for(li=li->next; li; li=li->next) {
 		asprintf(&str, "%s:%s",  str, (char *)li->data);

@@ -105,9 +105,13 @@ static int bookmark_save(const char *other_bmfile)
 			fprintf(fp, " prot %s", url->protlevel);
 		if(url->mech) {
 			char *mech_string = stringify_list(url->mech);
-			fprintf(fp, " mech '%s'", mech_string);
-			xfree(mech_string);
+			if(mech_string) {
+				fprintf(fp, " mech '%s'", mech_string);
+				xfree(mech_string);
+			}
 		}
+		if(url->pasvmode != -1)
+			fprintf(fp, " passive %s", url->pasvmode ? "true" : "false");
 		if(url->password) {
 			char *cq;
 			base64_encode(url->password, strlen(url->password), &cq);
@@ -275,6 +279,8 @@ static bool should_update_bookmark(url_t *url)
 	if(!list_equal(url->mech, ftp->url->mech, (listsortfunc)strcasecmp) != 0)
 		return true;
 	if(xstrcmp(url->protlevel, ftp->url->protlevel) != 0)
+		return true;
+	if(url->pasvmode != ftp->url->pasvmode && ftp->url->pasvmode != -1)
 		return true;
 	return false;
 }

@@ -20,7 +20,7 @@ noinst_HEADERS = \
    gvars.h help.h input.h get.h put.h lglob.h \
    set.h syshdr.h redir.h bashline.h login.h
 
-yafc_LDADD = @INTLLIBS@ ftp/libftp.a libmhe/libmhe.a cfglib/libcfg.a ../lib/libfoo.a
+yafc_LDADD = @INTLLIBS@ ftp/libftp.a libmhe/libmhe.a ../lib/libfoo.a
 
 yafc_DEPENDENCIES = $(yafc_LDADD) yafcrc.h
 INCLUDES = -I. -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../intl \

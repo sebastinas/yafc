@@ -109,8 +109,6 @@ void init_ftp(void)
 		ftp_set_verbosity(vbCommand);
 	if(gvDebug)
 		ftp_set_verbosity(vbDebug);
-
-	ftp->pasvmode = gvPasvmode;
 }
 
 void init_yafc(void)

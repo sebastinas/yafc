@@ -83,6 +83,9 @@ void cmd_user(int argc, char **argv)
 		url_setusername(ftp->url, 0);
 	url_setpassword(ftp->url, 0);
 
+	if(mech)
+		url_setmech(ftp->url, mech);
+
 	if(ftp_login(u, gvAnonPasswd) == 2) {
 		url_setusername(ftp->url, u);
 		url_setpassword(ftp->url, p);
@@ -158,6 +161,8 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 			url_setpassword(url, gvAnonPasswd);
 	}
 
+/*	url_setpassive(url, gvPasvmode);*/
+
 	if(mech)
 		url_setmech(url, mech);
 
@@ -178,6 +183,8 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 				url_setport(url, xurl->port);
 			if(!url->mech)
 				url->mech = list_clone(xurl->mech, (listclonefunc)xstrdup);
+			if(xurl->pasvmode != -1 && xurl->pasvmode != gvPasvmode)
+				url_setpassive(url, xurl->pasvmode);
 			url->noproxy = xurl->noproxy;
 		}
 	}
@@ -252,7 +259,7 @@ void cmd_open(int argc, char **argv)
 		opt |= OP_NOAUTO;
 
 	optind = 0; /* force getopt() to re-initialize */
-	while((c = getopt_long(argc, argv, "auUkKp", longopts, 0)) != EOF) {
+	while((c = getopt_long(argc, argv, "auUkKpm:", longopts, 0)) != EOF) {
 		switch(c) {
 		  case 'a':
 			opt |= OP_ANON;
@@ -265,7 +272,7 @@ void cmd_open(int argc, char **argv)
 			/* disable alias lookup */
 			opt |= OP_NOALIAS;
 			break;
-		  case 'm':
+		  case 'm': /* --mechanism=MECH */
 			  mech = xstrdup(optarg);
 			break;
 		  case 'p':
