@@ -64,7 +64,8 @@ static void bookmark_save_one(FILE *fp, url_t *url)
 	else if(url == gvDefaultUrl)
 		fprintf(fp, "default");
 	else {
-		fprintf(fp, "machine %s", url->hostname);
+		fprintf(fp, "machine %s://%s",
+				url->protocol ? url->protocol : "ftp", url->hostname);
 		if(url->port != -1)
 			fprintf(fp, ":%d", url->port);
 		if(url->alias) {
@@ -294,9 +295,11 @@ static bool should_update_bookmark(url_t *url)
 		return true;
 	if(url->pasvmode != ftp->url->pasvmode && ftp->url->pasvmode != -1)
 		return true;
+	if(xstrcmp(url->protocol, ftp->url->protocol) != 0)
+		return true;
 	return false;
 }
-	
+
 void auto_create_bookmark(void)
 {
 	listitem *li;
