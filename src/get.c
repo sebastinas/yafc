@@ -1,4 +1,4 @@
-/* $Id: get.c,v 1.10 2001/05/13 20:06:55 mhe Exp $
+/* $Id: get.c,v 1.11 2001/10/12 08:52:30 mhe Exp $
  *
  * get.c -- get file(s) from remote
  *
@@ -575,7 +575,7 @@ void cmd_get(int argc, char **argv)
 #endif
 
 	optind = 0; /* force getopt() to re-initialize */
-	while((c=getopt_long(argc, argv, "bHc:dDio:fL:tnpPvqrRsuT:m:M:",
+	while((c=getopt_long(argc, argv, "abHc:dDio:fL:tnpPvqrRsuT:m:M:",
 						 longopts, 0)) != EOF)
 	{
 		switch(c) {
