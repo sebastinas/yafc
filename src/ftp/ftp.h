@@ -1,4 +1,4 @@
-/* $Id: ftp.h,v 1.9 2001/05/12 18:44:04 mhe Exp $
+/* $Id: ftp.h,v 1.10 2001/05/21 22:16:28 mhe Exp $
  *
  * ftp.h -- lower level FTP stuff
  *
@@ -24,6 +24,7 @@
 #include "rfile.h"
 #include "ftpsigs.h"
 #include "rglob.h"
+#include "args.h"
 
 #define MAXREPLY 512      /* max size of (one line of) reply string */
 
@@ -119,7 +120,7 @@ typedef struct Ftp
 
 	pid_t ssh_pid;           /* process id of ssh program, or 0 if
 							  * ssh is not in use */
-	char **ssh_args;
+	args_t *ssh_args;
 	int ssh_in, ssh_out;     /* file descriptors for use by ssh */
 	int ssh_version;
 	unsigned int ssh_id;
