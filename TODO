@@ -7,7 +7,7 @@ TODO list for Yafc
 * ls -r doesn't work (no sorting done)
 * ltag should ignore multiples just as tag does
 * re-implement setproctitle code
-* don't show passwd (from cmdline) in 'ps' (Ari Pollak)
+? don't show passwd (from cmdline) in 'ps' (Ari Pollak)
 * SSL support
 * IPv6 support
 * keep-alive (send NOOP or similar when idle)
