@@ -80,7 +80,7 @@ that only SSH version 2 is supported.
 type: string
 
 Path to remote sftp-server program. Leave commented to use the sftp
-subsystem.
+subsystem. See also @ref{open}.
 
 @item inhibit_startup_syst
 type: boolean
