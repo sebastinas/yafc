@@ -210,33 +210,38 @@ static int getfile(const rfile *fi, unsigned int opt,
 		char *apath = base_dir_xptr(fi->path);
 		asprintf(&dest, "%s%s/%s", output, apath, destname);
 		xfree(apath);
-	} else
+	} else if(test(opt, GET_OUTPUT_FILE))
+		dest = xstrdup(output);
+	else
 		asprintf(&dest, "%s/%s", output, destname);
 
 	/* make sure destination directory exists */
 	{
 		char *destdir = base_dir_xptr(dest);
 		int r;
-		r = make_path(destdir, S_IRWXU, S_IRWXU, -1, -1, 1, 0);
-		if(r != 0) {
-			transfer_mail_msg(_("failed to create directory %s\n"), destdir);
-			xfree(destdir);
-			return -1;
-		}
-		/* change permission and group, if requested */
-		if(test(opt, GET_CHMOD)) {
-			if(stat(destdir, &sb) == 0) {
-				mode_t m = sb.st_mode;
-				m = mode_adjust(m, cmod);
-				if(chmod(destdir, m) != 0)
-					perror(destdir);
+
+		if(destdir) {
+			r = make_path(destdir, S_IRWXU, S_IRWXU, -1, -1, 1, 0);
+			if(r != 0) {
+				transfer_mail_msg(_("failed to create directory %s\n"), destdir);
+				xfree(destdir);
+				return -1;
 			}
+			/* change permission and group, if requested */
+			if(test(opt, GET_CHMOD)) {
+				if(stat(destdir, &sb) == 0) {
+					mode_t m = sb.st_mode;
+					m = mode_adjust(m, cmod);
+					if(chmod(destdir, m) != 0)
+						perror(destdir);
+				}
+			}
+			if(test(opt, GET_CHGRP)) {
+				if(chown(destdir, -1, group_change) != 0)
+					perror(dest);
+			}
+			xfree(destdir);
 		}
-		if(test(opt, GET_CHGRP)) {
-			if(chown(destdir, -1, group_change) != 0)
-				perror(dest);
-		}
-		xfree(destdir);
 	}
 
 	/* check if destination file exists */
@@ -784,6 +789,12 @@ void cmd_get(int argc, char **argv)
 	get_batch = get_owbatch = get_delbatch = test(opt, GET_FORCE);
 	if(test(opt, GET_FORCE))
 		opt &= ~GET_INTERACTIVE;
+
+	if(!test(opt, GET_RECURSIVE) && list_numitem(gl) +
+	   (test(opt, GET_TAGGED) ? list_numitem(ftp->taglist) : 0) == 1)
+		{
+			opt |= GET_OUTPUT_FILE;
+		}
 
 	gvInTransfer = true;
 	gvInterrupted = false;
