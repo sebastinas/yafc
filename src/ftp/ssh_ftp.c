@@ -198,7 +198,7 @@ static void ssh_print_reply(int code)
 int ssh_reply(Buffer *m)
 {
 	u_int len, msg_len;
-	unsigned char buf[4096];
+	char buf[4096];
 	bool reply_printed = false;
 
 	len = atomicio(read, ftp->ssh_in, buf, 4);
