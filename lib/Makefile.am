@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.4 2001/05/13 11:58:44 mhe Exp $
+## $Id: Makefile.am,v 1.5 2001/05/13 20:57:39 mhe Exp $
 
 noinst_LIBRARIES = libfoo.a
 
@@ -14,7 +14,7 @@ libfoo_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfoo_a_DEPENDENCIES = $(libfoo_a_LIBADD)
 
 INCLUDES = -I.. -I$(srcdir) -I$(top_srcdir)/src -I$(top_srcdir)/src/ftp \
-           -I$(top_srcdir)/src/libmhe
+-I$(top_srcdir)/src/libmhe
 
 CLEANFILES=*~ \#*\#
 DISTCLEANFILES=.deps/*
