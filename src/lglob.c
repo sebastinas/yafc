@@ -1,4 +1,4 @@
-/* $Id: lglob.c,v 1.5 2002/11/06 11:58:34 mhe Exp $
+/* $Id: lglob.c,v 1.6 2002/12/02 12:39:41 mhe Exp $
  *
  * lglob.c -- local glob functions
  *
@@ -81,8 +81,8 @@ int lglob_glob(list *gl, const char *mask, bool ignore_multiples,
 
 		asprintf(&path, "%s/%s", directory ? directory : ".", de->d_name);
 
-		if(!(exclude_func && exclude_func(path))) {
-			if(fnmatch(base_name_ptr(mask), de->d_name, 0) == 0) {
+		if(fnmatch(base_name_ptr(mask), de->d_name, 0) == 0) {
+			if(!(exclude_func && exclude_func(path))) {
 				char *p;
 				bool ignore_item;
 
@@ -96,8 +96,8 @@ int lglob_glob(list *gl, const char *mask, bool ignore_multiples,
 					list_additem(gl, p);
 					added = true;
 				}
-				found = true;
 			}
+			found = true;
 		}
 		xfree(path);
 	}
