@@ -155,8 +155,9 @@ char *strchr (), *strrchr ();
 # include <strcasecmp.h>  /* our own, in lib/ */
 #endif
 
+#define min(a, b) ((a) < (b) ? (a) : (b))
+
 #if defined(KRB4) || defined(KRB5)
-# define min(a, b) ((a) < (b) ? (a) : (b))
 # ifdef HAVE_DES_H
 #  include <des.h>
 # endif
@@ -170,6 +171,10 @@ char *strchr (), *strrchr ();
 # ifndef HAVE_STRLCPY
 size_t strlcpy (char *dst, const char *src, size_t dst_sz);
 # endif
+#endif
+
+#ifndef HAVE_STRLCAT
+size_t strlcat(char *dst, const char *src, size_t siz);
 #endif
 
 /* NLS stuff (Native Language Support) */
