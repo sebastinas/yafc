@@ -1,4 +1,4 @@
-/* $Id: list.c,v 1.8 2001/05/22 22:02:12 mhe Exp $
+/* $Id: list.c,v 1.9 2001/05/27 20:31:42 mhe Exp $
  *
  * list.c -- the remote cached 'ls' command
  *
@@ -279,6 +279,11 @@ static void ls_opl(list *gl, unsigned opt, bool doclr)
 	}
 }
 
+static int ls_sort_name(rfile *a, rfile *b)
+{
+	return strcmp(a->path, b->path);
+}
+
 static int ls_sort_dirs(rfile *a, rfile *b)
 {
 	if(risdir(a) && !risdir(b))
@@ -324,11 +329,6 @@ static int ls_sort_mtime(rfile *a, rfile *b)
 	if(a->mtime < b->mtime)
 		return 1;
 	return 0;
-}
-
-static int ls_sort_name(rfile *a, rfile *b)
-{
-	return strcmp(a->path, b->path);
 }
 
 static void ls_all(list *gl, unsigned opt, bool doclr)
