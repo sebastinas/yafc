@@ -13,7 +13,9 @@ By using the @code{auto_bookmark} keyword in the configuration
 file, Yafc can create bookmarks automatically for new sites.
 
 The bookmarks are available to the @code{open} command, with tab
-completion.
+completion. You can also specify a bookmark name/alias on the command
+line when starting yafc. Bookmark names/aliases can be abbreviated, as
+long as it isn't ambiguous.
 
 The autologin information is stored in much the same way as in the
 @file{~/.netrc} file used by standard ftp(1), except that the macdef option
@@ -45,6 +47,9 @@ any hostname on that domain, except for hostnames explicitly mentioned with
 another @samp{machine} keyword.
 You can not specify an alias name for a domain entry.
 
+To bookmark a ssh connection, use @code{ssh://hostname} or
+@code{sftp://hostname} (they are equivalent).
+
 @item alias
 Specifies another (verbose) name for the bookmark, like @samp{ruby} instead of
 @samp{ftp.netlab.co.jp}. This is the name that will be shown
@@ -52,7 +57,8 @@ in the tab completion list. Valid only after a @samp{machine} statement.
 
 @item local                       
 If an entry begins with @samp{local}, it specifies how to login to all
-ocal machines. Local machines are unqualified hostnames (ie, hostnames without a period.)
+local machines. Local machines are unqualified hostnames (ie,
+hostnames without a period.)
 
 This can be overridden with an entry for a specific machine.
 
@@ -91,6 +97,11 @@ List the preferred security mechanisms to use. This is the same as
 Boolean option requiring an argument (true/false). If true, use passive
 mode in data transfers, regardless of the value of @code{use_passive_mode}
 in the configuration file.
+
+@item noupdate
+If this keyword is specified, the bookmark will not be updated when a
+connection is closed. The @code{noupdate} flag can be toogled with the
+command @xref{bookmark}.
 
 @end table
 

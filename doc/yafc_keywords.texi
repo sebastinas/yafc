@@ -115,9 +115,16 @@ type: yes/no/ask
 
 If set to @code{yes}, Yafc automatically creates a bookmarks for the
 site when the connection is closed. Setting this to @code{ask}, makes
-Yafc to ask if to create the bookmark.
+yafc ask if to create the bookmark.
 
-The bookmark is given an appropriate aliases name.
+The bookmark is given an appropriate default aliases name.
+
+@item auto_bookmark_update
+type: yes/no/ask
+
+If set to @code{yes}, yafc will always update an existing bookmark
+when the connection is closed, if not the @code{noupdate} flag has
+been set, see the @code{noupdate} keyword in @xref{Bookmark keywords}.
 
 @item auto_bookmark_save_password
 type: boolean
@@ -157,9 +164,20 @@ the @code{default_type} keyword. This can be overridden with
 the @samp{--type} option to get/put.
 
 Masks are separated by colons (eg. @code{*.ext1:*.ext2:filename*})
-and are case sensitive.
+and are case sensitive. This option can be specified multiple times;
+masks will be appended.
 
 Preferrably used with @code{default_type} set to @code{binary}.
+
+@item transfer_first_mask
+type: string
+
+Filenames matching any of these masks are transferred before other
+files. 
+
+Masks are separated by colons (eg. @code{*.sfv:*.nfo:README*:md5sum*})
+and are case sensitive. This option can be specified multiple times;
+masks will be appended.
 
 @item beep_after_long_command
 type: boolean

@@ -27,6 +27,7 @@ def convert(filename)
 	 
   f.close
   ff.close
+  File.unlink(filename)
 end
 
 dir = Dir.open("yafc/")
@@ -39,4 +40,3 @@ begin
 ensure
   dir.close
 end
-

@@ -358,6 +358,12 @@ upon the hostname.
 `--list'
      List bookmarks in memory.
 
+`-u'
+`--noupdate'
+     Toggle the noupdate flag. If no bookmarks are specified on the
+     command line, only the current bookmark is affected. The bookmarks
+     file will be rewritten.
+
 `-h'
 `--help'
      Show short syntax description.
@@ -531,6 +537,10 @@ a security policy. You might get the error 'Illegal PORT Command' or
 `--dir-rx-mask=REGEXP'
      Enter only directories matching REGEXP pattern.
 
+`-e'
+`--skip-empty'
+     Skip empty files (files with a size of zero bytes).
+
 `-f'
 `--force'
      Overwrite existing destinations, never prompt.
@@ -670,6 +680,10 @@ File: yafc.info,  Node: get,  Next: help,  Prev: fxp,  Up: Yafc commands
 `-D'
 `--delete-after'
      Delete remote file after successful transfer.
+
+`-e'
+`--skip-empty'
+     Skip empty files (files with a size of zero bytes).
 
 `--dir-mask=GLOB'
      Enter only directories matching GLOB pattern.
@@ -998,7 +1012,7 @@ File: yafc.info,  Node: open,  Next: prot,  Prev: nop,  Up: Yafc commands
 `open'
 ------
 
-   Opens a new connection to an FTP server.
+   Opens a new connection to an FTP/SSH server.
 
    Usage:  open [options]
 [proto://][user[:password]@]hostname[:port][/directory] ...
@@ -1103,6 +1117,10 @@ File: yafc.info,  Node: put,  Next: pwd,  Prev: prot,  Up: Yafc commands
 
 `--dir-rx-mask=REGEXP'
      Enter only directories matching REGEXP pattern.
+
+`-e'
+`--skip-empty'
+     Skip empty files (files with a size of zero bytes).
 
 `-f'
 `--force'
@@ -1644,9 +1662,16 @@ on/off. The keywords are case insensitive.
 
      If set to `yes', Yafc automatically creates a bookmarks for the
      site when the connection is closed. Setting this to `ask', makes
-     Yafc to ask if to create the bookmark.
+     yafc ask if to create the bookmark.
 
-     The bookmark is given an appropriate aliases name.
+     The bookmark is given an appropriate default aliases name.
+
+`auto_bookmark_update'
+     type: yes/no/ask
+
+     If set to `yes', yafc will always update an existing bookmark when
+     the connection is closed, if not the `noupdate' flag has been set,
+     see the `noupdate' keyword in *Note Bookmark keywords::.
 
 `auto_bookmark_save_password'
      type: boolean
@@ -1688,9 +1713,20 @@ on/off. The keywords are case insensitive.
      get/put.
 
      Masks are separated by colons (eg. `*.ext1:*.ext2:filename*') and
-     are case sensitive.
+     are case sensitive. This option can be specified multiple times;
+     masks will be appended.
 
      Preferrably used with `default_type' set to `binary'.
+
+`transfer_first_mask'
+     type: string
+
+     Filenames matching any of these masks are transferred before other
+     files.
+
+     Masks are separated by colons (eg. `*.sfv:*.nfo:README*:md5sum*')
+     and are case sensitive. This option can be specified multiple
+     times; masks will be appended.
 
 `beep_after_long_command'
      type: boolean
@@ -2182,7 +2218,9 @@ using the `auto_bookmark' keyword in the configuration file, Yafc can
 create bookmarks automatically for new sites.
 
    The bookmarks are available to the `open' command, with tab
-completion.
+completion. You can also specify a bookmark name/alias on the command
+line when starting yafc. Bookmark names/aliases can be abbreviated, as
+long as it isn't ambiguous.
 
    The autologin information is stored in much the same way as in the
 `~/.netrc' file used by standard ftp(1), except that the macdef option
@@ -2212,6 +2250,9 @@ Bookmark keywords
      mentioned with another `machine' keyword.  You can not specify an
      alias name for a domain entry.
 
+     To bookmark a ssh connection, use `ssh://hostname' or
+     `sftp://hostname' (they are equivalent).
+
 `alias'
      Specifies another (verbose) name for the bookmark, like `ruby'
      instead of `ftp.netlab.co.jp'. This is the name that will be shown
@@ -2219,7 +2260,7 @@ Bookmark keywords
 
 `local'
      If an entry begins with `local', it specifies how to login to all
-     ocal machines. Local machines are unqualified hostnames (ie,
+     local machines. Local machines are unqualified hostnames (ie,
      hostnames without a period.)
 
      This can be overridden with an entry for a specific machine.
@@ -2259,6 +2300,11 @@ Bookmark keywords
      Boolean option requiring an argument (true/false). If true, use
      passive mode in data transfers, regardless of the value of
      `use_passive_mode' in the configuration file.
+
+`noupdate'
+     If this keyword is specified, the bookmark will not be updated
+     when a connection is closed. The `noupdate' flag can be toogled
+     with the command *Note bookmark::.
 
 
 File: yafc.info,  Node: Bookmark examples,  Prev: Bookmark keywords,  Up: Bookmarks
@@ -2330,70 +2376,70 @@ Node: !10249
 Node: afslog10383
 Node: alias10510
 Node: bookmark10633
-Node: cache11642
-Node: cat12173
-Node: cd12695
-Node: cdup13050
-Node: chmod13221
-Node: close13484
-Node: copyright13615
-Node: filetime13748
-Node: flush13888
-Node: fxp14016
-Node: get17765
-Node: help20726
-Node: idle20852
-Node: kauth20980
-Node: kdestroy21110
-Node: klist21247
-Node: krbtkfile21379
-Node: lcd21527
-Node: list21658
-Node: lpwd21766
-Node: ls21892
-Node: ltag23531
-Node: luntag23645
-Node: mkdir23768
-Node: mv23958
-Node: nlist24076
-Node: nop24198
-Node: open24478
-Node: prot25825
-Node: put26337
-Node: pwd28857
-Node: quit29012
-Node: quote29134
-Node: reopen29261
-Node: rhelp29397
-Node: rm29522
-Node: rmdir29982
-Node: rstatus30108
-Node: set30239
-Node: shell30362
-Node: site30486
-Node: source30701
-Node: status30831
-Node: switch30963
-Node: system31437
-Node: tag31577
-Node: unalias32436
-Node: untag32567
-Node: url32694
-Node: user32970
-Node: version33096
-Node: warranty33231
-Node: Nohup transfers33355
-Node: Configuration34192
-Node: Keywords35588
-Node: Prompt codes45431
-Node: Transfer codes46722
-Node: Aliases47789
-Node: Alias examples48314
-Node: Colors49879
-Node: ANSI attribute codes50584
-Node: Bookmarks51581
-Node: Bookmark keywords52659
-Node: Bookmark examples54851
-Node: Kerberos56165
+Node: cache11830
+Node: cat12361
+Node: cd12883
+Node: cdup13238
+Node: chmod13409
+Node: close13672
+Node: copyright13803
+Node: filetime13936
+Node: flush14076
+Node: fxp14204
+Node: get18031
+Node: help21070
+Node: idle21196
+Node: kauth21324
+Node: kdestroy21454
+Node: klist21591
+Node: krbtkfile21723
+Node: lcd21871
+Node: list22002
+Node: lpwd22110
+Node: ls22236
+Node: ltag23875
+Node: luntag23989
+Node: mkdir24112
+Node: mv24302
+Node: nlist24420
+Node: nop24542
+Node: open24822
+Node: prot26173
+Node: put26685
+Node: pwd29283
+Node: quit29438
+Node: quote29560
+Node: reopen29687
+Node: rhelp29823
+Node: rm29948
+Node: rmdir30408
+Node: rstatus30534
+Node: set30665
+Node: shell30788
+Node: site30912
+Node: source31127
+Node: status31257
+Node: switch31389
+Node: system31863
+Node: tag32003
+Node: unalias32862
+Node: untag32993
+Node: url33120
+Node: user33396
+Node: version33522
+Node: warranty33657
+Node: Nohup transfers33781
+Node: Configuration34618
+Node: Keywords36014
+Node: Prompt codes46490
+Node: Transfer codes47781
+Node: Aliases48848
+Node: Alias examples49373
+Node: Colors50938
+Node: ANSI attribute codes51643
+Node: Bookmarks52640
+Node: Bookmark keywords53875
+Node: Bookmark examples56363
+Node: Kerberos57677
 
 End Tag Table

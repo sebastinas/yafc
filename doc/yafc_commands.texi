@@ -121,6 +121,12 @@ will be rewritten.
 @itemx --list
 List bookmarks in memory.
 
+@item -u
+@itemx --noupdate
+Toggle the noupdate flag. If no bookmarks are specified on the command
+line, only the current bookmark is affected. The bookmarks file will be
+rewritten.
+
 @item -h
 @itemx --help
 Show short syntax description.
@@ -282,6 +288,10 @@ Enter only directories matching GLOB pattern.
 @item --dir-rx-mask=@var{REGEXP}
 Enter only directories matching REGEXP pattern.
 
+@item -e
+@itemx --skip-empty
+Skip empty files (files with a size of zero bytes).
+
 @item -f
 @itemx --force
 Overwrite existing destinations, never prompt.
@@ -429,6 +439,10 @@ Copy symbolic links as symbolic links.
 @item -D
 @itemx --delete-after
 Delete remote file after successful transfer.
+
+@item -e
+@itemx --skip-empty
+Skip empty files (files with a size of zero bytes).
 
 @item --dir-mask=@var{GLOB}
 Enter only directories matching GLOB pattern.
@@ -843,6 +857,10 @@ Enter only directories matching GLOB pattern.
 
 @item --dir-rx-mask=@var{REGEXP}
 Enter only directories matching REGEXP pattern.
+
+@item -e
+@itemx --skip-empty
+Skip empty files (files with a size of zero bytes).
 
 @item -f
 @itemx --force
