@@ -1,3 +1,10 @@
+New in 0.7.1
+------------
+
+* removed bignum functions from src/ftp/bufaux.[ch] (depended on openssl)
+* added checks for data types
+
+
 New in 0.7
 ----------
 
