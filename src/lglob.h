@@ -1,4 +1,4 @@
-/* $Id: lglob.h,v 1.4 2001/05/12 18:44:37 mhe Exp $
+/* $Id: lglob.h,v 1.5 2002/11/06 11:58:34 mhe Exp $
  *
  * lglob.h -- local glob functions
  *
@@ -21,6 +21,7 @@ typedef bool (*lglobfunc)(char *f);
 list *lglob_create(void);
 void lglob_destroy(list *gl);
 bool lglob_exclude_dotdirs(char *f);
-int lglob_glob(list *gl, const char *mask, lglobfunc exclude_func);
+int lglob_glob(list *gl, const char *mask, bool ignore_multiples,
+			   lglobfunc exclude_func);
 
 #endif

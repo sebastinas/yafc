@@ -1,4 +1,4 @@
-/* $Id: lglob.c,v 1.4 2001/09/07 09:08:16 mhe Exp $
+/* $Id: lglob.c,v 1.5 2002/11/06 11:58:34 mhe Exp $
  *
  * lglob.c -- local glob functions
  *
@@ -58,13 +58,14 @@ bool lglob_exclude_dotdirs(char *f)
  *
  * returns 0 if successful, -1 if failure
  */
-int lglob_glob(list *gl, const char *mask, lglobfunc exclude_func)
+int lglob_glob(list *gl, const char *mask, bool ignore_multiples,
+			   lglobfunc exclude_func)
 {
 	struct dirent *de;
 	DIR *dp;
 	char *directory;
 	char tmp[PATH_MAX];
-	bool added = false;
+	bool added = false, found = false;
 
 	directory = base_dir_xptr(mask);
 
@@ -83,19 +84,29 @@ int lglob_glob(list *gl, const char *mask, lglobfunc exclude_func)
 		if(!(exclude_func && exclude_func(path))) {
 			if(fnmatch(base_name_ptr(mask), de->d_name, 0) == 0) {
 				char *p;
+				bool ignore_item;
+
 				p = path_absolute(path, tmp, gvLocalHomeDir);
-				list_additem(gl, p);
-				added = true;
+
+				ignore_item = 
+					(ignore_multiples &&
+					 (list_search(gl, (listsearchfunc)strcmp, p) != 0));
+
+				if(!ignore_item) {
+					list_additem(gl, p);
+					added = true;
+				}
+				found = true;
 			}
 		}
 		xfree(path);
 	}
 	closedir(dp);
 
-	if(!added) {
+	if(!found) {
 		ftp_err("%s: no matches found\n", mask);
-		return 1;
+		return -1;
 	}
 
-	return 0;
+	return added ? 0 : -1;
 }

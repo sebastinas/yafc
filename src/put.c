@@ -1,4 +1,4 @@
-/* $Id: put.c,v 1.12 2002/11/05 22:51:57 mhe Exp $
+/* $Id: put.c,v 1.13 2002/11/06 11:58:34 mhe Exp $
  *
  * put.c -- upload files
  *
@@ -345,8 +345,8 @@ static void putfiles(const list *gl, unsigned opt, const char *output)
 
 						asprintf(&recurs_mask, "%s/*", path);
 						rgl = lglob_create();
-						r = lglob_glob(rgl,
-									   recurs_mask, lglob_exclude_dotdirs);
+						r = lglob_glob(rgl, recurs_mask, true,
+									   lglob_exclude_dotdirs);
 						xfree(recurs_mask);
 
 						if(list_numitem(rgl) > 0)
@@ -588,7 +588,7 @@ void cmd_put(int argc, char **argv)
 
 		f = tilde_expand_home(argv[optind], gvLocalHomeDir);
 		stripslash(f);
-		lglob_glob(gl, f, lglob_exclude_dotdirs);
+		lglob_glob(gl, f, true, lglob_exclude_dotdirs);
 		optind++;
 	}
 

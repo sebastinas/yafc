@@ -1,4 +1,4 @@
-/* $Id: ltag.c,v 1.4 2001/05/12 18:44:37 mhe Exp $
+/* $Id: ltag.c,v 1.5 2002/11/06 11:58:34 mhe Exp $
  *
  * ltag.c -- tag local files
  *
@@ -188,7 +188,7 @@ void cmd_ltag(int argc, char **argv)
 
 	for(i=1;i<argc;i++) {
 		stripslash(argv[i]);
-		lglob_glob(gvLocalTagList, argv[i], &lglob_exclude_dotdirs);
+		lglob_glob(gvLocalTagList, argv[i], true, &lglob_exclude_dotdirs);
 	}
 }
 
