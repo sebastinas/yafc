@@ -1,7 +1,7 @@
 /* gvars.c -- global variables
  *
  * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
+ * This program is Copyright (C) 1998-2001 Martin Hedenfalk
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,9 @@ char *gvWorkingDirectory = 0;
 
 /* try to login automagically */
 bool gvAutologin = true;
+
+/* do reverse DNS lookups? */
+bool gvReverseDNS = true;
 
 /* path to the SSH program */
 char *gvSSHProgram = 0;
@@ -175,6 +178,8 @@ void gvars_destroy(void)
 	xfree(gvTransferBeginString);
 	xfree(gvTransferString);
 	xfree(gvTransferEndString);
+	xfree(gvSSHProgram);
+	xfree(gvWorkingDirectory);
 	list_free(gvAsciiMasks);
 	list_free(gvAliases);
 	list_free(gvLocalTagList);

@@ -1,7 +1,7 @@
-/* host.c -- 
+/* host.c -- DNS lookups of hostnames
  *
  * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
+ * This program is Copyright (C) 1998-2001 Martin Hedenfalk
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 
 #include "syshdr.h"
 #include "host.h"
+#include "gvars.h"
 
 /* saved reply from getservent */
 static int ftp_servent_port = -1; /* -1 == not initialized */
@@ -65,7 +66,8 @@ int host_lookup(Host *hostp)
 	/* check if host is given in numbers-and-dots notation */
 	/* FIXME: should check if inet_aton is not present -> use inet_addr() */
 	if(inet_aton(hostp->hostname, &ia)) {
-		hostp->hep = gethostbyaddr((char *)&ia, sizeof(ia), AF_INET);
+		if(gvReverseDNS)
+			hostp->hep = gethostbyaddr((char *)&ia, sizeof(ia), AF_INET);
 		if(hostp->hep == 0) {
 			hostp->alt_h_length = sizeof(ia);
 			memcpy((void *)&hostp->alt_h_addr, &ia, hostp->alt_h_length);

@@ -300,6 +300,8 @@ int parse_rc(const char *file, bool warn)
 			gvAutoBookmarkSilent = nextbool(fp);
 		else if(strcasecmp(e, "tilde") == 0)
 			gvTilde = nextbool(fp);
+		else if(strcasecmp(e, "reverse_dns") == 0)
+			gvReverseDNS = nextbool(fp);
 		else if(strcasecmp(e, "use_env_string") == 0)
 			gvUseEnvString = nextbool(fp);
 		else if(strcasecmp(e, "auto_bookmark") == 0) {
