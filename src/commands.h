@@ -94,6 +94,7 @@ DEFCMD(cache);
 
 /* login.c */
 DEFCMD(open);
+DEFCMD(reopen);
 DEFCMD(close);
 DEFCMD(user);
 

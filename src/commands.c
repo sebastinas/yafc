@@ -69,6 +69,7 @@ cmd_t cmds[] = {
 	CMD(quit, 0,0,1, cpNone, 0),
 	CMD(quote, 0,0,1, cpNone, 0),
 	CMD(mv, 0,0,1, cpRemoteFile, 0),
+	CMD(reopen, 1, 1, 1, cpNone, 0),
 	CMD(rhelp, 1,0,1, cpNone, __("get remote help\n usage: rhelp [command]")),
 	CMD(rm, 0,0,1, cpRemoteFile, 0),
 	CMD(rmdir, 0,0,1, cpRemoteDir, 0),

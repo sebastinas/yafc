@@ -126,7 +126,7 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 	if(ftp_connected()) {
 		listitem *li;
 		bool found_unconnected = false;
-		
+
 		/* first see if there are any Ftp not connected in the list */
 		for(li=gvFtpList->first; li; li=li->next) {
 			if(!((Ftp *)li->data)->connected
@@ -183,12 +183,12 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 			url->noproxy = xurl->noproxy;
 		}
 	}
-	
+
 	if(test(opt, OP_NOPROXY))
 		url->noproxy = true;
 
 	for(i=0; gvConnectAttempts == -1 || i<gvConnectAttempts; i++) {
-		int r = ftp_open_url(url);
+		int r = ftp_open_url(url, true);
 		if(r == 0)
 			r = ftp_login(xurl && xurl->username ? xurl->username : gvUsername,
 						  gvAnonPasswd);
@@ -285,4 +285,16 @@ void cmd_open(int argc, char **argv)
 
 	for(i=optind; i<argc; i++)
 		yafc_open(argv[i], opt, mech);
+}
+
+void cmd_reopen(int argc, char **argv)
+{
+	OPT_HELP("Reopen closed connection.  Usage:\n"
+			 "  reopen [options]\n"
+			 "Options:\n"
+			 "  -h, --help    show this help\n");
+	need_connected();
+	need_loggedin();
+
+	ftp_reopen();
 }
