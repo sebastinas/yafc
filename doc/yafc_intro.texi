@@ -44,9 +44,6 @@ example for me to reproduce (use the @code{--trace} option) and a patch if you h
 @item Yafc SourceForge Project Page
 @uref{http://sourceforge.net/projects/yafc/}
 
-@item Yafc official FTP site
-@uref{ftp://yafc.sourceforge.net/pub/yafc/}
-
 @end table
 
 @c -----------------------------------------------------
