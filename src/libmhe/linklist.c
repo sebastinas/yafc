@@ -188,7 +188,7 @@ bool list_equal(list *a, list *b, listsortfunc cmpfunc)
 	if(a == b)
 		return true;
 
-	if(list_numitem(a) != list_numitem(b))
+	if(list_numitem(a) != list_numitem(b) || a == 0 || b == 0)
 		return false;
 
 	for(ai = a->first, bi = b->first; ai && bi; ai = ai->next, bi = bi->next) {
