@@ -41,7 +41,7 @@ debug off
 trace off
 
 # path to the SSH program
-ssh_program "/usr/bin/ssh"
+#ssh_program "/usr/bin/ssh"
 
 # path to the remote sftp-server program
 # leave commented to use sftp subsystem (requires ssh > 2.3.0)
