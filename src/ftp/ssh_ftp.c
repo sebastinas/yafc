@@ -738,8 +738,6 @@ int ssh_recv_binary(const char *remote_path, FILE *local_fp,
 	/* Read from remote and write to local */
 /*	offset = 0;*/
 
-	ftp_err("reading from %s at offset %lu\n", remote_path, offset);
-
 	while(true) {
 		u_int len;
 		char *data;
