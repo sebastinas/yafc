@@ -1,4 +1,4 @@
-/* $Id: commands.c,v 1.11 2001/07/01 11:27:13 mhe Exp $
+/* $Id: commands.c,v 1.12 2001/07/01 12:58:23 mhe Exp $
  *
  * commands.c --
  *
@@ -67,7 +67,7 @@ cmd_t cmds[] = {
 	CMD(rstatus, 0,0,1, cpRemoteFile),
 	CMD(set, 0,0,1, cpVariable),
 	CMD(shell, 0,0,0, cpLocalFile),
-	CMD(site, 0,0,1, cpNone),
+	CMD(site, 0,0,1, cpRemoteFile),
 	CMD(source, 0,0,1, cpLocalFile),
 	CMD(status, 0,0,1, cpNone),
 	CMD(switch, 0,0,0, cpFtpList),
