@@ -1,8 +1,9 @@
 @node Configuration, Bookmarks, The shell, top
 @chapter Configuration
 
-Yafc will parse a system-wide configuration file,
-@file{/etc/yafcrc}, first. Then, personal settings are read from
+Yafc will parse a system-wide configuration file, @file{/etc/yafcrc}
+(or whatever you set with the @samp{--sysconfdir} option to the
+configure script), first. Then, personal settings are read from
 @file{~/.yafc/yafcrc} (overriding the global ones). If none of those
 files exists, internal defaults will be used.
 

@@ -1,3 +1,15 @@
+New in 1.1
+----------
+
+* Applied patch by Mark Schreiber that checks for errno.h in
+  configure.ac
+* Less picky autogen.sh
+* sysconfdir setting from configure honored (thanks to Toru TAKAMIZU)
+* alternative SSH port now accepted (thanks Henk Csaba)
+* Applied patch from Eduard Bloch that adds a setting for user
+  configurable SSH options
+
+
 New in 1.0
 ----------
 
