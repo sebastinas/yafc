@@ -1,4 +1,4 @@
-/* $Id: bookmark.c,v 1.18 2002/11/06 10:31:10 mhe Exp $
+/* $Id: bookmark.c,v 1.19 2002/11/08 11:04:16 mhe Exp $
  *
  * bookmark.c -- create bookmark(s)
  *
@@ -328,7 +328,7 @@ void auto_create_bookmark(void)
 
 		/* bookmark already exist, update it */
 		if(gvAutoBookmarkUpdate == 2) {
-			a = ask(ASKYES|ASKNO, ASKNO,
+			a = ask(ASKYES|ASKNO, ASKYES,
 					_("Do you want to update the bookmark for this site?"));
 			if(a == ASKNO)
 				return;
@@ -340,7 +340,7 @@ void auto_create_bookmark(void)
 	}
 
 	if(gvAutoBookmark == 2 && !auto_create) {
-		a = ask(ASKYES|ASKNO, ASKNO,
+		a = ask(ASKYES|ASKNO, ASKYES,
 				_("Do you want to create a bookmark for this site?"));
 		if(a == ASKNO)
 			return;
