@@ -13,6 +13,7 @@ New in 0.7
 * ls now always sorts on name (if no other sort method is specified)
 * 'ls -r' now works (lists in reversed name order)
 * 'ls .' now works
+* new option: reverse_dns, do reverse DNS lookups? (thanks Ari Pollak)
 
 
 New in 0.6.6

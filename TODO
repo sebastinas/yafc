@@ -4,7 +4,6 @@ TODO list for Yafc
 * SSH2_FXP_READLINK returns wrong length of filename
 * Ctrl-C with SSH breaks ssh program *and* yafc
 * ssh cmdline option: -o option
-* option: do reverse DNS lookups? (Ari Pollak)
 ? config option for default answers to questions (get/put/fxp/more?)
 * fix --chgrp / --chmod for directories (get)
 * ltag should ignore multiples just as tag does
