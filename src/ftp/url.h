@@ -24,7 +24,7 @@
 #include "linklist.h"
 
 typedef struct url_t {
-	char *protocol;   /* "http", "ftp", ... (only ftp supported) */
+	char *protocol;   /* "ssh", "ftp", ... */
 	char *hostname;   /* hostname to connect to */
 	char *alias;      /* other name for this url */
 	char *username;   /* username to login with */
