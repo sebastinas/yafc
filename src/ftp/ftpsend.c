@@ -687,7 +687,6 @@ static int ftp_send(const char *path, FILE *fp, putmode_t how,
 	if(how == putUnique && !ftp->has_stou_command)
 		return -1;
 
-	foo_hookf = hookf;
 	reset_transfer_info();
 	ftp->ti.transfer_is_put = true;
 
@@ -967,6 +966,8 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 	ftp->ti.remote_name = xstrdup(infile);
 	ftp->ti.local_name = xstrdup(outfile);
 
+	foo_hookf = hookf;
+
 	if(ftp->ssh_pid)
 		r = ssh_do_receive(infile, fp, mode, hookf);
 	else
@@ -1032,6 +1033,7 @@ int ftp_putfile(const char *infile, const char *outfile, putmode_t how,
 		}
 	}
 
+	foo_hookf = hookf;
 
 	if(ftp->ssh_pid)
 		r = ssh_send(outfile, fp, how, mode, hookf);
