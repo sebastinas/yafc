@@ -8,6 +8,8 @@ New in 0.7
 * new command: reopen
 * SSH2 support (incorporated code from sftp/OpenSSH)
    try "open ssh://username@host"
+* new option: ssh_program (path to local ssh program)
+* new option: sftp_server_program (path to remote sftp-server program)
 * now stores protocol in bookmarks file
 * updates bookmarks if protocol changed (eg, from "ftp" to "ssh")
 * ls now always sorts on name (if no other sort method is specified)
@@ -16,6 +18,9 @@ New in 0.7
 * new option: reverse_dns, do reverse DNS lookups? (thanks Ari Pollak)
 * cleanups for old readline 2.0
 * removed gettext support (not used anyway)
+* defaults to passive mode
+* new default transfer_string
+* transfers are now verbose by default (use --quiet to turn off progress bar)
 
 
 New in 0.6.6
