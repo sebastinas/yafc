@@ -1,4 +1,4 @@
-/* $Id: gvars.c,v 1.14 2001/05/13 12:24:25 mhe Exp $
+/* $Id: gvars.c,v 1.15 2001/05/13 14:36:46 mhe Exp $
  *
  * gvars.c -- global variables
  *
@@ -119,7 +119,7 @@ char *gvHistoryFile = 0;
 bool gvVerbose = false;
 bool gvDebug = false;
 bool gvTrace = false;
-bool gvPasvmode = false;
+bool gvPasvmode = true;
 bool gvReadNetrc = false;
 
 int gvAutoBookmark = 1; /* 0 = no, 1 = yes, 2 = ask */
