@@ -1256,6 +1256,7 @@ rdirectory *ftp_get_directory(const char *path)
 	char *ap;
 
 	ap = ftp_path_absolute(path);
+	stripslash(ap);
 
 	rdir = ftp_cache_get_directory(ap);
 	if(!rdir)
