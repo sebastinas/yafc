@@ -28,7 +28,7 @@
 #include "syshdr.h"
 #include "ftp.h"
 #include "strq.h"
-
+#include "gvars.h"
 #include "buffer.h"
 #include "bufaux.h"
 /*#include "pathnames.h"*/
@@ -45,6 +45,10 @@ int ssh_open_url(url_t *urlp)
 	if(urlp->username) {
 		ssh_make_args(&ftp->ssh_args, "-l");
 		ssh_make_args(&ftp->ssh_args, urlp->username);
+	} else {
+		/* we need a username, otherwise other functions will fail
+		 */
+		urlp->username = xstrdup(gvUsername);
 	}
 
 	if(urlp->port) {
