@@ -1,4 +1,4 @@
-/* $Id: gvars.c,v 1.15 2001/05/13 14:36:46 mhe Exp $
+/* $Id: gvars.c,v 1.16 2001/05/13 17:57:49 mhe Exp $
  *
  * gvars.c -- global variables
  *
@@ -177,6 +177,7 @@ void gvars_destroy(void)
 	xfree(gvTransferString);
 	xfree(gvTransferEndString);
 	xfree(gvSSHProgram);
+	xfree(gvSFTPServerProgram);
 	xfree(gvWorkingDirectory);
 	list_free(gvAsciiMasks);
 	list_free(gvAliases);
