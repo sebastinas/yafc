@@ -19,7 +19,7 @@ noinst_HEADERS = \
    alias.h cmd.h completion.h commands.h transfer.h \
    gvars.h help.h input.h get.h put.h lglob.h \
    set.h syshdr.h redir.h login.h utils.h bookmark.h tag.h ltag.h prompt.h \
-   redir.h
+   redir.h rc.h
 
 yafc_LDADD = @INTLLIBS@ ftp/libftp.a libmhe/libmhe.a ../lib/libfoo.a
 
