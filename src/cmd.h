@@ -1,4 +1,4 @@
-/* $Id: cmd.h,v 1.3 2001/05/12 18:44:37 mhe Exp $
+/* $Id: cmd.h,v 1.4 2001/07/01 11:28:26 mhe Exp $
  *
  * cmd.h -- read and execute commands, this is the main loop
  *
@@ -25,7 +25,6 @@ typedef struct {
 	bool needconnect, needlogdin;
 	bool auto_unquote;
 	int cpltype;
-	char *hint;
 	vfunc func;
 } cmd_t;
 
