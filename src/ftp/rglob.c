@@ -1,4 +1,4 @@
-/* $Id: rglob.c,v 1.5 2002/12/02 12:24:39 mhe Exp $
+/* $Id: rglob.c,v 1.6 2002/12/02 14:32:21 mhe Exp $
  *
  * rglob.c -- remote glob functions
  *
@@ -58,7 +58,6 @@ int rglob_glob(list *gl, const char *mask, bool cpifnomatch,
 	rfile *fi = 0, *nfi;
 	char *d;
 	int found = 0;
-	int before = list_numitem(gl);
 
 	path = tilde_expand_home(mask, ftp->homedir);
 	dep = strrchr(path, '/');

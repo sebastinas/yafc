@@ -1,4 +1,4 @@
-/* $Id: ftp.h,v 1.13 2001/05/28 14:22:17 mhe Exp $
+/* $Id: ftp.h,v 1.14 2002/12/02 14:32:21 mhe Exp $
  *
  * ftp.h -- lower level FTP stuff
  *
@@ -233,6 +233,7 @@ void transfer_finished(void);
 int ftp_get_verbosity(void);
 void ftp_set_verbosity(int verbosity);
 void ftp_set_tmp_verbosity(int verbosity);
+int get_username(url_t *url, const char *guessed_username, bool isproxy);
 
 bool ftp_connected(void);
 bool ftp_loggedin(void);

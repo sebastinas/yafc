@@ -1,4 +1,4 @@
-/* $Id: cache.c,v 1.4 2002/11/04 14:02:39 mhe Exp $
+/* $Id: cache.c,v 1.5 2002/12/02 14:32:21 mhe Exp $
  *
  * cache.c -- remote directory cache
  *
@@ -54,7 +54,6 @@ void ftp_cache_flush_mark(const char *path)
  */
 void ftp_cache_flush_mark_for(const char *path)
 {
-	char *p;
 	char *e = base_dir_xptr(path);
 	if(!e) {
 		xfree(e);
