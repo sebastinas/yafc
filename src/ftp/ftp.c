@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.32 2002/11/04 13:50:11 mhe Exp $
+/* $Id: ftp.c,v 1.33 2002/11/04 15:04:26 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -296,12 +296,12 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
 	 * need to do this here, 'cause host_lookup() sets it to 21
 	 * (default port for vanilla FTP)
 	 */
-	if(strcmp(urlp->protocol, "sftp") == 0)
-		url_setprotocol(urlp, "ssh");
-
-	if(urlp->protocol && strcmp(urlp->protocol, "ssh") == 0
-		&& urlp->port == -1)
-		urlp->port = 22; /* default SSH port */
+	if(urlp->protocol) {
+		if(strcmp(urlp->protocol, "sftp") == 0)
+			url_setprotocol(urlp, "ssh");
+		if(strcmp(urlp->protocol, "ssh") == 0 && urlp->port == -1)
+			urlp->port = 22; /* default SSH port */
+	}
 
 	ftp->host = host_create(use_proxy ? gvProxyUrl : urlp);
 
