@@ -1,5 +1,5 @@
 /* Modified for use in Yafc by Martin Hedenfalk <mhe@home.se>
- * last changed: 990414
+ * last changed: 2000-Oct-14
  */
 
 /*
@@ -46,7 +46,7 @@
 #include "commands.h"
 #include "args.h"
 
-/*RCSID("$Id: kauth.c,v 1.3 2000/10/13 22:43:04 mhe Exp $");*/
+/*RCSID("$Id: kauth.c,v 1.4 2000/10/14 11:05:29 mhe Exp $");*/
 
 void cmd_kauth(int argc, char **argv)
 {
@@ -60,11 +60,17 @@ void cmd_kauth(int argc, char **argv)
     char passwd[100];
     int tmp;
     int save;
+
+	OPT_HELP("Authenticate to Kerberos.  Usage:\n"
+			 "  kauth [options] [principal name]\n"
+			 "Options:\n"
+			 "  -h, --help    show this help\n");
+
+	maxargs(1);
 	
-    if(argc > 2) {
-		printf(_("usage: %s [principal]\n"), argv[0]);
-		return;
-    }
+	need_connected();
+	need_loggedin();
+
     if(argc == 2)
 		name = argv[1];
     else
@@ -118,7 +124,8 @@ void cmd_kauth(int argc, char **argv)
     if (strcmp ((char*)tktcopy.dat + 8,
 				KRB_TICKET_GRANTING_TICKET) != 0)
 	{
-        afs_string_to_key (passwd, krb_realmofhost(ftp->host->ohostname), &key);
+        afs_string_to_key (passwd,
+						   krb_realmofhost(ftp->host->ohostname), &key);
 		des_key_sched (&key, schedule);
 		des_pcbc_encrypt((des_cblock*)tkt.dat, (des_cblock*)tktcopy.dat,
 						 tkt.length,
@@ -140,29 +147,58 @@ void cmd_kauth(int argc, char **argv)
 
 void cmd_klist(int argc, char **argv)
 {
+	OPT_HELP("List Kerberos tickets.  Usage:\n"
+			 "  klist [options]\n"
+			 "Options:\n"
+			 "  -h, --help    show this help\n");
+
 	maxargs(0);
+	need_connected();
+	need_loggedin();
+
 	ftp_set_tmp_verbosity(vbCommand);
     ftp_cmd("SITE KLIST");
 }
 
 void cmd_kdestroy(int argc, char **argv)
 {
+	OPT_HELP("Destroy Kerberos tickets.  Usage:\n"
+			 "  kdestroy [options]\n"
+			 "Options:\n"
+			 "  -h, --help    show this help\n");
+
 	maxargs(0);
+	need_connected();
+	need_loggedin();
 	ftp_set_tmp_verbosity(vbCommand);
 	ftp_cmd("SITE KDESTROY");
 }
 
 void cmd_krbtkfile(int argc, char **argv)
 {
+	OPT_HELP("Set file used for Kerberos tickets.  Usage:\n"
+			 "  krbtkfile [options] file\n"
+			 "Options:\n"
+			 "  -h, --help    show this help\n");
+
 	minargs(1);
 	maxargs(1);
+	need_connected();
+	need_loggedin();
 	ftp_set_tmp_verbosity(vbCommand);
     ftp_cmd("SITE KRBTKFILE %s", argv[1]);
 }
 
 void cmd_afslog(int argc, char **argv)
 {
+	OPT_HELP("Obtain AFS tokens for specified cell.  Usage:\n"
+			 "  afslog [options] [cell]\n"
+			 "Options:\n"
+			 "  -h, --help    show this help\n");
+
 	maxargs(2);
+	need_connected();
+	need_loggedin();
 	ftp_set_tmp_verbosity(vbCommand);
     if(argc == 2)
 		ftp_cmd("SITE AFSLOG %s", argv[1]);
