@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a -*- m4 -*- configure script.
-dnl $Id: configure.in,v 1.17 2001/05/12 18:45:46 mhe Exp $
+dnl $Id: configure.in,v 1.18 2001/05/13 11:59:27 mhe Exp $
 
 dnl
 dnl init
@@ -12,7 +12,7 @@ AM_CONFIG_HEADER(config.h)
 
 CDPATH=""
 
-ALL_LINGUAS=""
+dnl ALL_LINGUAS=""
 
 dnl AM_MAINTAINER_MODE
 
@@ -29,6 +29,7 @@ AC_MINIX
 
 AM_PROG_CC_STDC
 AC_PROG_INSTALL
+AC_PROG_RANLIB
 
 dnl AC_CYGWIN
 
@@ -46,7 +47,7 @@ AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_HEADER_STAT
 AC_HEADER_TIME
-AC_CHECK_HEADERS(stdlib.h pwd.h \
+AC_CHECK_HEADERS(unistd.h stdlib.h pwd.h \
    sys/stat.h sys/socket.h sys/types.h \
    netdb.h netinet/in.h netinet/ip.h netinet/in_systm.h \
    arpa/inet.h sys/ioctl.h
@@ -66,13 +67,15 @@ dnl
 dnl Checks for library functions
 dnl
 
+AC_FUNC_ALLOCA
+
 AC_CHECK_HEADERS(setjmp.h)
 
 AC_CHECK_FUNCS(memcpy sigsetjmp)
 
 BASH_FUNC_POSIX_SETJMP
 
-AM_GNU_GETTEXT
+dnl AM_GNU_GETTEXT
 dnl AC_LINK_FILES($nls_cv_header_libgt, $nls_cv_header_intl)
 
 AC_SEARCH_LIBS(socket, socket, ,
@@ -296,9 +299,8 @@ else
   AC_MSG_RESULT(no)
 fi
 
-AC_OUTPUT([Makefile intl/Makefile doc/Makefile lib/Makefile po/Makefile.in
-  src/Makefile src/ftp/Makefile src/libmhe/Makefile yafc.spec],
-[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])
+AC_OUTPUT([Makefile doc/Makefile lib/Makefile src/Makefile
+           src/ftp/Makefile src/libmhe/Makefile yafc.spec])
 
 echo "------ configure complete ------"
 echo "Compiling with $CC $CFLAGS"

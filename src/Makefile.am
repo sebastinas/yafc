@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.8 2001/05/12 18:44:37 mhe Exp $
+## $Id: Makefile.am,v 1.9 2001/05/13 11:55:36 mhe Exp $
 
 SUBDIRS = libmhe ftp
 
@@ -22,15 +22,13 @@ noinst_HEADERS = \
    set.h syshdr.h redir.h login.h utils.h bookmark.h tag.h ltag.h prompt.h \
    redir.h rc.h
 
-yafc_LDADD = @INTLLIBS@ ftp/libftp.a libmhe/libmhe.a ../lib/libfoo.a
+yafc_LDADD = ftp/libftp.a libmhe/libmhe.a ../lib/libfoo.a
 
 yafc_DEPENDENCIES = $(yafc_LDADD) yafcrc.h
-INCLUDES = -I. -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../intl \
+INCLUDES = -I. -I.. -I$(srcdir) -I$(top_srcdir)/lib \
 -I$(top_srcdir)/src/ftp -I$(top_srcdir)/src/libmhe
 
-localedir = $(datadir)/locale
-
-DEFS=-DLOCALEDIR=\"$(localedir)\" @DEFS@
+DEFS=@DEFS@
 
 CLEANFILES=*~ \#*\#
 DISTCLEANFILES=.deps/* yafcrc.h

@@ -1,12 +1,12 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.3 2001/05/12 18:45:46 mhe Exp $
+## $Id: Makefile.am,v 1.4 2001/05/13 12:00:47 mhe Exp $
 
 AUTOMAKE_OPTIONS = foreign
-EXTRA_DIST = ABOUT-NLS BUGS THANKS COPYRIGHT acconfig.h \
+EXTRA_DIST = BUGS THANKS COPYRIGHT acconfig.h \
              yafcrc.sample inputrc.sample \
              yafc.spec yafc.spec.in
 
-SUBDIRS = intl po doc lib src
+SUBDIRS = doc lib src
 
 SUPPORT_FILES = config.guess config.sub install-sh mdate-sh \
                 missing mkinstalldirs
@@ -22,3 +22,5 @@ dist-hook:
 
 CLEANFILES=*~ \#*\#
 DISTCLEANFILES=build
+
+celan: clean
