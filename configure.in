@@ -173,6 +173,7 @@ if test "$mhe_with_krb4" = "yes" -o "$mhe_with_krb5" = yes; then
 
         if test "$mhe_with_krb5" = "yes"; then
           echo "checking for Heimdal Kerberos 5..."
+          krb5_flavor="heimdal"
 
           dnl have we found all the libraries we need?  So far, yes.
           found_all_krb5=1;
@@ -184,6 +185,7 @@ if test "$mhe_with_krb4" = "yes" -o "$mhe_with_krb5" = yes; then
           dnl but there is an add_error_table.
           if test "$ac_cv_lib_com_err_init_error_table" = "no" ; then
             echo "checking for MIT Kerberos 5..."
+            krb5_flavor="mit"
             AC_CHECK_LIB(com_err, add_error_table)
             if test "$ac_cv_lib_com_err_add_error_table" = "no" ; then
               found_all_krb5=0;
@@ -193,7 +195,7 @@ if test "$mhe_with_krb4" = "yes" -o "$mhe_with_krb5" = yes; then
           if test "$found_all_krb5" = "1" ; then
             dnl only check for libasn1 if we're using Heimdal, MIT's krb5
             dnl doesn't have this library.
-            if test "$ac_cv_lib_com_err_init_error_table" = "yes" ; then
+            if test "$krb5_flavor" = "heimdal" ; then
               AC_CHECK_LIB(asn1, copy_EncryptionKey)
               if test "$ac_cv_lib_asn1_copy_EncryptionKey" = "no" ; then
                 found_all_krb5=0;
@@ -201,26 +203,26 @@ if test "$mhe_with_krb4" = "yes" -o "$mhe_with_krb5" = yes; then
             fi
           fi
 
-          if test "$found_all_krb5" = "1" ; then
-            if test "$ac_cv_lib_com_err_init_error_table" = "yes" ; then
-              dnl Heimdal calls this libdb
-              AC_CHECK_LIB(db, dbopen)
-              if test "$ac_cv_lib_db_dbopen" = "no" ; then
-                found_all_krb5=0;
-              fi
-            else
-              dnl MIT calls this libkdb5
-              AC_CHECK_LIB(kdb5, krb5_db_init)
-              if test "$ac_cv_lib_kdb5_krb5_db_init" = "no" ; then
-                found_all_krb5=0;
-              fi
-            fi
-          fi
+dnl          if test "$found_all_krb5" = "1" ; then
+dnl            if test "$krb5_flavor" == "heimdal" ; then
+dnl              dnl Heimdal calls this libdb
+dnl              AC_CHECK_LIB(db, dbopen)
+dnl              if test "$ac_cv_lib_db_dbopen" = "no" ; then
+dnl                found_all_krb5=0;
+dnl              fi
+dnl            else
+dnl              dnl MIT calls this libkdb5
+dnl              AC_CHECK_LIB(kdb5, krb5_db_init)
+dnl              if test "$ac_cv_lib_kdb5_krb5_db_init" = "no" ; then
+dnl                found_all_krb5=0;
+dnl              fi
+dnl            fi
+dnl          fi
 
           if test "$found_all_krb5" = "1" ; then
             dnl only check for libroken if we're using Heimdal, MIT's krb5
             dnl doesn't have this library.
-            if test "$ac_cv_lib_com_err_init_error_table" = "yes" ; then
+            if test "$krb5_flavor" = "heimdal" ; then
               AC_CHECK_LIB(roken, roken_gethostbyaddr)
               if test "$ac_cv_lib_roken_roken_gethostbyaddr" = "no" ; then
                 found_all_krb5=0;
@@ -239,7 +241,7 @@ if test "$mhe_with_krb4" = "yes" -o "$mhe_with_krb5" = yes; then
 
           if test "$found_all_krb5" = "1" && \
 			test "$ac_cv_lib_krb5_krb5_mk_priv" = "yes"; then
-            if test "$ac_cv_lib_com_err_init_error_table" = "yes" ; then
+            if test "$krb5_flavor" = "heimdal" ; then
               dnl the Heimdal name of what we're really looking for.
               AC_CHECK_LIB(gssapi, gss_init_sec_context)
               if test "$ac_cv_lib_gssapi_gss_init_sec_context" = "yes"; then
@@ -269,7 +271,6 @@ if test "$mhe_with_krb4" = "yes" -o "$mhe_with_krb5" = yes; then
             LIBS="$SAVELIBS"
           fi
         fi
-
     else
         AC_MSG_WARN([Kerberos support not enabled])
     fi
@@ -281,7 +282,7 @@ if test "$mhe_with_krb4" = "yes" -o "$mhe_with_krb5" = yes; then
       dnl additional convenience cpp symbol, so we know which it is.  This
       dnl is currently important for only one symbol, but there may be
       dnl additional things that hinge on this in the future.
-      if test "$ac_cv_lib_com_err_init_error_table" = "yes" ; then
+      if test "$krb5_flavor" = "heimdal" ; then
         AC_DEFINE(KRB5_HEIMDAL)
       else
         AC_DEFINE(KRB5_MIT)
@@ -304,7 +305,8 @@ echo "CPPFLAGS = $CPPFLAGS"
 echo "LDFLAGS = $LDFLAGS"
 echo "LIBS = $LIBS $RLLIBS"
 echo "installing in $prefix"
-
+test "$krb5_flavor" = "heimdal" && echo "using Heimdal Kerberos 5 libraries"
+test "$krb5_flavor" = "mit" && echo "using MIT Kerberos 5 libraries"
 if test "$mhe_with_readline" = "no" -o "$mhe_cv_lib_readline" = "no"; then
   echo "Readline was not found, completion won't work"
 fi
