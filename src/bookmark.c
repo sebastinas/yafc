@@ -1,4 +1,4 @@
-/* $Id: bookmark.c,v 1.15 2002/02/23 13:16:30 mhe Exp $
+/* $Id: bookmark.c,v 1.16 2002/03/11 19:00:05 mhe Exp $
  *
  * bookmark.c -- create bookmark(s)
  *
@@ -458,6 +458,7 @@ void cmd_bookmark(int argc, char **argv)
 				break;
 			case 'h':
 				print_bookmark_syntax();
+				/* fall through */
 			default:
 				return;
 		}
@@ -543,6 +544,9 @@ void cmd_bookmark(int argc, char **argv)
 		bool toggle_done = false;
 
 		if(argc == optind) {
+			need_connected();
+			need_loggedin();
+
 			ftp->url->noupdate = !ftp->url->noupdate;
 			printf(_("%s: noupdate: %s\n"),
 				   ftp->url->alias ? ftp->url->alias : ftp->url->hostname,
