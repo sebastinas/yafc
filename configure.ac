@@ -1,12 +1,12 @@
 dnl Process this file with autoconf to produce an m4 configure script.
-dnl $Id: configure.ac,v 1.1 2002/12/05 22:10:21 mhe Exp $
+dnl $Id: configure.ac,v 1.2 2003/07/12 10:20:19 mhe Exp $
 
 dnl
 dnl init
 dnl
 
 AC_PREREQ(2.50)
-AC_INIT(yafc, 1.0, [mhe@home.se])
+AC_INIT(yafc, 1.1, [mhe@home.se])
 AC_CONFIG_AUX_DIR(support)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
@@ -64,7 +64,8 @@ AC_CHECK_HEADERS(unistd.h \
                  arpa/inet.h \
                  sys/ioctl.h \
                  memory.h \
-                 setjmp.h
+                 setjmp.h \
+                 errno.h
 )
 
 AC_CHECK_HEADERS(dirent.h, [], [
