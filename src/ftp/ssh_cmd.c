@@ -448,10 +448,10 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
 	long offset = ftp->restart_offset;
 	char *p;
 
+	reset_transfer_info();
 	ftp->ti.size = ftp->ti.restart_size = offset;
 	ftp->restart_offset = 0L;
 
-	reset_transfer_info();
 	ftp->ti.transfer_is_put = true;
 
 	if(how == putUnique) {
