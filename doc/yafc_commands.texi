@@ -725,7 +725,10 @@ timeout (though some servers ignore it).
 
 Opens a new connection to an FTP server.
 
-Usage:  open [options] [ftp://][user[:password]@@]hostname[:port][/directory] ...
+Usage:  open [options]
+[proto://][user[:password]@@]hostname[:port][/directory] ...
+
+proto can be either 'ftp' or 'ssh'
 
 Options:
 
@@ -744,11 +747,26 @@ Disable autologin.
 Disable bookmark alias lookup and abbreviation.
 
 @item -m @var{MECH}
-@itemx --mechanism @var{MECH}
+@itemx --mechanism=@var{MECH}
 Try security mechanism @var{MECH} when logging in. This will override any
 'mech' options in @file{yafcrc} or @file{bookmarks}. @var{MECH} is a
 colon-separated string, supported values are "krb4", "krb5" and "none". The
 mechanisms are tried in the order specified.
+
+@item -s @var{PATH}
+@itemx --sftp=@var{PATH}
+Specify path to the remote sftp-server program. SSH starts this
+program on the remote side when initiating an sftp connection. This
+option is only necessary if the remote ssh server doesn't understand
+the sftp subsystem.
+
+Specify @samp{--sftp=""} to disable the sftp-server path, and use sftp
+subsystem instead.
+
+If you don't know the remote path to the sftp-server program, the
+default for OpenSSH is @file{/usr/libexec/sftp-server}. Another common
+path is @file{/usr/bin/sftp-server}.
+
 
 @item --help
 Show a short syntax description.
