@@ -46,6 +46,7 @@
 #define LS_LITERAL (1 << 17)
 #define LS_WPATH (1 << 18)
 #define LS_HUMAN_READABLE (1 << 19)
+#define LS_SORT_NAME (1 << 20)
 
 static void print_ls_syntax(void)
 {
@@ -342,7 +343,9 @@ static void ls_all(list *gl, unsigned opt, bool doclr)
 	if(list_numitem(gl) == 0)
 		return;
 
-	if(test(opt, LS_SORT_DIRS_FIRST))
+	if(test(opt, LS_SORT_NAME))
+		list_sort(gl, (listsortfunc)ls_sort_name, test(opt, LS_SORT_REVERSE));
+	else if(test(opt, LS_SORT_DIRS_FIRST))
 		list_sort(gl, (listsortfunc)ls_sort_dirs, test(opt, LS_SORT_REVERSE));
 	else if(test(opt, LS_SORT_SIZE))
 		list_sort(gl, (listsortfunc)ls_sort_size, test(opt, LS_SORT_REVERSE));
@@ -350,8 +353,6 @@ static void ls_all(list *gl, unsigned opt, bool doclr)
 		list_sort(gl, (listsortfunc)ls_sort_ext, test(opt, LS_SORT_REVERSE));
 	else if(test(opt, LS_SORT_MTIME))
 		list_sort(gl, (listsortfunc)ls_sort_mtime, test(opt, LS_SORT_REVERSE));
-	else
-		list_sort(gl, (listsortfunc)ls_sort_name, test(opt, LS_SORT_REVERSE));
 
 	if(test(opt, LS_LONG))
 		ls_long(gl, opt, doclr);
@@ -427,6 +428,8 @@ void cmd_ls(int argc, char **argv)
 		{0, 0, 0, 0},
 	};
 
+	opt |= LS_SORT_NAME;
+
 	optind = 0; /* force getopt() to re-initialize */
 	while((c = getopt_long(argc, argv, "aAFCdGhlNogBrRStUxX12",
 						   longopts, NULL)) != EOF) {
@@ -475,7 +478,7 @@ void cmd_ls(int argc, char **argv)
 			opt &= ~(LS_SORT_EXT | LS_SORT_DIRS_FIRST | LS_SORT_MTIME);
 			break;
 		  case 'U':
-			opt &= ~(LS_SORT_SIZE | LS_SORT_EXT
+			opt &= ~(LS_SORT_NAME | LS_SORT_SIZE | LS_SORT_EXT
 					 | LS_SORT_DIRS_FIRST | LS_SORT_MTIME);
 			break;
 		  case 'x':
