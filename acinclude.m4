@@ -27,7 +27,7 @@ AC_DEFUN(mhe_CHECK_TYPES,
     AC_CACHE_CHECK([for uintXX_t types], ac_cv_have_uintxx_t, [
       AC_TRY_COMPILE(
         [#include <sys/types.h>],
-        [ uint8_t a; uint16_t b; uint32_t c; a = b = c = 1; ], 
+        [ uint8_t a; uint16_t b; uint32_t c; a = b = c = 1; ],
         [ ac_cv_have_uintxx_t="yes" ],
         [ ac_cv_have_uintxx_t="no" ]
       )
@@ -35,6 +35,19 @@ AC_DEFUN(mhe_CHECK_TYPES,
     if test "x$ac_cv_have_uintxx_t" = "xyes" ; then
       AC_DEFINE(HAVE_UINTXX_T)
     fi
+  fi
+
+  AC_CACHE_CHECK([for u_int64_t types], ac_cv_have_u_int64_t, [
+    AC_TRY_COMPILE(
+      [ #include <sys/types.h> ],
+      [ u_int64_t a; a = 1;],
+      [ ac_cv_have_u_int64_t="yes" ],
+      [ ac_cv_have_u_int64_t="no" ]
+    )
+  ])
+  if test "x$ac_cv_have_u_int64_t" = "xyes" ; then
+    AC_DEFINE(HAVE_U_INT64_T)
+    have_u_int64_t=1
   fi
 ])
 

@@ -1,4 +1,4 @@
-/* $Id: syshdr.h,v 1.8 2001/05/16 15:11:21 mhe Exp $
+/* $Id: syshdr.h,v 1.9 2001/05/21 18:01:06 mhe Exp $
  *
  * syshdr.h -- includes global header files etc.
  *
@@ -21,7 +21,9 @@
 #ifdef HAVE_SYS_TYPES_H
 # include <sys/types.h>
 #endif
-/* data type checks stolen from openssh-2.9p1 */
+
+/* data type checks stolen from openssh-2.9p1
+ */
 #ifdef HAVE_SYS_BITYPES_H
 # include <sys/bitypes.h> /* For u_intXX_t */
 #endif
@@ -58,6 +60,18 @@ typedef unsigned long  u_int32_t;
 #  endif
 # endif
 #endif
+/* 64-bit types */
+#ifndef HAVE_U_INT64_T
+# if (SIZEOF_LONG_INT == 8)
+typedef unsigned long int u_int64_t;
+#   define HAVE_U_INT64_T 1
+# else
+#  if (SIZEOF_LONG_LONG_INT == 8)
+typedef unsigned long long int u_int64_t;
+#   define HAVE_U_INT64_T 1
+#  endif
+# endif
+#endif
 
 #include <stdio.h>
 #include <ctype.h>
@@ -86,7 +100,7 @@ int asprintf(char **strp, const char *format, ...);
 # include "setproctitle.h"
 #endif
 
-#if STDC_HEADERS
+#ifdef STDC_HEADERS
 # include <string.h>
 #else
 # ifndef HAVE_STRCHR
