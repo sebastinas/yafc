@@ -1,4 +1,4 @@
-/* $Id: lglob.c,v 1.3 2001/05/12 18:44:37 mhe Exp $
+/* $Id: lglob.c,v 1.4 2001/09/07 09:08:16 mhe Exp $
  *
  * lglob.c -- local glob functions
  *
@@ -16,6 +16,23 @@
 #include "linklist.h"
 #include "lglob.h"
 #include "gvars.h"
+
+#if defined (HAVE_DIRENT_H)
+#  include <dirent.h>
+#else /* !HAVE_DIRENT_H */
+#  if defined (HAVE_SYS_NDIR_H)
+#    include <sys/ndir.h>
+#  endif
+#  if defined (HAVE_SYS_DIR_H)
+#    include <sys/dir.h>
+#  endif /* HAVE_SYS_DIR_H */
+#  if defined (HAVE_NDIR_H)
+#    include <ndir.h>
+#  endif
+#  if !defined (dirent)
+#    define dirent direct
+#  endif
+#endif /* !HAVE_DIRENT_H */
 
 list *lglob_create(void)
 {
@@ -37,72 +54,48 @@ bool lglob_exclude_dotdirs(char *f)
 
 /* appends char * items in list LP matching MASK
  * EXCLUDE_FUNC (if not 0) is called for each path found
- * and that file is excluded if EXCLUDE_FUNC returns true
+ * and that path is excluded if EXCLUDE_FUNC returns true
+ *
  * returns 0 if successful, -1 if failure
  */
 int lglob_glob(list *gl, const char *mask, lglobfunc exclude_func)
 {
-	int i;
-	char **result;
+	struct dirent *de;
+	DIR *dp;
+	char *directory;
 	char tmp[PATH_MAX];
+	bool added = false;
 
-	result = glob_filename((char *)mask);
-	if(result == 0) {
-		fprintf(stderr, "out of memory\n");
+	directory = base_dir_xptr(mask);
+
+	if((dp = opendir(directory ? directory : ".")) == 0) {
+		ftp_err("Unable to read directory %s\n", directory ? directory : ".");
 		return -1;
-	}
-	if(result == &glob_error_return) {
-		perror(mask);
-		return -1;
-	}
-	if(!*result) {
-		fprintf(stderr, "%s: no matches found\n", mask);
-		return 1;
 	}
 
 	getcwd(tmp, PATH_MAX);
-	for(i=0; result[i]; i++) {
-		char *p;
 
-		if(exclude_func && exclude_func(result[i]))
-			continue;
+	while((de = readdir(dp)) != 0) {
+		char *path;
 
-		p = path_absolute(result[i], tmp, gvLocalHomeDir);
-		list_additem(gl, p);
-		xfree(result[i]);
+		asprintf(&path, "%s/%s", directory ? directory : ".", de->d_name);
+
+		if(!(exclude_func && exclude_func(path))) {
+			if(fnmatch(base_name_ptr(mask), de->d_name, 0) == 0) {
+				char *p;
+				p = path_absolute(path, tmp, gvLocalHomeDir);
+				list_additem(gl, p);
+				added = true;
+			}
+		}
+		xfree(path);
 	}
-	xfree(result);
+	closedir(dp);
 
-#if 0
-	glob_t glb;
-	/* GLOB_PERIOD is GNU extension */
-	int glob_flags = GLOB_NOSORT | GLOB_PERIOD;
-
-	memset(&glb, 0, sizeof(glb));
-
-	if(glob(mask, glob_flags, 0, &glb) != 0) {
-		fprintf(stderr, "%s: %s\n", mask, strerror(errno));
-		return -1;
-	}
-
-	if(glb.gl_pathc == 0) {
-		fprintf(stderr, "%s: no matches found\n", mask);
-		globfree(&glb);
+	if(!added) {
+		ftp_err("%s: no matches found\n", mask);
 		return 1;
 	}
 
-	getcwd(tmp, PATH_MAX);
-	for(i=0; i<glb.gl_pathc; i++) {
-		char *p;
-
-		if(exclude_func && exclude_func(glb.gl_pathv[i]))
-			continue;
-
-		p = path_absolute(glb.gl_pathv[i], tmp, gvLocalHomeDir);
-		list_additem(gl, p);
-	}
-
-	globfree(&glb);
-#endif
 	return 0;
 }

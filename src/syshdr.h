@@ -1,4 +1,4 @@
-/* $Id: syshdr.h,v 1.11 2001/05/28 09:51:57 mhe Exp $
+/* $Id: syshdr.h,v 1.12 2001/09/07 09:08:16 mhe Exp $
  *
  * syshdr.h -- includes global header files etc.
  *
@@ -195,8 +195,6 @@ void read_history();
 Function *rl_named_function();
 extern int rl_filename_completion_desired;
 #endif
-
-#include "glob.h"  /* we always use GNU glob now */
 
 /*#if defined(HAVE_FNMATCH) && defined(HAVE_FNMATCH_H)*/
 /*# include <fnmatch.h>*/
