@@ -28,10 +28,11 @@ typedef struct url_t {
 	char *username;   /* username to login with */
 	char *password;   /* password to login with */
 	char *directory;  /* startup directory */
-	char *protlevel;  /* Kerberos4 protection level */
+	char *protlevel;  /* security protection level */
 	int port;         /* port in host byte order */
-	bool nokrb;       /* true if we should skip (attempt) kerberos login */
+	char *mech;       /* requested security mechanisms to try */
 	bool noproxy;     /* don't connect via the configured proxy */
+	bool passive;     /* true if passive mode is requested */
 } url_t;
 
 url_t *url_create(void);
@@ -48,6 +49,8 @@ void url_setpassword(url_t *urlp, const char *password);
 void url_setdirectory(url_t *urlp, const char *directory);
 void url_setprotlevel(url_t *urlp, const char *protlevel);
 void url_setport(url_t *urlp, int port);
+void url_setmech(url_t *urlp, const char *mech);
+void url_setpassive(url_t *urlp, bool passive);
 
 bool url_isanon(const url_t *url);
 

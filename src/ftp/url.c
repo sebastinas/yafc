@@ -57,7 +57,7 @@ url_t *url_clone(const url_t *urlp)
 		cloned->directory = xstrdup(urlp->directory);
 		cloned->protlevel = xstrdup(urlp->protlevel);
 		cloned->port = urlp->port;
-		cloned->nokrb = urlp->nokrb;
+		cloned->mech = urlp->mech;
 		cloned->noproxy = urlp->noproxy;
 	}
 
@@ -76,6 +76,7 @@ void url_destroy(url_t *urlp)
 		xfree(urlp->alias);
 		xfree(urlp->directory);
 		xfree(urlp->protlevel);
+		xfree(urlp->mech);
 		xfree(urlp);
 	}
 }
@@ -87,6 +88,7 @@ void url_parse(url_t *urlp, const char *str)
 	adr = _adr = xstrdup(str);
 
 	urlp->port = -1;
+	urlp->mech = 0;
 
 	e = strstr(adr, "://");
 	if(e) {
@@ -183,12 +185,24 @@ void url_setprotlevel(url_t *urlp, const char *protlevel)
 	urlp->protlevel = decode_rfc1738(protlevel);
 }
 
+void url_setmech(url_t *urlp, const char *mech)
+{
+	xfree(urlp->mech);
+	urlp->mech = xstrdup(mech);
+}
+
 void url_setport(url_t *urlp, int port)
 {
 	if(port <= 0)
 		port = -1;
 	urlp->port = port;
 }
+
+void url_setpassive(url_t *urlp, bool passive)
+{
+	urlp->passive = passive;
+}
+
 
 bool url_isanon(const url_t *url)
 {
