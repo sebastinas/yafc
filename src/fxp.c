@@ -1,8 +1,8 @@
 /* fxp.c -- transfer files between hosts
- * 
+ *
  * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
- * 
+ * This program is Copyright (C) 1998-2001 Martin Hedenfalk
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -12,7 +12,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
@@ -102,7 +102,6 @@ static void fxp_preserve_attribs(const rfile *fi, char *dest)
 {
 	mode_t m = rfile_getmode(fi);
 	if(m != (mode_t)-1) {
-		/* ftp_use(fxp_target); */
 		if(ftp->has_site_chmod_command)
 			ftp_chmod(dest, get_mode_string(m));
 	}
@@ -144,7 +143,7 @@ static int do_the_fxp(Ftp *srcftp, const char *src,
 			transfer_mail_msg(_("failed to send %s: %s\n"),
 							  src, ftp_getreply(false));
 	}
-	
+
 	return r;
 }
 
@@ -184,7 +183,7 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 	path_collapse(dest);
 
 	ftp_use(fxp_target);
-	
+
 	/* make sure destination directory exists */
 	dpath = base_dir_xptr(dest);
 	dest_dir = ftp_path_absolute(dpath);
@@ -228,7 +227,7 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 			ftp_use(thisftp);
 			src_ft = ftp_filetime(fi->path);
 			ftp_use(fxp_target);
-			
+
 			dst_ft = ftp_filetime(dest);
 
 			if(src_ft != (time_t)-1 && dst_ft != (time_t)-1 && dst_ft >= src_ft) {
@@ -286,7 +285,7 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 		bool dodel = false;
 
 		ftp_use(thisftp);
-		
+
 		if(!test(opt, FXP_FORCE)
 		   && !fxp_delbatch && !gvSighupReceived)
 			{
@@ -314,7 +313,6 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 						shortpath(fi->path, 42, ftp->homedir),
 						ftp_getreply(false));
 		}
-/*		ftp_use(fxp_target);*/
 	}
 
 	ftp_use(thisftp);
@@ -391,7 +389,7 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 			if(strncmp(opath, lnfp->path, strlen(lnfp->path)) == 0) {
 				ftp_trace("opath == '%s', lnfp->path == '%s'\n", opath,
 						  lnfp->path);
-				fprintf(stderr, _("%s: circular link -- skipping\n"), 
+				fprintf(stderr, _("%s: circular link -- skipping\n"),
 						shortpath(lnfp->path, 42, ftp->homedir));
 				transfer_nextfile(gl, &li, true);
 				continue;
@@ -404,7 +402,7 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 				 */
 				goto link_to_link__duh;
 		}
-		
+
 		if(risdir(fp)) {
 			if(test(opt, FXP_RECURSIVE)) {
 				char *recurs_output;
@@ -673,7 +671,7 @@ void cmd_fxp(int argc, char **argv)
 		minargs(optind);
 		return;
 	}
-	
+
 	need_connected();
 	need_loggedin();
 
@@ -681,7 +679,12 @@ void cmd_fxp(int argc, char **argv)
 		ftp_err(_("No target specified, try '%s --help' for more information\n"), argv[0]);
 		return;
 	}
-	
+
+	if(ftp->ssh_pid || fxp_target->ssh_pid) {
+		ftp_err("FxP for SSH connections no implemented\n");
+		return;
+	}
+
 	gl = rglob_create();
 	while(optind < argc) {
 		stripslash(argv[optind]);
