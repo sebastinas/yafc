@@ -46,7 +46,7 @@
 #include "commands.h"
 #include "args.h"
 
-/*RCSID("$Id: kauth.c,v 1.1 2000/09/14 14:06:18 mhe Exp $");*/
+/*RCSID("$Id: kauth.c,v 1.2 2000/09/23 13:04:56 mhe Exp $");*/
 
 void cmd_kauth(int argc, char **argv)
 {
@@ -59,6 +59,7 @@ void cmd_kauth(int argc, char **argv)
     char *p;
     char passwd[100];
     int tmp;
+    int save;
 	
     if(argc > 2) {
 		printf(_("usage: %s [principal]\n"), argv[0]);
@@ -69,19 +70,25 @@ void cmd_kauth(int argc, char **argv)
     else
 		name = ftp->url->username;
 
+    save = set_command_prot(prot_private);
+
 	ftp_set_tmp_verbosity(vbError);
     ret = ftp_cmd("SITE KAUTH %s", name);
-    if(ftp->code != ctContinue)
+    if(ftp->code != ctContinue) {
+		set_command_prot(save);
 		return;
+	}
     p = strstr(ftp->reply, "T=");
     if(!p) {
 		ftp_err(_("Bad reply from server\n"));
+		set_command_prot(save);
 		return;
     }
     p += 2;
     tmp = base64_decode(p, &tkt.dat);
     if(tmp < 0) {
 		ftp_err(_("Failed to decode base64 in reply\n"));
+		set_command_prot(save);
 		return;
     }
     tkt.length = tmp;
@@ -90,6 +97,7 @@ void cmd_kauth(int argc, char **argv)
     p = strstr(ftp->reply, "P=");
     if(!p) {
 		ftp_err(_("Bad reply from server\n"));
+		set_command_prot(save);
 		return;
     }
     name = p + 2;
@@ -121,11 +129,13 @@ void cmd_kauth(int argc, char **argv)
     memset(passwd, 0, sizeof(passwd));
     if(base64_encode(tktcopy.dat, tktcopy.length, &p) < 0) {
 		ftp_err(_("Out of memory base64-encoding\n"));
+		set_command_prot(save);
 		return;
     }
     memset (tktcopy.dat, 0, tktcopy.length);
     ret = ftp_cmd("SITE KAUTH %s %s", name, p);
     xfree(p);
+	set_command_prot(save);
 }
 
 void cmd_klist(int argc, char **argv)
