@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.33 2002/11/04 15:04:26 mhe Exp $
+/* $Id: ftp.c,v 1.34 2002/12/02 12:25:23 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -1318,6 +1318,7 @@ rdirectory *ftp_read_directory(const char *path)
 	char *tmpfilename, *e;
 	bool _failed = false;
 	char *dir;
+	bool is_mlsd = false;
 
 	if(ftp->ssh_pid)
 		return ssh_read_directory(path);
@@ -1360,6 +1361,7 @@ rdirectory *ftp_read_directory(const char *path)
 	}
 
 	if(ftp->has_mlsd_command) {
+		is_mlsd = true;
 #if 0
 		/* PureFTPd (1.0.11) doesn't recognize directory arguments
 		 * with spaces, not even quoted, it just chops the argument
@@ -1380,8 +1382,10 @@ rdirectory *ftp_read_directory(const char *path)
 		if(_failed && ftp->code == ctError)
 			ftp->has_mlsd_command = false;
 	}
-	if(!ftp->has_mlsd_command)
+	if(!ftp->has_mlsd_command) {
 		_failed = (ftp_list("LIST", 0, fp) != 0);
+		is_mlsd = false;
+	}
 
 	if(!is_curdir)
 		ftp_cmd("CWD %s", ftp->curdir);
@@ -1392,7 +1396,7 @@ rdirectory *ftp_read_directory(const char *path)
 	rewind(fp);
 
 	rdir = rdir_create();
-	if(rdir_parse(rdir, fp, dir) != 0) {
+	if(rdir_parse(rdir, fp, dir, is_mlsd) != 0) {
 		rdir_destroy(rdir);
 		goto failed;
 	}
