@@ -41,5 +41,6 @@
 #define GET_BINARY (1 << 17)
 #define GET_CHMOD (1 << 18)
 #define GET_CHGRP (1 << 19)
+#define GET_OUTPUT_FILE (1 << 20)  /* --output=FILE (else --output=DIR) */
 
 #endif

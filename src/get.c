@@ -78,7 +78,7 @@ static void print_get_syntax(void)
 			 "  -m, --mask=GLOB      get only files matching GLOB pattern\n"
 			 "  -M, --rx-mask=REGEXP get only files matching REGEXP pattern\n"
 			 "  -n, --newer          get file if remote is newer than local file\n"
-			 "  -o, --output=DEST    store in local directory DEST\n"
+			 "  -o, --output=DEST    store in local file/directory DEST\n"
 			 "  -p, --preserve       try to preserve file attributes and timestamps\n"
 			 "  -P, --parents        append source path to destination\n"
 			 "  -q, --quiet          overrides --verbose\n"
