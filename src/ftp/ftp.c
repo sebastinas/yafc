@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.27 2001/07/09 18:47:54 mhe Exp $
+/* $Id: ftp.c,v 1.28 2001/11/03 12:05:09 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -659,7 +659,7 @@ int ftp_cmd(const char *cmd, ...)
 	ftp_set_close_handler();
 	if(resp == 421) { /* server is closing control connection! */
 		ftp_err(_("Server closed control connection\n"));
-		if(gvAutoReconnect && strcasecmp(cmd, "QUIT") != 0) {
+		if(gvAutoReconnect && ftp_loggedin() && strcasecmp(cmd, "QUIT") != 0) {
 			if(recon) {
 				ftp_err(_("Reconnect failed\n"));
 			} else {
