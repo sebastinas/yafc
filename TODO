@@ -1,19 +1,19 @@
 TODO list for Yafc
 ------------------
 
-! ls . still doesn't work
+* Ctrl-C with SSH breaks ssh program *and* yafc
+* ssh cmdline option: -o option
 * option: do reverse DNS lookups? (Ari Pollak)
 ? config option for default answers to questions (get/put/fxp/more?)
 * fix --chgrp / --chmod for directories (get)
-* ls -r doesn't work (no sorting done)
 * ltag should ignore multiples just as tag does
 * re-implement setproctitle code
 ? don't show passwd (from cmdline) in 'ps' (Ari Pollak)
-* SSL support
+* FTP over SSL support
 * IPv6 support
 * keep-alive (send NOOP or similar when idle)
 * EPSV and EPRT support (RFC2428)
-* LANGuage support (RFC2640)
+? LANGuage support (RFC2640)
 * problems to get directories with double quotes (") in the name
 * completion doesn't work correctly with rels (need to be expanded?)
 ? timeout on cache entry lifetime (eg, re-read after 3 min?)
