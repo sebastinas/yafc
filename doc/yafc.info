@@ -1,9 +1,9 @@
-This is yafc.info, produced by makeinfo version 4.0b from yafc.texi.
+This is yafc.info, produced by makeinfo version 4.1 from yafc.texi.
 
 START-INFO-DIR-ENTRY
 * Yafc: (yafc).  Yet Another FTP Client
 END-INFO-DIR-ENTRY
-   This file documents Yafc version 0.7.6
+   This file documents Yafc version 0.7.7
 
    Copyright (C) 1999-2000 Martin Hedenfalk
 
@@ -25,7 +25,7 @@ translation approved by the copyright holder.
 File: yafc.info,  Node: Top,  Next: Overview,  Up: (dir)
 
    This document describes YAFC, an interactive interface to the FTP
-protocol.  This document applies to version 0.7.6.
+protocol.  This document applies to version 0.7.7.
 
 * Menu:
 
@@ -2300,82 +2300,82 @@ automagically set the protection level for a specific host.
 
 
 Tag Table:
-Node: Top904
-Node: Overview1335
-Node: Bugs2247
-Node: Obtaining Yafc2784
-Node: Motivation3099
-Node: Invoking Yafc3693
-Node: The shell6374
-Node: Yafc commands6939
-Node: !10255
-Node: afslog10389
-Node: alias10516
-Node: bookmark10639
-Node: cache11648
-Node: cat12179
-Node: cd12701
-Node: cdup13056
-Node: chmod13227
-Node: close13490
-Node: copyright13621
-Node: filetime13754
-Node: flush13894
-Node: fxp14022
-Node: get17771
-Node: help20476
-Node: idle20602
-Node: kauth20730
-Node: kdestroy20860
-Node: klist20997
-Node: krbtkfile21129
-Node: lcd21277
-Node: list21408
-Node: lpwd21516
-Node: ls21642
-Node: ltag23281
-Node: luntag23395
-Node: mkdir23518
-Node: mv23708
-Node: nlist23826
-Node: nop23948
-Node: open24228
-Node: prot25544
-Node: put26056
-Node: pwd28576
-Node: quit28731
-Node: quote28853
-Node: reopen28980
-Node: rhelp29116
-Node: rm29241
-Node: rmdir29701
-Node: rstatus29827
-Node: set29958
-Node: shell30081
-Node: site30205
-Node: source30420
-Node: status30550
-Node: switch30682
-Node: system31156
-Node: tag31296
-Node: unalias32155
-Node: untag32286
-Node: url32413
-Node: user32689
-Node: version32815
-Node: warranty32950
-Node: Nohup transfers33074
-Node: Configuration33911
-Node: Keywords35307
-Node: Prompt codes44819
-Node: Transfer codes46110
-Node: Aliases47177
-Node: Alias examples47702
-Node: Colors49267
-Node: ANSI attribute codes49972
-Node: Bookmarks50969
-Node: Bookmark keywords52047
-Node: Bookmark examples54239
-Node: Kerberos55553
+Node: Top903
+Node: Overview1334
+Node: Bugs2246
+Node: Obtaining Yafc2783
+Node: Motivation3098
+Node: Invoking Yafc3692
+Node: The shell6373
+Node: Yafc commands6938
+Node: !10254
+Node: afslog10388
+Node: alias10515
+Node: bookmark10638
+Node: cache11647
+Node: cat12178
+Node: cd12700
+Node: cdup13055
+Node: chmod13226
+Node: close13489
+Node: copyright13620
+Node: filetime13753
+Node: flush13893
+Node: fxp14021
+Node: get17770
+Node: help20475
+Node: idle20601
+Node: kauth20729
+Node: kdestroy20859
+Node: klist20996
+Node: krbtkfile21128
+Node: lcd21276
+Node: list21407
+Node: lpwd21515
+Node: ls21641
+Node: ltag23280
+Node: luntag23394
+Node: mkdir23517
+Node: mv23707
+Node: nlist23825
+Node: nop23947
+Node: open24227
+Node: prot25543
+Node: put26055
+Node: pwd28575
+Node: quit28730
+Node: quote28852
+Node: reopen28979
+Node: rhelp29115
+Node: rm29240
+Node: rmdir29700
+Node: rstatus29826
+Node: set29957
+Node: shell30080
+Node: site30204
+Node: source30419
+Node: status30549
+Node: switch30681
+Node: system31155
+Node: tag31295
+Node: unalias32154
+Node: untag32285
+Node: url32412
+Node: user32688
+Node: version32814
+Node: warranty32949
+Node: Nohup transfers33073
+Node: Configuration33910
+Node: Keywords35306
+Node: Prompt codes44818
+Node: Transfer codes46109
+Node: Aliases47176
+Node: Alias examples47701
+Node: Colors49266
+Node: ANSI attribute codes49971
+Node: Bookmarks50968
+Node: Bookmark keywords52046
+Node: Bookmark examples54238
+Node: Kerberos55552
 
 End Tag Table
