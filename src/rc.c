@@ -178,10 +178,12 @@ static void parse_host(int trig, FILE *fp)
 			if(!has_warned_about_passwd) {
 				struct stat sb;
 				has_warned_about_passwd = true;
-				if(fstat(fileno(fp), &sb)==0 && (sb.st_mode & 077)!=0)
+				if(fstat(fileno(fp), &sb)==0 && (sb.st_mode & 077)!=0) {
 					printf(_("WARNING! Config file contains passwords "
 							 "but is readable by others (mode %03o)\n"),
 						   sb.st_mode&0777);
+					sleep(3);
+				}
 			}
 
 		} else if(strcasecmp(e, "anonymous") == 0) {
