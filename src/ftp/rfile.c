@@ -1,4 +1,4 @@
-/* $Id: rfile.c,v 1.8 2001/05/28 17:11:51 mhe Exp $
+/* $Id: rfile.c,v 1.9 2001/08/24 09:08:25 mhe Exp $
  *
  * rfile.c -- representation of a remote file
  *
@@ -388,6 +388,11 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 	f->perm = xstrndup(cf, 10);
 	cf += 10;
 
+	/* drwxr-s---+ 78 0        228         1536 Jul 10 15:36 private
+	 */
+	if(*cf == '+')
+	   ++cf;
+
 	NEXT_FIELD;
 	saved_field[0] = xstrdup(e);
 
@@ -548,6 +553,8 @@ static int rfile_parse_dos(rfile *f, char *str, const char *dirpath)
 		}
 	}
 
+	f->perm = xstrdup("-rw-r--r--");
+
 	NEXT_FIELD;
 	if(strcasecmp(e, "<DIR>") == 0) {
 		f->perm[0] = 'd';
@@ -556,10 +563,6 @@ static int rfile_parse_dos(rfile *f, char *str, const char *dirpath)
 		f->size = (unsigned long)atol(e);
 	}
 
-	if(f->perm[0] == 'd')
-		f->perm = xstrdup("drwxr-xr-x");
-	else
-		f->perm = xstrdup("-rw-r--r--");
 	f->nhl = 1;
 	f->owner = xstrdup("owner");
 	f->group = xstrdup("group");
