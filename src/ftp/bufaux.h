@@ -16,18 +16,8 @@
 #define BUFAUX_H
 
 #include "buffer.h"
-#include <openssl/bn.h>
 
-/*
- * Stores an BIGNUM in the buffer with a 2-byte msb first bit count, followed
- * by (bits+7)/8 bytes of binary data, msb first.
- */
-void    buffer_put_bignum(Buffer * buffer, BIGNUM * value);
-void    buffer_put_bignum2(Buffer * buffer, BIGNUM * value);
-
-/* Retrieves an BIGNUM from the buffer. */
-int     buffer_get_bignum(Buffer * buffer, BIGNUM * value);
-int	buffer_get_bignum2(Buffer *buffer, BIGNUM * value);
+/* bignum functions removed ... */
 
 /* Returns an integer from the buffer (4 bytes, msb first). */
 u_int buffer_get_int(Buffer * buffer);

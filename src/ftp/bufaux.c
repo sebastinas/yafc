@@ -44,111 +44,13 @@
 /*#include "includes.h"*/
 /*RCSID("$OpenBSD: bufaux.c,v 1.17 2001/01/21 19:05:45 markus Exp $");*/
 
-#include <openssl/bn.h>
+/*#include <openssl/bn.h>*/
 #include "bufaux.h"
 /*#include "xmalloc.h"*/
 #include "getput.h"
 /*#include "log.h"*/
 
-#if 0
-
-/*
- * Stores an BIGNUM in the buffer with a 2-byte msb first bit count, followed
- * by (bits+7)/8 bytes of binary data, msb first.
- */
-void
-buffer_put_bignum(Buffer *buffer, BIGNUM *value)
-{
-	int bits = BN_num_bits(value);
-	int bin_size = (bits + 7) / 8;
-	u_char *buf = xmalloc(bin_size);
-	int oi;
-	char msg[2];
-
-	/* Get the value of in binary */
-	oi = BN_bn2bin(value, buf);
-	if (oi != bin_size)
-		fatal("buffer_put_bignum: BN_bn2bin() failed: oi %d != bin_size %d",
-		      oi, bin_size);
-
-	/* Store the number of bits in the buffer in two bytes, msb first. */
-	PUT_16BIT(msg, bits);
-	buffer_append(buffer, msg, 2);
-	/* Store the binary data. */
-	buffer_append(buffer, (char *)buf, oi);
-
-	memset(buf, 0, bin_size);
-	xfree(buf);
-}
-
-/*
- * Retrieves an BIGNUM from the buffer.
- */
-int
-buffer_get_bignum(Buffer *buffer, BIGNUM *value)
-{
-	int bits, bytes;
-	u_char buf[2], *bin;
-
-	/* Get the number for bits. */
-	buffer_get(buffer, (char *) buf, 2);
-	bits = GET_16BIT(buf);
-	/* Compute the number of binary bytes that follow. */
-	bytes = (bits + 7) / 8;
-	if (buffer_len(buffer) < bytes)
-		fatal("buffer_get_bignum: input buffer too small");
-	bin = (u_char *) buffer_ptr(buffer);
-	BN_bin2bn(bin, bytes, value);
-	buffer_consume(buffer, bytes);
-
-	return 2 + bytes;
-}
-
-/*
- * Stores an BIGNUM in the buffer in SSH2 format.
- */
-void
-buffer_put_bignum2(Buffer *buffer, BIGNUM *value)
-{
-	int bytes = BN_num_bytes(value) + 1;
-	u_char *buf = xmalloc(bytes);
-	int oi;
-	int hasnohigh = 0;
-	buf[0] = '\0';
-	/* Get the value of in binary */
-	oi = BN_bn2bin(value, buf+1);
-	if (oi != bytes-1)
-		fatal("buffer_put_bignum: BN_bn2bin() failed: oi %d != bin_size %d",
-		      oi, bytes);
-	hasnohigh = (buf[1] & 0x80) ? 0 : 1;
-	if (value->neg) {
-		/**XXX should be two's-complement */
-		int i, carry;
-		u_char *uc = buf;
-		ftp_err("negativ!");
-		for(i = bytes-1, carry = 1; i>=0; i--) {
-			uc[i] ^= 0xff;
-			if(carry)
-				carry = !++uc[i];
-		}
-	}
-	buffer_put_string(buffer, buf+hasnohigh, bytes-hasnohigh);
-	memset(buf, 0, bytes);
-	xfree(buf);
-}
-
-int
-buffer_get_bignum2(Buffer *buffer, BIGNUM *value)
-{
-	/**XXX should be two's-complement */
-	int len;
-	u_char *bin = (u_char *)buffer_get_string(buffer, (u_int *)&len);
-	BN_bin2bn(bin, len, value);
-	xfree(bin);
-	return len;
-}
-
-#endif
+/* bignum functions removed ... */
 
 /*
  * Returns an integer from the buffer (4 bytes, msb first).
