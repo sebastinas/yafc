@@ -15,6 +15,7 @@ New in 0.6.5
 * bookmarks are now always kept in ~/.yafc/bookmarks
 * cleanups; moved small generic funcs to utils.c
 * even more manual updates
+* protlevel is now updated in bookmarks
 
 
 New in 0.6.4

@@ -988,9 +988,9 @@ File: yafc.info,  Node: nop,  Next: open,  Prev: nlist,  Up: Yafc commands
 `nop'
 -----
 
-   Send a NOOP command to remote. This does nothing except checking if
-the connection is still open. It may be used to reset the servers idle
-timeout (though some servers ignore it).
+   Send a NOOP command to remote host. This does nothing except
+checking if the connection is still open. It may be used to reset the
+servers idle timeout (though some servers ignore it).
 
 
 File: yafc.info,  Node: open,  Next: prot,  Prev: nop,  Up: Yafc commands
@@ -2295,42 +2295,42 @@ Node: mkdir23545
 Node: mv23735
 Node: nlist23853
 Node: nop23975
-Node: open24250
-Node: prot24983
-Node: put25495
-Node: pwd28015
-Node: quit28170
-Node: quote28292
-Node: rhelp28418
-Node: rm28542
-Node: rmdir29002
-Node: rstatus29128
-Node: set29259
-Node: shell29382
-Node: site29506
-Node: source29721
-Node: status29851
-Node: switch29983
-Node: system30457
-Node: tag30597
-Node: unalias31456
-Node: untag31587
-Node: url31714
-Node: user31990
-Node: version32116
-Node: warranty32251
-Node: Nohup transfers32375
-Node: Configuration33212
-Node: Keywords34608
-Node: Prompt codes43411
-Node: Transfer codes44702
-Node: Aliases45769
-Node: Alias examples46294
-Node: Colors47859
-Node: ANSI attribute codes48564
-Node: Bookmarks49561
-Node: Bookmark keywords50639
-Node: Bookmark examples52831
-Node: Kerberos54145
+Node: open24255
+Node: prot24988
+Node: put25500
+Node: pwd28020
+Node: quit28175
+Node: quote28297
+Node: rhelp28423
+Node: rm28547
+Node: rmdir29007
+Node: rstatus29133
+Node: set29264
+Node: shell29387
+Node: site29511
+Node: source29726
+Node: status29856
+Node: switch29988
+Node: system30462
+Node: tag30602
+Node: unalias31461
+Node: untag31592
+Node: url31719
+Node: user31995
+Node: version32121
+Node: warranty32256
+Node: Nohup transfers32380
+Node: Configuration33217
+Node: Keywords34613
+Node: Prompt codes43416
+Node: Transfer codes44707
+Node: Aliases45774
+Node: Alias examples46299
+Node: Colors47864
+Node: ANSI attribute codes48569
+Node: Bookmarks49566
+Node: Bookmark keywords50644
+Node: Bookmark examples52836
+Node: Kerberos54150
 
 End Tag Table

@@ -103,7 +103,8 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 
 	xurl = test(opt, OP_NOALIAS) ? 0 : get_autologin_url(url->hostname);
 	if(xurl == (url_t *)-1) {
-		fprintf(stderr, _("Ambiguous alias/hostname, use 'open --noalias' to skip bookmark alias lookup\n"));
+		fprintf(stderr, _("Ambiguous alias/hostname, use 'open --noalias'"
+						  " to skip bookmark alias lookup\n"));
 		return;
 	}
 
