@@ -68,8 +68,8 @@ int ssh_connect(char **args, int *in, int *out, pid_t *sshpid)
 		ftp_err("fork: %s\n", strerror(errno));
 		return -1;
 	} else if (*sshpid == 0) {
-		if ((dup2(c_in, STDIN_FILENO) == -1) ||
-		    (dup2(c_out, STDOUT_FILENO) == -1)) {
+		if ((dup2(c_in, /*STDIN_FILENO*/ 0) == -1) ||
+		    (dup2(c_out, /*STDOUT_FILENO*/ 1) == -1)) {
 			ftp_err("dup2: %s\n", strerror(errno));
 			exit(1);
 		}
