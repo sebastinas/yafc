@@ -1,4 +1,4 @@
-/* $Id: rfile.h,v 1.4 2001/05/12 18:44:04 mhe Exp $
+/* $Id: rfile.h,v 1.5 2001/05/13 13:27:00 mhe Exp $
  *
  * rfile.h -- representation of a remote file
  *
@@ -48,6 +48,9 @@ bool rislink(const rfile *f);
 void rfile_fake(rfile *f, const char *path);
 int rfile_parse(rfile *f, char *str, const char *dirpath);
 void rfile_parse_colors(rfile *f);
+
+int month_number(const char *str);
+void rfile_parse_time(rfile *f, const char *m, const char *d, const char *y);
 
 char rfile_classchar(const rfile *f);
 mode_t rfile_getmode(const rfile *f);
