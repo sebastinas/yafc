@@ -1,4 +1,4 @@
-/* $Id: put.c,v 1.10 2001/05/13 20:06:55 mhe Exp $
+/* $Id: put.c,v 1.11 2002/11/04 11:06:45 mhe Exp $
  *
  * put.c -- upload files
  *
@@ -187,10 +187,23 @@ static void putfile(const char *path, struct stat *sb,
 		}
 		else if(!test(opt, PUT_RESUME)) {
 			if(!put_owbatch) {
-				int a = ask(ASKYES|ASKNO|ASKUNIQUE|ASKCANCEL|ASKALL|ASKRESUME,
-							ASKRESUME,
-							_("File '%s' exists, overwrite?"),
-							shortpath(dest, 42, ftp->homedir));
+				struct tm *fan = gmtime(&sb->st_mtime);
+				time_t ft;
+				int a;
+				rfile *f;
+				char *e;
+
+				f = ftp_get_file(dest);
+				ft = ftp_filetime(f->path);
+				sb->st_mtime = gmt_mktime(fan);
+				e = xstrdup(ctime(&sb->st_mtime));
+				a = ask(ASKYES|ASKNO|ASKUNIQUE|ASKCANCEL|ASKALL|ASKRESUME,
+						ASKRESUME,
+						_("Remote file '%s' exists\nLocal: %ld bytes, %sRemote: %ld bytes, %sOverwrite?"),
+						shortpath(dest, 42, ftp->homedir),
+						sb->st_size, e ? e : "unknown date",
+						ftp_filesize(f->path), ctime(&ft));
+				xfree(e);
 				if(a == ASKCANCEL) {
 					put_quit = true;
 					xfree(dest);

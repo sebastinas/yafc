@@ -1,4 +1,4 @@
-/* $Id: get.c,v 1.12 2002/04/11 07:58:18 mhe Exp $
+/* $Id: get.c,v 1.13 2002/11/04 11:06:45 mhe Exp $
  *
  * get.c -- get file(s) from remote
  *
@@ -258,10 +258,20 @@ static int getfile(const rfile *fi, unsigned int opt,
 			}
 		} else if(!test(opt, GET_RESUME)) {
 			if(!get_owbatch && !gvSighupReceived) {
-				int a = ask(ASKYES|ASKNO|ASKUNIQUE|ASKCANCEL|ASKALL|ASKRESUME,
-							ASKRESUME,
-							_("Local file '%s' exists, overwrite?"),
-							shortpath(dest, 42, gvLocalHomeDir));
+				struct tm *fan = gmtime(&sb.st_mtime);
+				time_t ft = ftp_filetime(fi->path);
+				int a;
+				char *e;
+
+				sb.st_mtime = gmt_mktime(fan);
+				e = xstrdup(ctime(&sb.st_mtime));
+				a = ask(ASKYES|ASKNO|ASKUNIQUE|ASKCANCEL|ASKALL|ASKRESUME,
+						ASKRESUME,
+						_("Local file '%s' exists\nLocal: %ld bytes, %sRemote: %ld bytes, %sOverwrite?"),
+						shortpath(dest, 42, gvLocalHomeDir),
+						sb.st_size, e ? e : "unknown date",
+						ftp_filesize(fi->path), ctime(&ft));
+				xfree(e);
 				if(a == ASKCANCEL) {
 					get_quit = true;
 					return 0;
