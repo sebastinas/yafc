@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.17 2001/05/21 19:51:48 mhe Exp $
+/* $Id: main.c,v 1.18 2001/05/28 10:13:41 mhe Exp $
  *
  * main.c -- parses command line options and starts Yafc
  *
@@ -154,11 +154,19 @@ void init_yafc(void)
 #ifdef KRB4
 # ifdef KRB5
 	listify_string("krb4:krb5:none", gvDefaultMechanism);
+# elif defined(USE_SSL)
+	listify_string("krb4:krb5:ssl:none", gvDefaultMechanism);
 # else
 	listify_string("krb4:none", gvDefaultMechanism);
 # endif
 #elif defined(KRB5)
+# ifdef USE_SSL
+	listify_string("krb5:ssl:none", gvDefaultMechanism);
+# else
 	listify_string("krb5:none", gvDefaultMechanism);
+# endif
+#elif defined(USE_SSL)
+	listify_string("ssl", gvDefaultMechanism);
 #else
 	listify_string("none", gvDefaultMechanism);
 #endif
@@ -189,7 +197,7 @@ void init_yafc(void)
 	gvTransferString = xstrdup("%5p%% [%25v] %s/%S ETA %e %B");
 /*	gvTransferEndString = xstrdup("%-40R      %s in %t @ %b\n");*/
 
-	gvTransferXtermString = xstrdup("\e]0;yafc - (%p%%) %r\x07");
+	gvTransferXtermString = xstrdup("\x1B]0;yafc - (%p%%) %r\x07");
 
 	input_init();
 }
