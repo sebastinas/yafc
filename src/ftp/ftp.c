@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.22 2001/05/27 20:28:54 mhe Exp $
+/* $Id: ftp.c,v 1.23 2001/05/28 09:52:55 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -1725,8 +1725,10 @@ int ftp_maybe_isdir(rfile *fp)
 
 void ftp_pwd(void)
 {
-	if(ftp->ssh_pid)
-		return ssh_pwd();
+	if(ftp->ssh_pid) {
+		ssh_pwd();
+		return;
+	}
 
 	ftp_set_tmp_verbosity(vbCommand);
 	ftp_cmd("PWD");
