@@ -54,6 +54,18 @@ type: boolean
 If this option is true, IP addresses will be reverse looked up in the
 DNS for a hostname, which can be slow. Set to false to skip this.
 
+@item waiting_dots
+type: boolean
+
+If this option is true, filenames will be completed with ... while
+waiting for the directory listing to be downloaded.
+
+@item cache_timeout
+type: integer
+
+Time (in seconds) before a cached directory times out and needs to be
+reread. Set to 0 (zero) to disable the timeout.
+
 @item verbose
 type: boolean
 

@@ -1,4 +1,4 @@
-/* $Id: completion.c,v 1.8 2002/05/09 12:30:49 mhe Exp $
+/* $Id: completion.c,v 1.9 2002/11/04 14:16:13 mhe Exp $
  *
  * completion.c -- readline completion functions
  *
@@ -166,15 +166,21 @@ static char *remote_completion_function(const char *text, int state)
 			else
 				merge_fmt = "%s/%s";
 		}
-		rl_insert_text("..."); /* show dots while waiting, like ncftp */
-		rl_redisplay();
+		if(gvWaitingDots) {
+			rl_insert_text("..."); /* show dots while waiting, like ncftp */
+			rl_redisplay();
+		}
+		
 		ap = ftp_path_absolute(dir);
 		rdir = ftp_cache_get_directory(ap);
 		dir_is_cached = (rdir != 0);
 		if(!rdir)
 			rdir = ftp_read_directory(ap);
 		xfree(ap);
-		rl_do_undo(); /* remove the dots */
+
+		if(gvWaitingDots)
+			rl_do_undo(); /* remove the dots */
+
 		if(!dir_is_cached && ftp_get_verbosity() >= vbCommand)
 			rl_forced_update_display();
 

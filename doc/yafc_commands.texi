@@ -725,12 +725,12 @@ timeout (though some servers ignore it).
 @node open
 @subsection @code{open}
 
-Opens a new connection to an FTP server.
+Opens a new connection to an FTP/SSH server.
 
 Usage:  open [options]
 [proto://][user[:password]@@]hostname[:port][/directory] ...
 
-proto can be either 'ftp' or 'ssh'
+proto can be either 'ftp' or 'ssh' ('sftp' is an alias for 'ssh')
 
 Options:
 
