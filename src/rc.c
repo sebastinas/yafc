@@ -1,4 +1,4 @@
-/* $Id: rc.c,v 1.18 2002/11/06 10:31:10 mhe Exp $
+/* $Id: rc.c,v 1.19 2002/12/02 12:22:26 mhe Exp $
  *
  * rc.c -- config file parser + autologin lookup
  *
@@ -483,6 +483,9 @@ int parse_rc(const char *file, bool warn)
 		} else if(strcasecmp(e, "ascii_transfer_mask") == 0) {
 			NEXTSTR;
 			listify_string(e, gvAsciiMasks);
+		} else if(strcasecmp(e, "transfer_first_mask") == 0) {
+			NEXTSTR;
+			listify_string(e, gvTransferFirstMasks);
 		} else if(strcasecmp(e, "startup_local_directory") == 0) {
 			NEXTSTR;
 			e = tilde_expand_home(e, gvLocalHomeDir);

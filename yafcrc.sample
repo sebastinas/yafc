@@ -99,6 +99,9 @@ default_type binary # ...or ascii
 ascii_transfer_mask "README:*.html:*.htm:*.txt"
 ascii_transfer_mask "*.dsc:*.lsm:*.md5"
 
+# filename smatching any of these masks are transferred before other files
+transfer_first_mask "*.sfv:*.nfo:*.txt:README*:md5sum*:*.md5:*.diz"
+
 # beep after a 'long' command is finished
 beep_after_long_command yes
 

@@ -1,4 +1,4 @@
-/* $Id: transfer.h,v 1.3 2001/05/12 18:44:37 mhe Exp $
+/* $Id: transfer.h,v 1.4 2002/12/02 12:22:26 mhe Exp $
  *
  * transfer.h --
  *
@@ -23,6 +23,7 @@ void transfer_mail_msg(const char *fmt, ...);
 
 void add_ascii_transfer_masks(const char *str);
 bool ascii_transfer(const char *mask);
+bool transfer_first(const char *mask);
 
 extern const char *status;
 extern const char *finished_status;

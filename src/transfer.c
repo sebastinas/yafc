@@ -1,4 +1,4 @@
-/* $Id: transfer.c,v 1.8 2001/05/12 18:44:37 mhe Exp $
+/* $Id: transfer.c,v 1.9 2002/12/02 12:22:26 mhe Exp $
  *
  * transfer.c --
  *
@@ -467,6 +467,19 @@ bool ascii_transfer(const char *mask)
 	listitem *li;
 
 	li = gvAsciiMasks->first;
+	while(li) {
+		if(fnmatch((char *)li->data, mask, 0) != FNM_NOMATCH)
+			return true;
+		li = li->next;
+	}
+	return false;
+}
+
+bool transfer_first(const char *mask)
+{
+	listitem *li;
+
+	li = gvTransferFirstMasks->first;
 	while(li) {
 		if(fnmatch((char *)li->data, mask, 0) != FNM_NOMATCH)
 			return true;
