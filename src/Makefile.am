@@ -13,12 +13,12 @@ BUILT_SOURCES = yafcrc.h
 yafc_SOURCES = main.c \
    alias.c cmd.c commands.c completion.c get.c fxp.c gvars.c lglob.c \
    help.c input.c local.c login.c list.c put.c rm.c tag.c \
-   redir.c prompt.c bashline.c transfer.c rc.c set.c ltag.c bookmark.c
+   redir.c prompt.c transfer.c rc.c set.c ltag.c bookmark.c
 
 noinst_HEADERS = \
    alias.h cmd.h completion.h commands.h transfer.h \
    gvars.h help.h input.h get.h put.h lglob.h \
-   set.h syshdr.h redir.h bashline.h login.h
+   set.h syshdr.h redir.h login.h
 
 yafc_LDADD = @INTLLIBS@ ftp/libftp.a libmhe/libmhe.a ../lib/libfoo.a
 

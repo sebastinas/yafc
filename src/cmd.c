@@ -123,7 +123,7 @@ void command_loop(void)
 
 		ftp_initsigs();
 
-#if defined(HAVE_SETPROCTITLE) || defined(linux)
+#if 0 && (defined(HAVE_SETPROCTITLE) || defined(linux))
 		if(gvUseEnvString) {
 			if(ftp_connected())
 				setproctitle("%s", ftp->url->hostname);

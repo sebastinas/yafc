@@ -543,6 +543,10 @@ trying 'ftp' instead...\n", 219},
   {"Bad reply from server\n", 295},
   {"Failed to decode base64 in reply\n", 296},
   {"Password for %s:", 297},
+  {"Error importing name %s: %s\n", 298},
+  {"Error initializing security context: %s\n", 299},
+  {"Error: expected ADAT in reply\n", 300},
+  {"Unrecognized response code: %d\n", 301},
 };
 
-int _msg_tbl_length = 297;
+int _msg_tbl_length = 301;

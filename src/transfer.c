@@ -364,7 +364,7 @@ void transfer_begin_nohup(int argc, char **argv)
 	ftp_set_signal(SIGTERM, term_handler);
 	dup2(fileno(logfp), fileno(stdout));
 	dup2(fileno(logfp), fileno(stderr));
-#if defined(HAVE_SETPROCTITLE) || defined(linux)
+#if 0 && (defined(HAVE_SETPROCTITLE) || defined(linux))
 	if(gvUseEnvString)
 		setproctitle("%s, nohup, %s", ftp->url->hostname, nohup_logfile);
 #endif

@@ -132,7 +132,7 @@ static int do_the_fxp(Ftp *srcftp, const char *src,
 	else if(test(opt, FXP_BINARY))
 		type = tmBinary;
 
-#if defined(HAVE_SETPROCTITLE) || defined(linux)
+#if 0 && (defined(HAVE_SETPROCTITLE) || defined(linux))
 	if(gvUseEnvString && ftp_connected())
 		setproctitle("%s, fxp %s", srcftp->url->hostname, src);
 #endif
@@ -140,7 +140,7 @@ static int do_the_fxp(Ftp *srcftp, const char *src,
 		printf("%s\n", src);
 	}
 	r = ftp_fxpfile(srcftp, src, destftp, dest, how, type);
-#if defined(HAVE_SETPROCTITLE) || defined(linux)
+#if 0 && (defined(HAVE_SETPROCTITLE) || defined(linux))
 	if(gvUseEnvString && ftp_connected())
 		setproctitle("%s", srcftp->url->hostname);
 #endif

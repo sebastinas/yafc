@@ -126,13 +126,13 @@ static int do_the_put(const char *src, const char *dest,
 	else if(test(opt, PUT_BINARY))
 		type = tmBinary;
 
-#if defined(HAVE_SETPROCTITLE) || defined(linux)
+#if 0 && (defined(HAVE_SETPROCTITLE) || defined(linux))
 	if(gvUseEnvString && ftp_connected())
 		setproctitle("%s, put %s", ftp->url->hostname, src);
 #endif
 	r = ftp_putfile(src, dest, how, type,
 					test(opt, PUT_VERBOSE) ? transfer : 0);
-#if defined(HAVE_SETPROCTITLE) || defined(linux)
+#if 0 && (defined(HAVE_SETPROCTITLE) || defined(linux))
 	if(gvUseEnvString && ftp_connected())
 		setproctitle("%s", ftp->url->hostname);
 #endif

@@ -1,6 +1,9 @@
 New in 0.6.4
 ------------
 
+* removed lib/setproctitle.[ch] due to licensing problems
+* moved src/bashline.[ch] to lib/
+
 
 New in 0.6.3
 ------------

@@ -18,7 +18,6 @@ src/prompt.c
 src/put.c
 src/rc.c
 src/redir.c
-src/bashline.c
 src/rm.c
 src/set.c
 src/tag.c
@@ -45,4 +44,5 @@ src/libmhe/strq.c
 lib/krb4.c
 lib/security.c
 lib/kauth.c
-
+lib/bashline.c
+lib/gssapi.c

@@ -52,7 +52,7 @@ int vasprintf(char **strp, const char *format, va_list ap);
 int asprintf(char **strp, const char *format, ...);
 #endif
 
-#if !defined(HAVE_SETPROCTITLE) && defined(linux)
+#if 0 && (!defined(HAVE_SETPROCTITLE) && defined(linux))
 # include "setproctitle.h"
 #endif
 

@@ -113,7 +113,7 @@ static int do_the_get(const char *src, const char *dest,
 	getcwd(tmp, PATH_MAX);
 	fulldest = path_absolute(dest, tmp, 0);
 
-#if defined(HAVE_SETPROCTITLE) || defined(linux)
+#if 0 && (defined(HAVE_SETPROCTITLE) || defined(linux))
 	if(gvUseEnvString && ftp_connected())
 		setproctitle("%s, get %s", ftp->url->hostname, src);
 #endif
@@ -136,7 +136,7 @@ static int do_the_get(const char *src, const char *dest,
 							  src, ftp_getreply(false));
 	}
 	xfree(fulldest);
-#if defined(HAVE_SETPROCTITLE) || defined(linux)
+#if 0 && (defined(HAVE_SETPROCTITLE) || defined(linux))
 	if(gvUseEnvString && ftp_connected())
 		setproctitle("%s", ftp->url->hostname);
 #endif

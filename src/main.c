@@ -25,7 +25,9 @@
 #include "alias.h"
 #include "input.h"
 #include "cmd.h"
-#include "setproctitle.h"
+#if 0
+# include "setproctitle.h"
+#endif
 #include "completion.h"
 #include "login.h"
 #include "strq.h"
@@ -319,7 +321,7 @@ int main(int argc, char **argv, char **envp)
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
 #endif
-#if !defined(HAVE_SETPROCTITLE) && defined(linux)
+#if 0 && (!defined(HAVE_SETPROCTITLE) && defined(linux))
 	initsetproctitle(argc, argv, envp);
 #endif
 	
