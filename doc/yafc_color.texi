@@ -1,14 +1,15 @@
 @node Colors, , Aliases, Configuration
 @section Colors
 
-Escape codes can be used to display colors in the transfer strings and the prompts.
-See @ref{transfer_begin_string} and @ref{prompt1}.
+Escape codes can be used to display colors in the transfer strings and the
+prompts. All escape codes must
+be surrounded by %@{ and %@} pairse for readline to correctly wrap long lines.
 
-The built-in command @code{ls} has an option @samp{--color}. You must set the environment
-variable @var{LS_COLORS} (or @var{LS_COLOURS}) for this to work.
- See manpage for GNU ls(1) and 
-@inforef{dircolors invocation, dircolors, fileutils}, for information how to do 
-this. If you don't set LS_COLO[U]RS, you can still use the @samp{--color} 
+The built-in command @code{ls} has an option @samp{--color}. You must set the
+environment variable @var{LS_COLORS} (or @var{LS_COLOURS}) for this to work.
+See manpage for GNU ls(1) and
+@inforef{dircolors invocation, dircolors, fileutils}, for information how to
+do this. If you don't set LS_COLO[U]RS, you can still use the @samp{--color} 
 option, since Yafc provides some default settings.
 
 @menu
@@ -90,5 +91,6 @@ one of the following escape codes:
 
 @end itemize
 
-For example, the sequence @code{ESC[1;32myafc rulesESC[0m} will be the string @code{yafc rules}
-in bright green, after which the attribute is restored to normal.
+For example, the sequence @code{ESC[1;32myafc rulesESC[0m} will be the string
+@code{yafc rules} in bright green, after which the attribute is restored to
+normal.

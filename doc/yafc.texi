@@ -110,8 +110,7 @@ customize it with your favourite editor, it should be quite self-explaining if
 you read the comments.
 
 Yafc also looks for @file{~/.netrc}, and reads autologin information from
-that file. @ref{read_netrc}. This file is also used by the standard ftp
-client.
+that file. This file is also used by the standard ftp client.
 
 Yafc uses the Readline library to read commands from the terminal, and
 Readline can be configured via the @file{~/.inputrc} file. In this file
@@ -149,7 +148,7 @@ A sample inputrc file is included in the distribution.
 
 Just like creating bookmarks for web pages in a browser, you can create
 bookmarks for ftp sites in Yafc. These can later be used for
-autologin (@ref{autologin}) to that site.
+autologin to that site.
 
 When connected to an ftp site, use the @code{bookmark} command to
 create a bookmark for that site. If you logged in with a username

@@ -122,10 +122,10 @@ Invoking Yafc
 `-a'
 `--anon'
      Try an anonymous login, ie login as "anonymous" with your email
-     address as password.  Your email address is first looked for in
-     the config file (*Note anon_password::), then in the $EMAIL
-     environment variable. If it's not found, a guess is made from your
-     user- and hostname.
+     address as password. Your email address is first looked for in the
+     config file (*Note Keywords::), then in the $EMAIL environment
+     variable. If it's not found, a guess is made from your user- and
+     hostname.
 
 `-d'
 `--debug'
@@ -135,25 +135,18 @@ Invoking Yafc
 `--dump-rc'
      Prints the default configuration file to standard output.
 
-`-k'
-`--nokrb'
-     Don't try Kerberos4 authentication when logging in to the host
-     specified on the command line.
-
-`-K'
-`--krb'
-     Try Kerberos4 authentication when logging in to the host specified
-     on the command line. This will override any 'nokrb' options in
-     `yafcrc' or `bookmarks'.
+`-m'
+`--mechanism=MECH'
+     Try security mechanism MECH when logging in to the host specified
+     on the command line. This will override any 'mech' options in
+     `yafcrc' or `bookmarks'. MECH is a colon-separated string,
+     supported values are "krb4", "krb5" and "none". The mechanisms are
+     tried in the order specified.
 
 `-n'
 `--norc'
      Do not read the users configuration file. This will cause yafc to
      use its default settings.
-
-`-N'
-`--nonetrc'
-     Do not read `~/.netrc' for additional autologin information.
 
 `-p'
 `--noproxy'
@@ -175,7 +168,7 @@ Invoking Yafc
      debugging and includes every response and command Yafc
      receives/sends. If FILE is specified, use that file instead of the
      default trace file (`~/.yafc/trace/trace.pid', where pid is the
-     process id number of Yafc.) Trace files can grow quite large and
+     process id number of Yafc.)  Trace files can grow quite large and
      can safely be deleted.
 
 `-u'
@@ -196,7 +189,7 @@ Invoking Yafc
 `--wait=TIME'
      Use a different time to wait between connection attempts, in
      seconds.  This overrides the value set by `connect_wait_time' in
-     the configuration file, *Note connect_wait_time::.
+     the configuration file.
 
 `-W'
 `--workdir=DIR'
@@ -304,7 +297,7 @@ File: yafc.info,  Node: !,  Next: afslog,  Up: Yafc commands
 `!'
 ---
 
-   This is a synonym for the shell command.
+   This is a synonym for the shell (*Note shell::) command.
 
 
 File: yafc.info,  Node: afslog,  Next: alias,  Prev: !,  Up: Yafc commands
@@ -312,13 +305,15 @@ File: yafc.info,  Node: afslog,  Next: alias,  Prev: !,  Up: Yafc commands
 `afslog'
 --------
 
+   Documentation missing...
+
 
 File: yafc.info,  Node: alias,  Next: bookmark,  Prev: afslog,  Up: Yafc commands
 
 `alias'
 -------
 
-   Create an alias for a command.
+   Define an alias.
 
 
 File: yafc.info,  Node: bookmark,  Next: cache,  Prev: alias,  Up: Yafc commands
@@ -335,7 +330,7 @@ File: yafc.info,  Node: cache,  Next: cat,  Prev: bookmark,  Up: Yafc commands
    Control the directory cache.
 
    Usage:
-     cache <option(s)>
+     cache [options] [directory ...]
 
    Options:
 
@@ -349,7 +344,9 @@ File: yafc.info,  Node: cache,  Next: cat,  Prev: bookmark,  Up: Yafc commands
 
 `-t'
 `--touch'
-     Remove the current directory from the cache.
+     Remove the specified directories from the cache. If no directories
+     are given as arguments, the current directory is removed from the
+     cache.
 
 `-h'
 `--help'
@@ -361,11 +358,33 @@ File: yafc.info,  Node: cat,  Next: cd,  Prev: cache,  Up: Yafc commands
 `cat'
 -----
 
+   Print file(s) on standard output. All files are transferred in
+binary mode, so it is safe to do a `cat foo.tar.gz > bar.tar.gz'.
+
+   Usage:
+     cat [options] file ...
+
+   Options:
+
+`-h, --help'
+     Show a short help description
+
 
 File: yafc.info,  Node: cd,  Next: cdup,  Prev: cat,  Up: Yafc commands
 
 `cd'
 ----
+
+   Change remote working directory.
+
+   Usage:
+     cd [directory]
+
+   If no argument is given, `cd' changes to the home directory. The home
+directory is the current directory when logged in.
+
+   If the argument is '-', `cd' changes to the previous working
+directory.
 
 
 File: yafc.info,  Node: cdup,  Next: chmod,  Prev: cd,  Up: Yafc commands
@@ -373,11 +392,22 @@ File: yafc.info,  Node: cdup,  Next: chmod,  Prev: cd,  Up: Yafc commands
 `cdup'
 ------
 
+   Changes to parent directory. On UN*X systems, this is the same as
+`cd ..'.
+
 
 File: yafc.info,  Node: chmod,  Next: close,  Prev: cdup,  Up: Yafc commands
 
 `chmod'
 -------
+
+   Change the permission mode of remote files.
+
+   Usage:
+     chmod mode file ...
+
+   Mode must be given in octal representation (for example: 0644 is
+-rw-r-r-).
 
 
 File: yafc.info,  Node: close,  Next: copyright,  Prev: chmod,  Up: Yafc commands
@@ -385,11 +415,15 @@ File: yafc.info,  Node: close,  Next: copyright,  Prev: chmod,  Up: Yafc command
 `close'
 -------
 
+   Close active connection.
+
 
 File: yafc.info,  Node: copyright,  Next: filesize,  Prev: close,  Up: Yafc commands
 
 `copyright'
 -----------
+
+   Show copyright.
 
 
 File: yafc.info,  Node: filesize,  Next: filetime,  Prev: copyright,  Up: Yafc commands
@@ -412,95 +446,109 @@ File: yafc.info,  Node: get,  Next: help,  Prev: filetime,  Up: Yafc commands
    Transfer files from remote server to local computer.
 
    Usage:
-     get [options] file...
+     get [options] file ...
 
    Options:
 
 `-a'
 `--append'
-     append if destination exists
+     Append if destination exists.
 
 `-c PERM'
 `--chmod=PERM'
-     change mode of transferred files to PERM
+     Change mode of transferred files to PERM.
 
 `--chgrp=GROUP'
-     change group of transferred files to GROUP You need to be a member
-     of GROUP.
+     change group of transferred files to GROUP.  You need to be a
+     member of GROUP.
 
 `-d'
 `--no-dereference'
-     copy symbolic links as symbolic links
+     Copy symbolic links as symbolic links.
 
 `-D'
 `--delete-after'
-     delete remote file after successful transfer
+     Delete remote file after successful transfer.
+
+`--dir-mask=GLOB'
+     Enter only directories matching GLOB pattern.
+
+`--dir-rx-mask=REGEXP'
+     Enter only directorues matching REGEXP pattern.
 
 `-f'
 `--force'
-     overwrite existing destinations, never prompt
+     Overwrite existing destinations, never prompt.
 
 `-H'
 `--nohup'
-     transfer files in background (nohup mode), quits yafc
+     Transfer files in background (nohup mode), quits yafc.
 
 `-i'
 `--interactive'
-     prompt before each transfer
+     Prompt before each transfer.
 
 `-L FILE'
 `--logfile=FILE'
-     use FILE as logfile instead of `~/.yafc/nohup/nohup.<pid>'.
+     Use FILE as logfile instead of `~/.yafc/nohup/nohup.<pid>'.
+
+`-m GLOB'
+`--mask=GLOB'
+     Only get file matching GLOB pattern.
+
+`-M REGEXP'
+`--rx-mask=REGEXP'
+     Only get files matching REGEXP pattern.
 
 `-n'
 `--newer'
-     get file if remote is newer than local file
+     Only get file if remote is newer than local file.
 
 `-o DEST'
 `--output=DEST'
-     store in local directory DEST
+     Store in local directory DEST.
 
 `-p'
 `--preserve'
-     try to preserve file attributes and timestamps
+     Try to preserve file attributes and timestamps.
 
 `-P'
 `--parents'
-     append source path to destination
+     Append source path to destination.
 
 `-q'
 `--quiet'
-     overrides `--verbose'
+     Overrides `--verbose'.
 
 `-r'
 `--recursive'
-     get directories recursively
+     Get directories recursively.
 
 `-R'
 `--resume'
-     resume broken download (restart at eof)
+     Resume broken download (restart at EOF).
 
 `-s'
 `--skip-existing'
-     always skip existing files
+     Always skip existing files.
 
 `-t'
 `--tagged'
-     transfer tagged file(s)
+     Transfer tagged files.
 
 `--type=TYPE'
-     specify transfer type, 'ascii' or 'binary'
+     Specify transfer type, 'ascii' or 'binary'.
 
 `-u'
 `--unique'
-     always store as unique local file
+     Always store as unique local file.
 
 `-v'
 `--verbose'
-     explain what is being done
+     Explain what is being done.
 
 `--help'
-     display help
+     Show a short syntax description.
 
 
 File: yafc.info,  Node: help,  Next: idle,  Prev: get,  Up: Yafc commands
@@ -514,11 +562,15 @@ File: yafc.info,  Node: idle,  Next: kauth,  Prev: help,  Up: Yafc commands
 `idle'
 ------
 
+   Show or set the idle timeout.
+
 
 File: yafc.info,  Node: kauth,  Next: kdestroy,  Prev: idle,  Up: Yafc commands
 
 `kauth'
 -------
+
+   Authenticate to Kerberos.
 
 
 File: yafc.info,  Node: kdestroy,  Next: klist,  Prev: kauth,  Up: Yafc commands
@@ -526,11 +578,15 @@ File: yafc.info,  Node: kdestroy,  Next: klist,  Prev: kauth,  Up: Yafc commands
 `kdestroy'
 ----------
 
+   Destroy Kerberos tickets.
+
 
 File: yafc.info,  Node: klist,  Next: krbtkfile,  Prev: kdestroy,  Up: Yafc commands
 
 `klist'
 -------
+
+   Show Kerberos tickets.
 
 
 File: yafc.info,  Node: krbtkfile,  Next: lcd,  Prev: klist,  Up: Yafc commands
@@ -538,11 +594,15 @@ File: yafc.info,  Node: krbtkfile,  Next: lcd,  Prev: klist,  Up: Yafc commands
 `krbtkfile'
 -----------
 
+   Set file used for Kerberos tickets.
+
 
 File: yafc.info,  Node: lcd,  Next: list,  Prev: krbtkfile,  Up: Yafc commands
 
 `lcd'
 -----
+
+   Change local working directory.
 
 
 File: yafc.info,  Node: list,  Next: lpwd,  Prev: lcd,  Up: Yafc commands
@@ -550,11 +610,15 @@ File: yafc.info,  Node: list,  Next: lpwd,  Prev: lcd,  Up: Yafc commands
 `list'
 ------
 
+   List files.
+
 
 File: yafc.info,  Node: lpwd,  Next: ls,  Prev: list,  Up: Yafc commands
 
 `lpwd'
 ------
+
+   Print local working directory.
 
 
 File: yafc.info,  Node: ls,  Next: ltag,  Prev: lpwd,  Up: Yafc commands
@@ -562,17 +626,112 @@ File: yafc.info,  Node: ls,  Next: ltag,  Prev: lpwd,  Up: Yafc commands
 `ls'
 ----
 
+   List files.
+
+   Usage:
+     ls [options] [files ...]
+
+   Options:
+
+`-a'
+`--all'
+     Do not hide entries starting with '.'.
+
+`-A'
+
+`--almost-all'
+     As `--all', but do not list . and ..
+
+`-B'
+`--ignore-backups'
+     Do not list implied entries ending with ~.
+
+`-C'
+     List entries by columns.
+
+`--color[=WHEN]'
+     Control whether color is used to distinguish file types. WHEN may
+     be either NEVER, ALWAYS or AUTO. If WHEN is not given, default is
+     ALWAYS. If the argument is AUTO, colors will be used only if
+     output is bound to a tty.
+
+`-d'
+`--directory'
+     List directory entries instead of contents.
+
+`--dirs-first'
+     Show directories first (last with `--reverse').
+
+`-F'
+`--classify'
+     Append a character for typing each entry.
+
+`-g'
+     Ignored.
+
+`-G'
+`--no-group'
+     Inhibit display of group information.
+
+`-h'
+
+`--human-readable'
+     Print sizes in human readable format (e.g. 1K, 234M, 2G)
+
+`-l'
+     Use a long listing format.
+
+`-N'
+`--literal'
+     Print raw entry names (don't treat control characters specially)
+
+`-o'
+     Use a long listing format without group info. Same as `-lG'.
+
+`-r'
+`--reverse'
+     Reverse order while sorting.
+
+`-R'
+`--recursive'
+     List subdirectories recursively.
+
+`-S'
+     Sort by file size
+
+`-t'
+     Sort by modification time.
+
+`-U'
+     Do not sort; list entries in directory order.
+
+`-x'
+     List entries by lines instead of by columns.
+
+`-X'
+     Sort alphabetically by entry extension.
+
+`-1'
+     List one file per line.
+
+`--help'
+     Show a short syntax description.
+
 
 File: yafc.info,  Node: ltag,  Next: luntag,  Prev: ls,  Up: Yafc commands
 
 `ltag'
 ------
 
+   Tag local files.
+
 
 File: yafc.info,  Node: luntag,  Next: mkdir,  Prev: ltag,  Up: Yafc commands
 
 `luntag'
 --------
+
+   Untag local files.
 
 
 File: yafc.info,  Node: mkdir,  Next: mv,  Prev: luntag,  Up: Yafc commands
@@ -582,7 +741,8 @@ File: yafc.info,  Node: mkdir,  Next: mv,  Prev: luntag,  Up: Yafc commands
 
    Creates a remote directory (requires proper permissions.)
 
-   Usage: `mkdir <directory>'
+   Usage:
+     mkdir directory
 
 
 File: yafc.info,  Node: mv,  Next: nlist,  Prev: mkdir,  Up: Yafc commands
@@ -617,26 +777,25 @@ File: yafc.info,  Node: open,  Next: prot,  Prev: nop,  Up: Yafc commands
 
 `-a'
 `--anon'
-     try to login anonymously
+     Try to login anonymously.
 
 `-u'
 `--noauto'
-     disable autologin
+     Disable autologin.
 
 `-U'
 `--noalias'
-     disable bookmark alias lookup and abbreviation
+     Disable bookmark alias lookup and abbreviation.
 
-`-k'
-`--nokrb'
-     disable kerberos authentication
-
-`-K'
-`--krb'
-     try kerberos authentication
+`-m MECH'
+`--mechanism MECH'
+     Try security mechanism MECH when logging in. This will override any
+     'mech' options in `yafcrc' or `bookmarks'. MECH is a
+     colon-separated string, supported values are "krb4", "krb5" and
+     "none". The mechanisms are tried in the order specified.
 
 `--help'
-     display this help and exit
+     Show a short syntax description.
 
 
 File: yafc.info,  Node: prot,  Next: put,  Prev: open,  Up: Yafc commands
@@ -867,8 +1026,7 @@ customize it with your favourite editor, it should be quite
 self-explaining if you read the comments.
 
    Yafc also looks for `~/.netrc', and reads autologin information from
-that file. *Note read_netrc::. This file is also used by the standard
-ftp client.
+that file. This file is also used by the standard ftp client.
 
    Yafc uses the Readline library to read commands from the terminal,
 and Readline can be configured via the `~/.inputrc' file. In this file
@@ -892,463 +1050,299 @@ Keywords
 ========
 
    The configuration file consists of keywords with an argument,
-separated with a space. The keywords are case insensitive.
+separated with a space. There are three types of arguments: strings,
+booleans and integers.  Strings must be enclosed in quotes if they
+contains spaces. Boolean arguments can be written as 0/1, true/false of
+on/off. The keywords are case insensitive.
 
    These are the supported keywords:
 
-* Menu:
-
-* anon_password::               set password for anonymous logins
-* autologin::                   disable the autologin feature
-* quit_on_eof::                 quit Yafc on C-d (end-of-file)
-* read_netrc::                  read the ~/.netrc file for additional autologin entries
-* use_passive_mode::            use passive mode data connections
-* verbose::                     be verbose
-* debug::                       shows exactly what is going on
-* trace::                       create trace files for debugging
-* inhibit_startup_syst::        don't display system type on connect
-* use_env_string::              alter the environment strings
-* remote_completion::           complete remote filenames
-* auto_bookmark::               automate creation of bookmarks
-* auto_bookmark_save_passwd::   always save password with bookmarks
-* auto_bookmark_silent::        don't shout
-* default_type::                specify default transfer type
-* default_mechanism::           default security mechanisms to try
-* ascii_transfer_mask::         match files that always should be transferred in ascii mode
-* beep_after_long_command::     ring a bell?
-* long_command_time::           how long is a command?
-* command_timeout::             how long should Yafc wait for commands?
-* connection_timeout::          how long should Yafc wait for connect?
-* connect_attempts::            how many times to try to connect
-* connect_wait_time::           how long to wait between connection attempts
-* use_history::                 use command history?
-* history_max::                 how large should the history be?
-* startup_local_directory::     change to a local startup directory
-* nohup_mailaddress::           send mail to someone when nohup transfers finish
-* sendmail_path::               where is sendmail?
-* prompt1::                     disconnected prompt
-* prompt2::                     connected prompt
-* prompt3::                     logged in prompt
-* transfer_begin_string::       string printed before transfer
-* transfer_string::             string printed during transfer
-* transfer_end_string::         string printed after transfer
-* tilde::                       use ~ instead of `echo $HOME`
-* xterm_title1::                disconnected title for xterms
-* xterm_title2::                connected title for xterms
-* xterm_title3::                logged in title for xterms
-* xterm_title_terms::           which $TERM's are xterms?
-
-
-File: yafc.info,  Node: anon_password,  Next: autologin,  Up: Keywords
-
 `anon_password'
----------------
+     type: string
 
-   This is the password used for anonymous logins. It should be your
-email address.
-
-
-File: yafc.info,  Node: autologin,  Next: quit_on_eof,  Prev: anon_password,  Up: Keywords
+     This is the password used for anonymous logins. It should be your
+     email address.
 
 `autologin'
------------
+     type: boolean
 
-   Setting this to true will cause yafc to attempt to login
-automatically.  Information for doing this is specified by *Note
-Autologin::.
-
-
-File: yafc.info,  Node: quit_on_eof,  Next: read_netrc,  Prev: autologin,  Up: Keywords
+     Setting this to true will cause yafc to attempt to login
+     automatically.  Information for doing this is specified by *Note
+     Autologin::.
 
 `quit_on_eof'
--------------
+     type: boolean
 
-   Quits yafc on end-of-file (usually `Ctrl-D').
-
-
-File: yafc.info,  Node: read_netrc,  Next: use_passive_mode,  Prev: quit_on_eof,  Up: Keywords
+     Quits yafc on end-of-file (usually `Ctrl-D').
 
 `read_netrc'
-------------
+     type: boolean
 
-   Read additional autologin entries from `~/.netrc'.  *Note
-Autologin::.
-
-
-File: yafc.info,  Node: use_passive_mode,  Next: verbose,  Prev: read_netrc,  Up: Keywords
+     Read additional autologin entries from `~/.netrc'.  *Note
+     Autologin::.
 
 `use_passive_mode'
-------------------
+     type: boolean
 
-   If true, use passive mode data connections. You might have to do this
-if you are behind a proxy. *Note Proxy::.
-
-
-File: yafc.info,  Node: verbose,  Next: debug,  Prev: use_passive_mode,  Up: Keywords
+     If true, use passive mode data connections. You might have to do
+     this if you are behind a proxy. *Note Proxy::.
 
 `verbose'
----------
+     type: boolean
 
-   Show all replies received from remote host.
-
-
-File: yafc.info,  Node: debug,  Next: trace,  Prev: verbose,  Up: Keywords
+     Show all replies received from remote host.
 
 `debug'
--------
+     type: boolean
 
-   Show exactly what is going on. Prints all FTP commands sent to
-remote host and all replies received, including response code.
-
-
-File: yafc.info,  Node: trace,  Next: inhibit_startup_syst,  Prev: debug,  Up: Keywords
+     Show exactly what is going on. Prints all FTP commands sent to
+     remote host and all replies received, including response code.
 
 `trace'
--------
+     type: string
 
-   Create trace files in `~/.yafc/trace/trace.<pid>'.
-
-
-File: yafc.info,  Node: inhibit_startup_syst,  Next: use_env_string,  Prev: trace,  Up: Keywords
+     Create trace files in `~/.yafc/trace/trace.<pid>'.
 
 `inhibit_startup_syst'
-----------------------
+     type: boolean
 
-   Set to true to skip query of remote system on connect.
-
-
-File: yafc.info,  Node: use_env_string,  Next: remote_completion,  Prev: inhibit_startup_syst,  Up: Keywords
+     Set to true to skip query of remote system on connect.
 
 `use_env_string'
-----------------
+     type: boolean
 
-   Alter the environment strings to reflect what Yafc is doing.  This
-information can be seen with the shell command `ps'.
-
-
-File: yafc.info,  Node: remote_completion,  Next: auto_bookmark,  Prev: use_env_string,  Up: Keywords
+     Alter the environment strings to reflect what Yafc is doing.  This
+     information can be seen with the shell command `ps'.
 
 `remote_completion'
--------------------
+     type: boolean
 
-   Use tab to complete remote files. Yeahh.
-
-
-File: yafc.info,  Node: auto_bookmark,  Next: auto_bookmark_save_passwd,  Prev: remote_completion,  Up: Keywords
+     Use tab to complete remote files. Yeahh.
 
 `auto_bookmark'
----------------
+     type: yes/no/ask
 
-   If set to `yes', Yafc automatically creates a bookmarks for the site
-when the connection is closed. Setting this to `ask', makes Yafc to ask
-if to create the bookmark.
+     If set to `yes', Yafc automatically creates a bookmarks for the
+     site when the connection is closed. Setting this to `ask', makes
+     Yafc to ask if to create the bookmark.
 
-   The bookmark is given an appropriate aliases name.
+     The bookmark is given an appropriate aliases name.
 
-
-File: yafc.info,  Node: auto_bookmark_save_passwd,  Next: auto_bookmark_silent,  Prev: auto_bookmark,  Up: Keywords
+`auto_bookmark_save_password'
+     type: boolean
 
-`auto_bookmark_save_passwd'
----------------------------
+     If set to `yes', Yafc don't ask whether to save passwords in the
+     bookmarks file. Anonymous password, though, are always saved.
 
-   If set to `yes', Yafc don't ask whether to save passwords in the
-bookmarks file. Anonymous password, though, are always saved.
-
-   Passwords in the bookmarks file are stored either as clear text or
-base64-encoded. Be sure the file is not world readable (`chmod 0600
-bookmarks'.)
-
-
-File: yafc.info,  Node: auto_bookmark_silent,  Next: default_type,  Prev: auto_bookmark_save_passwd,  Up: Keywords
+     Passwords in the bookmarks file are stored either as clear text or
+     base64-encoded. Be sure the file is not world readable (`chmod
+     0600 bookmarks'.)
 
 `auto_bookmark_silent'
-----------------------
+     type: boolean
 
-   If set to `true', Yafc won't say anything about automatically
-created bookmarks.
-
-
-File: yafc.info,  Node: default_type,  Next: default_mechanism,  Prev: auto_bookmark_silent,  Up: Keywords
+     If set to `true', Yafc won't say anything about automatically
+     created bookmarks.
 
 `default_type'
---------------
+     type: string
 
-   Specifies the default type used for file transfers, either `binary'
-or `ascii'. Setting this to `ascii' can mess up binary files (ascii
-mode rewrites the end-of-line characters.)  *Note ascii_transfer_mask::.
-
-
-File: yafc.info,  Node: default_mechanism,  Next: ascii_transfer_mask,  Prev: default_type,  Up: Keywords
+     Specifies the default type used for file transfers, either
+     `binary' or `ascii'. Setting this to `ascii' can mess up binary
+     files (ascii mode rewrites the end-of-line characters).
 
 `default_mechanism'
--------------------
+     type: string
 
-   This option specifies which security mechanisms to try, in given
-order.  It is a colon-separated string, supported values are "krb4",
-"krb5" and "none".  Example: `default_mechanism "krb4:krb5"'
-
-
-File: yafc.info,  Node: ascii_transfer_mask,  Next: beep_after_long_command,  Prev: default_mechanism,  Up: Keywords
+     This option specifies which security mechanisms to try, in given
+     order.  It is a colon-separated string, supported values are
+     "krb4", "krb5" and "none".  Example: `default_mechanism
+     "krb4:krb5"'
 
 `ascii_transfer_mask'
----------------------
+     type: string
 
-   Filenames matching any of these filemasks are always transferred in
-`ascii' mode, regardless of the value of the `default_type' keyword.
-This can be overridden with the `--type' option to get/put.
+     Filenames matching any of these filemasks are always transferred
+     in `ascii' mode, regardless of the value of the `default_type'
+     keyword. This can be overridden with the `--type' option to
+     get/put.
 
-   Masks are separated by colons (eg. `*.ext1:*.ext2:filename*') and
-are case sensitive.
+     Masks are separated by colons (eg. `*.ext1:*.ext2:filename*') and
+     are case sensitive.
 
-   Preferrably used with `default_type' set to `binary'.
-
-
-File: yafc.info,  Node: beep_after_long_command,  Next: long_command_time,  Prev: ascii_transfer_mask,  Up: Keywords
+     Preferrably used with `default_type' set to `binary'.
 
 `beep_after_long_command'
--------------------------
+     type: boolean
 
-   Beep after a long command is finished. Use `long_command_time' to
-specify how long a `long' command is.
-
-
-File: yafc.info,  Node: long_command_time,  Next: command_timeout,  Prev: beep_after_long_command,  Up: Keywords
+     Beep after a long command is finished. Use `long_command_time' to
+     specify how long a `long' command is.
 
 `long_command_time'
--------------------
+     type: integer
 
-   Number of seconds for command to become `long'
-
-
-File: yafc.info,  Node: command_timeout,  Next: connection_timeout,  Prev: long_command_time,  Up: Keywords
+     Number of seconds for command to become `long'
 
 `command_timeout'
------------------
+     type: integer
 
-   How long (in seconds) before aborting a command without response.
-
-
-File: yafc.info,  Node: connection_timeout,  Next: connect_attempts,  Prev: command_timeout,  Up: Keywords
+     How long (in seconds) before aborting a command without response.
 
 `connection_timeout'
---------------------
+     type: integer
 
-   How long (in seconds) before aborting a connection without response.
-
-
-File: yafc.info,  Node: connect_attempts,  Next: connect_wait_time,  Prev: connection_timeout,  Up: Keywords
+     How long (in seconds) before aborting a connection without
+     response.
 
 `connect_attempts'
-------------------
+     type: integer
 
-   Number of times to try to re-connect if login failed (due to busy
-server.)  Use the value -1 for unlimited number of tries, and 0 to
-disable this feature.
-
-
-File: yafc.info,  Node: connect_wait_time,  Next: use_history,  Prev: connect_attempts,  Up: Keywords
+     Number of times to try to re-connect if login failed (due to busy
+     server.)  Use the value -1 for unlimited number of tries, and 0 to
+     disable this feature.
 
 `connect_wait_time'
--------------------
+     type: integer
 
-   Number of seconds to wait between connection attempts.
-
-
-File: yafc.info,  Node: use_history,  Next: history_max,  Prev: connect_wait_time,  Up: Keywords
+     Number of seconds to wait between connection attempts.
 
 `use_history'
--------------
+     type: boolean
 
-   Save and load history lines in `~/.yafc/history'.  This is a no-op
-if not compiled with Readline.
-
-
-File: yafc.info,  Node: history_max,  Next: startup_local_directory,  Prev: use_history,  Up: Keywords
+     Save and load history lines in `~/.yafc/history'.  This is a no-op
+     if not compiled with Readline.
 
 `history_max'
--------------
+     type: integer
 
-   Max number of history lines to save in the history file.  This is a
-no-op if not compiled with Readline.
-
-
-File: yafc.info,  Node: startup_local_directory,  Next: nohup_mailaddress,  Prev: history_max,  Up: Keywords
+     Max number of history lines to save in the history file.  This is
+     a no-op if not compiled with Readline.
 
 `startup_local_directory'
--------------------------
+     type: string
 
-   Yafc will change to this (local) directory upon startup.
-
-
-File: yafc.info,  Node: nohup_mailaddress,  Next: sendmail_path,  Prev: startup_local_directory,  Up: Keywords
+     Yafc will change to this (local) directory upon startup.
 
 `nohup_mailaddress'
--------------------
+     type: string
 
-   If set, Yafc sends mail to this address when nohup transfers are
-finished.  *Note Nohup transfers::.
-
-
-File: yafc.info,  Node: sendmail_path,  Next: prompt1,  Prev: nohup_mailaddress,  Up: Keywords
+     If set, Yafc sends mail to this address when nohup transfers are
+     finished.  *Note Nohup transfers::.
 
 `sendmail_path'
----------------
+     type: string
 
-   Complete path to sendmail used by `nohup_mailaddress' above.
-
-
-File: yafc.info,  Node: prompt1,  Next: prompt2,  Prev: sendmail_path,  Up: Keywords
+     Complete path to sendmail used by `nohup_mailaddress' above.
 
 `prompt1'
----------
+     type: string
 
-   not connected
+     This prompt is printed when no connection is established.
 
-   ftp prompts
+     See *Note Prompt codes::.
 
-   *Note Prompt codes::
-
-   [#] means an optional width specifier can be specified  example: %32w
-
-   you can put escape codes here, for example if you want a colored
-prompt "%{\e[01;31m%}ftp%{\e[0m%}" will be "ftp" in red, if your
-terminal supports ISO 6429 (ANSI) color codes. *Note Colors::.
-
-   The %{ and %} codes are needed for readline to correctly wrap lines
-with embedded escape codes.
-
-
-File: yafc.info,  Node: prompt2,  Next: prompt3,  Prev: prompt1,  Up: Keywords
+     You can put escape codes here, for example if you want a colored
+     prompt "%{\e[01;31m%}ftp%{\e[0m%}" will be "ftp" in red, if your
+     terminal supports ISO 6429 (ANSI) color codes. *Note Colors::.
 
 `prompt2'
----------
+     type: string
 
-   connected but not logged in.  *Note prompt1::.
-
-
-File: yafc.info,  Node: prompt3,  Next: transfer_begin_string,  Prev: prompt2,  Up: Keywords
+     connected but not logged in.
 
 `prompt3'
----------
+     type: string
 
-   connected and logged in *Note prompt1::.
-
-
-File: yafc.info,  Node: transfer_begin_string,  Next: transfer_string,  Prev: prompt3,  Up: Keywords
+     connected and logged in
 
 `transfer_begin_string'
------------------------
+     type: string
 
-   this string is printed before the actual transfer begins
+     this string is printed before the actual transfer begins
 
-   transfer status string codes these strings are printed with the
--verbose option to get/put
+     transfer status string codes these strings are printed with the
+     -verbose option to get/put
 
-   you can specify an (optional) max width between the '%' and the
-character code escape codes are recognized
+     you can specify an (optional) max width between the '%' and the
+     character code escape codes are recognized
 
-   *Note Transfer codes::
-
-
-File: yafc.info,  Node: transfer_string,  Next: transfer_end_string,  Prev: transfer_begin_string,  Up: Keywords
+     *Note Transfer codes::
 
 `transfer_string'
------------------
+     type: string
 
-   this string is printed (approx.) every second or so during the
-transfer with a trailing carriage return
-
-   *Note transfer_begin_string::.
-
-
-File: yafc.info,  Node: transfer_end_string,  Next: tilde,  Prev: transfer_string,  Up: Keywords
+     this string is printed (approx.) every second or so during the
+     transfer with a trailing carriage return
 
 `transfer_end_string'
----------------------
+     type: string
 
-   this string is printed when the transfer is finished
-
-   *Note transfer_begin_string::.
-
-
-File: yafc.info,  Node: tilde,  Next: xterm_title1,  Prev: transfer_end_string,  Up: Keywords
+     this string is printed when the transfer is finished
 
 `tilde'
--------
+     type: boolean
 
-   display ~ instead of full home directory path for various commands
-
-
-File: yafc.info,  Node: xterm_title1,  Next: xterm_title2,  Prev: tilde,  Up: Keywords
+     display ~ instead of full home directory path for various commands
 
 `xterm_title1'
---------------
+     type: string
 
-   Xterm window titles
+     Xterm window titles
 
-   same codes as for the prompts, see *Note prompt1::.
+     same codes as for the prompts, see *Note Prompt codes::.
 
-   This is an excerpt from the Xterm-title mini-HOWTO:
-     Many people find it useful to set the title of a terminal to
-     reflect dynamic information, such as the name of the host the user
-     is logged into, the current working directory, etc.
+     This is an excerpt from the Xterm-title mini-HOWTO:
+          Many people find it useful to set the title of a terminal to
+          reflect dynamic information, such as the name of the host the
+          user is logged into, the current working directory, etc.
 
-     This may be done by using XTerm escape sequences. The following
-     sequences are useful in this respect:
+          This may be done by using XTerm escape sequences. The
+          following sequences are useful in this respect:
 
-    `ESC]0;_string_BEL'
-          Set icon name and window title to _string_
+         `ESC]0;_string_BEL'
+               Set icon name and window title to _string_
 
-    `ESC]1;_string_BEL'
-          Set icon name to _string_
+         `ESC]1;_string_BEL'
+               Set icon name to _string_
 
-    `ESC]2;_string_BEL'
-          Set window title to _string_
+         `ESC]2;_string_BEL'
+               Set window title to _string_
 
-     where `ESC' is the _escape_ character (\033), and `BEL' is the
-     _bell_ character (\007).
+          where `ESC' is the _escape_ character (\033), and `BEL' is
+          the _bell_ character (\007).
 
-     _Note_: these sequences apply to most xterm derivatives, such as
-     nxterm, color-xterm and rxvt. Other terminal types often use
-     different escapes; see the appendix for examples. For the full
-     list of xterm escape sequences see the file ctlseq2.txt, which
-     comes with the xterm distribution, or xterm.seq, which comes with
-     the rxvt distribution.
+          _Note_: these sequences apply to most xterm derivatives, such
+          as nxterm, color-xterm and rxvt. Other terminal types often
+          use different escapes; see the appendix for examples. For the
+          full list of xterm escape sequences see the file ctlseq2.txt,
+          which comes with the xterm distribution, or xterm.seq, which
+          comes with the rxvt distribution.
 
-     These escapes really need to be applied every time the prompt
-     changes.  This way the string is updated with every command you
-     issue and can keep track of information such as current working
-     directory, username, hostname, etc.
+          These escapes really need to be applied every time the prompt
+          changes.  This way the string is updated with every command
+          you issue and can keep track of information such as current
+          working directory, username, hostname, etc.
 
-   Example: `xterm_title1 "\e]0Yafc\x07"' sets the xterm window title
-and icon name to `Yafc'.
-
-
-File: yafc.info,  Node: xterm_title2,  Next: xterm_title3,  Prev: xterm_title1,  Up: Keywords
+     Example: `xterm_title1 "\e]0Yafc\x07"' sets the xterm window title
+     and icon name to `Yafc'.
 
 `xterm_title2'
---------------
+     type: string
 
-   Example: `xterm_title1 "\e]0Yafc - %h\x07"' sets the xterm window
-title and icon name to `Yafc - HOSTNAME'.
-
-
-File: yafc.info,  Node: xterm_title3,  Next: xterm_title_terms,  Prev: xterm_title2,  Up: Keywords
+     Example: `xterm_title1 "\e]0Yafc - %h\x07"' sets the xterm window
+     title and icon name to `Yafc - HOSTNAME'.
 
 `xterm_title3'
---------------
+     type: string
 
-   Example: `xterm_title1 "\e]0Yafc - %u@%h:%~\x07"' sets the xterm
-window title and icon  name to `Yafc - USER@HOSTNAME:DIRECTORY'.
-
-
-File: yafc.info,  Node: xterm_title_terms,  Prev: xterm_title3,  Up: Keywords
+     Example: `xterm_title1 "\e]0Yafc - %u@%h:%~\x07"' sets the xterm
+     window title and icon  name to `Yafc - USER@HOSTNAME:DIRECTORY'.
 
 `xterm_title_terms'
--------------------
+     type: string
 
-   List of $TERM's, separated with spaces, which can handle xterm
-escape sequences.
+     List of $TERM's, separated with spaces, which can handle xterm
+     escape sequences.
 
 
 File: yafc.info,  Node: Prompt codes,  Next: Transfer codes,  Prev: Keywords,  Up: Configuration
@@ -1356,7 +1350,7 @@ File: yafc.info,  Node: Prompt codes,  Next: Transfer codes,  Prev: Keywords,  U
 Prompt codes
 ============
 
-   These codes can be used in the prompts, *Note prompt1::, to reflect
+   These codes can be used in the prompts, *Note Keywords::, to reflect
 dynamic information.  For all codes, there may be an optional minimum
 field width. This is an integer between the '%' and the code character.
 
@@ -1432,13 +1426,12 @@ File: yafc.info,  Node: Transfer codes,  Next: Autologin,  Prev: Prompt codes,  
 Transfer codes
 ==============
 
-   These codes can be used in the transfer strings, *Note
-transfer_string::.  For all codes, there may be an optional minimum
-field width. This is an integer between the '%' and the code character.
-For example will %17v be expanded to a visual progress bar with length
-17. If the field width if negative (start with a minus), the string is
-left-justified, so using %-20S will show the total size, padded with
-spaces to 20 characters.
+   These codes can be used in the transfer strings. For all codes,
+there may be an optional minimum field width. This is an integer
+between the '%' and the code character. For example will %17v be
+expanded to a visual progress bar with length 17. If the field width if
+negative (start with a minus), the string is left-justified, so using
+%-20S will show the total size, padded with spaces to 20 characters.
 
 `%r'
      source filename
@@ -1488,8 +1481,8 @@ Autologin
    Documentation missing...
 
    The autologin information is stored in much the same way as in the
-`~/.netrc' file used by stock ftp, except that the macdef option is not
-supported.
+`~/.netrc' file used by standard ftp(1), except that the macdef option
+is not supported.
 
    An entry must begin with a `machine', `default' or `local' keyword.
 
@@ -1556,10 +1549,13 @@ Autologin keywords
 
 `mech'
      List the preferred security mechanisms to use. This is the same as
-     for *Note default_mechanism::, except it is only use for this
-     machine.
+     `default_mechanism', except it is only use for this machine.
 
 `passive'
+     Boolean option requiring an argument (true/false). If true, use
+     passive mode in data transfers, regardless of the value of
+     `use_passive_mode' in the configuration file.
+
 
 File: yafc.info,  Node: Autologin examples,  Prev: Autologin keywords,  Up: Autologin
 
@@ -1569,8 +1565,8 @@ Autologin examples
 `default login anonymous'
      as default, login as 'anonymous' and prompt for password
 
-`local login MrFu'
-     login as 'MrFu' on all machines on the local network (machines w/o
+`local login mhe'
+     login as 'mhe' on all machines on the local network (machines w/o
      a '.')
 
 `machine .foo.bar.se login niels'
@@ -1589,6 +1585,11 @@ Autologin examples
 
 `machine mayer.physto.se anonymous cwd /pub/yafc alias yafc'
      login anonymously to machine mayer.physto.se with other name yafc
+
+`machine shell.stacken.kth.se login mhe mech krb4 passive yes alias stacken'
+     login as mhe using Kerberos 4 authentication, and use passive mode
+     for transfers (overrides the use_passive_mode keyword in the
+     config file)
 
 
 File: yafc.info,  Node: Aliases,  Next: Colors,  Prev: Autologin,  Up: Configuration
@@ -1644,13 +1645,6 @@ Alias examples
      the `%*' keyword. Using `$PAGER' is fine, it is expanded by the
      ordinary shell.
 
-`alias tget "untag *; tag; get --tagged --verbose --preserve"'
-     Create a new command `tget', which untags any tagged files, enters
-     the visual tag interface (if Yafc was compiled with the newt
-     library), and then transfers any tagged files to the local
-     computer (with a couple of other options).   Any options to `tget'
-     are appended at the end of the alias (to the `get' command.)
-
 `alias rels "cache --touch %*; ls -F --color %*"'
      Create a new command `rels', which flushes the directories from
      the cache before listing them. Two `%*' sequences are needed to
@@ -1663,10 +1657,11 @@ Colors
 ======
 
    Escape codes can be used to display colors in the transfer strings
-and the prompts.  See *Note transfer_begin_string:: and *Note prompt1::.
+and the prompts. All escape codes must be surrounded by %{ and %}
+pairse for readline to correctly wrap long lines.
 
    The built-in command `ls' has an option `--color'. You must set the
-environment variable LS_COLORS (or LS_COLOURS) for this to work.   See
+environment variable LS_COLORS (or LS_COLOURS) for this to work.  See
 manpage for GNU ls(1) and *note dircolors: (fileutils)dircolors
 invocation, for information how to do this. If you don't set
 LS_COLO[U]RS, you can still use the `--color' option, since Yafc
@@ -1752,7 +1747,7 @@ Bookmarks
 
    Just like creating bookmarks for web pages in a browser, you can
 create bookmarks for ftp sites in Yafc. These can later be used for
-autologin (*Note autologin::) to that site.
+autologin to that site.
 
    When connected to an ftp site, use the `bookmark' command to create
 a bookmark for that site. If you logged in with a username and
@@ -1799,115 +1794,76 @@ Node: Bugs2292
 Node: Obtaining Yafc2829
 Node: Motivation3144
 Node: Invoking Yafc3738
-Node: The shell6429
-Node: Yafc commands6994
-Node: !10121
-Node: afslog10239
-Node: alias10336
-Node: bookmark10473
-Node: cache10580
-Node: cat10992
-Node: cd11081
-Node: cdup11167
-Node: chmod11259
-Node: close11356
-Node: copyright11458
-Node: filesize11571
-Node: filetime11685
-Node: get11793
-Node: help13365
-Node: idle13457
-Node: kauth13551
-Node: kdestroy13651
-Node: klist13758
-Node: krbtkfile13863
-Node: lcd13971
-Node: list14066
-Node: lpwd14158
-Node: ls14249
-Node: ltag14336
-Node: luntag14429
-Node: mkdir14529
-Node: mv14718
-Node: nlist14807
-Node: nop14900
-Node: open14991
-Node: prot15523
-Node: put16010
-Node: pwd16099
-Node: quit16254
-Node: quote16347
-Node: rhelp16444
-Node: rm16539
-Node: rmdir16999
-Node: rstatus17096
-Node: set17198
-Node: shell17292
-Node: site17387
-Node: source17483
-Node: status17584
-Node: switch17687
-Node: system17790
-Node: tag17890
-Node: unalias17985
-Node: untag18087
-Node: url18185
-Node: user18276
-Node: version18371
-Node: warranty18477
-Node: Nohup transfers18572
-Node: Configuration19500
-Node: Keywords20974
-Node: anon_password23685
-Node: autologin23877
-Node: quit_on_eof24135
-Node: read_netrc24305
-Node: use_passive_mode24505
-Node: verbose24754
-Node: debug24912
-Node: trace25137
-Node: inhibit_startup_syst25300
-Node: use_env_string25506
-Node: remote_completion25777
-Node: auto_bookmark25968
-Node: auto_bookmark_save_passwd26344
-Node: auto_bookmark_silent26803
-Node: default_type27053
-Node: default_mechanism27407
-Node: ascii_transfer_mask27756
-Node: beep_after_long_command28270
-Node: long_command_time28551
-Node: command_timeout28759
-Node: connection_timeout28977
-Node: connect_attempts29203
-Node: connect_wait_time29513
-Node: use_history29718
-Node: history_max29949
-Node: startup_local_directory30193
-Node: nohup_mailaddress30419
-Node: sendmail_path30679
-Node: prompt130875
-Node: prompt231414
-Node: prompt331568
-Node: transfer_begin_string31730
-Node: transfer_string32177
-Node: transfer_end_string32473
-Node: tilde32710
-Node: xterm_title132895
-Node: xterm_title234477
-Node: xterm_title334717
-Node: xterm_title_terms34984
-Node: Prompt codes35191
-Node: Transfer codes36411
-Node: Autologin37402
-Node: Autologin keywords37880
-Node: Autologin examples39905
-Node: Aliases40870
-Node: Alias examples41390
-Node: Colors43359
-Node: ANSI attribute codes44023
-Node: Bookmarks45020
-Node: Kerberos45763
-Node: Proxy46462
+Node: The shell6343
+Node: Yafc commands6908
+Node: !10035
+Node: afslog10169
+Node: alias10295
+Node: bookmark10418
+Node: cache10525
+Node: cat11056
+Node: cd11379
+Node: cdup11734
+Node: chmod11905
+Node: close12166
+Node: copyright12297
+Node: filesize12430
+Node: filetime12544
+Node: get12652
+Node: help14560
+Node: idle14652
+Node: kauth14780
+Node: kdestroy14910
+Node: klist15047
+Node: krbtkfile15179
+Node: lcd15327
+Node: list15458
+Node: lpwd15566
+Node: ls15692
+Node: ltag17333
+Node: luntag17447
+Node: mkdir17570
+Node: mv17760
+Node: nlist17849
+Node: nop17942
+Node: open18033
+Node: prot18766
+Node: put19253
+Node: pwd19342
+Node: quit19497
+Node: quote19590
+Node: rhelp19687
+Node: rm19782
+Node: rmdir20242
+Node: rstatus20339
+Node: set20441
+Node: shell20535
+Node: site20630
+Node: source20726
+Node: status20827
+Node: switch20930
+Node: system21033
+Node: tag21133
+Node: unalias21228
+Node: untag21330
+Node: url21428
+Node: user21519
+Node: version21614
+Node: warranty21720
+Node: Nohup transfers21815
+Node: Configuration22743
+Node: Keywords24197
+Node: Prompt codes32378
+Node: Transfer codes33599
+Node: Autologin34564
+Node: Autologin keywords35048
+Node: Autologin examples37243
+Node: Aliases38440
+Node: Alias examples38960
+Node: Colors40525
+Node: ANSI attribute codes41231
+Node: Bookmarks42228
+Node: Kerberos42951
+Node: Proxy43650
 
 End Tag Table

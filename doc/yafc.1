@@ -14,14 +14,13 @@ Some of the features are recursive get/put/ls/rm, nohup transfers,
 colored ls, cached directory listings, autologin and bookmarks,
 powerful aliases and extensive tab completion.
 .PP
-To my knowledge, Yafc is the only ftp client that has colored ls.
-.PP
 .SH OPTIONS
 .TP
 .B -a, --anon
-Try an anonymous login, ie login as "anonymous" and prompt for
-password.  Your email address (or password set in the config file with
-"anon_password") is printed as default. Press enter to accept it.
+Try an anonymous login, ie login as "anonymous" with your email address as
+password. Your email address is first looked for in the config file
+("anon_password"), then in the $EMAIL environment variable. If it's not
+found, a guess is made from your user- and hostname.
 .TP
 .B -d, --debug
 Print all messages sent to/from server.
@@ -29,12 +28,12 @@ Print all messages sent to/from server.
 .B -D, --dump-rc
 Prints the default configuration file to standard output.
 .TP
-.B -k, --nokrb
-Don't try Kerberos4 authentication when logging in to the host specified on the command line.
-.TP
-.B -K, --krb
-Try Kerberos4 authentication when logging in to the host specified on the
-command line. This will override any 'nokrb' options in \fIyafcrc\fP or \fIbookmarks\fP.
+.B -m \fIMECH\fP, --mechanism=\fIMECH\fP
+Try security mechanism MECH when logging in to the host specified on the
+command line. This will override any 'mech' options in \fIyafcrc\fP or
+\fIbookmarks\fP. MECH is a colon-separated string,
+supported values are "krb4", "krb5" and "none". The mechanisms are tried in
+the order specified.
 .TP
 .B -n, --norc
 Do not read the users configuration file. This will cause yafc to use its default settings.
@@ -42,9 +41,6 @@ Do not read the users configuration file. This will cause yafc to use its defaul
 .B -p, --noproxy
 Do not connect via the proxy. This should be used if connection to a host on
 the local network.
-.TP
-.B -N, --nonetrc
-Do not read \fI~/.netrc\fP for additional autologin information.
 .TP
 .B -q, --quiet
 Do not print the welcome message with copyright information when starting Yafc.
@@ -67,6 +63,15 @@ As ---noauto, but bookmark aliases is disabled (for host on command line).
 .TP
 .B -v, --verbose
 Print all responses received (without response code.)
+.TP
+.B -w, --wait=\fITIME\fP
+Use a different time to wait between connection attempts, in seconds.
+This overrides the value set by "connect_wait_time" in the configuration
+file.
+.TP
+.B -W, --workdir=\fIDIR\fP
+Use a different working directory for configuration files and
+temporary files. Default is \fI~/.yafc\fP.
 .TP
 .B -V, --version
 Print version information on stdout and exit successfully.

@@ -4,10 +4,11 @@
 Documentation missing...
 
 The autologin information is stored in much the same way as in the
-@file{~/.netrc} file used by stock ftp, except that the macdef option
+@file{~/.netrc} file used by standard ftp(1), except that the macdef option
 is not supported.
 
-An entry must begin with a @code{machine}, @code{default} or @code{local} keyword.
+An entry must begin with a @code{machine}, @code{default} or @code{local}
+keyword.
 
 @menu
 * Autologin keywords::          keywords for autologin
@@ -72,10 +73,12 @@ This is a no-op if not compiled with Kerberos.
 
 @item mech
 List the preferred security mechanisms to use. This is the same as
-for @xref{default_mechanism}, except it is only use for this machine.
+@code{default_mechanism}, except it is only use for this machine.
 
 @item passive
-
+Boolean option requiring an argument (true/false). If true, use passive
+mode in data transfers, regardless of the value of @code{use_passive_mode}
+in the configuration file.
 
 @end table
 
@@ -89,8 +92,8 @@ for @xref{default_mechanism}, except it is only use for this machine.
 @item default login anonymous
 as default, login as 'anonymous' and prompt for password
 
-@item local login MrFu
-login as 'MrFu' on all machines on the local network (machines w/o a '.')
+@item local login mhe
+login as 'mhe' on all machines on the local network (machines w/o a '.')
 
 @item machine .foo.bar.se login niels
 login as 'niels' on all hosts on .foo.bar.se domain
@@ -107,5 +110,9 @@ anon_password, connect on non-standard port 4711
 
 @item machine mayer.physto.se anonymous cwd /pub/yafc alias yafc
 login anonymously to machine mayer.physto.se with other name yafc
+
+@item machine shell.stacken.kth.se login mhe mech krb4 passive yes alias stacken
+login as mhe using Kerberos 4 authentication, and use passive mode for
+transfers (overrides the use_passive_mode keyword in the config file)
 
 @end table

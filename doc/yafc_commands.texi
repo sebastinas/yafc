@@ -67,17 +67,17 @@ short syntax description.
 @c -----------------------------------------------------
 @node !
 @subsection @code{!}
-This is a synonym for the shell command.
+This is a synonym for the shell (@ref{shell}) command.
 
 @c -----------------------------------------------------
 @node afslog
 @subsection @code{afslog}
+Documentation missing...
 
 @c -----------------------------------------------------
 @node alias
 @subsection @code{alias}
-
-Create an alias for a command. 
+Define an alias.
 
 @c -----------------------------------------------------
 @node bookmark
@@ -91,7 +91,7 @@ Control the directory cache.
 
 Usage:
 @example
-cache <option(s)>
+cache [options] [directory ...]
 @end example
 
 Options:
@@ -108,7 +108,8 @@ List the contents of the directory cache.
 
 @item  -t
 @itemx --touch
-Remove the current directory from the cache.
+Remove the specified directories from the cache. If no directories are
+given as arguments, the current directory is removed from the cache.
 
 @item  -h
 @itemx --help
@@ -119,26 +120,62 @@ Show a short help description.
 @c -----------------------------------------------------
 @node cat
 @subsection @code{cat}
+Print file(s) on standard output. All files are transferred in binary mode, so
+it is safe to do a @code{cat foo.tar.gz > bar.tar.gz}.
+
+Usage:
+@example
+cat [options] file ...
+@end example
+
+Options:
+
+@table @samp
+@item -h, --help
+Show a short help description
+@end table
 
 @c -----------------------------------------------------
 @node cd
 @subsection @code{cd}
+Change remote working directory.
+
+Usage:
+@example
+cd [directory]
+@end example
+
+If no argument is given, @code{cd} changes to the home directory. The home
+directory is the current directory when logged in.
+
+If the argument is '-', @code{cd} changes to the previous working directory.
 
 @c -----------------------------------------------------
 @node cdup
 @subsection @code{cdup}
+Changes to parent directory. On UN*X systems, this is the same as @code{cd ..}.
 
 @c -----------------------------------------------------
 @node chmod
 @subsection @code{chmod}
+Change the permission mode of remote files.
+
+Usage:
+@example
+chmod mode file ...
+@end example
+
+Mode must be given in octal representation (for example: 0644 is -rw-r--r--).
 
 @c -----------------------------------------------------
 @node close
 @subsection @code{close}
+Close active connection.
 
 @c -----------------------------------------------------
 @node copyright
 @subsection @code{copyright}
+Show copyright.
 
 @c -----------------------------------------------------
 @node filesize
@@ -156,7 +193,7 @@ Transfer files from remote server to local computer.
 
 Usage:
 @example
-get [options] file...
+get [options] file ...
 @end example
 
 Options:
@@ -165,89 +202,103 @@ Options:
 
 @item  -a
 @itemx --append
-append if destination exists
+Append if destination exists.
 
 @item -c @var{PERM}
 @itemx --chmod=@var{PERM}
-change mode of transferred files to PERM
+Change mode of transferred files to PERM.
 
 @item --chgrp=@var{GROUP}
-change group of transferred files to GROUP
+change group of transferred files to GROUP.
 You need to be a member of GROUP.
 
 @item -d
 @itemx --no-dereference
-copy symbolic links as symbolic links
+Copy symbolic links as symbolic links.
 
 @item -D
 @itemx --delete-after
-delete remote file after successful transfer
+Delete remote file after successful transfer.
+
+@item --dir-mask=@var{GLOB}
+Enter only directories matching GLOB pattern.
+
+@item --dir-rx-mask=@var{REGEXP}
+Enter only directorues matching REGEXP pattern.
 
 @item -f
 @itemx --force
-overwrite existing destinations, never prompt
+Overwrite existing destinations, never prompt.
 
 @item -H
 @itemx --nohup
-transfer files in background (nohup mode), quits yafc
+Transfer files in background (nohup mode), quits yafc.
 
 @item -i
 @itemx --interactive
-prompt before each transfer
+Prompt before each transfer.
 
 @item -L @var{FILE}
 @itemx --logfile=@var{FILE}
-use @var{FILE} as logfile instead of @file{~/.yafc/nohup/nohup.<pid>}.
+Use @var{FILE} as logfile instead of @file{~/.yafc/nohup/nohup.<pid>}.
+
+@item -m @var{GLOB}
+@itemx --mask=@var{GLOB}
+Only get file matching GLOB pattern.
+
+@item -M @var{REGEXP}
+@itemx --rx-mask=@var{REGEXP}
+Only get files matching REGEXP pattern.
 
 @item -n
 @itemx --newer
-get file if remote is newer than local file
+Only get file if remote is newer than local file.
 
 @item -o @var{DEST}
 @itemx --output=@var{DEST}
-store in local directory @var{DEST}
+Store in local directory @var{DEST}.
 
 @item -p
 @itemx --preserve
-try to preserve file attributes and timestamps
+Try to preserve file attributes and timestamps.
 
 @item -P
 @itemx --parents
-append source path to destination
+Append source path to destination.
 
 @item -q
 @itemx --quiet
-overrides @samp{--verbose}
+Overrides @samp{--verbose}.
 
 @item -r
 @itemx --recursive
-get directories recursively
+Get directories recursively.
 
 @item -R
 @itemx --resume
-resume broken download (restart at eof)
+Resume broken download (restart at EOF).
 
 @item -s
 @itemx --skip-existing
-always skip existing files
+Always skip existing files.
 
 @item -t
 @itemx --tagged
-transfer tagged file(s)
+Transfer tagged files.
 
 @item --type=@var{TYPE}
-specify transfer type, 'ascii' or 'binary'
+Specify transfer type, 'ascii' or 'binary'.
 
 @item -u
 @itemx --unique
-always store as unique local file
+Always store as unique local file.
 
 @item -v
 @itemx --verbose
-explain what is being done
+Explain what is being done.
 
 @item --help
-display help
+Show a short syntax description.
 
 @end table
 
@@ -258,54 +309,160 @@ display help
 @c -----------------------------------------------------
 @node idle
 @subsection @code{idle}
+Show or set the idle timeout.
 
 @c -----------------------------------------------------
 @node kauth
 @subsection @code{kauth}
+Authenticate to Kerberos.
 
 @c -----------------------------------------------------
 @node kdestroy
 @subsection @code{kdestroy}
+Destroy Kerberos tickets.
 
 @c -----------------------------------------------------
 @node klist
 @subsection @code{klist}
+Show Kerberos tickets.
 
 @c -----------------------------------------------------
 @node krbtkfile
 @subsection @code{krbtkfile}
+Set file used for Kerberos tickets.
 
 @c -----------------------------------------------------
 @node lcd
 @subsection @code{lcd}
+Change local working directory.
 
 @c -----------------------------------------------------
 @node list
 @subsection @code{list}
+List files.
 
 @c -----------------------------------------------------
 @node lpwd
 @subsection @code{lpwd}
+Print local working directory.
 
 @c -----------------------------------------------------
 @node ls
 @subsection @code{ls}
+List files.
+
+Usage:
+@example
+ls [options] [files ...]
+@end example
+
+Options:
+
+@table @samp
+
+@item -a
+@itemx --all
+Do not hide entries starting with '.'.
+
+@item -A
+@item --almost-all
+As @samp{--all}, but do not list . and ..
+
+@item -B
+@itemx --ignore-backups
+Do not list implied entries ending with ~.
+
+@item -C
+List entries by columns.
+
+@item --color[=@var{WHEN}]
+Control whether color is used to distinguish file types. @var{WHEN} may be
+either @var{never}, @var{always} or @var{auto}. If @var{WHEN} is not given,
+default is @var{always}. If the argument is @var{auto}, colors will be used
+only if output is bound to a tty.
+
+@item -d
+@itemx --directory
+List directory entries instead of contents.
+
+@item --dirs-first
+Show directories first (last with @samp{--reverse}).
+
+@item -F
+@itemx --classify
+Append a character for typing each entry.
+
+@item -g
+Ignored.
+
+@item -G
+@itemx --no-group
+Inhibit display of group information.
+
+@item -h
+@item --human-readable
+Print sizes in human readable format (e.g. 1K, 234M, 2G)
+
+@item -l
+Use a long listing format.
+
+@item -N
+@itemx --literal
+Print raw entry names (don't treat control characters specially)
+
+@item -o
+Use a long listing format without group info. Same as @samp{-lG}.
+
+@item -r
+@itemx --reverse
+Reverse order while sorting.
+
+@item -R
+@itemx --recursive
+List subdirectories recursively.
+
+@item -S
+Sort by file size
+
+@item -t
+Sort by modification time.
+
+@item -U
+Do not sort; list entries in directory order.
+
+@item -x
+List entries by lines instead of by columns.
+
+@item -X
+Sort alphabetically by entry extension.
+
+@item -1
+List one file per line.
+
+@item --help
+Show a short syntax description.
+
+@end table
 
 @c -----------------------------------------------------
 @node ltag
 @subsection @code{ltag}
+Tag local files.
 
 @c -----------------------------------------------------
 @node luntag
 @subsection @code{luntag}
+Untag local files.
 
 @c -----------------------------------------------------
 @node mkdir
 @subsection @code{mkdir}
-
 Creates a remote directory (requires proper permissions.)
 
-Usage: @code{mkdir <directory>}
+Usage:
+@example
+mkdir directory
+@end example
 
 @c -----------------------------------------------------
 @node mv
@@ -333,26 +490,25 @@ Options:
 
 @item -a
 @itemx --anon
-try to login anonymously
+Try to login anonymously.
 
 @item -u
 @itemx --noauto
-disable autologin
+Disable autologin.
 
 @item -U
 @itemx --noalias
-disable bookmark alias lookup and abbreviation
+Disable bookmark alias lookup and abbreviation.
 
-@item -k
-@itemx --nokrb
-disable kerberos authentication
-
-@item -K
-@itemx --krb
-try kerberos authentication
+@item -m @var{MECH}
+@itemx --mechanism @var{MECH}
+Try security mechanism @var{MECH} when logging in. This will override any
+'mech' options in @file{yafcrc} or @file{bookmarks}. @var{MECH} is a
+colon-separated string, supported values are "krb4", "krb5" and "none". The
+mechanisms are tried in the order specified.
 
 @item --help
-display this help and exit
+Show a short syntax description.
 
 @end table
 
