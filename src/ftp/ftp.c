@@ -187,10 +187,10 @@ void ftp_reset_vars(void)
 		ftp->ssh_pid = 0;
 		close(ftp->ssh_in);
 		close(ftp->ssh_out);
-		xfree(ftp->ssh_args);
-		ftp->ssh_args = 0;
 		ftp->ssh_id = 0;
 	}
+	xfree(ftp->ssh_args);
+	ftp->ssh_args = 0;
 
 	url_destroy(ftp->url);
 	ftp->url = 0;
@@ -301,6 +301,9 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
 	}
 	urlp->port = ntohs(ftp->host->port);
 
+	fprintf(stderr, "\r");
+	ftp_trace("\n");
+
 	if(urlp->protocol && strcmp(urlp->protocol, "ssh") == 0) {
 		int ret = ssh_open_url(urlp);
 		alarm(0);
@@ -314,8 +317,6 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
 		url_setprotocol(urlp, 0);
 	}
 
-	fprintf(stderr, "\r");
-	ftp_trace("\n");
 	if(use_proxy) {
 		ftp_err(_("Connecting to proxy %s (%s) at port %d...\n"),
 				ftp->host->ohostname, ftp->host->ipnum,
