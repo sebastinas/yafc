@@ -34,6 +34,10 @@
  * SUCH DAMAGE. 
  */
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #ifdef FTP_SERVER
 #include "ftpd_locl.h"
 #else
@@ -41,9 +45,34 @@
 #include "ftp.h"
 #include "base64.h"
 #endif
-#include <gssapi.h>
 
-/*RCSID("$Id: gssapi.c,v 1.3 2000/10/20 06:54:49 mhe Exp $");*/
+#ifdef HAVE_GSSAPI_H
+# include <gssapi.h>
+#elif HAVE_GSSAPI_GSSAPI_H
+# include <gssapi/gssapi.h>
+/* if we have gssapi/gssapi.h it might be safe to assume we have the other
+ * two that are part of MIT's krb5 as well, but this will work even if they
+ * one day do away with one of those two header files.
+ */
+# ifdef HAVE_GSSAPI_GSSAPI_GENERIC_H
+#   include <gssapi/gssapi_generic.h>
+# endif
+# ifdef HAVE_GSSAPI_GSSAPI_KRB5_H
+#   include <gssapi/gssapi_krb5.h>
+# endif
+#else
+# error "Need gssapi.h from either Heimdal or MIT krb5"
+#endif
+
+/*
+ * This is a hack, to work around the fact that Heimdal and MIT diverge
+ * on what this particular symbol is called.
+ */
+#ifdef KRB5_MIT
+# define GSS_C_NT_HOSTBASED_SERVICE gss_nt_service_name
+#endif
+
+/*RCSID("$Id: gssapi.c,v 1.4 2001/04/27 14:16:47 mhe Exp $");*/
 
 struct gss_data {
     gss_ctx_id_t context_hdl;
