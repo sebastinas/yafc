@@ -3,10 +3,7 @@
 
 These codes can be used in the prompts, @xref{prompt1}, to reflect dynamic information.
 For all codes, there may be an optional minimum field width. This is an integer between
-the '%' and the code character. For example will %17v be expanded to a visual
-progress bar with length 17. If the field width if negative (start with a minus), the
-string is left-justified, so using %-20S will show the total size, padded with spaces
-to 20 characters.
+the '%' and the code character.
 
 @table @samp
 

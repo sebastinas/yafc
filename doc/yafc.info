@@ -1359,10 +1359,6 @@ Prompt codes
    These codes can be used in the prompts, *Note prompt1::, to reflect
 dynamic information.  For all codes, there may be an optional minimum
 field width. This is an integer between the '%' and the code character.
-For example will %17v be expanded to a visual progress bar with length
-17. If the field width if negative (start with a minus), the string is
-left-justified, so using %-20S will show the total size, padded with
-spaces to 20 characters.
 
 `%u'
      username
@@ -1902,16 +1898,16 @@ Node: xterm_title234477
 Node: xterm_title334717
 Node: xterm_title_terms34984
 Node: Prompt codes35191
-Node: Transfer codes36647
-Node: Autologin37638
-Node: Autologin keywords38116
-Node: Autologin examples40141
-Node: Aliases41106
-Node: Alias examples41626
-Node: Colors43595
-Node: ANSI attribute codes44259
-Node: Bookmarks45256
-Node: Kerberos45999
-Node: Proxy46698
+Node: Transfer codes36411
+Node: Autologin37402
+Node: Autologin keywords37880
+Node: Autologin examples39905
+Node: Aliases40870
+Node: Alias examples41390
+Node: Colors43359
+Node: ANSI attribute codes44023
+Node: Bookmarks45020
+Node: Kerberos45763
+Node: Proxy46462
 
 End Tag Table
