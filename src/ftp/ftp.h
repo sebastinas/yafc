@@ -1,4 +1,4 @@
-/* $Id: ftp.h,v 1.12 2001/05/28 09:53:21 mhe Exp $
+/* $Id: ftp.h,v 1.13 2001/05/28 14:22:17 mhe Exp $
  *
  * ftp.h -- lower level FTP stuff
  *
@@ -81,7 +81,8 @@ typedef enum {
 	ltUnknown,
 	ltUnix,
 	ltDos,
-	ltEplf
+	ltEplf,
+	ltMlsd
 } LIST_t;
 
 typedef enum {
@@ -148,6 +149,7 @@ typedef struct Ftp
 	bool has_stou_command;
 	bool has_site_chmod_command;
 	bool has_site_idle_command;
+	bool has_mlsd_command;
 
 	long restart_offset;  /* next transfer will be restarted at this offset */
 
@@ -275,6 +277,8 @@ time_t gmt_mktime(const struct tm *ts);
  */
 int ftp_maybe_isdir(rfile *fp);
 void ftp_pwd(void);
+char *perm2string(int perm);
+void ftp_get_feat(void);
 
 /* in lscolors.h */
 void init_colors(void);

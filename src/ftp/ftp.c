@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.23 2001/05/28 09:52:55 mhe Exp $
+/* $Id: ftp.c,v 1.24 2001/05/28 14:21:48 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -201,6 +201,7 @@ void ftp_reset_vars(void)
 	ftp->has_stou_command = true;
 	ftp->has_site_chmod_command = true;
 	ftp->has_site_idle_command = true;
+	ftp->has_mlsd_command = true;
 
 	list_free(ftp->dirs_to_flush);
 	ftp->dirs_to_flush = list_new((listfunc)xfree);
@@ -1026,6 +1027,7 @@ int ftp_login(const char *guessed_username, const char *anonpass)
 		ftp->prevdir = xstrdup(ftp->homedir);
 		if(ftp->url->directory)
 			ftp_chdir(ftp->url->directory);
+		ftp_get_feat();
 		return 0;
 	}
 	if(ftp->code == ctTransient)
@@ -1338,7 +1340,13 @@ rdirectory *ftp_read_directory(const char *path)
 			goto failed;
 	}
 
-	_failed = (ftp_list("LIST", 0, fp) != 0);
+	if(ftp->has_mlsd_command) {
+		_failed = (ftp_list("MLSD", 0, fp) != 0);
+		if(_failed && ftp->code == ctError)
+			ftp->has_mlsd_command = false;
+	}
+	if(!ftp->has_mlsd_command)
+		_failed = (ftp_list("LIST", 0, fp) != 0);
 
 	if(!is_curdir) {
 		ftp_cmd("CWD %s", ftp->curdir);
@@ -1732,4 +1740,53 @@ void ftp_pwd(void)
 
 	ftp_set_tmp_verbosity(vbCommand);
 	ftp_cmd("PWD");
+}
+
+
+char *perm2string(int perm)
+{
+	char *attr = (char *)xmalloc(11);
+
+	strcpy(attr, "----------");
+
+	if(S_ISDIR(perm))
+		attr[0] = 'd';
+	else if(S_ISLNK(perm))
+		attr[0] = 'l';
+	else if(S_ISCHR(perm))
+		attr[0] = 'c';
+	else if(S_ISBLK(perm))
+		attr[0] = 'b';
+	else if(S_ISFIFO(perm))
+		attr[0] = 'p';
+	else if(S_ISSOCK(perm))
+		attr[0] = 's';
+
+	if(test(perm, S_IRUSR)) attr[1] = 'r';
+	if(test(perm, S_IWUSR)) attr[2] = 'w';
+	if(test(perm, S_IXUSR)) {
+		if(test(perm, S_ISUID)) attr[3] = 's';
+		else attr[3] = 'x';
+	} else if(test(perm, S_ISUID)) attr[3] = 'S';
+
+	if(test(perm, S_IRGRP)) attr[4] = 'r';
+	if(test(perm, S_IWGRP)) attr[5] = 'w';
+	if(test(perm, S_IXGRP)) {
+		if(test(perm, S_ISGID)) attr[6] = 's';
+		else attr[6] = 'x';
+	} else if(test(perm, S_ISGID)) attr[6] = 'S';
+
+	if(test(perm, S_IROTH)) attr[7] = 'r';
+	if(test(perm, S_IWOTH)) attr[8] = 'w';
+	if(test(perm, S_IXOTH)) {
+		if(test(perm, S_ISVTX)) attr[9] = 't';
+		else attr[9] = 'x';
+	} else if(test(perm, S_ISVTX)) attr[9] = 'T';
+
+	return attr;
+}
+
+void ftp_get_feat(void)
+{
+/*	ftp_cmd("FEAT");*/
 }
