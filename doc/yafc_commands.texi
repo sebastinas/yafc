@@ -84,6 +84,7 @@ Define an alias.
 @c -----------------------------------------------------
 @node bookmark
 @subsection @code{bookmark}
+Documentation missing...
 
 @c -----------------------------------------------------
 @node cache

@@ -5,8 +5,8 @@ Just like creating bookmarks for web pages in a browser, you can create
 bookmarks for ftp sites in Yafc. These can later be used for
 autologin to that site.
 
-When connected to an ftp site, use the @code{bookmark} command to
-create a bookmark for that site. If you logged in with a username
+When connected to an ftp site, use the @code{bookmark} command (@ref{bookmark})
+to create a bookmark for that site. If you logged in with a username
 and password, Yafc will ask if you want to save the password in
 the bookmarks file. If you do, be sure it isn't world readable.
 By using the @code{auto_bookmark} keyword in the configuration
@@ -102,29 +102,33 @@ in the configuration file.
 @table @code
 
 @item default login anonymous
-as default, login as 'anonymous' and prompt for password
+As default, login as 'anonymous' and prompt for password
+
+@item default anonymous
+As default, login as 'anonymous' and automatically supply your email
+address as password.
 
 @item local login mhe
-login as 'mhe' on all machines on the local network (machines w/o a '.')
+Login as 'mhe' on all machines on the local network (machines w/o a '.')
 
 @item machine .foo.bar.se login niels
-login as 'niels' on all hosts on .foo.bar.se domain
+Login as 'niels' on all hosts on .foo.bar.se domain
 
 @item machine dent.foo.bar.se login slartibartfast cwd ~/fjord
-login as 'slartibartfast' on dent.foo.bar.se and start in directory ~/fjord
+Login as 'slartibartfast' on dent.foo.bar.se and start in directory ~/fjord
 
 @item machine slartibartfast@@dent.foo.bar.se/fjord
-identical to the example above, but using an ftp URL instead
+Identical to the example above, but using an ftp URL instead
 
 @item machine ftp.gurka.com:4711 anonymous
-login as 'anonymous' and automagically supply password from
+Login as 'anonymous' and automagically supply password from
 anon_password, connect on non-standard port 4711
 
 @item machine mayer.physto.se anonymous cwd /pub/yafc alias yafc
-login anonymously to machine mayer.physto.se with other name yafc
+Login anonymously to machine mayer.physto.se with other name yafc
 
 @item machine shell.stacken.kth.se login mhe mech krb4 passive yes alias stacken
-login as mhe using Kerberos 4 authentication, and use passive mode for
+Login as mhe using Kerberos 4 authentication, and use passive mode for
 transfers (overrides the use_passive_mode keyword in the config file)
 
 @end table

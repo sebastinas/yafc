@@ -37,7 +37,7 @@ Read additional autologin entries from @file{~/.netrc}.
 type: boolean
 
 If true, use passive mode data connections. You might have to do this
-if you are behind a proxy. @ref{Proxy}.
+if you are behind a proxy.
 
 @item verbose
 type: boolean

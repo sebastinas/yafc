@@ -1,9 +1,9 @@
 @node Prompt codes, Transfer codes, Keywords, Configuration
 @section Prompt codes
 
-These codes can be used in the prompts, @xref{Keywords}, to reflect dynamic information.
-For all codes, there may be an optional minimum field width. This is an integer between
-the '%' and the code character.
+These codes can be used in the prompts, @ref{Keywords}, to reflect dynamic
+information. For all codes, there may be an optional minimum field width.
+This is an integer between the '%' and the code character.
 
 @table @samp
 
@@ -75,6 +75,12 @@ character 0x## (hex)
 
 @end table
 
+Example:
+
+@example
+prompt3 "(%C) %@{\e[1%@}myafc%@{\e[0m%@} %u@@%h:%42~> "
+@end example
+
 @c ===========================================================
 @node Transfer codes, Aliases, Prompt codes, Configuration
 @section Transfer codes
@@ -128,3 +134,9 @@ time elapsed
 visual progress bar
 
 @end table
+
+Example:
+
+@example
+transfer_string "%5p%% [%@{\e[32m%@}%25v%@{\e[0m%@}] %s/%S ETA %@{\e[32m%@}%e%@{\e[0m%@} %B"
+@end example

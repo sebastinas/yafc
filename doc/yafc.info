@@ -35,7 +35,6 @@ protocol.  This document applies to version 0.6.5.
 * Configuration::               How to configure Yafc
 * Bookmarks::
 * Kerberos::                    How Yafc uses Kerberos
-* Proxy::                       Proxy support
 
 
 File: yafc.info,  Node: Overview,  Next: Invoking Yafc,  Prev: Top,  Up: Top
@@ -150,7 +149,7 @@ Invoking Yafc
 
 `-p'
 `--noproxy'
-     Do not connect via the proxy. This should be used if connection to
+     Do not connect via the proxy. This should be used if connecting to
      a host on the local network.
 
 `-q'
@@ -178,8 +177,7 @@ Invoking Yafc
 
 `-U'
 `--noalias'
-     As --noauto, but bookmark aliases is disabled (for host on command
-     line).
+     As --noauto, but bookmark aliases is disabled.
 
 `-v'
 `--verbose'
@@ -322,6 +320,8 @@ File: yafc.info,  Node: bookmark,  Next: cache,  Prev: alias,  Up: Yafc commands
 
 `bookmark'
 ----------
+
+   Documentation missing...
 
 
 File: yafc.info,  Node: cache,  Next: cat,  Prev: bookmark,  Up: Yafc commands
@@ -471,10 +471,11 @@ connection on the target host. The source host is the current active
 host, the target host must be specified using the `--target=HOST'
 option.
 
-   This will not always work, either because passive mode is not
-supported on the source host, or because the target refuses the given
-port. The target ftp server might refuse the port as a security policy.
-You might get the error 'Illegal PORT Command' or 'Possible port theft'.
+   This will not always work with all ftp servers, either because
+passive mode is not supported on the source host, or because the target
+refuses the given port.  The target ftp server might refuse the port as
+a security policy. You might get the error 'Illegal PORT Command' or
+'Possible port theft'.
 
    If the destination file already exists, and none of the options
 `--append', `--force', `--newer', `--resume', `--skip-existing' or
@@ -1428,7 +1429,7 @@ on/off. The keywords are case insensitive.
      type: boolean
 
      If true, use passive mode data connections. You might have to do
-     this if you are behind a proxy. *Note Proxy::.
+     this if you are behind a proxy.
 
 `verbose'
      type: boolean
@@ -1709,8 +1710,8 @@ Prompt codes
 ============
 
    These codes can be used in the prompts, *Note Keywords::, to reflect
-dynamic information.  For all codes, there may be an optional minimum
-field width. This is an integer between the '%' and the code character.
+dynamic information. For all codes, there may be an optional minimum
+field width.  This is an integer between the '%' and the code character.
 
 `%u'
      username
@@ -1778,6 +1779,10 @@ field width. This is an integer between the '%' and the code character.
 `\x##'
      character 0x## (hex)
 
+   Example:
+
+     prompt3 "(%C) %{\e[1%}myafc%{\e[0m%} %u@%h:%42~> "
+
 
 File: yafc.info,  Node: Transfer codes,  Next: Aliases,  Prev: Prompt codes,  Up: Configuration
 
@@ -1829,6 +1834,10 @@ negative (start with a minus), the string is left-justified, so using
 
 `%v'
      visual progress bar
+
+   Example:
+
+     transfer_string "%5p%% [%{\e[32m%}%25v%{\e[0m%}] %s/%S ETA %{\e[32m%}%e%{\e[0m%} %B"
 
 
 File: yafc.info,  Node: Aliases,  Next: Colors,  Prev: Transfer codes,  Up: Configuration
@@ -1988,12 +1997,12 @@ Bookmarks
 create bookmarks for ftp sites in Yafc. These can later be used for
 autologin to that site.
 
-   When connected to an ftp site, use the `bookmark' command to create
-a bookmark for that site. If you logged in with a username and
-password, Yafc will ask if you want to save the password in the
-bookmarks file. If you do, be sure it isn't world readable.  By using
-the `auto_bookmark' keyword in the configuration file, Yafc can create
-bookmarks automatically for new sites.
+   When connected to an ftp site, use the `bookmark' command (*Note
+bookmark::) to create a bookmark for that site. If you logged in with a
+username and password, Yafc will ask if you want to save the password in
+the bookmarks file. If you do, be sure it isn't world readable.  By
+using the `auto_bookmark' keyword in the configuration file, Yafc can
+create bookmarks automatically for new sites.
 
    The bookmarks are available to the `open' command, with tab
 completion.
@@ -2081,36 +2090,40 @@ Bookmark examples
 -----------------
 
 `default login anonymous'
-     as default, login as 'anonymous' and prompt for password
+     As default, login as 'anonymous' and prompt for password
+
+`default anonymous'
+     As default, login as 'anonymous' and automatically supply your
+     email address as password.
 
 `local login mhe'
-     login as 'mhe' on all machines on the local network (machines w/o
+     Login as 'mhe' on all machines on the local network (machines w/o
      a '.')
 
 `machine .foo.bar.se login niels'
-     login as 'niels' on all hosts on .foo.bar.se domain
+     Login as 'niels' on all hosts on .foo.bar.se domain
 
 `machine dent.foo.bar.se login slartibartfast cwd ~/fjord'
-     login as 'slartibartfast' on dent.foo.bar.se and start in
+     Login as 'slartibartfast' on dent.foo.bar.se and start in
      directory ~/fjord
 
 `machine slartibartfast@dent.foo.bar.se/fjord'
-     identical to the example above, but using an ftp URL instead
+     Identical to the example above, but using an ftp URL instead
 
 `machine ftp.gurka.com:4711 anonymous'
-     login as 'anonymous' and automagically supply password from
+     Login as 'anonymous' and automagically supply password from
      anon_password, connect on non-standard port 4711
 
 `machine mayer.physto.se anonymous cwd /pub/yafc alias yafc'
-     login anonymously to machine mayer.physto.se with other name yafc
+     Login anonymously to machine mayer.physto.se with other name yafc
 
 `machine shell.stacken.kth.se login mhe mech krb4 passive yes alias stacken'
-     login as mhe using Kerberos 4 authentication, and use passive mode
+     Login as mhe using Kerberos 4 authentication, and use passive mode
      for transfers (overrides the use_passive_mode keyword in the
      config file)
 
 
-File: yafc.info,  Node: Kerberos,  Next: Proxy,  Prev: Bookmarks,  Up: Top
+File: yafc.info,  Node: Kerberos,  Prev: Bookmarks,  Up: Top
 
 Kerberos
 ********
@@ -2125,94 +2138,85 @@ protection is not supported in Kerberos 4. You can use the `prot'
 keyword (*note Bookmark keywords::) in the bookmarks file to
 automagically set the protection level for a specific host.
 
-
-File: yafc.info,  Node: Proxy,  Prev: Kerberos,  Up: Top
-
-Proxy
-*****
-
-   Documentation missing...
-
 
 
 Tag Table:
 Node: Top903
-Node: Overview1380
-Node: Bugs2292
-Node: Obtaining Yafc2829
-Node: Motivation3144
-Node: Invoking Yafc3738
-Node: The shell6343
-Node: Yafc commands6908
-Node: !10223
-Node: afslog10357
-Node: alias10484
-Node: bookmark10607
-Node: cache10714
-Node: cat11245
-Node: cd11767
-Node: cdup12122
-Node: chmod12293
-Node: close12556
-Node: copyright12687
-Node: filesize12820
-Node: filetime12963
-Node: flush13102
-Node: fxp13230
-Node: get16957
-Node: help19662
-Node: idle19783
-Node: kauth19911
-Node: kdestroy20041
-Node: klist20178
-Node: krbtkfile20310
-Node: lcd20458
-Node: list20589
-Node: lpwd20697
-Node: ls20823
-Node: ltag22462
-Node: luntag22576
-Node: mkdir22699
-Node: mv22889
-Node: nlist22978
-Node: nop23071
-Node: open23162
-Node: prot23895
-Node: put24382
-Node: pwd26902
-Node: quit27057
-Node: quote27179
-Node: rhelp27305
-Node: rm27429
-Node: rmdir27889
-Node: rstatus28015
-Node: set28146
-Node: shell28269
-Node: site28393
-Node: source28608
-Node: status28738
-Node: switch28870
-Node: system29002
-Node: tag29131
-Node: unalias29255
-Node: untag29386
-Node: url29513
-Node: user29633
-Node: version29757
-Node: warranty29892
-Node: Nohup transfers30016
-Node: Configuration30853
-Node: Keywords32249
-Node: Prompt codes41067
-Node: Transfer codes42288
-Node: Aliases43251
-Node: Alias examples43776
-Node: Colors45341
-Node: ANSI attribute codes46046
-Node: Bookmarks47043
-Node: Bookmark keywords48102
-Node: Bookmark examples50294
-Node: Kerberos51487
-Node: Proxy52185
+Node: Overview1334
+Node: Bugs2246
+Node: Obtaining Yafc2783
+Node: Motivation3098
+Node: Invoking Yafc3692
+Node: The shell6265
+Node: Yafc commands6830
+Node: !10145
+Node: afslog10279
+Node: alias10406
+Node: bookmark10529
+Node: cache10665
+Node: cat11196
+Node: cd11718
+Node: cdup12073
+Node: chmod12244
+Node: close12507
+Node: copyright12638
+Node: filesize12771
+Node: filetime12914
+Node: flush13053
+Node: fxp13181
+Node: get16930
+Node: help19635
+Node: idle19756
+Node: kauth19884
+Node: kdestroy20014
+Node: klist20151
+Node: krbtkfile20283
+Node: lcd20431
+Node: list20562
+Node: lpwd20670
+Node: ls20796
+Node: ltag22435
+Node: luntag22549
+Node: mkdir22672
+Node: mv22862
+Node: nlist22951
+Node: nop23044
+Node: open23135
+Node: prot23868
+Node: put24355
+Node: pwd26875
+Node: quit27030
+Node: quote27152
+Node: rhelp27278
+Node: rm27402
+Node: rmdir27862
+Node: rstatus27988
+Node: set28119
+Node: shell28242
+Node: site28366
+Node: source28581
+Node: status28711
+Node: switch28843
+Node: system28975
+Node: tag29104
+Node: unalias29228
+Node: untag29359
+Node: url29486
+Node: user29606
+Node: version29730
+Node: warranty29865
+Node: Nohup transfers29989
+Node: Configuration30826
+Node: Keywords32222
+Node: Prompt codes41025
+Node: Transfer codes42316
+Node: Aliases43383
+Node: Alias examples43908
+Node: Colors45473
+Node: ANSI attribute codes46178
+Node: Bookmarks47175
+Node: Bookmark keywords48253
+Node: Bookmark examples50445
+Node: Kerberos51759
 
 End Tag Table

@@ -41,7 +41,7 @@ default settings.
 
 @item -p
 @itemx --noproxy
-Do not connect via the proxy. This should be used if connection to a host on
+Do not connect via the proxy. This should be used if connecting to a host on
 the local network.
 
 @item -q
@@ -67,7 +67,7 @@ still use bookmark aliases, though.
 
 @item -U
 @itemx --noalias
-As ---noauto, but bookmark aliases is disabled (for host on command line).
+As ---noauto, but bookmark aliases is disabled.
 
 @item -v
 @itemx --verbose
