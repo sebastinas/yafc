@@ -1,12 +1,12 @@
 dnl Process this file with autoconf to produce an m4 configure script.
-dnl $Id: configure.ac,v 1.2 2003/07/12 10:20:19 mhe Exp $
+dnl $Id: configure.ac,v 1.3 2005/03/12 11:55:12 mhe Exp $
 
 dnl
 dnl init
 dnl
 
 AC_PREREQ(2.50)
-AC_INIT(yafc, 1.1, [mhe@home.se])
+AC_INIT(yafc, 1.1, [yafc-devel@lists.sourceforge.net])
 AC_CONFIG_AUX_DIR(support)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
