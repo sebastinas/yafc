@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-09-14 16:12+0200\n"
+"POT-Creation-Date: 2000-10-13 00:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,35 +37,35 @@ msgstr "inga alias definierade\n"
 msgid "no such alias '%s'\n"
 msgstr "det finns inget alias \"%s\"\n"
 
-#: src/bookmark.c:229
+#: src/bookmark.c:238
 #, c-format
 msgid "a bookmark named '%s' already exists, choose another name\n"
 msgstr "bokmärket \"%s\" finns redan, välj ett annat namn\n"
 
-#: src/bookmark.c:235
+#: src/bookmark.c:244
 #, c-format
 msgid "a bookmark named '%s' already exists, overwrite?"
 msgstr "ett bokmärke med namnet \"%s\" finns redan, skriva över?"
 
-#: src/bookmark.c:246
+#: src/bookmark.c:255
 msgid "Save password?"
 msgstr "Spara lösenord?"
 
-#: src/bookmark.c:252 src/bookmark.c:373
+#: src/bookmark.c:261 src/bookmark.c:384
 #, c-format
 msgid "created bookmark %s\n"
 msgstr "skapade bokmärke %s\n"
 
-#: src/bookmark.c:309
+#: src/bookmark.c:320
 msgid "Do you want to create a bookmark for this site?"
 msgstr "Vill du skapa ett bokmärke för den här platsen?"
 
-#: src/bookmark.c:371
+#: src/bookmark.c:382
 #, c-format
 msgid "updated bookmark %s\n"
 msgstr "uppdaterade bokmärke %s\n"
 
-#: src/bookmark.c:380
+#: src/bookmark.c:391
 #, fuzzy
 msgid ""
 "Handle bookmarks.  Usage:\n"
@@ -87,27 +87,27 @@ msgstr ""
 "  -l, --list            lista bokmärkena som finns i minnet\n"
 "  -h, --help            visa den här hjälptexten\n"
 
-#: src/bookmark.c:438
+#: src/bookmark.c:449
 #, fuzzy, c-format
 msgid "bookmarks saved in %s\n"
 msgstr "bokmärken sparade i %s/bookmarks"
 
-#: src/bookmark.c:440 src/bookmark.c:501
+#: src/bookmark.c:451 src/bookmark.c:512
 #, fuzzy, c-format
 msgid "bookmarks saved in %s/bookmarks\n"
 msgstr "bokmärken sparade i %s/bookmarks"
 
-#: src/bookmark.c:453
+#: src/bookmark.c:464
 #, c-format
 msgid "bookmarks read from %s\n"
 msgstr "läste in bokmärken från %s\n"
 
-#: src/bookmark.c:467
+#: src/bookmark.c:478
 #, c-format
 msgid "%u bookmarks\n"
 msgstr "%u bokmärken\n"
 
-#: src/bookmark.c:492
+#: src/bookmark.c:503
 #, fuzzy, c-format
 msgid "deleted bookmark %s\n"
 msgstr "skapade bokmärke %s\n"
@@ -359,7 +359,7 @@ msgstr "Det finns inget kommando \"%s\" (expanderat alias \"%s\")\n"
 msgid "ambiguous command '%s' (expanded alias '%s')\n"
 msgstr "tvetydigt kommando \"%s\" (expanderat alias \"%s\")\n"
 
-#: src/commands.c:393 src/get.c:752 src/ltag.c:236 src/tag.c:267
+#: src/commands.c:393 src/get.c:766 src/ltag.c:236 src/tag.c:267
 #, c-format
 msgid "%s: no matches found\n"
 msgstr ""
@@ -496,105 +496,105 @@ msgstr ""
 msgid "failed to receive %s: %s\n"
 msgstr ""
 
-#: src/get.c:223 src/put.c:185
+#: src/get.c:222 src/put.c:187
 #, c-format
 msgid "failed to create directory %s\n"
 msgstr ""
 
-#: src/get.c:232
+#: src/get.c:246
 #, c-format
 msgid "Local file '%s' exists, skipping...\n"
 msgstr ""
 
-#: src/get.c:251
+#: src/get.c:265
 #, c-format
 msgid "Local file '%s' is newer than remote, skipping...\n"
 msgstr ""
 
-#: src/get.c:259
+#: src/get.c:273
 #, c-format
 msgid "Local file '%s' exists, overwrite?"
 msgstr ""
 
-#: src/get.c:291
+#: src/get.c:305
 #, c-format
 msgid "symlinking '%s' to '%s'\n"
 msgstr "länkar \"%s\" till \"%s\"\n"
 
-#: src/get.c:319
+#: src/get.c:333
 #, c-format
 msgid "Delete remote file '%s'?"
 msgstr ""
 
-#: src/get.c:335 src/put.c:283
+#: src/get.c:349 src/put.c:285
 #, c-format
 msgid "%s: deleted\n"
 msgstr ""
 
-#: src/get.c:338 src/put.c:286
+#: src/get.c:352 src/put.c:288
 #, c-format
 msgid "error deleting '%s': %s\n"
 msgstr ""
 
-#: src/get.c:386
+#: src/get.c:400
 #, c-format
 msgid "Get '%s'?"
 msgstr "Hämta \"%s\"?"
 
-#: src/get.c:432
+#: src/get.c:446
 #, c-format
 msgid "%s: circular link -- skipping\n"
 msgstr "%s: cirkulär länk -- otrevligt\n"
 
-#: src/get.c:479 src/put.c:382
+#: src/get.c:493 src/put.c:384
 #, c-format
 msgid "%s: omitting directory\n"
 msgstr ""
 
-#: src/get.c:487 src/put.c:387
+#: src/get.c:501 src/put.c:389
 #, c-format
 msgid "%s: not a regular file\n"
 msgstr "%s är ingen vanlig fil\n"
 
-#: src/get.c:501 src/put.c:398
+#: src/get.c:515 src/put.c:400
 msgid "Continue transfer?"
 msgstr "Fortsätt överföringen?"
 
 #. else a == ASKYES
-#: src/get.c:507 src/put.c:404
+#: src/get.c:521 src/put.c:406
 msgid "Excellent!!!\n"
 msgstr "Finemang!\n"
 
-#: src/get.c:596
+#: src/get.c:610
 #, c-format
 msgid "Invalid mode for --chmod: %s\n"
 msgstr ""
 
-#: src/get.c:600
+#: src/get.c:614
 msgid "virtual memory exhausted\n"
 msgstr "slut på virtuellt minne\n"
 
-#: src/get.c:608
+#: src/get.c:622
 #, c-format
 msgid "%s is not a valid group name\n"
 msgstr "%s är inte att giltigt gruppnamn\n"
 
-#: src/get.c:619
+#: src/get.c:633
 #, c-format
 msgid "you are not a member of group %s\n"
 msgstr "du tillhör inte gruppen %s\n"
 
-#: src/get.c:647 src/get.c:674 src/put.c:498 src/put.c:531
+#: src/get.c:661 src/get.c:688 src/put.c:500 src/put.c:533
 #, c-format
 msgid "Regexp '%s' failed: %s\n"
 msgstr ""
 
-#: src/get.c:715 src/put.c:577
+#: src/get.c:729 src/put.c:579
 #, c-format
 msgid "Invalid option argument --type=%s\n"
 msgstr ""
 
-#: src/get.c:762 src/put.c:623 src/rm.c:183
+#: src/get.c:776 src/put.c:625 src/rm.c:183
 msgid "no tagged files\n"
 msgstr "inga filer är taggade\n"
 
@@ -612,31 +612,35 @@ msgstr ""
 msgid "Available commands: (commands may be abbreviated)\n"
 msgstr "Tillgängliga kommandon: (de kan förkortas)\n"
 
-#: src/help.c:93
+#: src/help.c:92
 msgid ""
 "This product includes software developed by the Kungliga Tekniska\n"
 "Högskolan and its contributors.\n"
 "\n"
 msgstr ""
 
-#: src/help.c:97
+#: src/help.c:96
 msgid "Compiled "
 msgstr ""
 
-#: src/help.c:97
+#: src/help.c:96
 msgid " "
 msgstr ""
 
-#: src/help.c:97
-msgid "\n"
+#: src/help.c:96
+msgid " ("
 msgstr ""
 
-#: src/help.c:99
+#: src/help.c:96
+msgid ")\n"
+msgstr ""
+
+#: src/help.c:98
 #, c-format
 msgid "Using Readline version %s\n"
 msgstr "Använder Readline version %s\n"
 
-#: src/help.c:113
+#: src/help.c:112
 msgid ""
 "This product includes software developed by the Kungliga Tekniska\n"
 "Högskolan and its contributors.\n"
@@ -728,22 +732,16 @@ msgid ""
 "Send new user information.  Usage:\n"
 "  user [options] [username]\n"
 "Options:\n"
-"  -k, --nokrb            disable kerberos authentication\n"
-"  -K, --krb              try kerberos authentication\n"
+"  -m, --mechanism=MECH       try MECH as security mechanism(s) when logging "
+"in\n"
 "      --help             display this help\n"
 msgstr ""
 
-#: src/login.c:76 src/login.c:86 src/login.c:304 src/login.c:314
-#: src/main.c:352 src/main.c:362
-#, fuzzy
-msgid "Yafc was not compiled with Kerberos support\n"
-msgstr "Yafc kompilerades inte med stöd för Kerberos4\n"
-
-#: src/login.c:130
+#: src/login.c:106
 msgid "Connect to what!? Need a hostname!\n"
 msgstr "Anslut till vadå? Vill ha ett värddatornamn!\n"
 
-#: src/login.c:136
+#: src/login.c:112
 msgid ""
 "Ambiguous alias/hostname, use 'open --noalias' to skip bookmark alias "
 "lookup\n"
@@ -751,21 +749,21 @@ msgstr ""
 "Tvetydigt alias/värddatornamn, använd \"open --noalias\" för att inte "
 "använda alias för bokmärken\n"
 
-#: src/login.c:144
+#: src/login.c:120
 #, c-format
 msgid "Disconnect from %s?"
 msgstr ""
 
-#: src/login.c:230
+#: src/login.c:210
 #, c-format
 msgid "Sleeping %u seconds before connecting again (attempt #%d)...\n"
 msgstr "Väntar %u sekunder innan nästa anslutning (försök #%d)...\n"
 
-#: src/login.c:234
+#: src/login.c:214
 msgid "connection aborted\n"
 msgstr "anslutningen avbröts\n"
 
-#: src/login.c:251
+#: src/login.c:231
 msgid ""
 "Connect and login to remote host.  Usage:\n"
 "  open [options] [ftp://][user[:password]@]hostname[:port][/directory] ...\n"
@@ -773,8 +771,8 @@ msgid ""
 "  -a, --anon                 try to login anonymously\n"
 "  -u, --noauto               disable autologin\n"
 "  -U, --noalias              disable bookmark alias lookup and abbreviation\n"
-"  -k, --nokrb                disable kerberos authentication\n"
-"  -K, --krb                  try kerberos authentication\n"
+"  -m, --mechanism=MECH       try MECH as security mechanism(s) when logging "
+"in\n"
 "  -p, --noproxy              don't connect via proxy\n"
 "      --help                 display this help and exit\n"
 msgstr ""
@@ -828,38 +826,36 @@ msgstr "inga filer taggade -- använd \"ltag\" för att tagga filer\n"
 msgid "%u files tagged\n"
 msgstr "%u filer är taggade\n"
 
-#: src/main.c:56
-#, c-format
+#: src/main.c:58
+#, fuzzy, c-format
 msgid ""
 "This is yet another FTP client.  Usage:\n"
 "  %s [options] [[ftp://][user[:password]@]hostname[:port][/directory] ...]\n"
 "Options:\n"
-"    -a, --anon        (*) anonymous login\n"
-"    -d, --debug           print all commands sent to/from server\n"
-"    -D, --dump-rc         prints the default config file to stdout\n"
-"    -k, --nokrb       (*) do not attempt a Kerberos login\n"
-"    -K, --krb         (*) try a Kerberos login (overrides nokrb in "
-"bookmark)\n"
-"    -n, --norc            don't parse config file\n"
-"    -N, --nonetrc         don't parse ~/.netrc\n"
-"    -p, --noproxy     (*) don't connect via proxy\n"
-"    -q, --quiet           don't print the yafc welcome message\n"
-"    -r, --rcfile=FILE     use other config file instead of ~/.yafc/yafcrc\n"
-"    -t, --trace[=FILE]    use a trace file (mainly for debugging)\n"
-"                 if FILE specified, use it instead of "
+"  -a, --anon        (*) anonymous login\n"
+"  -d, --debug           print all commands sent to/from server\n"
+"  -D, --dump-rc         prints the default config file to stdout\n"
+"  -m, --mechanism=MECH\n"
+"                    (*) try MECH as security mechanism(s)\n"
+"  -n, --norc            don't parse config file\n"
+"  -p, --noproxy     (*) don't connect via proxy\n"
+"  -q, --quiet           don't print the yafc welcome message\n"
+"  -r, --rcfile=FILE     use other config file instead of ~/.yafc/yafcrc\n"
+"  -t, --trace[=FILE]    use a trace file (mainly for debugging)\n"
+"               if FILE specified, use it instead of "
 "~/.yafc/trace/trace.<pid>\n"
-"    -u, --noauto      (*) disable autologin\n"
-"    -U, --noalias     (*) disable bookmark alias lookup and abbreviation\n"
-"    -v, --verbose         print all replies from server\n"
-"    -w, --wait=TIME       use a different wait time for reconnecting\n"
-"    -W, --workdir=DIR     use a different working directory (instead of "
+"  -u, --noauto      (*) disable autologin\n"
+"  -U, --noalias     (*) disable bookmark alias lookup and abbreviation\n"
+"  -v, --verbose         print all replies from server\n"
+"  -w, --wait=TIME       use a different wait time for reconnecting\n"
+"  -W, --workdir=DIR     use a different working directory (instead of "
 "~/.yafc)\n"
-"    -V, --version         print version information and quit\n"
-"    -h, --help            print this help and quit\n"
+"  -V, --version         print version information and quit\n"
+"  -h, --help            print this help and quit\n"
 "\n"
 "(*) only applies for login to host specified on the command line\n"
 "\n"
-"Report bugs to <mhe@stacken.kth.se>\n"
+"Report bugs to <yafc-devel@lists.sourceforge.net>\n"
 "\n"
 msgstr ""
 "En till FTP-klient.  Användning:\n"
@@ -896,36 +892,36 @@ msgstr ""
 "Rapportera fel till <mhe@stacken.kth.se>\n"
 
 #. printf(_("This seems to be the first time you run Yafc...\n"));
-#: src/main.c:211
+#: src/main.c:222
 #, c-format
 msgid "creating working directory %s: "
 msgstr ""
 
-#: src/main.c:218 src/main.c:228 src/main.c:239 src/main.c:257
+#: src/main.c:229 src/main.c:239 src/main.c:250 src/main.c:268
 msgid "done\n"
 msgstr ""
 
-#: src/main.c:221 src/main.c:232
+#: src/main.c:232 src/main.c:243
 #, c-format
 msgid "creating directory %s: "
 msgstr "skapar katalog %s: "
 
-#: src/main.c:244
+#: src/main.c:255
 msgid "creating default config file /yafcrc: "
 msgstr ""
 
-#: src/main.c:424
+#: src/main.c:411
 msgid ""
 "No proxy host defined!\n"
 "\n"
 msgstr ""
 
-#: src/main.c:434
+#: src/main.c:421
 #, c-format
 msgid "Invalid value for --wait: %d\n"
 msgstr ""
 
-#: src/main.c:446
+#: src/main.c:433
 #, c-format
 msgid "Couldn't open tracefile '%s': %s\n"
 msgstr ""
@@ -1004,74 +1000,74 @@ msgid "failed to send %s: %s\n"
 msgstr ""
 
 #. can't overwrite a directory
-#: src/ftp/ftpsend.c:889 src/ftp/ftpsend.c:953 src/put.c:198
+#: src/ftp/ftpsend.c:890 src/ftp/ftpsend.c:954 src/put.c:200
 #, c-format
 msgid "%s: is a directory\n"
 msgstr "%s är en katalog\n"
 
-#: src/put.c:208
+#: src/put.c:210
 #, c-format
 msgid "Remote file '%s' exists, skipping...\n"
 msgstr ""
 
-#: src/put.c:216
+#: src/put.c:218
 #, c-format
 msgid "Remote file '%s' is newer than local, skipping...\n"
 msgstr ""
 
-#: src/put.c:226
+#: src/put.c:228
 #, c-format
 msgid "File '%s' exists, overwrite?"
 msgstr "Filen \"%s\" existerar, skriva över?"
 
-#: src/put.c:268
+#: src/put.c:270
 #, c-format
 msgid "Delete local file '%s'?"
 msgstr "Ta bort lokal fil \"%s\"?"
 
-#: src/put.c:326
+#: src/put.c:328
 #, c-format
 msgid "Put '%s'?"
 msgstr "Skicka över \"%s\"?"
 
-#: src/put.c:555
+#: src/put.c:557
 msgid "Remote doesn't support the STOU (store unique) command\n"
 msgstr ""
 "Värddatorn stöder inte kommandot STOU (för att spara filer med unika "
 "filname)\n"
 
-#: src/rc.c:39
+#: src/rc.c:41
 #, c-format
 msgid "Error(s) while parsing '%s':\n"
 msgstr "Fel vid inläsning av \"%s\":\n"
 
-#: src/rc.c:99
+#: src/rc.c:101
 msgid "unmatched quote\n"
 msgstr ""
 
-#: src/rc.c:106
+#: src/rc.c:108
 msgid "string too long or unmatched quote, truncated\n"
 msgstr ""
 "strängen är för lång, eller så saknas slut-fnutten, strängen trunkerad\n"
 
-#: src/rc.c:121
+#: src/rc.c:123
 msgid "Unexpected end of file encountered\n"
 msgstr "Oväntat filslut\n"
 
-#: src/rc.c:128 src/set.c:167
+#: src/rc.c:130 src/set.c:170
 #, c-format
 msgid "Expected boolean value, but got '%s'\n"
 msgstr "Förväntade mig ett booleskt värde, men fick \"%s\"\n"
 
-#: src/rc.c:153
+#: src/rc.c:155
 msgid "'machine' directive needs a hostname\n"
 msgstr "\"machine\"-direktivet behöver ett värddatornamn\n"
 
-#: src/rc.c:169
+#: src/rc.c:171
 msgid "'alias' directive not useful with domains\n"
 msgstr ""
 
-#: src/rc.c:181
+#: src/rc.c:183
 #, c-format
 msgid ""
 "WARNING! Config file contains passwords but is readable by others (mode "
@@ -1080,57 +1076,57 @@ msgstr ""
 "VARNING! Inställningsfilen innehåller lösenord men kan läsas av andra (mode "
 "%03o)\n"
 
-#: src/rc.c:230
+#: src/rc.c:239
 #, c-format
 msgid "Multiple definitions for '%s', skipping...\n"
 msgstr ""
 
-#: src/rc.c:243
+#: src/rc.c:252
 msgid "Multiple definitions for 'local', skipping...\n"
 msgstr ""
 
-#: src/rc.c:255
+#: src/rc.c:264
 msgid "Multiple definitions for 'default', skipping...\n"
 msgstr ""
 
-#: src/rc.c:300
+#: src/rc.c:296
 msgid ""
 "As a computer, I find your faith in technology amusing...\n"
 "Too many errors\n"
 msgstr "Detta är ju löjligt, alldeles för många fel...\n"
 
-#: src/rc.c:349 src/rc.c:361
+#: src/rc.c:345 src/rc.c:357
 #, c-format
 msgid "Expected boolean value or 'ask', but got '%s'\n"
 msgstr ""
 "Förväntade mig ett booleskt värde, eller \"ask\", men fick ett \"%s\"\n"
 
-#: src/rc.c:372
+#: src/rc.c:368
 #, c-format
 msgid "Unknown default_type parameter '%s'... (use 'ascii' or 'binary')\n"
 msgstr ""
 
-#: src/rc.c:381
+#: src/rc.c:382
 #, c-format
 msgid "Invalid value for long_command_time: %d\n"
 msgstr "Felaktigt värde på long_command_time: %d\n"
 
-#: src/rc.c:388
+#: src/rc.c:389
 #, c-format
 msgid "Invalid value for connect_wait_time: %d\n"
 msgstr "Felaktigt värde på connect_wait_time: %d\n"
 
-#: src/rc.c:462
+#: src/rc.c:463
 #, c-format
 msgid "Invalid value for history_max: %d\n"
 msgstr "Felaktigt värde på history_max: %d\n"
 
-#: src/rc.c:495
+#: src/rc.c:496
 #, c-format
 msgid "Invalid value for proxy_type: %d\n"
 msgstr "Felaktigt värde på proxy_type: %d\n"
 
-#: src/rc.c:513
+#: src/rc.c:514
 #, c-format
 msgid "Config parse error: '%s'\n"
 msgstr "Fel vid tolkning: \"%s\"\n"
@@ -1201,43 +1197,43 @@ msgstr ""
 msgid "verbose is off"
 msgstr ""
 
-#: src/set.c:62
+#: src/set.c:65
 msgid "passive mode is on"
 msgstr "passivt läge är på"
 
-#: src/set.c:64
+#: src/set.c:67
 msgid "passive mode is off"
 msgstr "passivt läge är av"
 
-#: src/set.c:77
+#: src/set.c:80
 msgid "debug is on"
 msgstr "debug är på"
 
-#: src/set.c:80
+#: src/set.c:83
 msgid "debug is off"
 msgstr "debug är av"
 
-#: src/set.c:93
+#: src/set.c:96
 #, c-format
 msgid "Unknown type '%s'? Use 'ascii' or 'binary'\n"
 msgstr "Okäng överföringstyp \"%s\"? Använd \"ascii\" eller \"binary\"\n"
 
-#: src/set.c:97
+#: src/set.c:100
 #, c-format
 msgid "type is '%s'\n"
 msgstr "överföringstyp är \"%s\"\n"
 
-#: src/set.c:107
+#: src/set.c:110
 #, c-format
 msgid "anonymous password is '%s'\n"
 msgstr "anonymt lösenord är \"%s\"\n"
 
-#: src/set.c:155
+#: src/set.c:158
 #, c-format
 msgid "No such variable '%s'\n"
 msgstr "Nä, det finns ingen variabel \"%s\"\n"
 
-#: src/set.c:158
+#: src/set.c:161
 #, c-format
 msgid "Ambiguous variable '%s'\n"
 msgstr "tvetydig variabel \"%s\"\n"
@@ -1396,12 +1392,12 @@ msgstr ""
 msgid "Unable to send mail (using %s)\n"
 msgstr "Kunde inte skicka epost (med %s)\n"
 
-#: src/ftp/ftp.c:271
+#: src/ftp/ftp.c:270
 #, c-format
 msgid "Connection timeout after %u seconds\n"
 msgstr "Inget svar vid anslutning efter %u sekunder\n"
 
-#: src/ftp/ftp.c:281
+#: src/ftp/ftp.c:280
 #, c-format
 msgid ""
 "Sorry, don't know how to handle your '%s' protocol\n"
@@ -1410,104 +1406,109 @@ msgstr ""
 "Huh? vet inte vad \"%s\" är för nåt protokoll\n"
 "prövar med \"ftp\" istället...\n"
 
-#: src/ftp/ftp.c:287
+#: src/ftp/ftp.c:286
 #, c-format
 msgid "Looking up %s... "
 msgstr "Letar efter %s... "
 
-#: src/ftp/ftp.c:303
+#: src/ftp/ftp.c:302
 #, c-format
 msgid "Connecting to proxy %s (%s) at port %d...\n"
 msgstr "Ansluter till proxyn %s (%s) på port %d...\n"
 
-#: src/ftp/ftp.c:307
+#: src/ftp/ftp.c:306
 #, c-format
 msgid "Connecting to %s (%s) at port %d...\n"
 msgstr "Ansluter till %s (%s) på port %d...\n"
 
-#: src/ftp/ftp.c:372 src/ftp/ftp.c:574
+#: src/ftp/ftp.c:371 src/ftp/ftp.c:572
 msgid "No control connection\n"
 msgstr "Ingen anslutning\n"
 
-#: src/ftp/ftp.c:379
+#: src/ftp/ftp.c:378
 msgid "Server has closed control connection\n"
 msgstr "Värddatorn stängde anslutningen\n"
 
-#: src/ftp/ftp.c:423
+#: src/ftp/ftp.c:422
 msgid "Reply too long (truncated)\n"
 msgstr "För långt svar (trunkerat)\n"
 
-#: src/ftp/ftp.c:491
+#: src/ftp/ftp.c:489
 #, c-format
 msgid "Tired of waiting for reply, timeout after %u seconds\n"
 msgstr "Trött på att vänta på svar, gav upp efter %u sekunder\n"
 
-#: src/ftp/ftp.c:589
+#: src/ftp/ftp.c:587
 msgid "error writing command"
 msgstr "fel vid skrivning av kommando"
 
 #. server is closing control connection!
-#: src/ftp/ftp.c:610
+#: src/ftp/ftp.c:608
 msgid "Server closed control connection?\n"
 msgstr "Värddatorn stängde anslutningen?\n"
 
-#: src/ftp/ftp.c:659
+#: src/ftp/ftp.c:657
 msgid "Proxy login: "
 msgstr "Användarnamn för proxy: "
 
-#: src/ftp/ftp.c:661
+#: src/ftp/ftp.c:659
 #, c-format
 msgid "login (%s): "
 msgstr "användarnamn (%s): "
 
-#: src/ftp/ftp.c:663
+#: src/ftp/ftp.c:661
 msgid "login (anonymous): "
 msgstr "användarnamn (anonymous): "
 
-#: src/ftp/ftp.c:673 src/ftp/ftp.c:715
+#: src/ftp/ftp.c:671 src/ftp/ftp.c:713
 msgid "You loose\n"
 msgstr "Tjipp å hej...\n"
 
-#: src/ftp/ftp.c:697
+#: src/ftp/ftp.c:695
 #, c-format
 msgid "password (%s): "
 msgstr "lösenord (%s): "
 
-#: src/ftp/ftp.c:699 src/ftp/ftp.c:711
+#: src/ftp/ftp.c:697 src/ftp/ftp.c:709
 msgid "password: "
 msgstr "lösenord: "
 
-#: src/ftp/ftp.c:710
+#: src/ftp/ftp.c:708
 msgid "Proxy password: "
 msgstr "Lösenord för proxy: "
 
-#: src/ftp/ftp.c:759
+#: src/ftp/ftp.c:784
 #, c-format
 msgid "Invalid protection level '%s'\n"
 msgstr ""
 
-#: src/ftp/ftp.c:764
+#: src/ftp/ftp.c:797
+#, fuzzy, c-format
+msgid "unknown mechanism '%s'\n"
+msgstr "det finns inget alias \"%s\"\n"
+
+#: src/ftp/ftp.c:803
 msgid "*** Using plaintext username and password ***\n"
 msgstr "*** Använder användarnamn och lösenord i klartext ***\n"
 
-#: src/ftp/ftp.c:769
+#: src/ftp/ftp.c:809
 msgid "Authentication successful.\n"
 msgstr ""
 
-#: src/ftp/ftp.c:774
+#: src/ftp/ftp.c:818
 msgid "logging in anonymously...\n"
 msgstr "loggar in anonymt...\n"
 
-#: src/ftp/ftp.c:880
+#: src/ftp/ftp.c:924
 #, c-format
 msgid "Data protection is %s\n"
 msgstr ""
 
-#: src/ftp/ftp.c:1043
+#: src/ftp/ftp.c:1090
 msgid "Server doesn't support SITE CHMOD\n"
 msgstr "Värddatorn stöder inte SITE CHMOD\n"
 
-#: src/ftp/ftp.c:1056
+#: src/ftp/ftp.c:1103
 msgid "Server doesn't support SITE IDLE\n"
 msgstr "Värddatorn stöder inte SITE IDLE\n"
 
@@ -1528,35 +1529,35 @@ msgstr "Fel vid tolkning av PASV-svar: \"%s\"\n"
 msgid "Waiting for remote to finish abort...\n"
 msgstr "Väntar på att värddatorn ska avsluta...\n"
 
-#: src/ftp/ftpsend.c:274
+#: src/ftp/ftpsend.c:275
 #, c-format
 msgid "read error: %s\n"
 msgstr "läsfel: %s\n"
 
-#: src/ftp/ftpsend.c:278
+#: src/ftp/ftpsend.c:279
 #, c-format
 msgid "write error: %s\n"
 msgstr "skrivfel: %s\n"
 
-#: src/ftp/ftpsend.c:592 src/ftp/ftpsend.c:722
+#: src/ftp/ftpsend.c:593 src/ftp/ftpsend.c:723
 msgid "data connection not accepted\n"
 msgstr "överföring vägrades\n"
 
-#: src/ftp/ftpsend.c:766
+#: src/ftp/ftpsend.c:767
 msgid "FxP between same hosts\n"
 msgstr ""
 
-#: src/ftp/ftpsend.c:803 src/ftp/ftpsend.c:978
+#: src/ftp/ftpsend.c:804 src/ftp/ftpsend.c:979
 #, c-format
 msgid "unable to get remote filesize of '%s', unable to resume\n"
 msgstr ""
 
-#: src/ftp/ftpsend.c:893
+#: src/ftp/ftpsend.c:894
 #, c-format
 msgid "%s: permission denied\n"
 msgstr "%s: åtkomst nekas\n"
 
-#: src/ftp/ftpsend.c:924 src/ftp/ftpsend.c:989
+#: src/ftp/ftpsend.c:925 src/ftp/ftpsend.c:990
 #, c-format
 msgid "%s: %s, transfer cancelled\n"
 msgstr "%s: %s, överföring avslutad\n"
@@ -1612,144 +1613,148 @@ msgstr ""
 msgid "Forced passive mode on\n"
 msgstr "passivt läge är på"
 
-#: lib/kauth.c:123 lib/krb4.c:214
+#: lib/kauth.c:131 lib/krb4.c:215
 msgid "Out of memory base64-encoding\n"
 msgstr ""
 
-#: lib/krb4.c:221
+#: lib/krb4.c:222
 msgid "Server didn't accept auth data\n"
 msgstr ""
 
-#: lib/krb4.c:227
+#: lib/krb4.c:228
 msgid "Remote host didn't send adat reply\n"
 msgstr ""
 
-#: lib/krb4.c:233
+#: lib/krb4.c:234
 msgid "Failed to decode base64 from server\n"
 msgstr ""
 
-#: lib/krb4.c:241
+#: lib/krb4.c:242
 #, fuzzy, c-format
 msgid "Error reading reply from server: %s\n"
 msgstr "Fel vid tolkning av PASV-svar: \"%s\"\n"
 
-#: lib/krb4.c:247
+#: lib/krb4.c:248
 msgid "Bad checksum returned from server\n"
 msgstr ""
 
-#: lib/security.c:72
+#: lib/security.c:70
 msgid "unknown"
 msgstr ""
 
-#: lib/security.c:368
+#: lib/security.c:354
 msgid "Failed to encode command.\n"
 msgstr ""
 
-#: lib/security.c:372
+#: lib/security.c:358
 msgid "Out of memory base64-encoding.\n"
 msgstr ""
 
-#: lib/security.c:417
+#: lib/security.c:387
 #, c-format
 msgid "Using %s for authentication.\n"
 msgstr ""
 
-#: lib/security.c:418
+#: lib/security.c:388
 #, c-format
 msgid "Using %s command channel.\n"
 msgstr ""
 
-#: lib/security.c:420
+#: lib/security.c:390
 #, c-format
 msgid "Using %s data channel.\n"
 msgstr ""
 
-#: lib/security.c:422
+#: lib/security.c:392
 #, c-format
 msgid "Protection buffer size: %lu.\n"
 msgstr ""
 
-#: lib/security.c:425
+#: lib/security.c:395
 msgid "Not using any security mechanism.\n"
 msgstr ""
 
-#: lib/security.c:441
+#: lib/security.c:408
 msgid "No security data exchange has taken place.\n"
 msgstr ""
 
-#: lib/security.c:448
+#: lib/security.c:415
 msgid "Failed to set protection buffer size.\n"
 msgstr ""
 
-#: lib/security.c:461
+#: lib/security.c:428
 msgid "Failed to set protection level.\n"
 msgstr ""
 
-#: lib/security.c:497
+#: lib/security.c:459
 msgid "No security data exchange has taken place\n"
 msgstr ""
 
-#: lib/security.c:504
+#: lib/security.c:465
 #, c-format
 msgid "Unrecognized protection level %s\n"
 msgstr ""
 
-#: lib/security.c:509
+#: lib/security.c:470
 #, c-format
 msgid "%s does not implement %s protection\n"
 msgstr ""
 
-#: lib/security.c:525
+#: lib/security.c:483
 #, fuzzy, c-format
 msgid "Syntax error, try %s --help for more information\n"
 msgstr "Ej inloggad. Pröva \"user --help\" för mer information.\n"
 
-#: lib/security.c:568
+#: lib/security.c:543
 #, c-format
 msgid "realloc %u failed"
 msgstr ""
 
-#: lib/security.c:574
+#: lib/security.c:549
 #, fuzzy, c-format
 msgid "Skipping %s...\n"
 msgstr "Letar efter %s... "
 
-#: lib/security.c:577
+#: lib/security.c:552
 #, fuzzy, c-format
 msgid "Trying %s...\n"
 msgstr "Letar efter %s... "
 
-#: lib/security.c:581
+#: lib/security.c:556
 #, c-format
 msgid "%s is not supported by the server.\n"
 msgstr ""
 
-#: lib/security.c:583
+#: lib/security.c:558
 #, c-format
 msgid "%s rejected as security mechanism.\n"
 msgstr ""
 
-#: lib/security.c:585
+#: lib/security.c:560
 msgid "The server doesn't support the FTP security extensions.\n"
 msgstr ""
 
-#: lib/kauth.c:64
+#: lib/kauth.c:65
 #, c-format
 msgid "usage: %s [principal]\n"
 msgstr ""
 
-#: lib/kauth.c:78 lib/kauth.c:92
+#: lib/kauth.c:83 lib/kauth.c:99
 msgid "Bad reply from server\n"
 msgstr ""
 
-#: lib/kauth.c:84
+#: lib/kauth.c:90
 msgid "Failed to decode base64 in reply\n"
 msgstr ""
 
-#: lib/kauth.c:99
+#: lib/kauth.c:107
 #, fuzzy, c-format
 msgid "Password for %s:"
 msgstr "lösenord (%s): "
+
+#, fuzzy
+#~ msgid "Yafc was not compiled with Kerberos support\n"
+#~ msgstr "Yafc kompilerades inte med stöd för Kerberos4\n"
 
 #~ msgid "nothing tagged -- use 'ltag' to tag files"
 #~ msgstr "inga filer taggade -- använd \"ltag\" för att tagga filer"
