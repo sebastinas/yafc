@@ -1,4 +1,4 @@
-/* $Id: commands.c,v 1.12 2001/07/01 12:58:23 mhe Exp $
+/* $Id: commands.c,v 1.13 2001/08/24 08:57:02 mhe Exp $
  *
  * commands.c --
  *
@@ -217,7 +217,7 @@ void expand_alias_parameters(args_t **args, args_t *alias_args)
 			int n;
 
 			*e = 0;
-			n = strtoul(++e, &ep, 0);
+			n = strtoul(++e, &ep, 0) - 1;
 
 			if(ep != e && n < alias_args->argc && n >= 0) {
 				ins = deleted->argv[n];
