@@ -2,12 +2,12 @@
 
 noinst_LIBRARIES = libfoo.a
 
-libfoo_a_SOURCES = xmalloc.c fnmatch.c makepath.c base64.c glob.c modechange.c
+libfoo_a_SOURCES = xmalloc.c fnmatch.c makepath.c base64.c glob.c modechange.c bashline.c
 
 noinst_HEADERS = xmalloc.h fnmatch.h getopt.h \
                  glob.h strcasecmp.h krb4.h base64.h \
-				 setproctitle.h pathmax.h makepath.h modechange.h \
-				 security.h collsyms.h
+				 pathmax.h makepath.h modechange.h \
+				 security.h collsyms.h bashline.h
 
 libfoo_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfoo_a_DEPENDENCIES = $(libfoo_a_LIBADD)
