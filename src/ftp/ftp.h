@@ -130,6 +130,7 @@ typedef struct Ftp
 	int ssh_in, ssh_out;     /* file descriptors for use by ssh */
 	int ssh_version;
 	unsigned int ssh_id;
+	int ssh_last_status;
 
 	char reply[MAXREPLY+1];  /* last reply string from server */
 

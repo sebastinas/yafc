@@ -25,6 +25,7 @@
 #include "strq.h"
 #include "gvars.h"
 #include "ssh_cmd.h"
+#include "sftp-common.h"
 
 /* in cmd.c */
 void exit_yafc(void);
@@ -502,6 +503,9 @@ static int ftp_gets(void)
 const char *ftp_getreply(bool withcode)
 {
 	char *r = ftp->reply;
+
+	if(ftp->ssh_pid)
+		return fx2txt(ftp->ssh_last_status);
 
 	if(withcode)
 		return r;
