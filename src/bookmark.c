@@ -1,4 +1,4 @@
-/* $Id: bookmark.c,v 1.13 2001/05/21 19:53:25 mhe Exp $
+/* $Id: bookmark.c,v 1.14 2001/07/09 18:27:42 mhe Exp $
  *
  * bookmark.c -- create bookmark(s)
  *
@@ -491,7 +491,8 @@ void cmd_bookmark(int argc, char **argv)
 			url_t *u = (url_t *)li->data;
 			/* note: all info not printed */
 			printf("%-20s", u->alias ? u->alias : u->hostname);
-			printf("%s@%s", u->username, u->hostname);
+			printf("%s://%s@%s", u->protocol ? u->protocol : "ftp",
+				   u->username, u->hostname);
 			if(u->directory)
 				printf("/%s", shortpath(u->directory, 30, 0));
 			putchar('\n');
