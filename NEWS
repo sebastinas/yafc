@@ -3,23 +3,24 @@ New in 0.6.5
 
 * changed default value for auto_bookmark to yes
 * added option --type={ascii|binary} to cat
-* forgot a fflush() in cat (cat didn't work on binary files)
+* forgot a fflush() in cat (cat didn't work on binary files) (thanks Decklin)
 * fixed broken alias zpage in yafcrc.sample + added (b)zcat alias
-* removed arguments to site command
+* removed arguments to site command (thanks to Robert Hahn)
 * 'get/put onefile -o othername' instead of 'get/put onefile -o otherdir'
-     confused? look in the manual...
-* use_passive_mode in config file was ignored
-* new option: transfer_xterm_string
+     confused? look in the manual... (thanks to Skyper Sorg)
+* use_passive_mode in config file was ignored (thanks to Ari Pollak)
+* new option: transfer_xterm_string (thanks to Ari Pollak)
 * removed swedish po-file (I don't have time to maintain it)
 * check for circular include statements in config file
 * bookmarks are now always kept in ~/.yafc/bookmarks
 * cleanups; moved small generic funcs to utils.c
+* even more manual updates
 
 
 New in 0.6.4
 ------------
 
-* removed lib/setproctitle.[ch] due to licensing problems
+* removed lib/setproctitle.[ch] due to licensing problems (thanks Decklin)
 * moved src/bashline.[ch] to lib/
 * updated manpage
 * more manual updates
