@@ -267,17 +267,16 @@ rdirectory *ssh_read_directory(const char *path)
 		e = strqsep(&cf, ' ');
 		rf->group = xstrdup(e);
 
-		rf->link = 0; /* FIXME: need to check if symlink */
-
 		asprintf(&rf->path, "%s/%s", p, dir[i]->filename);
 		rf->date = time_to_string(dir[i]->a.mtime);
 		rf->mtime = dir[i]->a.mtime;
 		rf->size = dir[i]->a.size;
 		rfile_parse_colors(rf);
 
-/*		if(rislink(rf))
+		rf->link = 0;
+		if(rislink(rf))
 			rf->link = ssh_readlink(rf->path);
-*/
+
 		list_additem(rdir->files, (void *)rf);
 	}
 
