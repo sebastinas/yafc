@@ -2,6 +2,10 @@ New in 0.7.2
 ------------
 
 * Applied patch from Mark Screiber, fixing 'yafc -a unresolvablehost' bug
+* Fixed bug with binary transfers being in ascii mode after reconnect
+* Support for MLSD directory listings
+* removed 'help cmd', use 'cmd --help' instead
+* removed filesize and flush commands
 
 
 New in 0.7.1

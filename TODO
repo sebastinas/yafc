@@ -1,14 +1,14 @@
 TODO list for Yafc
 ------------------
 
-* MLSD and MLST support (Frank Denis)
+* option (in bookmarks?) to control LIST parameters (-a needed for PureFTPd)
 * Ctrl-C with SSH breaks ssh program *and* yafc, anyone?
 ? config option for default answers to questions (get/put/fxp/more?)
 * fix --chgrp / --chmod for directories (get)
 * ltag should ignore multiples just as tag does
 * re-implement setproctitle code
 ? don't show passwd (from cmdline) in 'ps' (Ari Pollak)
-* FTP over SSL support
+* FTP over SSL support (rfc2228)
 * IPv6 support
 * keep-alive (send NOOP or similar when idle)
 * EPSV and EPRT support (RFC2428)

@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce an m4 configure script.
-dnl $Id: configure.in,v 1.21 2001/05/24 19:14:07 mhe Exp $
+dnl $Id: configure.in,v 1.22 2001/07/01 12:54:05 mhe Exp $
 
 dnl
 dnl init
@@ -153,6 +153,39 @@ mhe_CHECK_PROTO(herror, [
 
 mhe_CHECK_PROTO(vasprintf, [#include <stdio.h>])
 mhe_CHECK_PROTO(asprintf, [#include <stdio.h>])
+
+dnl mhe_ARG_WITH(ssl)
+dnl AC_MSG_CHECKING(whether SSL support is requested)
+dnl if test "$mhe_with_ssl" = "yes"; then
+dnl   AC_MSG_RESULT(yes)
+dnl   dnl SSL configure checks stolen from curl
+dnl   AC_CHECK_LIB(crypto, CRYPTO_lock)
+dnl   if test "$ac_cv_lib_crypto_CRYPTO_lock" = "yes"; then
+dnl     AC_CHECK_LIB(ssl, SSL_connect)
+dnl     if test "$ac_cv_lib_ssl_SSL_connect" != "yes"; then
+dnl       dnl we didn't find the SSL lib, try the RSAglue/rsaref stuff
+dnl       AC_MSG_CHECKING(for ssl with RSAglue/rsaref libs in use);
+dnl       OLIBS=$LIBS
+dnl       LIBS="$LIBS -lRSAglue -lrsaref"
+dnl       AC_CHECK_LIB(ssl, SSL_connect)
+dnl       if test "$ac_cv_lib_ssl_SSL_connect" != "yes"; then
+dnl         dnl still no SSL_connect
+dnl         AC_MSG_RESULT(no)
+dnl         LIBS=$OLIBS
+dnl       else
+dnl         AC_MSG_RESULT(yes)
+dnl       fi
+dnl     fi
+
+dnl     if test "$ac_cv_lib_ssl_SSL_connect" = "yes"; then
+dnl       AC_DEFINE(USE_SSL)
+dnl       LIBOBJS="$LIBOBJS security.o ssl.o"
+dnl       AC_CHECK_HEADERS(openssl/ssl.h)
+dnl     else
+dnl       AC_WARN(SSL library not found, SSL support not enabled)
+dnl     fi
+dnl   fi
+dnl fi
 
 mhe_ARG_WITH(krb4)
 mhe_ARG_WITH(krb5)

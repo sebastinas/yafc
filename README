@@ -29,10 +29,12 @@ FEATURES
 * uses readline (tab completion, emacs/vi editing keys, history file, etc.)
 * extensive tab completion
 * multiple connections open
+* automatic reconnect
 * aliases
 * colored ls (ie, ls --color, uses $LS_COLORS like GNU ls)
 * autologin and bookmarks
 * Kerberos4 authentication support
+* SFTP support (SSH2)
 * recursive get/put/rm/ls
 * nohup mode get and put
 * tagging (queueing) of files for later transferring
