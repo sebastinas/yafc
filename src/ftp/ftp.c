@@ -1,4 +1,4 @@
-/* $Id: ftp.c,v 1.18 2001/05/12 18:44:04 mhe Exp $
+/* $Id: ftp.c,v 1.19 2001/05/21 20:51:08 mhe Exp $
  *
  * ftp.c -- low(er) level FTP stuff
  *
@@ -127,6 +127,8 @@ void ftp_destroy(Ftp *ftp)
 	xfree(ftp->curdir);
 	xfree(ftp->prevdir);
 	list_free(ftp->taglist);
+	xfree(ftp->ssh_args);
+	ftp->ssh_args = 0;
 
 #if defined(KRB4) || defined(KRB5)
 	sec_end();
