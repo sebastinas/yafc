@@ -1,6 +1,7 @@
 TODO list for Yafc
 ------------------
 
+* add documentation for --mechanism option
 * fix --chgrp / --chmod for directories (get)
 * remove more hints from cmds[]
 * ls -r doesn't work (no sorting done)
