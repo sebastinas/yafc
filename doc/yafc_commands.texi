@@ -19,7 +19,6 @@ short syntax description.
 * chmod::                       change access mode (permissions) of files
 * close::                       close connection
 * copyright::                   show copyright notice
-* filesize::                    print filesize in bytes
 * filetime::                    print file modification time
 * flush::                       flush replies
 * fxp::                         transfer files between hosts
