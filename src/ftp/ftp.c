@@ -291,6 +291,14 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
 	ftp_err(_("Looking up %s... "),
 			use_proxy ? gvProxyUrl->hostname : urlp->hostname);
 
+	/* Set the default port (22) for SSH if no port is specified. We
+	 * need to do this here, 'cause host_lookup() sets it to 21
+	 * (default port for vanilla FTP)
+	 */
+	if(urlp->protocol && strcmp(urlp->protocol, "ssh") == 0
+		&& urlp->port == -1)
+		urlp->port = 22; /* default SSH port */
+
 	ftp->host = host_create(use_proxy ? gvProxyUrl : urlp);
 
 	if(host_lookup(ftp->host) != 0) {
