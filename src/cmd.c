@@ -82,7 +82,7 @@ void command_loop(void)
 			printf(_("restarted command loop, command aborted\n"));
 	}
 	gvJmpBufSet = true;
-
+	force_completion_type = cpUnset;
 	close_redirection();
 	gvInTransfer = false;
 	gvInterrupted = false;
