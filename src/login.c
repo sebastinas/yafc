@@ -170,6 +170,8 @@ void yafc_open(const char *host, unsigned int opt, const char *mech)
 	if(xurl) {
 		url_sethostname(url, xurl->hostname);
 		url_setalias(url, xurl->alias);
+		if(!url->protocol)
+			url_setprotocol(url, xurl->protocol);
 
 		if(!test(opt, OP_NOAUTO)) {
 			url_setprotlevel(url, xurl->protlevel);
