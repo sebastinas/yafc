@@ -14,6 +14,8 @@ New in 0.7
 * 'ls -r' now works (lists in reversed name order)
 * 'ls .' now works
 * new option: reverse_dns, do reverse DNS lookups? (thanks Ari Pollak)
+* cleanups for old readline 2.0
+* removed gettext support (not used anyway)
 
 
 New in 0.6.6
