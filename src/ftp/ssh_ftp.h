@@ -88,7 +88,6 @@ struct SFTP_DIRENT {
 };
 
 int ssh_connect(char **args, int *in, int *out, pid_t *sshpid);
-char **ssh_make_args(char ***args, char *add_arg, const char *sftp_server);
 int ssh_cmd(Buffer *m);
 int ssh_reply(Buffer *m);
 int ssh_init(void);

@@ -40,18 +40,19 @@ int version;
 int ssh_open_url(url_t *urlp)
 {
 	char *sftp = gvSFTPServerProgram;
+	char *s;
 
-	xfree(ftp->ssh_args);
-	ftp->ssh_args = 0;
+	args_clear(ftp->ssh_args);
 
 	if(urlp->sftp_server)
 		sftp = urlp->sftp_server;
 
-	ssh_make_args(&ftp->ssh_args, urlp->hostname, sftp);
+	args_push_back(ftp->ssh_args, gvSSHProgram);
+	args_push_back(ftp->ssh_args, urlp->hostname);
 
 	if(urlp->username) {
-		ssh_make_args(&ftp->ssh_args, "-l", sftp);
-		ssh_make_args(&ftp->ssh_args, urlp->username, sftp);
+		args_push_back(ftp->ssh_args, "-l");
+		args_push_back(ftp->ssh_args, urlp->username);
 	} else {
 		/* we need a username, otherwise other functions will fail
 		 */
@@ -60,17 +61,37 @@ int ssh_open_url(url_t *urlp)
 
 	if(urlp->port) {
 		char *p;
-		asprintf(&p, "-p %d", urlp->port);
-		ssh_make_args(&ftp->ssh_args, p, sftp);
+		asprintf(&p, "%d", urlp->port);
+		args_push_back(ftp->ssh_args, "-p");
+		args_push_back(ftp->ssh_args, p);
 		xfree(p);
 	}
 
 	if(ftp_get_verbosity() == vbDebug)
-		ssh_make_args(&ftp->ssh_args, "-v", sftp);
+		args_push_back(ftp->ssh_args, "-v");
 
-	ssh_make_args(&ftp->ssh_args, 0, sftp);
+	/* no subsystem if the server-spec contains a '/' */
+	if(sftp == 0 || strchr(sftp, '/') == 0)
+		args_push_back(ftp->ssh_args, "-s");
+	args_push_back(ftp->ssh_args, "-oForwardX11=no");
+	args_push_back(ftp->ssh_args, "-oForwardAgent=no");
+	args_push_back(ftp->ssh_args, "-oProtocol=2");
 
-	if(ssh_connect(ftp->ssh_args, &ftp->ssh_in, &ftp->ssh_out,
+	/* Otherwise finish up and return the arg array */
+	if(sftp != 0)
+		args_push_back(ftp->ssh_args, sftp);
+	else
+		args_push_back(ftp->ssh_args, "sftp");
+
+	s = args_cat2(ftp->ssh_args, 0);
+	ftp_trace("SSH args: %s\n", s);
+	if(ftp_get_verbosity() == vbDebug)
+		fprintf(stderr, "SSH args: %s\n", s);
+	xfree(s);
+
+	args_add_null(ftp->ssh_args);
+
+	if(ssh_connect(ftp->ssh_args->argv, &ftp->ssh_in, &ftp->ssh_out,
 				   &ftp->ssh_pid) == -1)
 		{
 			return -1;

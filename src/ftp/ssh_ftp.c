@@ -76,9 +76,6 @@ int ssh_connect(char **args, int *in, int *out, pid_t *sshpid)
 		close(c_in);
 		close(c_out);
 
-		if(ftp_get_verbosity() == vbDebug)
-			fprintf(stderr, "executing '%s'...\n", gvSSHProgram);
-
 		execv(gvSSHProgram, args);
 		ftp_err("exec: %s: %s\n", gvSSHProgram, strerror(errno));
 		exit(1);
@@ -88,59 +85,6 @@ int ssh_connect(char **args, int *in, int *out, pid_t *sshpid)
 	close(c_out);
 
 	return 0;
-}
-
-char **ssh_make_args(char ***args, char *add_arg, const char *sftp_server)
-{
-	static int nargs = 0;
-	char debug_buf[4096];
-	int i;
-
-	/* Init args array */
-	if (*args == NULL) {
-		nargs = 2;
-		i = 0;
-		*args = xmalloc(sizeof(*args) * nargs);
-		(*args)[i++] = "ssh";
-		(*args)[i++] = NULL;
-	}
-
-	/* If asked to add args, then do so and return */
-	if (add_arg) {
-		i = nargs++ - 1;
-		*args = xrealloc(*args, sizeof(*args) * nargs);
-		(*args)[i++] = add_arg;
-		(*args)[i++] = NULL;
-		return(NULL);
-	}
-
-	/* no subsystem if the server-spec contains a '/' */
-	if(sftp_server == NULL || strchr(sftp_server, '/') == NULL)
-		ssh_make_args(args, "-s", sftp_server);
-	ssh_make_args(args, "-oForwardX11=no", sftp_server);
-	ssh_make_args(args, "-oForwardAgent=no", sftp_server);
-	ssh_make_args(args, use_ssh1 ? "-oProtocol=1" : "-oProtocol=2",
-				  sftp_server);
-
-	/* Otherwise finish up and return the arg array */
-	if (sftp_server != NULL)
-		ssh_make_args(args, sftp_server, sftp_server);
-	else
-		ssh_make_args(args, "sftp", sftp_server);
-
-	/* XXX: overflow - doesn't grow debug_buf */
-	debug_buf[0] = '\0';
-	for(i = 0; (*args)[i]; i++) {
-		if(i)
-			strlcat(debug_buf, " ", sizeof(debug_buf));
-		strlcat(debug_buf, (*args)[i], sizeof(debug_buf));
-	}
-	if(ftp_get_verbosity() == vbDebug)
-		ftp_err("SSH args: '%s'\n", debug_buf);
-	else
-		ftp_trace("SSH args: '%s'\n", debug_buf);
-
-	return *args;
 }
 
 static const char *ssh_cmd2txt(int code)
