@@ -18,11 +18,10 @@
 /*RCSID("$OpenBSD: buffer.c,v 1.13 2001/04/12 19:15:24 markus Exp $");*/
 
 #include "syshdr.h"
+#include "ftp.h"
 /*#include "xmalloc.h"*/
 #include "buffer.h"
 /*#include "log.h"*/
-
-#define fatal ftp_err     /* FIXME: ! */
 
 
 /* Initializes the buffer structure. */
@@ -118,9 +117,11 @@ buffer_len(Buffer *buffer)
 void
 buffer_get(Buffer *buffer, char *buf, u_int len)
 {
-	if (len > buffer->end - buffer->offset)
-		fatal("buffer_get: trying to get more bytes %d than in buffer %d",
-		    len, buffer->end - buffer->offset);
+	if (len > buffer->end - buffer->offset) {
+		ftp_err("buffer_get: trying to get more bytes %d than in buffer %d",
+				len, buffer->end - buffer->offset);
+		len = buffer->end - buffer->offset;
+	}
 	memcpy(buf, buffer->buf + buffer->offset, len);
 	buffer->offset += len;
 }
@@ -130,8 +131,10 @@ buffer_get(Buffer *buffer, char *buf, u_int len)
 void
 buffer_consume(Buffer *buffer, u_int bytes)
 {
-	if (bytes > buffer->end - buffer->offset)
-		fatal("buffer_consume: trying to get more bytes than in buffer");
+	if (bytes > buffer->end - buffer->offset) {
+		ftp_err("buffer_consume: trying to get more bytes than in buffer");
+		bytes = buffer->end - buffer->offset;
+	}
 	buffer->offset += bytes;
 }
 
@@ -140,8 +143,10 @@ buffer_consume(Buffer *buffer, u_int bytes)
 void
 buffer_consume_end(Buffer *buffer, u_int bytes)
 {
-	if (bytes > buffer->end - buffer->offset)
-		fatal("buffer_consume_end: trying to get more bytes than in buffer");
+	if (bytes > buffer->end - buffer->offset) {
+		ftp_err("buffer_consume_end: trying to get more bytes than in buffer");
+		bytes = buffer->end - buffer->offset;
+	}
 	buffer->end -= bytes;
 }
 
