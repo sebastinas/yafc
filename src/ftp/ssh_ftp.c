@@ -78,10 +78,6 @@ int ssh_connect(char **args, int *in, int *out, pid_t *sshpid)
 		close(c_in);
 		close(c_out);
 
-		signal(SIGINT, SIG_IGN);
-		signal(SIGTERM, SIG_IGN);
-		signal(SIGHUP, SIG_IGN);
-
 		execv(gvSSHProgram, args);
 		ftp_err("exec: %s: %s\n", gvSSHProgram, strerror(errno));
 		exit(1);
@@ -133,12 +129,14 @@ char **ssh_make_args(char ***args, char *add_arg)
 	/* XXX: overflow - doesn't grow debug_buf */
 	debug_buf[0] = '\0';
 	for(i = 0; (*args)[i]; i++) {
-		if (i)
+		if(i)
 			strlcat(debug_buf, " ", sizeof(debug_buf));
-
 		strlcat(debug_buf, (*args)[i], sizeof(debug_buf));
 	}
-	ftp_err("SSH args \"%s\"\n", debug_buf);
+	if(ftp_get_verbosity() == vbDebug)
+		ftp_err("SSH args: '%s'\n", debug_buf);
+	else
+		ftp_trace("SSH args: '%s'\n", debug_buf);
 
 	return *args;
 }
@@ -290,6 +288,9 @@ int ssh_reply(Buffer *m)
 		msg_len -= len;
 		buffer_append(m, buf, len);
 	}
+
+	ftp->fullcode = 200;
+	ftp->code = ctComplete;
 
 	return 0;
 }
@@ -680,6 +681,8 @@ u_int ssh_get_status(int expected_id)
 
 	status = buffer_get_int(&msg);
 	buffer_free(&msg);
+
+	ftp->ssh_last_status = status;
 
 	return status;
 }
