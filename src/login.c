@@ -1,4 +1,4 @@
-/* $Id: login.c,v 1.18 2002/02/23 13:16:30 mhe Exp $
+/* $Id: login.c,v 1.19 2003/07/12 10:21:10 mhe Exp $
  *
  * login.c -- connect and login
  *
@@ -89,8 +89,8 @@ void cmd_user(int argc, char **argv)
 		url_setpassword(ftp->url, p);
 	}
 
-	xfree(u);
-	xfree(p);
+	free(u);
+	free(p);
 }
 
 void yafc_open(const char *host, unsigned int opt,
@@ -161,7 +161,7 @@ void yafc_open(const char *host, unsigned int opt,
 		if(!url->protocol) {
 			url_setprotocol(url, xurl->protocol);
 			if(xurl->protocol && strcmp(xurl->protocol, "ssh") == 0)
-				url_setport(url, 22);
+				url_setport(url, xurl->port);
 		}
 
 		if(!test(opt, OP_NOAUTO)) {
@@ -187,7 +187,7 @@ void yafc_open(const char *host, unsigned int opt,
 	}
 
 	if(url->sftp_server && url->sftp_server[0] == 0) {
-		xfree(url->sftp_server);
+		free(url->sftp_server);
 		url->sftp_server = 0;
 	}
 
