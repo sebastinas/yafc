@@ -1,21 +1,14 @@
-/* args.c -- handles command arguments
+/* $Id: args.c,v 1.3 2001/05/12 18:43:01 mhe Exp $
  *
- * This file is part of Yafc, an ftp client.
- * This program is Copyright (C) 1998-2001 martin HedenfaLk
+ * args.c -- handles command arguments
+ *
+ * Yet Another FTP Client
+ * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * (at your option) any later version. See COPYING for more details.
  */
 
 #include "syshdr.h"
@@ -50,7 +43,8 @@ static char **alloc_argv(unsigned n)
 	return (char **)xmalloc(n * sizeof(char *));
 }
 
-void args_init3(args_t *args, int argc, char **argv, unsigned int first, unsigned int last)
+void args_init3(args_t *args, int argc, char **argv, unsigned int first,
+				unsigned int last)
 {
 	int i;
 
@@ -143,7 +137,8 @@ static args_t *split_args(const char *str)
 	return args;
 }
 
-void args_add_args3(args_t *args, const args_t *add_args, unsigned int first, unsigned int last)
+void args_add_args3(args_t *args, const args_t *add_args, unsigned int first,
+					unsigned int last)
 {
 	int i;
 	char **argv;
@@ -169,7 +164,7 @@ void args_add_args3(args_t *args, const args_t *add_args, unsigned int first, un
 	xfree(args->argv);
 	args->argv = argv;
 	args->argc = argc;
-} 
+}
 
 void args_add_args2(args_t *args, const args_t *add_args, unsigned int first)
 {
@@ -203,7 +198,7 @@ void args_push_front(args_t *args, const char *str)
 void args_remove_empty(args_t *args)
 {
 	int i;
-	
+
 	for(i=0;i<args->argc;) {
 		if(!args->argv[i] || strlen(args->argv[i]) == 0)
 			args_del(args, i, 1);
@@ -217,7 +212,7 @@ void args_remove_empty(args_t *args)
 void args_unquote(args_t *args)
 {
 	int i;
-	
+
 	for(i=0;i<args->argc;i++)
 		unquote(args->argv[i]);
 }
@@ -244,8 +239,8 @@ void args_insert_string(args_t *args, unsigned int index, const char *str)
 
 /* inserts INSARGS between FIRST and LAST (and ALWAYS?) into ARGS at index INDEX
  */
-void args_insert_args(args_t *args, unsigned int index,
-						const args_t *insargs, unsigned int first, unsigned int last)
+void args_insert_args(args_t *args, unsigned int index, const args_t *insargs,
+					  unsigned int first, unsigned int last)
 {
 	args_t *a;
 

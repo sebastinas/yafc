@@ -1,4 +1,5 @@
 ## Process this file with automake to produce Makefile.in
+## $Id: Makefile.am,v 1.3 2001/05/12 18:42:42 mhe Exp $
 
 noinst_LIBRARIES = libfoo.a
 

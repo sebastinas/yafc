@@ -1,4 +1,5 @@
 ## Process this file with automake to produce Makefile.in
+## $Id: Makefile.am,v 1.2 2001/05/12 18:43:01 mhe Exp $
 
 noinst_LIBRARIES = libmhe.a
 
