@@ -1,4 +1,4 @@
-/* $Id: put.c,v 1.11 2002/11/04 11:06:45 mhe Exp $
+/* $Id: put.c,v 1.12 2002/11/05 22:51:57 mhe Exp $
  *
  * put.c -- upload files
  *
@@ -22,6 +22,7 @@
 #include "commands.h"
 #include "lglob.h"
 #include "utils.h"
+#include "bashline.h"
 
 #ifdef HAVE_REGEX_H
 # include <regex.h>
@@ -117,7 +118,7 @@ static void putfile(const char *path, struct stat *sb,
 	char *dest, *dpath;
 	int r;
 	bool dir_created;
-	char *dest_dir;
+	char *dest_dir, *q_dest_dir;
 
 	if((put_glob_mask && fnmatch(put_glob_mask, base_name_ptr(path),
 								 FNM_EXTMATCH) == FNM_NOMATCH)
@@ -145,7 +146,9 @@ static void putfile(const char *path, struct stat *sb,
 	/* make sure destination directory exists */
 	dpath = base_dir_xptr(dest);
 	dest_dir = ftp_path_absolute(dpath);
-	r = ftp_mkpath(dest_dir);
+	q_dest_dir = bash_backslash_quote(dest_dir);
+	r = ftp_mkpath(q_dest_dir);
+	xfree(q_dest_dir);
 	xfree(dest_dir);
 	if(r == -1) {
 		transfer_mail_msg(_("failed to create directory %s\n"), dest_dir);

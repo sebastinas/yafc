@@ -1,4 +1,4 @@
-/* $Id: rm.c,v 1.3 2001/05/12 18:44:37 mhe Exp $
+/* $Id: rm.c,v 1.4 2002/11/05 22:51:57 mhe Exp $
  *
  * rm.c -- remove files, the 'rm' command
  *
@@ -18,6 +18,7 @@
 #include "strq.h"
 #include "input.h"
 #include "commands.h"
+#include "bashline.h"
 
 #define RM_INTERACTIVE 1
 #define RM_FORCE 2
@@ -89,10 +90,13 @@ static void remove_files(const list *gl, unsigned opt)
 			if(test(opt, RM_RECURSIVE)) {
 				char *recurs_mask;
 				list *rgl;
+				char *q_recurs_mask;
 
 				rgl = rglob_create();
 				asprintf(&recurs_mask, "%s/*", f->path);
-				rglob_glob(rgl, recurs_mask, true, true, 0);
+				q_recurs_mask = bash_backslash_quote(recurs_mask);
+				rglob_glob(rgl, q_recurs_mask, false, true, 0);
+				xfree(q_recurs_mask);
 				if(list_numitem(rgl) > 0)
 					remove_files(rgl, opt);
 				rglob_destroy(rgl);

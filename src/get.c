@@ -1,4 +1,4 @@
-/* $Id: get.c,v 1.13 2002/11/04 11:06:45 mhe Exp $
+/* $Id: get.c,v 1.14 2002/11/05 22:51:57 mhe Exp $
  *
  * get.c -- get file(s) from remote
  *
@@ -23,6 +23,7 @@
 #include "commands.h"
 #include <modechange.h>  /* in ../lib/ */
 #include "utils.h"
+#include "bashline.h"
 
 #ifdef HAVE_REGEX_H
 # include <regex.h>
@@ -476,6 +477,7 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
 					)
 					{
 					} else {
+						char *q_recurs_mask;
 
 						if(!test(opt, GET_PARENTS))
 							asprintf(&recurs_output, "%s/%s",
@@ -485,7 +487,9 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
 									 output ? output : ".");
 						rgl = rglob_create();
 						asprintf(&recurs_mask, "%s/*", opath);
-						rglob_glob(rgl, recurs_mask, true, true, 0);
+						q_recurs_mask = bash_backslash_quote(recurs_mask);
+						rglob_glob(rgl, q_recurs_mask, true, true, 0);
+						xfree(q_recurs_mask);
 						if(list_numitem(rgl) > 0)
 							getfiles(rgl, opt, recurs_output);
 						if(test(opt, GET_PRESERVE))
@@ -697,7 +701,7 @@ void cmd_get(int argc, char **argv)
 #endif
 		  case 'o':
 			get_output = tilde_expand_home(optarg, gvLocalHomeDir);
-			//stripslash(get_output);
+			/*stripslash(get_output);*/
 			unquote(get_output);
 			break;
 		  case 'v':

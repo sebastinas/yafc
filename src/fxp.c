@@ -1,4 +1,4 @@
-/* $Id: fxp.c,v 1.9 2001/05/13 20:06:55 mhe Exp $
+/* $Id: fxp.c,v 1.10 2002/11/05 22:51:57 mhe Exp $
  *
  * fxp.c -- transfer files between hosts
  *
@@ -20,6 +20,7 @@
 #include "strq.h"
 #include "shortpath.h"
 #include "utils.h"
+#include "bashline.h"
 
 #ifdef HAVE_REGEX_H
 # include <regex.h>
@@ -148,7 +149,7 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 	char *dest, *dpath;
 	int r;
 	bool dir_created;
-	char *dest_dir;
+	char *dest_dir, *q_dest_dir;
 	Ftp *thisftp = ftp;
 
 	if((fxp_glob_mask
@@ -180,7 +181,9 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 	/* make sure destination directory exists */
 	dpath = base_dir_xptr(dest);
 	dest_dir = ftp_path_absolute(dpath);
-	r = ftp_mkpath(dest_dir);
+	q_dest_dir = bash_backslash_quote(dest_dir);
+	r = ftp_mkpath(q_dest_dir);
+	xfree(q_dest_dir);
 	xfree(dest_dir);
 	if(r == -1) {
 		transfer_mail_msg(_("failed to create directory %s\n"), dest_dir);
@@ -399,7 +402,7 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 		if(risdir(fp)) {
 			if(test(opt, FXP_RECURSIVE)) {
 				char *recurs_output;
-				char *recurs_mask;
+				char *recurs_mask, *q_recurs_mask;
 				list *rgl;
 
 				if((fxp_dir_glob_mask
@@ -423,7 +426,9 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 									 output ? output : ".");
 						rgl = rglob_create();
 						asprintf(&recurs_mask, "%s/*", opath);
-						rglob_glob(rgl, recurs_mask, true, true, 0);
+						q_recurs_mask = bash_backslash_quote(recurs_mask);
+						rglob_glob(rgl, q_recurs_mask, true, true, 0);
+						xfree(q_recurs_mask);
 						if(list_numitem(rgl) > 0)
 							fxpfiles(rgl, opt, recurs_output);
 						if(test(opt, FXP_PRESERVE))
@@ -509,8 +514,6 @@ void cmd_fxp(int argc, char **argv)
 		{0, 0, 0, 0}
 	};
 
-	fxp_target = 0;
-
 	if(fxp_glob_mask) {
 		xfree(fxp_glob_mask);
 		fxp_glob_mask = 0;
@@ -528,6 +531,15 @@ void cmd_fxp(int argc, char **argv)
 		fxp_dir_rx_mask_set = 0;
 	}
 #endif
+
+	if(list_numitem(gvFtpList) == 2) {
+		fxp_tmp = gvFtpList->first;
+		if(fxp_tmp->data == ftp)
+			fxp_target = fxp_tmp->next->data;
+		else
+			fxp_target = fxp_tmp->data;
+	} else
+		fxp_target = 0;
 
 	optind = 0; /* force getopt() to re-initialize */
 	while((c=getopt_long(argc, argv, "aDfHiL:M:no:pPqrRstT:uvh",

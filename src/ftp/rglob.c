@@ -1,4 +1,4 @@
-/* $Id: rglob.c,v 1.3 2001/05/12 18:44:04 mhe Exp $
+/* $Id: rglob.c,v 1.4 2002/11/05 22:51:58 mhe Exp $
  *
  * rglob.c -- remote glob functions
  *
@@ -65,12 +65,14 @@ int rglob_glob(list *gl, const char *mask, bool cpifnomatch,
 		dep = path;
 	else dep++;
 	mp = xstrdup(dep);
+	unquote(mp);
 	/* note: mp might be NULL here, treat it like mp == "*" */
 
 	/* read the directory */
 	d = base_dir_xptr(path);
 	if(!d) d = xstrdup(ftp->curdir);
 	else unquote(d);
+
 	rdir = ftp_get_directory(d);
 	xfree(d);
 

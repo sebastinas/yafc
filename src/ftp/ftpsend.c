@@ -1,4 +1,4 @@
-/* $Id: ftpsend.c,v 1.13 2001/07/16 09:18:13 mhe Exp $
+/* $Id: ftpsend.c,v 1.14 2002/11/05 22:51:58 mhe Exp $
  *
  * ftpsend.c -- send/receive files and file listings
  *
@@ -779,7 +779,7 @@ int ftp_fxpfile(Ftp *srcftp, const char *srcfile,
 	Ftp *thisftp;
 	unsigned char addr[6];
 
-	printf("FxP: %s -> %s\n", srcftp->url->hostname, destftp->url->hostname);
+/*	printf("FxP: %s -> %s\n", srcftp->url->hostname, destftp->url->hostname);*/
 
 	if(srcftp == destftp) {
 		ftp_err(_("FxP between same hosts\n"));
@@ -865,6 +865,8 @@ int ftp_fxpfile(Ftp *srcftp, const char *srcfile,
 		ftp_cmd("STOR %s", destfile);
 		break;
 	}
+
+	ftp_cache_flush_mark_for(destfile);
 
 	if(ftp->code != ctPrelim) {
 		ftp_use(thisftp);
