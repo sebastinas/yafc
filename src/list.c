@@ -1,4 +1,4 @@
-/* $Id: list.c,v 1.10 2001/05/28 16:04:07 mhe Exp $
+/* $Id: list.c,v 1.11 2002/05/09 12:01:40 mhe Exp $
  *
  * list.c -- the remote cached 'ls' command
  *
@@ -121,7 +121,10 @@ static void ls_long(list *gl, unsigned opt, bool doclr)
 	listitem *li;
 	rfile *fi;
 
-	printf(_("total %lu\n"), rglob_size(gl));
+	if(test(opt, LS_HUMAN_READABLE))
+		printf(_("total %lu\n"), human_size(rglob_size(gl)));
+	else
+		printf(_("total %s\n"), rglob_size(gl));
 
 	for(li=gl->first; li; li=li->next) {
 
