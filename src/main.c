@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.19 2002/02/23 13:16:30 mhe Exp $
+/* $Id: main.c,v 1.20 2002/05/09 12:28:36 mhe Exp $
  *
  * main.c -- parses command line options and starts Yafc
  *
@@ -430,7 +430,17 @@ int main(int argc, char **argv, char **envp)
 			open_opt |= OP_NOAUTO;
 
 		for(i=optind; i<argc; i++) {
+#ifdef HAVE_GETTIMEOFDAY
+			struct timeval beg, end;
+			gettimeofday(&beg, 0);
+#endif
 			yafc_open(argv[i], open_opt, mech, 0);
+#ifdef HAVE_GETTIMEOFDAY
+			gettimeofday(&end, 0);
+			end.tv_sec -= beg.tv_sec;
+			if(gvBeepLongCommand && end.tv_sec > gvLongCommandTime)
+				fputc('\007', stderr);
+#endif
 #ifdef HAVE_LIBREADLINE /* add appropriate 'open' command to history */
 			asprintf(&s, "open %s%s",
 					 argv[i], test(open_opt, OP_ANON) ? " --anon" : "");
