@@ -58,6 +58,9 @@ int ssh_open_url(url_t *urlp)
 		xfree(p);
 	}
 
+	if(ftp_get_verbosity() == vbDebug)
+		ssh_make_args(&ftp->ssh_args, "-v");
+
 	ssh_make_args(&ftp->ssh_args, 0);
 
 	if(ssh_connect(ftp->ssh_args, &ftp->ssh_in, &ftp->ssh_out,
@@ -190,13 +193,13 @@ int ssh_unlink(const char *path)
 {
 	u_int status, id;
 
-	ftp_err("Sending SSH2_FXP_REMOVE \"%s\"\n", path);
-
 	id = ftp->ssh_id++;
 	ssh_send_string_request(id, SSH2_FXP_REMOVE, path, strlen(path));
 	status = ssh_get_status(id);
 	if(status != SSH2_FX_OK) {
-		ftp_err("Couldn't delete file: %s\n", fx2txt(status));
+/*		ftp_err("Couldn't delete file: %s\n", fx2txt(status));*/
+		ftp->code = ctError;
+		ftp->fullcode = 500;
 		return -1;
 	} else
 		ftp_cache_flush_mark_for(path);
