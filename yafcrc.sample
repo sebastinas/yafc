@@ -43,7 +43,7 @@ use_env_string yes
 remote_completion on
 
 # auto-create a bookmark when connection closed?
-auto_bookmark no # no/yes/ask
+auto_bookmark yes # no/yes/ask
 
 # by default, if auto_bookmark is true, non-anonymous passwords are not saved
 # anonymous passwords are always saved though
@@ -133,8 +133,11 @@ alias lls "shell ls -F"
 alias lmkdir "shell mkdir"
 alias lrmdir "shell rmdir"
 alias lcat "!cat"
-alias page "cat %* | $PAGER"
-alias zpage "zcat %* | $PAGER"
+alias zcat "cat --type=binary %* | zcat"
+alias bzcat "cat --type=binary %* | bzcat"
+alias page "cat --type=ascii %* | $PAGER"
+alias zpage "cat --type=binary %* | zcat | $PAGER"
+alias bzpage "cat --type=binary %* | bzcat | $PAGER"
 
 # ftp prompts
 #
@@ -292,16 +295,16 @@ transfer_end_string ""
 # use Kerberos 4, else use cleartext password. Always use passive mode.
 #machine newcastle login mhe mech krb5:krb4 passive yes
 
-# login anonymously to machine mayer.physto.se with other name yafc
-machine mayer.physto.se anonymous cwd /pub/yafc alias yafc 
+# login anonymously to machine yafc.sourceforge.net with other name yafc
+machine yafc.sourceforge.net anonymous cwd /pub/yafc alias yafc 
 
 machine eclipt.uni-klu.ac.at alias eclipt anonymous
  cwd /pub/linux/internet/yafc
 
-machine metalab.unc.edu anonymous cwd /pub alias metalab
-machine ftp.gnu.org cwd /pub/gnu alias gnu anonymous
-machine ftp.cdrom.com cwd /pub alias cdrom anonymous
-machine ftp.debian.org cwd /debian/dists/stable/main alias debian anonymous
+#machine metalab.unc.edu anonymous cwd /pub alias metalab
+#machine ftp.gnu.org cwd /pub/gnu alias gnu anonymous
+#machine ftp.cdrom.com cwd /pub alias cdrom anonymous
+#machine ftp.debian.org cwd /debian/dists/stable/main alias debian anonymous
 
 # You can include any other file using the 'include' statement
 #include ~/.yafc/machines
