@@ -4,7 +4,7 @@
  * this is not the complete bashline.c, see the bash source,
  * available at ftp://ftp.gnu.org/pub/
  * 
- * latest modified 1999-07-22
+ * latest modified 1999-07-22, 2000-11-04
  */
 
 /* Copyright (C) 1987,1991 Free Software Foundation, Inc.
@@ -76,6 +76,14 @@ char *bash_dequote_filename (const char *text, int quote_char)
   *r = '\0';
   return ret;
 }
+
+/* these should really be defined in readline/readline.h */
+#ifndef SINGLE_MATCH
+# define SINGLE_MATCH 1
+#endif
+#ifndef MULT_MATCH
+# define MULT_MATCH 2
+#endif
 
 #ifdef HAVE_LIBREADLINE
 /* Quote a filename using double quotes, single quotes, or backslashes
