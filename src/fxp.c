@@ -49,6 +49,7 @@
 #define FXP_BACKGROUND (1 << 14)
 #define FXP_ASCII (1 << 15)
 #define FXP_BINARY (1 << 16)
+#define FXP_OUTPUT_FILE (1 << 17)
 
 static Ftp *fxp_target = 0;
 static bool fxp_batch = false;
@@ -79,14 +80,14 @@ static void print_fxp_syntax(void)
 			 "  -H, --nohup          transfer files in background (nohup mode), quits yafc\n"
 			 "  -i, --interactive    prompt before each transfer\n"
 			 "  -L, --logfile=FILE   use FILE as logfile instead of ~/.yafc/nohup/nohup.<pid>\n"
-			 "  -m, --mask=GLOB      get only files matching GLOB pattern\n"
-			 "  -M, --rx-mask=REGEXP get only files matching REGEXP pattern\n"
-			 "  -n, --newer          get file if destination is newer than source file\n"
-			 "  -o, --output=DEST    store in destination directory DEST\n"
+			 "  -m, --mask=GLOB      only transfer files matching GLOB pattern\n"
+			 "  -M, --rx-mask=REGEXP only transfer files matching REGEXP pattern\n"
+			 "  -n, --newer          transfer file if destination is newer than source file\n"
+			 "  -o, --output=DEST    store in destination file/directory DEST\n"
 			 "  -p, --preserve       try to preserve file attributes\n"
 			 "  -P, --parents        append source path to destination\n"
 			 "  -q, --quiet          overrides --verbose\n"
-			 "  -r, --recursive      get directories recursively\n"
+			 "  -r, --recursive      transfer directories recursively\n"
 			 "  -R, --resume         resume broken download (restart at eof)\n"
 			 "  -s, --skip-existing  skip file if destination exists\n"
 			 "  -t, --tagged         transfer tagged files\n"
@@ -175,7 +176,9 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 		char *p = base_dir_xptr(fi->path);
 		asprintf(&dest, "%s/%s/%s", output, p, base_name_ptr(fi->path));
 		xfree(p);
-	} else
+	} else if(test(opt, FXP_OUTPUT_FILE))
+		dest = xstrdup(output);
+	else
 		asprintf(&dest, "%s/%s", output, base_name_ptr(fi->path));
 
 	path_collapse(dest);
@@ -704,6 +707,12 @@ void cmd_fxp(int argc, char **argv)
 	fxp_batch = fxp_owbatch = fxp_delbatch = test(opt, FXP_FORCE);
 	if(test(opt, FXP_FORCE))
 		opt &= ~FXP_INTERACTIVE;
+
+	if(fxp_output && !test(opt, FXP_RECURSIVE) && list_numitem(gl) +
+	   (test(opt, FXP_TAGGED) ? list_numitem(ftp->taglist) : 0) == 1)
+		{
+			opt |= FXP_OUTPUT_FILE;
+		}
 
 	gvInTransfer = true;
 	gvInterrupted = false;
