@@ -1,20 +1,20 @@
 #!/bin/sh
 
 echo -n "Running aclocal..."
-aclocal || exit
+aclocal-1.7 -I cf || exit
 echo " done"
 
 echo -n "Running autoheader..."
-autoheader || exit
+autoheader2.50 || exit
 echo " done"
 
 echo -n "Running autoconf..."
-autoconf || exit
+autoconf2.50 || exit
 echo " done"
 
 echo -n "Running automake..."
-automake || exit
+automake-1.7 || exit
 echo " done"
 
-echo "Running configure (without arguments)..."
-./configure $*
+echo "Running configure $*..."
+CFLAGS="-Wall -O2 -g" ./configure $*
