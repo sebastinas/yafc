@@ -143,7 +143,9 @@ void init_yafc(void)
 		gvWorkingDirectory ? gvWorkingDirectory : "~/.yafc",
 		get_local_curdir(),
 		gvLocalHomeDir);
-	
+
+	gvSSHProgram = xstrdup("/usr/bin/ssh");
+
 	gvAnonPasswd = getenv("EMAIL");
 	if(gvAnonPasswd)
 		gvAnonPasswd = xstrdup(gvAnonPasswd);
@@ -166,7 +168,7 @@ void init_yafc(void)
 #else
 	listify_string("none", gvDefaultMechanism);
 #endif
-	
+
 	gvPrompt1 = xstrdup("yafc> ");
 	gvPrompt2 = xstrdup("yafc %h> ");
 	gvPrompt3 = xstrdup("yafc %h:%42~> ");
@@ -299,7 +301,7 @@ int main(int argc, char **argv, char **envp)
 #ifdef SOCKS
 	SOCKSinit(argv[0]);
 #endif
-	
+
 #ifdef ENABLE_NLS
 # ifdef HAVE_SETLOCALE
 	setlocale(LC_ALL, "");
@@ -310,7 +312,7 @@ int main(int argc, char **argv, char **envp)
 #if 0 && (!defined(HAVE_SETPROCTITLE) && defined(linux))
 	initsetproctitle(argc, argv, envp);
 #endif
-	
+
 	while((c = getopt_long(argc, argv,
 						   "qhdDgant::r:uUm:pvVw:W:", longopts, 0)) != EOF)
 	{

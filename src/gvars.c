@@ -36,7 +36,7 @@ char *gvWorkingDirectory = 0;
 bool gvAutologin = true;
 
 /* path to the SSH program */
-char *gvSSHProgram = "/usr/bin/ssh";
+char *gvSSHProgram = 0;
 
 /* automatically reconnect on connection timeout */
 bool gvAutoReconnect = true;
