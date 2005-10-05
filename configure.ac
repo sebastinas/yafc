@@ -1,12 +1,12 @@
 dnl Process this file with autoconf to produce an m4 configure script.
-dnl $Id: configure.ac,v 1.3 2005/03/12 11:55:12 mhe Exp $
+dnl $Id: configure.ac,v 1.4 2005/10/05 20:10:09 splicednetworks Exp $
 
 dnl
 dnl init
 dnl
 
 AC_PREREQ(2.50)
-AC_INIT(yafc, 1.1, [yafc-devel@lists.sourceforge.net])
+AC_INIT(yafc, 1.1.1, [yafc-devel@lists.sourceforge.net])
 AC_CONFIG_AUX_DIR(support)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
@@ -134,7 +134,8 @@ AC_SEARCH_LIBS(herror, resolv nsl)
 
 AC_CHECK_FUNCS(gettimeofday uname setsockopt)
 
-AC_CHECK_DECLS([herror, asprintf, vasprintf])
+AC_CHECK_DECLS([asprintf, vasprintf])
+AC_CHECK_DECLS([herror],,,[#include<netdb.h>])
 
 YAFC_KERBEROS
 
