@@ -1,3 +1,15 @@
+New in 1.1.1
+-------------
+
+* Applied patch by Norihiko Murase for ls -t (timestamp) fix
+* Double fclose() segfault fix
+* autoconf herror include fix
+* Modified code to use strtoul / strtoull
+* Changed getpass hook to use new code (fixes ctrl+c password local echo bug)
+* Updated TODO
+* Confirmed remaining bugs as fixed or non-issues
+* Added KNOWN_ISSUES file
+
 New in 1.1
 ----------
 
