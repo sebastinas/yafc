@@ -1,4 +1,4 @@
-/* $Id: rfile.c,v 1.12 2004/05/20 11:10:52 mhe Exp $
+/* $Id: rfile.c,v 1.13 2005/10/05 19:32:47 splicednetworks Exp $
  *
  * rfile.c -- representation of a remote file
  *
@@ -202,6 +202,8 @@ int month_number(const char *str)
 
 void rfile_parse_time(rfile *f, const char *m, const char *d, const char *y)
 {
+    time_t now;
+    struct tm *tm_now;
     struct tm mt;
     int u;
 
@@ -216,10 +218,13 @@ void rfile_parse_time(rfile *f, const char *m, const char *d, const char *y)
     if(mt.tm_mon == -1)
         return;
 
+    time(&now);
+    tm_now = localtime(&now);
+    mt.tm_isdst = tm_now->tm_isdst;
+
     if(strchr(y, ':') != 0) {
         /* date on form "MMM DD HH:MM" */
-        time_t now, tmp;
-        struct tm *tm_now;
+        time_t tmp;
         char *eh, *em;
         u = strtoul(y, &eh, 10);
         if(eh == y)
@@ -230,8 +235,6 @@ void rfile_parse_time(rfile *f, const char *m, const char *d, const char *y)
             return;
         mt.tm_min = u;
 
-        time(&now);
-        tm_now = localtime(&now);
         mt.tm_year = tm_now->tm_year;
         /* might be wrong year, +- 1
          * filetime is not older than 6 months
@@ -439,7 +442,7 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
         free(saved_field[0]);
         f->owner = saved_field[1];
         f->group = saved_field[2];
-        f->size = atoll(saved_field[3]);
+        f->size = strtoull(saved_field[3],NULL,10);
         free(saved_field[3]);
         m = saved_field[4];
         NEXT_FIELD2;
@@ -453,7 +456,7 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
         free(saved_field[0]);
         f->owner = saved_field[1];
         f->group = xstrdup("group");
-        f->size = atoll(saved_field[2]);
+        f->size = strtoull(saved_field[2],NULL,10);
         free(saved_field[2]);
         m = saved_field[3];
         d = saved_field[4];
@@ -465,7 +468,7 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
         f->nhl = 0;
         f->owner = xstrdup("owner");;
         f->group = xstrdup("group");
-        f->size = atoll(saved_field[1]);
+        f->size = strtoull(saved_field[1],NULL,10);
         free(saved_field[1]);
         m = saved_field[2];
         d = saved_field[3];
@@ -480,7 +483,7 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
             free(saved_field[0]);
             f->owner = saved_field[1];
             f->group = saved_field[2];
-            f->size = atoll(saved_field[3]);
+            f->size = strtoull(saved_field[3],NULL,10);
             free(saved_field[3]);
             free(saved_field[4]);
 
@@ -624,7 +627,7 @@ static int rfile_parse_dos(rfile *f, char *str, const char *dirpath)
         f->perm[0] = 'd';
         f->size = 0L;
     } else {
-        f->size = (unsigned long long)atoll(e);
+        f->size = strtoull(e,NULL,10);
     }
 
     f->nhl = 1;
@@ -686,7 +689,7 @@ static int rfile_parse_mlsd(rfile *f, char *str, const char *dirpath)
              * FTP" Internet draft, but PureFTPd uses it for some
              * reason for size of directories
              */
-            f->size = atoll(value);
+            f->size = strtoull(value,NULL,10);
         else if(strcasecmp(factname, "type") == 0) {
             if(strcasecmp(value, "file") == 0)
                 isdir = false;

@@ -1,4 +1,4 @@
-/* $Id: ftpsend.c,v 1.17 2004/05/20 11:10:52 mhe Exp $
+/* $Id: ftpsend.c,v 1.18 2005/10/05 19:32:47 splicednetworks Exp $
  *
  * ftpsend.c -- send/receive files and file listings
  *
@@ -634,7 +634,7 @@ static int ftp_init_receive(const char *path, transfer_mode_t mode,
 			if(e != 0) {
 				while((e > ftp->reply) && isdigit((int)e[-1]))
 					e--;
-				ftp->ti.total_size = atol(e);
+				ftp->ti.total_size = strtoul(e,NULL,10);
 			} /* else we don't bother */
 		}
 	}
