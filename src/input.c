@@ -1,4 +1,4 @@
-/* $Id: input.c,v 1.10 2003/10/15 21:37:31 mhe Exp $
+/* $Id: input.c,v 1.11 2005/10/05 19:31:25 splicednetworks Exp $
  *
  * input.c -- string input and readline stuff
  *
@@ -53,7 +53,7 @@ char *input_read_string(const char *prompt)
 #endif
 }
 
-#if 1
+#if 0
 char *getpass_hook(const char *prompt)
 {
 #ifdef KERBEROS
@@ -71,6 +71,8 @@ char *getpass_hook(const char *prompt)
  * sourceforge. It didn't compile right away so I commented it out. This is
  * probably a good idea, but I just don't have the time.
  */
+
+/* this compiles ok now, fixes ctrl+c and doesn't use obsolete getpass() */
 
 # include <fcntl.h> 
 # include <sys/ioctl.h> 
