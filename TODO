@@ -1,37 +1,52 @@
-TODO list for Yafc
-------------------
+TODO Last Updated by John Buswell on Wednesday October 5th 2005
 
-* check and apply Eduard Blochs large file support patch
-* clean up source directory structure
-* put/get/fxp/rm shouldn't remove tagged items that failed to transfer
-  (eg, directories if -r option not given)
-* remove [l]untag: create [l]tag --remove file(s) instead
-* completion doesn't work correctly with rels (need to be expanded?)
-* improve documentation (help wanted)
-* Ctrl-C in ssh mode breaks ssh program *and* yafc, anyone?
-* look into the 'set' command; only a subset of the settings are
-  handled, and they aren't saved either, is it needed?
-* 'insgesamt 679748' (locale settings in LISTing -> parsing failed)
-   I'm not sure how to fix this
-* doesn't compile with socks5 ?
-+ fix --chgrp / --chmod for directories (get)
-+ support HTTP proxy (eg, http://www.squid-cache.org)
-   (suggested by Linder Erik)
-+ use libConfuse (will break config file)
-+ ability to specify preferred protocol (ssh/ftp) (Steve Grecni)
-+ automatically retry failed download (bullet-proof transfers)
-+ stop and retry transfer if it hangs (zero bytes in a configurable time)
-+ IPv6 support, EPSV and EPRT support (RFC2428)
-? option (in bookmarks?) to control LIST parameters (-a needed for PureFTPd)
-? skiplist: add files/dirs which shouldn't be transfered (Marcus Schommer)
-? if the LIST output can't be parsed, yafc should just dump it out
-  raw, or pehaps use NLST
-? config option for default answers to questions (get/put/fxp/...)
-? FTP over SSL/TLS support (rfc2228)
+note: This is still very much work in progress.
+
+
+TODO: Yafc 1.1.2
+-----------------
+
+* Fix SFTP slow transfers
+* Add support for usernames with whitespaces
+* Add support for stalled transfers to timeout
+> ability to specify preferred protocol (ssh/ftp) (Steve Grecni)
+> Enhance Documentation
+
+% Test socks5 support
+% Test chgrp / chmod for directories (get)
+% Test local settings in LISTing parse failure
+% Review set command
+
+Roadmap 2.0.0
+--------------
+
+> Feature: Recursive Deletion of Empty Directories
+
+   Add --delete-empty-dir option for get -Dr to remove directories once empty
+   Add --create-empty-dir option for get -Dr to create empty directories locally
+
+> Feature: Intelligent Connection Management
+
+   Add abort/connect/resume when threshold of n bytes not transferred in t time
+   Add connection timeout detection
+   Add alternate URL option
+
+> Feature: Persistant Reconnect
+
+   Add capability to persistantly reconnect until transfer is complete
+
+> Feature: FTP over TLS / SSL support (rfc2228)
+
+> Feature: SSH config file support
+
+> Feature: HTTP proxy support
+
+> Feature: IPv6 support, EPSV and EPRT support (RFC2428)
 
 
 Legend:
 
 * fix bug
-+ add feature
+> add feature
+% test
 ? questionable
