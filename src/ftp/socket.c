@@ -1,4 +1,4 @@
-/* $Id: socket.c,v 1.7 2004/05/20 11:10:52 mhe Exp $
+/* $Id: socket.c,v 1.8 2005/10/05 20:02:09 splicednetworks Exp $
  *
  * socket.c --
  *
@@ -84,7 +84,8 @@ void sock_destroy(Socket *sockp)
 		return;
 
 	fclose(sockp->sin);
-	fclose(sockp->sout);
+	if (sockp->sin != sockp->sout)		/* 853836 */
+		fclose(sockp->sout);
 	close(sockp->handle);
 	free(sockp);
 }
