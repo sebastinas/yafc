@@ -64,7 +64,7 @@ int lglob_glob(list *gl, const char *mask, bool ignore_multiples,
 	struct dirent *de;
 	DIR *dp;
 	char *directory;
-	char tmp[PATH_MAX];
+	char *tmp;
 	bool added = false, found = false;
 
 	directory = base_dir_xptr(mask);
@@ -74,12 +74,9 @@ int lglob_glob(list *gl, const char *mask, bool ignore_multiples,
 		return -1;
 	}
 
-	if (!getcwd(tmp, PATH_MAX)) {
-		if (ERANGE == errno) {
-			ftp_err("cwd too long\n");
-		} else {
-			ftp_err("getcwd(): %s\n", strerror(errno));
-		}
+	tmp = getcwd(NULL, 0);
+	if (tmp == (char *)NULL) {
+		ftp_err("getcwd(): %s\n", strerror(errno));
 		return -1;
 	}
 

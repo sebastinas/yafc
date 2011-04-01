@@ -55,7 +55,7 @@ char *malloc ();
 
 #define isodigit(c) ((c) >= '0' && (c) <= '7')
 
-static int oatoi ();
+static int oatoi(const char *s);
 
 /* Return a linked list of file mode change operations created from
    MODE_STRING, an ASCII string that contains either an octal number
@@ -71,9 +71,7 @@ static int oatoi ();
    return MODE_MEMORY_EXHAUSTED if there is insufficient memory. */
 
 struct mode_change *
-mode_compile (mode_string, masked_ops)
-     const char *mode_string;
-     unsigned masked_ops;
+mode_compile (const char *mode_string, unsigned masked_ops)
 {
   struct mode_change *head;	/* First element of the linked list. */
   struct mode_change *change;	/* An element of the linked list. */
@@ -308,11 +306,9 @@ mode_adjust (oldmode, changes)
 /* Free the memory used by the list of file mode change operations
    CHANGES. */
 
-void
-mode_free (changes)
-     register struct mode_change *changes;
+void mode_free (struct mode_change *changes)
 {
-  register struct mode_change *next;
+  struct mode_change *next;
 
   while (changes)
     {
@@ -325,9 +321,7 @@ mode_free (changes)
 /* Return a positive integer containing the value of the ASCII
    octal number S.  If S is not an octal number, return -1.  */
 
-static int
-oatoi (s)
-     char *s;
+static int oatoi (const char *s)
 {
   register int i;
 

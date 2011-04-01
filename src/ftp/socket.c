@@ -153,7 +153,7 @@ int sock_accept(Socket *sockp, const char *mode, bool pasvmode)
 {
 	int s;
 	struct sockaddr sa;
-	int l = sizeof(sa);
+	socklen_t l = sizeof(sa);
 	int tfd;
 
 	if(!pasvmode) {
