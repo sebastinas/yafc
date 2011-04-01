@@ -1,0 +1,62 @@
+Index: yafc-1.1.1.dfsg.1/src/ftp/ftp.c
+===================================================================
+--- yafc-1.1.1.dfsg.1.orig/src/ftp/ftp.c	2006-09-20 13:21:25.000000000 -0400
++++ yafc-1.1.1.dfsg.1/src/ftp/ftp.c	2006-09-20 13:22:16.000000000 -0400
+@@ -311,7 +311,13 @@
+         ftp_set_signal(SIGALRM, SIG_IGN);
+         return -1;
+     }
++    /* keep the value in urlp->port
+     urlp->port = ntohs(ftp->host->port);
++    and set it to 21 if it is -1 */
++    if(urlp->port == -1) {
++	    urlp->port = 21;
++    }
++
+ 
+     fprintf(stderr, "\r               ");
+     i = strlen(use_proxy ? gvProxyUrl->hostname : urlp->hostname);
+@@ -861,7 +867,7 @@
+     r = get_username(ftp->url, guessed_username, false);
+     if(r != 0)
+         return r;
+-    if(ptype > 1) {
++    if(ptype > 1 && ptype < 7) {
+         r = get_username(purl, 0, true);
+         if(r != 0)
+             return r;
+@@ -972,6 +978,9 @@
+                 ftp_cmd("USER %s", ftp->url->username);
+         }
+         break;
++      case 7:
++        ftp_cmd("USER %s@%s:%i", ftp->url->username, ftp->url->hostname, ftp->url->port);
++        break;
+     }
+ 
+     if(ftp->code == ctContinue) {
+Index: yafc-1.1.1.dfsg.1/src/rc.c
+===================================================================
+--- yafc-1.1.1.dfsg.1.orig/src/rc.c	2006-09-20 13:21:25.000000000 -0400
++++ yafc-1.1.1.dfsg.1/src/rc.c	2006-09-20 13:22:16.000000000 -0400
+@@ -516,7 +516,7 @@
+ 			NEXTSTR;
+ 
+ 			gvProxyType = atoi(e);
+-			if(gvProxyType < 0 || gvProxyType > 6) {
++			if(gvProxyType < 0 || gvProxyType > 7) {
+ 				errp(_("Invalid value for proxy_type: %d\n"), gvProxyType);
+ 				gvProxyType = 0;
+ 			}
+Index: yafc-1.1.1.dfsg.1/yafcrc.sample
+===================================================================
+--- yafc-1.1.1.dfsg.1.orig/yafcrc.sample	2006-09-20 13:21:25.000000000 -0400
++++ yafc-1.1.1.dfsg.1/yafcrc.sample	2006-09-20 13:22:16.000000000 -0400
+@@ -287,6 +287,7 @@
+ # 4 - login to proxy, OPEN real_host, USER real_user, PASS real_password
+ # 5 - connect to proxy, USER real_user@proxy_user@real_host, PASS real_password@proxy_password
+ # 6 - connect to proxy, USER proxy_user@real_host, PASS proxy_password, USER realuser, PASS real_password
++# 7 - connect to proxy, USER real_user@real_host:real_port, PASS real_password
+ 
+ proxy_type 0
+ 

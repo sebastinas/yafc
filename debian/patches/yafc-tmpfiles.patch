@@ -1,0 +1,94 @@
+Index: yafc-1.1.1.dfsg.1/src/ftp/ftp.c
+===================================================================
+--- yafc-1.1.1.dfsg.1.orig/src/ftp/ftp.c	2006-09-20 13:22:16.000000000 -0400
++++ yafc-1.1.1.dfsg.1/src/ftp/ftp.c	2006-09-20 13:23:56.000000000 -0400
+@@ -24,9 +24,6 @@
+ /* in cmd.c */
+ void exit_yafc(void);
+ 
+-/* in get.c */
+-char *make_unique_filename(const char *path);
+-
+ /* in tag.c */
+ void save_taglist(const char *alt_filename);
+ 
+@@ -1319,7 +1316,6 @@
+     FILE *fp = 0;
+     rdirectory *rdir;
+     bool is_curdir = false;
+-    char *tmpfilename, *e;
+     bool _failed = false;
+     char *dir;
+     bool is_mlsd = false;
+@@ -1332,27 +1328,12 @@
+ 
+     is_curdir = (strcmp(dir, ftp->curdir) == 0);
+ 
+-    asprintf(&e, "%s/yafclist.tmp", gvWorkingDirectory);
+-    tmpfilename = make_unique_filename(e);
+-    free(e);
+-    fp = fopen(tmpfilename, "w+");
+-
+-    if(fp == 0) {
+-        /* can't create a tmpfile in ~/.yafc, try in /tmp/ */
+-
+-        tmpfilename = make_unique_filename("/tmp/yafclist.tmp");
+-        fp = fopen(tmpfilename, "w+");
+-
+-        if(fp == 0) {
+-            ftp_err("%s: %s\n", tmpfilename, strerror(errno));
++    if((fp = tmpfile()) == NULL) {	/* can't create a tmpfile */
++	    ftp_err("%s\n", strerror(errno));
+             free(dir);
+-            free(tmpfilename);
+             return 0;
+-        }
+     }
+ 
+-    fchmod(fileno(fp), S_IRUSR | S_IWUSR);
+-
+     /* we do a "CWD" before the listing, because: we want a listing of
+      *  the directory contents, not the directory itself, and some
+      *  servers misunderstand this. If the target is a link to a
+@@ -1409,16 +1390,12 @@
+     ftp_trace("added directory '%s' to cache\n", dir);
+     list_additem(ftp->cache, rdir);
+     free(dir);
+-    unlink(tmpfilename);
+-    free(tmpfilename);
+     return rdir;
+ 
+   failed: /* forgive me father, for I have goto'ed */
++    if (fp)
++	    fclose(fp);
+     free(dir);
+-    if(fp)
+-        fclose(fp);
+-    unlink(tmpfilename);
+-    free(tmpfilename);
+     return 0;
+ }
+ 
+Index: yafc-1.1.1.dfsg.1/src/transfer.c
+===================================================================
+--- yafc-1.1.1.dfsg.1.orig/src/transfer.c	2004-05-20 07:10:52.000000000 -0400
++++ yafc-1.1.1.dfsg.1/src/transfer.c	2006-09-20 13:23:56.000000000 -0400
+@@ -386,17 +386,9 @@
+ 		return;
+ 
+ 	if(!opened) {
+-		char *e;
+-		char *tmpfilename;
+-
+-		asprintf(&e, "%s/yafcmail.tmp", gvWorkingDirectory);
+-		tmpfilename = make_unique_filename(e);
+-		free(e);
+-
+-		mailfp = fopen(tmpfilename, "w+");
++		mailfp = tmpfile();
+ 		opened = true;
+ 		if(mailfp) {
+-			unlink(tmpfilename);
+ 			setbuf(logfp, 0); /* change buffering */
+ 			transfer_mail_msg(_("From: yafc@%s\n"
+ 								"Subject: yafc transfer finished on %s\n"

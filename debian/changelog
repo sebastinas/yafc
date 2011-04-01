@@ -1,0 +1,361 @@
+yafc (1.1.1.dfsg.1-4) unstable; urgency=low
+
+  * Fix segfault on completing a line of whitespace (Closes: #418171)
+
+ -- Decklin Foster <decklin@red-bean.com>  Fri, 26 Sep 2008 17:43:55 -0400
+
+yafc (1.1.1.dfsg.1-3) unstable; urgency=low
+
+  * Added patch to fix useless sleep on interactive login (Closes: #197326)
+  * Explicitly disable Kerberos in configure as we don't currently support
+    it.
+
+ -- Decklin Foster <decklin@red-bean.com>  Wed, 28 Mar 2007 16:14:44 -0400
+
+yafc (1.1.1.dfsg.1-2) unstable; urgency=low
+
+  * Converted from dpatch to quilt.
+  * Added patches from neologix@free.fr:
+    - Allow expansion of '~user'
+    - Use tmpfile instead of mktemp (Closes: #368688)
+    - Fix some compiler warnings
+
+ -- Decklin Foster <decklin@red-bean.com>  Wed, 20 Sep 2006 13:24:41 -0400
+
+yafc (1.1.1.dfsg.1-1) unstable; urgency=low
+
+  * Strip out all the junk in the upstream tarball so we can upload this.
+
+ -- Decklin Foster <decklin@red-bean.com>  Mon, 10 Apr 2006 15:47:44 -0400
+
+yafc (1.1.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Decklin Foster <decklin@red-bean.com>  Thu,  6 Oct 2005 16:53:30 -0400
+
+yafc (1.1-4) unstable; urgency=low
+
+  * 10_list_all.dpatch: disabled, as this is causing problems with other
+    servers. Reopening bug #232012 until we can get a better solution.
+    (Closes: #275314)
+  * 20_proxy_7.dpatch: Provide a new type of proxy server.
+
+ -- Decklin Foster <decklin@red-bean.com>  Sat,  8 Jan 2005 19:34:34 -0500
+
+yafc (1.1-3) unstable; urgency=low
+
+  * Compile against libreadline5.
+
+ -- Decklin Foster <decklin@red-bean.com>  Sat, 25 Dec 2004 08:37:03 -0500
+
+yafc (1.1-2) unstable; urgency=low
+
+  * Set sysconfdir to /etc instead of ${prefix}/etc when configuring.
+    (Closes: #278024)
+
+ -- Decklin Foster <decklin@red-bean.com>  Mon, 25 Oct 2004 01:51:11 -0400
+
+yafc (1.1-1) unstable; urgency=low
+
+  * New upstream release; This merges all of the patches previously held in
+    debian/patches. Of note, the LFS patch has been applied with Sebastian
+    Henschel's fix. I would like to thank Martin Pitt and Michael Banck for
+    their NMUs during my unfortunate absence. (Closes: #214050, #222632)
+  * Drop /usr/bin/ftp alternative. (Closes: #221117)
+  * Added 10_list_all.dpatch from Sebastian Henschel (Closes: #232012)
+  * Added 30_pathmax.dpatch from Marc Dequènes (Closes: #223581)
+
+ -- Decklin Foster <decklin@red-bean.com>  Sat,  2 Oct 2004 06:01:09 -0400
+
+yafc (1.0-7.2) unstable; urgency=low
+
+  * NMU during Bug-Squashing-Party
+  * Applied patch by Sebastian Henschel fixing a segfault when 
+    transferring files on powerpc (Closes: #222632)
+
+ -- Michael Banck <mbanck@debian.org>  Sat, 17 Apr 2004 00:18:36 +0200
+
+yafc (1.0-7.1) unstable; urgency=low
+
+  * Non-maintainer upload
+  * added debian/patches/21_errno.dpatch to replace 'extern int errno' with
+    '#include <errno.h>' to work with newer glibcs (closes: #219588)
+
+ -- Martin Pitt <mpitt@debian.org>  Fri, 19 Dec 2003 11:30:10 +0100
+
+
+yafc (1.0-7) unstable; urgency=low
+
+  * Add ugly workaround to doc/Makefile.in to correctly detect the presence
+    of Debian install-info and not call it during the build (Closes: #214050)
+
+ -- Decklin Foster <decklin@red-bean.com>  Sun,  5 Oct 2003 14:46:49 -0400
+
+yafc (1.0-6) unstable; urgency=low
+
+  * Reverted part of the LFS patch from #172409. This seems wrong to me, but
+    it fixes the segfault for now. (Closes: #213058)
+
+ -- Decklin Foster <decklin@red-bean.com>  Mon, 29 Sep 2003 16:43:28 -0400
+
+yafc (1.0-5) unstable; urgency=low
+
+  * It helps if, when using dpatch, I actually build-dep on dpatch. Der.
+    (Closes: #212039)
+
+ -- Decklin Foster <decklin@red-bean.com>  Sun, 21 Sep 2003 19:55:34 -0400
+
+yafc (1.0-4) unstable; urgency=low
+
+  * Converted to dpatch
+    - 10_lfs: Large file support from Eduard, we've had this for a while.
+    - 11_leak2: Thomas Habets's fix for memory and file descriptor leaks.
+      (Closes: #177385)
+    - 12_ssh_opts: Also from Eduard, backported from CVS: allow passing
+      arbitrary options to ssh. (Closes: #166473)
+    - 13_help_arg: Another one from Eduard, improving the help command.
+    - 20_fsf_addr: Placate that silly lintian warning.
+
+ -- Decklin Foster <decklin@red-bean.com>  Sat, 20 Sep 2003 21:37:21 -0400
+
+yafc (1.0-3) unstable; urgency=low
+
+  * Register as an alternative for /usr/bin/ftp (Closes: #203743)
+  * Bump Standards-Version to 3.6.0
+
+ -- Decklin Foster <decklin@red-bean.com>  Wed, 20 Aug 2003 16:14:26 -0400
+
+yafc (1.0-2) unstable; urgency=low
+
+  * The "Reports of my vacation have been greatly exaggerated" release
+  * Fix bugs introduced by the LFS patch (#156982). Thanks to Martin for
+    identifying the problem and Ari Pollak for providing the patch.
+    (Closes: #172087, #172409)
+  * Support DEB_BUILD_OPTIONS =~ /noopt/ correctly (thanks again to Ari for
+    pointing this out). My eyes must have glazed over while reading the
+    upgrading checklist.
+
+ -- Decklin Foster <decklin@red-bean.com>  Mon, 16 Dec 2002 19:00:53 -0500
+
+yafc (1.0-1) unstable; urgency=low
+
+  * New upstream release
+  * Added reference to /usr/share/common-licenses/GPL in copyright file.
+
+ -- Decklin Foster <decklin@red-bean.com>  Mon, 16 Dec 2002 19:00:49 -0500
+
+yafc (0.7.10-3) unstable; urgency=low
+
+  * Don't free return value of getenv (Closes: #168089)
+  * Use debhelper v4 and Standards-Version 3.5.7
+  * Updated copyright file
+
+ -- Decklin Foster <decklin@red-bean.com>  Wed,  6 Nov 2002 17:16:52 -0500
+
+yafc (0.7.10-2) unstable; urgency=low
+
+  * Applied Eduard Bloch's LFS patch (Closes: #156982)
+
+ -- Decklin Foster <decklin@red-bean.com>  Mon, 19 Aug 2002 15:50:00 -0400
+
+yafc (0.7.10-1) unstable; urgency=low
+
+  * New upstream release (Closes: #148688)
+
+ -- Decklin Foster <decklin@red-bean.com>  Tue,  4 Jun 2002 02:47:20 -0400
+
+yafc (0.7.8-1) unstable; urgency=low
+
+  * New upstream release (Closes: #135623)
+
+ -- Decklin Foster <decklin@red-bean.com>  Mon,  8 Apr 2002 01:18:03 -0400
+
+yafc (0.7.7-1) unstable; urgency=low
+
+  * New upstream release
+  * Fixed .diff.gz
+
+ -- Decklin Foster <decklin@red-bean.com>  Sat, 23 Feb 2002 16:33:32 -0500
+
+yafc (0.7.6-2) unstable; urgency=low
+
+  * Fixed segfault on unspecified protocol and port (Closes: #135265)
+
+ -- Decklin Foster <decklin@red-bean.com>  Sat, 23 Feb 2002 00:18:02 -0500
+
+yafc (0.7.6-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Decklin Foster <decklin@red-bean.com>  Mon, 18 Feb 2002 18:30:30 -0500
+
+yafc (0.7.5-1) unstable; urgency=low
+
+  * New upstream release
+  * Bump Standards-Version, add --build and --host to ./configure
+
+ -- Decklin Foster <decklin@red-bean.com>  Sun,  4 Nov 2001 10:53:20 -0500
+
+yafc (0.7.4-1) unstable; urgency=low
+
+  * New upstream release, fixes DOS directory listing (Closes: #107155)
+
+ -- Decklin Foster <decklin@red-bean.com>  Fri, 24 Aug 2001 12:15:31 -0400
+
+yafc (0.7.3-1) unstable; urgency=low
+
+  * New upstream release, fixes 'alias l' segfault (Closes: #106621)
+
+ -- Decklin Foster <decklin@red-bean.com>  Fri, 27 Jul 2001 13:28:31 -0400
+
+yafc (0.7.2-1) unstable; urgency=low
+
+  * New upstream release
+  * Added texinfo to Build-Depends
+  * Update Standards-Version to 3.5.5
+
+ -- Decklin Foster <decklin@red-bean.com>  Fri, 20 Jul 2001 21:01:52 -0400
+
+yafc (0.7.1-1) unstable; urgency=low
+
+  * New upstream release
+  * Updated to use debhelper v3 and Standards-Version 3.5.4
+
+ -- Decklin Foster <decklin@red-bean.com>  Tue, 22 May 2001 20:41:06 -0400
+
+yafc (0.6.6-2) unstable; urgency=low
+
+  * Increase debhelper build dep to >= 2.1.6. This is needed because
+    we depend on dh_strip to do the right thing when "nostrip" is set
+    in DEB_BUILD_OPTIONS (otherwise, adding "debug" would be useless
+    as there would be no way to prevent debugging information from
+    being stripped).
+
+ -- Decklin Foster <decklin@red-bean.com>  Tue, 13 Feb 2001 19:25:52 -0500
+
+yafc (0.6.6-1) unstable; urgency=low
+
+  * New upstream release.
+  * Made debhelper build dependency versioned.
+  * Removed -g from the default compilation flags, and added support
+    for "debug" in DEB_BUILD_OPTIONS.
+  * Increased Standards-Version to 3.5.0.0.
+
+ -- Decklin Foster <decklin@red-bean.com>  Sat, 10 Feb 2001 17:48:36 -0500
+
+yafc (0.6.5-1) unstable; urgency=low
+
+  * New upstream release (this fixes the stale /etc/yafcrc I left in
+    the last version).
+
+ -- Decklin Foster <decklin@red-bean.com>  Fri, 20 Oct 2000 18:24:40 -0400
+
+yafc (0.6.4-1) unstable; urgency=low
+
+  * New upstream release
+  * Checked recent revisions to policy and updated Standards-Version
+  * Updated debhelper rules to v2
+  * install upstream changelog as changelog.gz instead of NEWS.gz
+  * Updated debian/copyright info from upstream COPYRIGHT (also
+    fixed emails). 0.6.3 was held due to copyright problems.
+
+ -- Decklin Foster <decklin@red-bean.com>  Sat, 14 Oct 2000 13:22:11 -0400
+
+yafc (0.6.2-1) unstable; urgency=low
+
+  * New upstream release
+  * debian/copyright: updated URL
+  * debian/dirs: fixed etc/ typo
+  * debian/rules: corrected build target
+
+ -- Decklin Foster <decklin@red-bean.com>  Fri, 15 Sep 2000 08:55:41 -0400
+
+yafc (0.6.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Decklin Foster <decklin@red-bean.com>  Tue,  5 Sep 2000 23:30:44 -0400
+
+yafc (0.6-1) unstable; urgency=low
+
+  * New upstream release
+  * debian/control: added Build-Depends
+
+ -- Decklin Foster <decklin@red-bean.com>  Thu, 31 Aug 2000 22:27:46 -0400
+
+yafc (0.5.8-1) unstable; urgency=low
+
+  * New upstream release
+  * Moved the sample yafcrc out of /usr/share/doc, as /etc/yafcrc is
+    now read by the program.
+
+ -- Decklin Foster <decklin@red-bean.com>  Tue, 15 Aug 2000 18:41:03 -0400
+
+yafc (0.5.6-1) unstable; urgency=low
+
+  * New upstream release
+  * Fixed author's email in debian/copyright
+
+ -- Decklin Foster <decklin@red-bean.com>  Sun, 23 Jul 2000 21:31:44 -0400
+
+yafc (0.5.5-2) unstable; urgency=low
+
+  * Wrote man page.
+
+ -- Decklin Foster <decklin@red-bean.com>  Mon, 17 Jul 2000 00:44:50 -0500
+
+yafc (0.5.5-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Decklin Foster <fosterd@hartwick.edu>  Fri, 30 Jun 2000 10:33:14 -0400
+
+yafc (0.5.4-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Decklin Foster <fosterd@hartwick.edu>  Sat, 20 May 2000 20:39:25 -0400
+
+yafc (0.5.2-1) unstable; urgency=low
+
+  * New upstream release
+  * Moved info documentation to /usr/share/info
+
+ -- Decklin Foster <fosterd@hartwick.edu>  Fri, 21 Apr 2000 18:58:56 -0400
+
+yafc (0.5.0-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Decklin Foster <fosterd@hartwick.edu>  Thu,  9 Dec 1999 21:18:58 -0500
+
+yafc (0.4.8-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Decklin Foster <fosterd@hartwick.edu>  Sun, 31 Oct 1999 14:11:44 -0500
+
+yafc (0.4.6-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Decklin Foster <decklin@home.com>  Thu, 19 Aug 1999 13:35:05 -0400
+
+yafc (0.4.5-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Decklin Foster <decklin@home.com>  Sat, 24 Jul 1999 12:37:19 -0400
+
+yafc (0.4.3-2) unstable; urgency=low
+
+  * Added /usr/doc/yafc/examples.
+
+ -- Decklin Foster <decklin@home.com>  Thu, 24 Jun 1999 00:39:10 -0400
+
+yafc (0.4.3-1) unstable; urgency=low
+
+  * Initial release
+
+ -- Decklin Foster <decklin@home.com>  Mon, 21 Jun 1999 20:20:33 -0400

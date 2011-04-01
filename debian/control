@@ -1,0 +1,17 @@
+Source: yafc
+Section: net
+Priority: optional
+Maintainer: Decklin Foster <decklin@red-bean.com>
+Standards-Version: 3.7.2
+Build-Depends: debhelper (>= 4.0.0), quilt, texinfo, libncurses5-dev, libreadline5-dev
+
+Package: yafc
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: yet another FTP client
+ yafc is an ftp client intended to be a replacement for the standard
+ ftp(1) program. Features include directory cache, remote filename
+ completion, aliases, colored ls, recursive get/put/ls/rm, nohup mode
+ transfers, tagging (queueing), background downloading, and more.
+ .
+ This version is compiled without KTH Kerberos 4/5 authentication.
