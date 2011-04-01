@@ -7,6 +7,7 @@ dnl
 
 AC_PREREQ(2.50)
 AC_INIT(yafc, 1.1.1, [yafc-devel@lists.sourceforge.net])
+AC_SYS_LARGEFILE
 AC_CONFIG_AUX_DIR(support)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
