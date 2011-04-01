@@ -62,24 +62,6 @@ struct krb4_data {
 };
 
 static int
-krb_get_int(void *f, u_int32_t *to, int size, int lsb)
-{
-    int i;
-    unsigned char *from = (unsigned char *)f;
-
-    *to = 0;
-    if(lsb){
-        for(i = size-1; i >= 0; i--)
-            *to = (*to << 8) | from[i];
-    }else{
-        for(i = 0; i < size; i++)
-            *to = (*to << 8) | from[i];
-    }
-    return size;
-}
-
-
-static int
 krb4_check_prot(void *app_data, int level)
 {
     if(level == prot_confidential)

@@ -51,6 +51,12 @@
 # if defined(HAVE_GSSAPI_GSSAPI_KRB5_H)
 #   include <gssapi/gssapi_krb5.h>
 # endif
+ /* This is needed in Gentoo's Heimdal install which correctly creates
+  * symlinks to match MIT's distribution locations for gssapi/*.h
+  */
+# if defined(HAVE_GSSAPI_KRB5_ERR_H)
+#   include <gssapi/krb5_err.h>
+# endif
 #else
 # error "Need gssapi.h from either Heimdal or MIT krb5"
 #endif
@@ -71,11 +77,6 @@
  */
 static gss_OID_desc gss_c_nt_hostbased_service_oid_desc =
 {10, (void *)"\x2a\x86\x48\x86\xf7\x12" "\x01\x02\x01\x04"};
-
-static gss_OID GSS_C_NT_HOSTBASED_SERVICE = &gss_c_nt_hostbased_service_oid_desc;
-
-
-
 
 /*RCSID("$Id: gssapi.c,v 1.5 2002/12/05 22:12:36 mhe Exp $");*/
 

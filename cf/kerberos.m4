@@ -285,6 +285,10 @@ AC_DEFUN(YAFC_SEARCH_GSSAPI_HEADERS,
           [
 #include <gssapi/gssapi.h>
           ])
+		AC_CHECK_HEADERS([gssapi/krb5_err.h],,,
+		  [
+#include <gssapi/krb5_err.h>
+		  ])
       fi
     fi
     if test "$yafc_found_gssapi_inc" = "yes"; then
