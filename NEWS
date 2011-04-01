@@ -1,3 +1,12 @@
+New in 1.1.2
+------------
+
+* Applied several patches from Debian
+* Applied patch by Lionel Landwerlin (dj_death) to fix wrong strcpy usage
+* Added large file support
+* Applied patches from Gentoo (kerberos related build fixes)
+
+
 New in 1.1.1
 -------------
 
