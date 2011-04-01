@@ -96,9 +96,10 @@ void strpush(char *s, int n)
 
 void strpull(char *s, int n)
 {
-	if(n > strlen(s))
+	int l = strlen(s);
+	if(n > l)
 		n = strlen(s);
-	strcpy(s, s+n);
+	memmove(s, s+n, l-n+1);
 }
 
 /* returns number of C in STR */
