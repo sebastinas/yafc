@@ -971,7 +971,7 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 	}
 
 	if(rp > 0L) {
-		if(fseek(fp, rp, SEEK_SET) != 0) {
+		if(fseeko(fp, rp, SEEK_SET) != 0) {
 			ftp_err(_("%s: %s, transfer cancelled\n"),
 					outfile, strerror(errno));
 			close_func(fp);
@@ -1044,7 +1044,7 @@ int ftp_putfile(const char *infile, const char *outfile, putmode_t how,
 
 
 	if(ftp->restart_offset > 0L) {
-		if(fseek(fp, ftp->restart_offset, SEEK_SET) != 0) {
+		if(fseeko(fp, ftp->restart_offset, SEEK_SET) != 0) {
 			ftp_err(_("%s: %s, transfer cancelled\n"),
 					outfile, strerror(errno));
 			fclose(fp);

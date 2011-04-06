@@ -238,6 +238,8 @@ size_t strlcpy (char *dst, const char *src, size_t dst_sz);
 # endif
 #endif
 
+#include <pathmax.h>  /* define PATH_MAX somehow, requires sys/types.h */
+
 typedef RETSIGTYPE (*sighandler_t)(int);
 
 #ifndef bool

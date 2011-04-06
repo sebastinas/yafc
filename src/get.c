@@ -98,7 +98,7 @@ static int do_the_get(const char *src, const char *dest,
 {
     int r = 0;
     char *fulldest;
-    char *tmp;
+    char tmp[PATH_MAX];
     transfer_mode_t type;
 
     type = ascii_transfer(src) ? tmAscii : gvDefaultType;
@@ -107,10 +107,7 @@ static int do_the_get(const char *src, const char *dest,
     else if(test(opt, GET_BINARY))
         type = tmBinary;
 
-    tmp = getcwd(NULL, 0);
-    if (tmp == (char *)NULL)
-        return -1;
-
+    getcwd(tmp, PATH_MAX);
     fulldest = path_absolute(dest, tmp, 0);
 
 #if 0 && (defined(HAVE_SETPROCTITLE) || defined(linux))
@@ -140,9 +137,6 @@ static int do_the_get(const char *src, const char *dest,
     if(gvUseEnvString && ftp_connected())
         setproctitle("%s", ftp->url->hostname);
 #endif
-
-    free(tmp);
-
     return r;
 }
 

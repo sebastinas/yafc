@@ -354,9 +354,6 @@ char **the_complete_function(char *text, int start, int end)
 	rl_completion_append_character = ' ';
 #endif
 
-    if (start == end)
-        return NULL;
-
 	if(force_completion_type == cpUnset) {
 		int i;
 		int cmd_start;

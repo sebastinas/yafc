@@ -207,8 +207,7 @@ void yafc_open(const char *host, unsigned int opt,
 		if(r == -1)
 			break;
 
-		if(url->username &&
-				(gvConnectAttempts == -1 || i+1 < gvConnectAttempts)) {
+		if(gvConnectAttempts == -1 || i+1 < gvConnectAttempts) {
 			ftp_set_close_handler();
 			fprintf(stderr, _("Sleeping %u seconds before connecting again"
 							  " (attempt #%d)...\n"),

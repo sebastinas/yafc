@@ -24,6 +24,9 @@
 /* in cmd.c */
 void exit_yafc(void);
 
+/* in get.c */
+char *make_unique_filename(const char *path);
+
 /* in tag.c */
 void save_taglist(const char *alt_filename);
 
@@ -308,13 +311,7 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
         ftp_set_signal(SIGALRM, SIG_IGN);
         return -1;
     }
-    /* keep the value in urlp->port
     urlp->port = ntohs(ftp->host->port);
-    and set it to 21 if it is -1 */
-    if(urlp->port == -1) {
-	    urlp->port = 21;
-    }
-
 
     fprintf(stderr, "\r               ");
     i = strlen(use_proxy ? gvProxyUrl->hostname : urlp->hostname);
@@ -864,7 +861,7 @@ int ftp_login(const char *guessed_username, const char *anonpass)
     r = get_username(ftp->url, guessed_username, false);
     if(r != 0)
         return r;
-    if(ptype > 1 && ptype < 7) {
+    if(ptype > 1) {
         r = get_username(purl, 0, true);
         if(r != 0)
             return r;
@@ -974,9 +971,6 @@ int ftp_login(const char *guessed_username, const char *anonpass)
             if(ftp->code < ctTransient)
                 ftp_cmd("USER %s", ftp->url->username);
         }
-        break;
-      case 7:
-        ftp_cmd("USER %s@%s:%i", ftp->url->username, ftp->url->hostname, ftp->url->port);
         break;
     }
 
@@ -1316,6 +1310,7 @@ rdirectory *ftp_read_directory(const char *path)
     FILE *fp = 0;
     rdirectory *rdir;
     bool is_curdir = false;
+    char *tmpfilename, *e;
     bool _failed = false;
     char *dir;
     bool is_mlsd = false;
@@ -1328,11 +1323,26 @@ rdirectory *ftp_read_directory(const char *path)
 
     is_curdir = (strcmp(dir, ftp->curdir) == 0);
 
-    if((fp = tmpfile()) == NULL) {	/* can't create a tmpfile */
-	    ftp_err("%s\n", strerror(errno));
+    asprintf(&e, "%s/yafclist.tmp", gvWorkingDirectory);
+    tmpfilename = make_unique_filename(e);
+    free(e);
+    fp = fopen(tmpfilename, "w+");
+
+    if(fp == 0) {
+        /* can't create a tmpfile in ~/.yafc, try in /tmp/ */
+
+        tmpfilename = make_unique_filename("/tmp/yafclist.tmp");
+        fp = fopen(tmpfilename, "w+");
+
+        if(fp == 0) {
+            ftp_err("%s: %s\n", tmpfilename, strerror(errno));
             free(dir);
+            free(tmpfilename);
             return 0;
+        }
     }
+
+    fchmod(fileno(fp), S_IRUSR | S_IWUSR);
 
     /* we do a "CWD" before the listing, because: we want a listing of
      *  the directory contents, not the directory itself, and some
@@ -1362,13 +1372,13 @@ rdirectory *ftp_read_directory(const char *path)
         _failed = (ftp_list("MLSD", asdf, fp) != 0);
         free(asdf);
 #else
-        _failed = (ftp_list("MLSD", "-a", fp) != 0);
+        _failed = (ftp_list("MLSD", 0, fp) != 0);
 #endif
         if(_failed && ftp->code == ctError)
             ftp->has_mlsd_command = false;
     }
     if(!ftp->has_mlsd_command) {
-        _failed = (ftp_list("LIST", "-a", fp) != 0);
+        _failed = (ftp_list("LIST", 0, fp) != 0);
         is_mlsd = false;
     }
 
@@ -1390,12 +1400,16 @@ rdirectory *ftp_read_directory(const char *path)
     ftp_trace("added directory '%s' to cache\n", dir);
     list_additem(ftp->cache, rdir);
     free(dir);
+    unlink(tmpfilename);
+    free(tmpfilename);
     return rdir;
 
   failed: /* forgive me father, for I have goto'ed */
-    if (fp)
-	    fclose(fp);
     free(dir);
+    if(fp)
+        fclose(fp);
+    unlink(tmpfilename);
+    free(tmpfilename);
     return 0;
 }
 

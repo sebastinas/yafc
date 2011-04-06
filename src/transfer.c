@@ -386,9 +386,17 @@ void transfer_mail_msg(const char *fmt, ...)
 		return;
 
 	if(!opened) {
-		mailfp = tmpfile();
+		char *e;
+		char *tmpfilename;
+
+		asprintf(&e, "%s/yafcmail.tmp", gvWorkingDirectory);
+		tmpfilename = make_unique_filename(e);
+		free(e);
+
+		mailfp = fopen(tmpfilename, "w+");
 		opened = true;
 		if(mailfp) {
+			unlink(tmpfilename);
 			setbuf(logfp, 0); /* change buffering */
 			transfer_mail_msg(_("From: yafc@%s\n"
 								"Subject: yafc transfer finished on %s\n"

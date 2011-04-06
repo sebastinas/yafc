@@ -65,10 +65,9 @@ static void dirtodots(char *path, unsigned maxlen)
 
 static char *_shortpath(char *path, unsigned maxlen)
 {
-	static char *tmp = NULL;
+	static char tmp[PATH_MAX];
 	int len = strlen(path);
 
-	tmp = realloc(tmp, len+1);
 	strcpy(tmp, path);
 
 	if(len <= maxlen)
@@ -82,14 +81,12 @@ static char *_shortpath(char *path, unsigned maxlen)
 char *shortpath(const char *path, unsigned maxlen, const char *home)
 {
 	char *e;
-	static char *tmp = NULL;
-	int len = strlen(path);
+	static char tmp[PATH_MAX];
 	extern bool gvTilde;
 
 	if(!path)
 		return 0;
 
-	tmp = realloc(tmp, len+1);
 	strcpy(tmp, path);
 
 	path_collapse(tmp);

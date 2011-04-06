@@ -21,7 +21,7 @@
 /* print local working directory */
 void cmd_lpwd(int argc, char **argv)
 {
-	char *tmp;
+	char tmp[PATH_MAX+1];
 
 	if(argv) {
 		OPT_HELP("Print local working directory.  Usage:\n"
@@ -32,8 +32,7 @@ void cmd_lpwd(int argc, char **argv)
 		maxargs(optind - 1);
 	}
 
-	tmp = getcwd(NULL, 0);
-	if (tmp == (char *)NULL) {
+	if(getcwd(tmp, PATH_MAX) == 0) {
 		fprintf(stderr, _("Couldn't get local working directory...\n"));
 		return;
 	}
@@ -43,7 +42,7 @@ void cmd_lpwd(int argc, char **argv)
 /* local change directory */
 void cmd_lcd(int argc, char **argv)
 {
-	char *e = 0, *tmp;
+	char *e = 0, tmp[PATH_MAX+1];
 	char *te;
 
 	OPT_HELP("Change local working directory.  Usage:\n"
@@ -64,11 +63,7 @@ void cmd_lcd(int argc, char **argv)
 	}
 	if(!e)
 		return;
-	tmp = getcwd(NULL, 0);
-	if (tmp == (char *)NULL) {
-		fprintf(stderr, _("Couldn't change local working directory...\n"));
-		return;
-	}
+	getcwd(tmp, PATH_MAX);
 	te = tilde_expand_home(e, gvLocalHomeDir);
 	if(chdir(te) == -1)
 		perror(te);

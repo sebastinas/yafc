@@ -60,7 +60,7 @@ char *expand_prompt(const char *fmt)
 	unsigned maxlen;
 	char *ins, *e;
 	bool freeins;
-	char *tmp;
+	char tmp[PATH_MAX+1];
 
 
 	if(!fmt)
@@ -149,14 +149,12 @@ char *expand_prompt(const char *fmt)
 				ins = shortpath(ftp->curdir, maxlen, ftp->homedir);
 				break;
 			case 'l': /* current local directory */
-				tmp = getcwd(NULL, 0);
+				getcwd(tmp, PATH_MAX);
 				ins = shortpath(tmp, maxlen, 0);
-				free(tmp);
 				break;
 			case 'L': /* basename(%l) */
-				tmp = getcwd(NULL, 0);
+				getcwd(tmp, PATH_MAX);
 				ins = (char *)base_name_ptr(tmp);
-				free(tmp);
 				break;
 			case '%': /* percent sign */
 				ins = "%";

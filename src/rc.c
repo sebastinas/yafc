@@ -516,7 +516,7 @@ int parse_rc(const char *file, bool warn)
 			NEXTSTR;
 
 			gvProxyType = atoi(e);
-			if(gvProxyType < 0 || gvProxyType > 7) {
+			if(gvProxyType < 0 || gvProxyType > 6) {
 				errp(_("Invalid value for proxy_type: %d\n"), gvProxyType);
 				gvProxyType = 0;
 			}
