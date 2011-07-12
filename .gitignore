@@ -17,3 +17,4 @@ src/yafc
 src/yafcrc.h
 src/ftp/libftp.a
 src/libmhe/libmhe.a
+contrib/*.spec
