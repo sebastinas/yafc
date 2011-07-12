@@ -18,7 +18,7 @@ dnl checks for rl_function_of_keyseq (appeared in 2.0)
 dnl checks for rl_completion_append_character (appeared in 2.1)
 dnl check for rl_completion_matches (renamed from completion_matches in 4.2)
 
-AC_DEFUN(YAFC_CHECK_READLINE,
+AC_DEFUN([YAFC_CHECK_READLINE],
 [
   AC_SEARCH_LIBS(tgetent, [ncurses curses termcap], [])
 

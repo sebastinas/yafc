@@ -1,5 +1,5 @@
 dnl Check type of signal routines (posix, 4.2bsd, 4.1bsd or v7)
-AC_DEFUN(BASH_SIGNAL_CHECK,
+AC_DEFUN([BASH_SIGNAL_CHECK],
 [AC_REQUIRE([AC_TYPE_SIGNAL])
 AC_MSG_CHECKING(for type of signal functions)
 AC_CACHE_VAL(bash_cv_signal_vintage,
