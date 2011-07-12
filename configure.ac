@@ -7,6 +7,7 @@ dnl
 
 AC_PREREQ(2.50)
 AC_INIT(yafc, 1.1.2, [yafc-devel@lists.sourceforge.net])
+AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE
 AC_CONFIG_AUX_DIR(support)
 AM_INIT_AUTOMAKE
@@ -30,7 +31,7 @@ AC_MINIX
 
 AM_PROG_CC_STDC
 AC_PROG_INSTALL
-dnl AC_PROG_RANLIB
+AC_PROG_RANLIB
 AM_PROG_LIBTOOL
 
 dnl check if to use pipes or socketpair in src/ftp/ssh_ftp.c
