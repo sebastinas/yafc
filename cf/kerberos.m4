@@ -27,7 +27,7 @@ dnl sets yafc_found_krb4_lib_libs to required LIBS
 dnl sets yafc_found_krb4_lib_flags to required LDFLAGS
 dnl sets yafc_found_krb4_inc_flags to required CPPFLAGS
 
-AC_DEFUN(YAFC_KERBEROS,
+AC_DEFUN([YAFC_KERBEROS],
 [
   YAFC_ARG_WITH(krb4, yes, [Kerberos 4])
   YAFC_ARG_WITH(krb5, yes, [Kerberos 5])
@@ -167,7 +167,7 @@ dnl Kerberos 5
 
 
 
-AC_DEFUN(YAFC_SEARCH_KRB5_LIBS_IN,
+AC_DEFUN([YAFC_SEARCH_KRB5_LIBS_IN],
 [
   if test -z "$1"; then
     AC_MSG_CHECKING([for Kerberos 5])
@@ -214,7 +214,7 @@ AC_DEFUN(YAFC_SEARCH_KRB5_LIBS_IN,
   LDFLAGS=$saved_LDFLAGS
 ])
 
-AC_DEFUN(YAFC_SEARCH_KRB5_LIBS,
+AC_DEFUN([YAFC_SEARCH_KRB5_LIBS],
 [
   for p in $1; do
     if test -z "$p" -o -d "$p"; then
@@ -226,7 +226,7 @@ AC_DEFUN(YAFC_SEARCH_KRB5_LIBS,
   done
 ])
 
-AC_DEFUN(YAFC_CHECK_GSSAPI_LIB,
+AC_DEFUN([YAFC_CHECK_GSSAPI_LIB],
 [
   AC_MSG_CHECKING([for GSSAPI library])
 
@@ -256,7 +256,7 @@ AC_DEFUN(YAFC_CHECK_GSSAPI_LIB,
   LDFLAGS=$saved_LDFLAGS
 ])
 
-AC_DEFUN(YAFC_SEARCH_GSSAPI_HEADERS,
+AC_DEFUN([YAFC_SEARCH_GSSAPI_HEADERS],
 [
   saved_LIBS=$LIBS
   saved_LDFLAGS=$LDFLAGS
@@ -303,7 +303,7 @@ AC_DEFUN(YAFC_SEARCH_GSSAPI_HEADERS,
   CPPFLAGS=$saved_CPPFLAGS
 ]);
 
-AC_DEFUN(YAFC_SEARCH_KRB5_HEADERS,
+AC_DEFUN([YAFC_SEARCH_KRB5_HEADERS],
 [
   for p in $1; do
     if test -z "$p" -o -d "$p"; then
@@ -320,7 +320,7 @@ dnl *************************************************************
 dnl Kerberos 4
 
 
-AC_DEFUN(YAFC_SEARCH_KRB4_LIBS_IN,
+AC_DEFUN([YAFC_SEARCH_KRB4_LIBS_IN],
 [
   if test -z "$1"; then
     AC_MSG_CHECKING([for Kerberos 4])
@@ -396,7 +396,7 @@ AC_DEFUN(YAFC_SEARCH_KRB4_LIBS_IN,
   LDFLAGS=$saved_LDFLAGS
 ])
 
-AC_DEFUN(YAFC_SEARCH_KRB4_LIBS,
+AC_DEFUN([YAFC_SEARCH_KRB4_LIBS],
 [
   for p in $1; do
     if test -z "$p" -o -d "$p"; then
@@ -408,7 +408,7 @@ AC_DEFUN(YAFC_SEARCH_KRB4_LIBS,
   done
 ])
 
-AC_DEFUN(YAFC_SEARCH_KRB4_HEADERS,
+AC_DEFUN([YAFC_SEARCH_KRB4_HEADERS],
 [
   for p in $1; do
     if test -z "$p" -o -d "$p"; then
@@ -421,7 +421,7 @@ AC_DEFUN(YAFC_SEARCH_KRB4_HEADERS,
   done
 ])
 
-AC_DEFUN(YAFC_CHECK_KRB_GET_OUR_IP_FOR_REALM,
+AC_DEFUN([YAFC_CHECK_KRB_GET_OUR_IP_FOR_REALM],
 [
   AC_MSG_CHECKING([for krb_get_our_ip_for_realm])
 
@@ -454,7 +454,7 @@ AC_DEFUN(YAFC_CHECK_KRB_GET_OUR_IP_FOR_REALM,
 ])
 
 dnl YAFC_SEARCH_HEADER_IN(name, desc, hdr, path, body)
-AC_DEFUN(YAFC_SEARCH_HEADER_IN,
+AC_DEFUN([YAFC_SEARCH_HEADER_IN],
 [
   AC_COMPILE_IFELSE(
   [
@@ -472,7 +472,7 @@ AC_DEFUN(YAFC_SEARCH_HEADER_IN,
 ])
 
 dnl YAFC_SEARCH_HEADER(name, desc, hdr, path, body)
-AC_DEFUN(YAFC_SEARCH_HEADER,
+AC_DEFUN([YAFC_SEARCH_HEADER],
 [
   saved_LIBS=$LIBS
   saved_LDFLAGS=$LDFLAGS

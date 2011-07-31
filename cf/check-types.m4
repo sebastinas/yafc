@@ -1,7 +1,7 @@
 dnl YAFC_CHECK_TYPES
 dnl stolen from configure.in in openssh-2.9p1
 
-AC_DEFUN(YAFC_CHECK_TYPES,
+AC_DEFUN([YAFC_CHECK_TYPES],
 [
   dnl Checks for data types
 

@@ -3,7 +3,7 @@ dnl
 dnl defines yafc_with_$1 to yes or no and sets CPPFLAGS and/or LDFLAGS if given
 dnl also sets yafc_with_$1_{lib|inc} to appropriate values (or empty)
 
-AC_DEFUN(YAFC_ARG_WITH,
+AC_DEFUN([YAFC_ARG_WITH],
 [
   yafc_with_$1=$2
 
