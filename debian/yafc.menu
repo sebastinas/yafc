@@ -1,2 +1,0 @@
-?package(yafc):needs="text" section="Apps/Net" \
-  title="Yet Another FTP Client" command="/usr/bin/yafc"

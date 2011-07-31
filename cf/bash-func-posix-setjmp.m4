@@ -1,4 +1,4 @@
-AC_DEFUN(BASH_FUNC_POSIX_SETJMP,
+AC_DEFUN([BASH_FUNC_POSIX_SETJMP],
 [AC_REQUIRE([BASH_SIGNAL_CHECK])
 AC_MSG_CHECKING(for presence of POSIX-style sigsetjmp/siglongjmp)
 AC_CACHE_VAL(bash_cv_func_sigsetjmp,
