@@ -76,7 +76,20 @@ char *getpass_hook(const char *prompt)
 
 # include <fcntl.h> 
 # include <sys/ioctl.h> 
-# include <termio.h> 
+# include <termios.h> 
+
+# if __FreeBSD_kernel__
+#  ifndef IUCLC
+    /* Not implemented in FreeBSD 8.0!  */
+#   define IUCLC 0
+#  endif
+#  ifndef TCGETS
+#   define TCGETS TIOCGETA
+#  endif
+#  ifndef TCSETS
+#   define TCSETS TIOCGETA
+#  endif
+# endif /* __FreeBSD_kernel__ */
 
 char *getpass_hook(const char *prompt)
 {
@@ -89,14 +102,14 @@ char *getpass_hook(const char *prompt)
 #else
 	int c, n = 0;
 	char tmp[1024];
-	struct termio tbuf, tbufsave;
+	struct termios tbuf, tbufsave;
 	FILE *fd;
 
 	if((fd = fopen("/dev/tty", "rb")) == NULL) {
 		perror("fopen /dev/tty");
 		return NULL;
 	}
-	if (ioctl(fileno(fd), TCGETA, &tbuf) < 0) {
+	if (ioctl(fileno(fd), TCGETS, &tbuf) < 0) {
 		perror("ioctl get");
 		fclose(fd);
 		return NULL;
@@ -105,7 +118,7 @@ char *getpass_hook(const char *prompt)
 	tbuf.c_iflag &= ~(IUCLC | ISTRIP | IXON | IXOFF);
 	tbuf.c_lflag &= ~(ICANON | ISIG | ECHO);
 	tbuf.c_cc[4] = 1; /* MIN */
-	if (ioctl(fileno(fd), TCSETA, &tbuf) < 0) {
+	if (ioctl(fileno(fd), TCSETS, &tbuf) < 0) {
 		perror("ioctl set");
 		fclose(fd);
 		return NULL;
@@ -132,7 +145,7 @@ char *getpass_hook(const char *prompt)
 		fflush(stderr);
 	}
 	tmp[n] = '\0';
-	if (ioctl(fileno(fd), TCSETA, &tbufsave) < 0) {
+	if (ioctl(fileno(fd), TCSETS, &tbufsave) < 0) {
 		perror("ioctl restore");
 		fclose(fd);
 		return NULL;
