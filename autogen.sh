@@ -1,5 +1,7 @@
 #!/bin/sh
 
+[ -d support ] || mkdir support || exit
+
 echo -n "Running aclocal..."
 aclocal -I cf || exit
 echo " done"
