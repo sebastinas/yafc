@@ -32,6 +32,7 @@ AC_MINIX
 
 AM_PROG_CC_STDC
 AC_PROG_INSTALL
+AC_PROG_LIBTOOL
 LT_INIT
 
 dnl check if to use pipes or socketpair in src/ftp/ssh_ftp.c
