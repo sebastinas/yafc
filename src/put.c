@@ -323,6 +323,9 @@ static void putfiles(list *gl, unsigned opt, const char *output)
 		if(strcmp(file, ".") == 0 || strcmp(file, "..") == 0)
 			continue;
 
+		if(ignore(file))
+			continue;
+
 		if(test(opt, PUT_INTERACTIVE) && !put_batch) {
 			int a = ask(ASKYES|ASKNO|ASKCANCEL|ASKALL, ASKYES,
 						_("Put '%s'?"),
