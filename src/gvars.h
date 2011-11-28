@@ -126,6 +126,9 @@ extern list *gvAsciiMasks;
 /* list of shell-glob-format filemasks to transfer before other files */
 extern list *gvTransferFirstMasks;
 
+/* list of shell-glob-format filemasks to never transfer */
+extern list *gvIgnoreMasks;
+
 /* don't include "." and ".." in completions */
 extern bool gvCompletionSkipDotdirs;
 
