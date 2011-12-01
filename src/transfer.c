@@ -488,6 +488,19 @@ bool transfer_first(const char *mask)
 	return false;
 }
 
+bool ignore(const char *mask)
+{
+	listitem *li;
+
+	li = gvIgnoreMasks->first;
+	while(li) {
+		if(fnmatch((char *)li->data, mask, 0) != FNM_NOMATCH)
+			return true;
+		li = li->next;
+	}
+	return false;
+}
+
 void transfer_nextfile(list *gl, listitem **li, bool removeitem)
 {
 	if(removeitem) {

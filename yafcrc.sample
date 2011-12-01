@@ -105,6 +105,9 @@ ascii_transfer_mask "*.dsc:*.lsm:*.md5"
 # filenames matching any of these masks are transferred before other files
 transfer_first_mask "*.sfv:*.nfo:*.txt:README*:md5sum*:*.md5:*.diz"
 
+# filenames matching any of these masks are not transferred
+ignore_mask ".svn:.git*"
+
 # beep after a 'long' command is finished
 beep_after_long_command yes
 

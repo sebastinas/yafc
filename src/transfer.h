@@ -24,6 +24,7 @@ void transfer_mail_msg(const char *fmt, ...);
 void add_ascii_transfer_masks(const char *str);
 bool ascii_transfer(const char *mask);
 bool transfer_first(const char *mask);
+bool ignore(const char *mask);
 
 extern const char *status;
 extern const char *finished_status;
