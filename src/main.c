@@ -181,6 +181,7 @@ void init_yafc(void)
 	gvAliases = list_new((listfunc)alias_destroy);
 	gvAsciiMasks = list_new((listfunc)free);
 	gvTransferFirstMasks = list_new((listfunc)free);
+	gvIgnoreMasks = list_new((listfunc)free);
 	gvLocalTagList = list_new((listfunc)free);
 	gvProxyExclude = list_new((listfunc)free);
 
