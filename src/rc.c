@@ -490,6 +490,9 @@ int parse_rc(const char *file, bool warn)
 		} else if(strcasecmp(e, "transfer_first_mask") == 0) {
 			NEXTSTR;
 			listify_string(e, gvTransferFirstMasks);
+		} else if(strcasecmp(e, "ignore_mask") == 0) {
+			NEXTSTR;
+			listify_string(e, gvIgnoreMasks);
 		} else if(strcasecmp(e, "startup_local_directory") == 0) {
 			NEXTSTR;
 			e = tilde_expand_home(e, gvLocalHomeDir);

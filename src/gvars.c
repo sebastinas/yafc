@@ -121,6 +121,9 @@ list *gvAsciiMasks = 0;  /* list of (char *) */
 /* list of shell-glob-format filemasks to transfer before other files */
 list *gvTransferFirstMasks = 0;  /* list of (char *) */
 
+/* list of shell-glob-format filemasks to never transfer */
+list *gvIgnoreMasks = 0;  /* list of (char *) */
+
 bool gvUseHistory = true;
 int gvHistoryMax = 128;
 
@@ -193,6 +196,7 @@ void gvars_destroy(void)
 	free(gvSFTPServerProgram);
 	free(gvWorkingDirectory);
 	list_free(gvAsciiMasks);
+	list_free(gvIgnoreMasks);
 	list_free(gvAliases);
 	list_free(gvLocalTagList);
 	list_free(gvBookmarks);
