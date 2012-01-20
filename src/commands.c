@@ -58,6 +58,7 @@ cmd_t cmds[] = {
 	CMD(put, 0,0,0, cpLocalFile),
 	CMD(pwd, 0,0,1, cpNone),
 	CMD(quit, 0,0,1, cpNone),
+	CMD(exit, 0,0,1, cpNone),
 	CMD(quote, 0,0,1, cpNone),
 	CMD(mv, 0,0,1, cpRemoteFile),
 	CMD(reopen, 1,1,1, cpNone),

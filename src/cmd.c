@@ -41,6 +41,11 @@ void exit_yafc(void)
 	exit(0);
 }
 
+void cmd_exit(int argc, char **argv)
+{
+        cmd_quit(argc,argv);
+}
+
 void cmd_quit(int argc, char **argv)
 {
 	if(argv != 0) {

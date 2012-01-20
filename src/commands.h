@@ -77,6 +77,7 @@ extern cpl_t force_completion_type;
 DEFCMD(cachelist);
 DEFCMD(status);
 DEFCMD(quit);
+DEFCMD(exit);
 DEFCMD(filetime);
 DEFCMD(source);
 DEFCMD(system);
