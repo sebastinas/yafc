@@ -78,7 +78,7 @@ char *getpass_hook(const char *prompt)
 # include <sys/ioctl.h> 
 # include <termios.h> 
 
-# if __FreeBSD_kernel__
+# if __FreeBSD_kernel__ || defined(__GNU__)
 #  ifndef IUCLC
     /* Not implemented in FreeBSD 8.0!  */
 #   define IUCLC 0
