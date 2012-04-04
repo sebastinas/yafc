@@ -211,11 +211,11 @@ void invoke_shell(char *cmdline)
 	pid = fork();
 	if(pid == 0) { /* child thread */
 		if(cmdline)
-			execl(shell, shell, "-c", cmdline, 0);
+			execl(shell, shell, "-c", cmdline, (char *)NULL);
 		else {
 			printf(_("Executing '%s', use 'exit' to exit from shell...\n"),
 				   shell);
-			execl(shell, shell, 0);
+			execl(shell, shell, (char *)NULL);
 		}
 		perror(shell);
 		exit(1);
