@@ -5,7 +5,7 @@ dnl
 dnl init
 dnl
 
-AC_PREREQ(2.50)
+AC_PREREQ(2.60)
 AC_INIT(yafc, 1.1.2, [yafc-devel@lists.sourceforge.net])
 AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE
