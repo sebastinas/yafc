@@ -152,6 +152,9 @@ if test "$yafc_found_krb4" = "yes"; then
   LIBS="$yafc_found_krb4_lib_libs $LIBS"
   CPPFLAGS="$yafc_found_krb4_inc_flags $CPPFLAGS"
   LDFLAGS="$yafc_found_krb4_lib_flags $LDFLAGS"
+
+  AC_SEARCH_LIBS(strlcpy, [bsd], [], [AC_REPLACE_FUNCS(strlcpy)])
+  AC_CHECK_HEADERS(bsd/string.h)
 fi
 
 if test "$yafc_found_krb5" = "yes"; then
@@ -159,10 +162,6 @@ if test "$yafc_found_krb5" = "yes"; then
   LIBS="$yafc_found_krb5_lib_libs $LIBS"
   CPPFLAGS="$yafc_found_krb5_inc_flags $CPPFLAGS"
   LDFLAGS="$yafc_found_krb5_lib_flags $LDFLAGS"
-fi
-
-if test "$yafc_found_krb"; then
-  AC_REPLACE_FUNCS(strlcpy)
 fi
 
 AC_CONFIG_FILES([Makefile \
