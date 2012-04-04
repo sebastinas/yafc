@@ -3,10 +3,10 @@
 
 noinst_LIBRARIES = libfoo.a
 
-libfoo_a_SOURCES = xmalloc.c fnmatch.c makepath.c base64.c modechange.c \
+libfoo_a_SOURCES = xmalloc.c makepath.c base64.c modechange.c \
                    bashline.c
 
-noinst_HEADERS = xmalloc.h fnmatch.h getopt.h strcasecmp.h krb4.h base64.h \
+noinst_HEADERS = xmalloc.h getopt.h strcasecmp.h krb4.h base64.h \
 				 pathmax.h makepath.h modechange.h security.h collsyms.h \
                  bashline.h
 
