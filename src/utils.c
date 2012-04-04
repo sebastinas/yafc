@@ -190,8 +190,12 @@ listitem *ftplist_search(const char *str)
 
 char *get_local_curdir(void)
 {
-	static char buf[PATH_MAX+1];
-	getcwd(buf, PATH_MAX);
+	static char *buf = NULL;
+
+	if (buf != (char *)NULL)
+		free(buf);
+	buf = getcwd (NULL, 0);
+
 	return buf;
 }
 
