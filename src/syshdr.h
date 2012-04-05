@@ -192,7 +192,11 @@ Function *rl_named_function();
 extern int rl_filename_completion_desired;
 #endif
 
+#ifdef HAVE_FNMATCH_GNU
+#include <fnmatch.h>
+#else
 #include "fnmatch.h"  /* our own, in lib/ */
+#endif
 
 #if defined(HAVE_GETOPT_LONG) && defined(HAVE_GETOPT_H)
 # include <getopt.h>

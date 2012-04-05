@@ -88,6 +88,10 @@ YAFC_CHECK_TYPES
 
 AC_FUNC_ALLOCA
 AC_FUNC_FNMATCH_GNU
+if test "$ac_cv_func_fnmatch_gnu" = "yes"; then
+  AC_DEFINE([HAVE_FNMATCH_GNU], [],
+            [Define if you have a fnmatch supporting GNU extensions])
+fi
 
 AC_CHECK_FUNCS(strcoll memcpy sigsetjmp)
 
