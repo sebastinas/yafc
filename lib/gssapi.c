@@ -38,10 +38,10 @@
 #if defined(HAVE_GSSAPI_H)
 # include <gssapi.h>
  /* if we have gssapi.h (not gssapi/gssapi.h) we assume we link
-  * against Heimdal, which needs krb5_err.h to define *
+  * against Heimdal, which needs krb5.h to define *
   * KRB5KDC_ERR_S_PRINCIPAL_UNKNOWN
   */
-# include <krb5_err.h>
+# include <krb5.h>
 #elif defined(HAVE_GSSAPI_GSSAPI_H)
 # include <gssapi/gssapi.h>
  /* if we have gssapi/gssapi.h it might be safe to assume we have the
