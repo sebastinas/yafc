@@ -1,3 +1,0 @@
-#!/bin/sh
-
-texi2html -prefix manual -subdir html -split chapter yafc.texi
