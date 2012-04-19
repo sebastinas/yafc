@@ -361,6 +361,8 @@ char **the_complete_function(char *text, int start, int end)
 			else {
 				c += cmd_start;
 				e = strqsep(&c, ' ');
+        if (e == NULL)
+          return NULL;
 				cp = find_func(e, false);
 				if(!cp) {
 					free(orgc);
