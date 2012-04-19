@@ -163,33 +163,32 @@ char *strchr (), *strrchr ();
 # include <arpa/inet.h> /* for inet_aton() or inet_addr()  */
 #endif
 
-#ifdef HAVE_READLINE_READLINE_H
-# include <readline/readline.h>
-#endif
-#ifdef HAVE_READLINE_HISTORY_H
-# include <readline/history.h>
-#endif
 
-#if HAVE_LIBREADLINE < 420
-# define rl_completion_matches completion_matches
-# define rl_filename_completion_function filename_completion_function
-# define rl_compentry_func_t Function
-# define rl_dequote_func_t CPFunction
-#endif
+#ifdef HAVE_LIBREADLINE
+#  if defined(HAVE_READLINE_READLINE_H)
+#    include <readline/readline.h>
+#  elif defined(HAVE_READLINE_H)
+#    include <readline.h>
+#  else /* !defined(HAVE_READLINE_H) */
+extern char *readline ();
+#  endif /* !defined(HAVE_READLINE_H) */
+#else /* !defined(HAVE_READLINE_READLINE_H) */
+  /* no readline */
+#endif /* HAVE_LIBREADLINE */
 
-#if (HAVE_LIBREADLINE == 200)
-int rl_insert_text();
-int rl_do_undo();
-int rl_forced_update_display();
-char *filename_completion_function();
-void rl_redisplay();
-void add_history();
-void stifle_history();
-void write_history();
-void read_history();
-Function *rl_named_function();
-extern int rl_filename_completion_desired;
-#endif
+#ifdef HAVE_READLINE_HISTORY
+#  if defined(HAVE_READLINE_HISTORY_H)
+#    include <readline/history.h>
+#  elif defined(HAVE_HISTORY_H)
+#    include <history.h>
+#  else /* !defined(HAVE_HISTORY_H) */
+extern void add_history ();
+extern int write_history ();
+extern int read_history ();
+#  endif /* defined(HAVE_READLINE_HISTORY_H) */
+  /* no history */
+#endif /* HAVE_READLINE_HISTORY */
+
 
 #ifdef HAVE_FNMATCH_GNU
 #include <fnmatch.h>

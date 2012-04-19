@@ -2,9 +2,8 @@ Installation instructions for Yafc
 ----------------------------------
 
 If you want tab completion and history (yes, you do :-),
-you will need the GNU Readline library, version 2.0 or later is required.
+you will need the GNU Readline library, version 4.2 or later is required.
 Readline is available from ftp://ftp.gnu.org/pub/gnu/readline.
-Please don't use version 2.1, there is a bug in the header file.
 
 If you want support for KerberosIV authentication you need the KTH-KRB
 Kerberos4 implementation. KTH-KRB is available from ftp://ftp.pdc.kth.se/pub/krb.
