@@ -405,24 +405,36 @@ int str2bool(const char *e)
 }
 
 /* returns string with ~/foo expanded to /home/username/foo
- * FIXME: does not handle ~user/foo
+ * can handle ~user/foo
  * returned string should be free'd
  */
 char *tilde_expand_home(const char *str, const char *home)
 {
-	if(str[0] == '~') {
-		if(home) {
-			if(str[1] == 0)
-				return xstrdup(home);
-			else if(str[1] == '/') {
-				char *full;
+	char *full, *s;
 
-				asprintf(&full, "%s%s", home, str+1);
-				return full;
-			}
-		}
-	}
-	return xstrdup(str);
+	if(home && (strcmp(str, "~") == 0))
+		full = xstrdup(home);
+	else if(home && (strncmp(str, "~/", 2) == 0))
+		asprintf(&full, "%s%s", home, str + 1);
+	else if ((str[0] == '~') && ((s = strchr(str, '/')) ||
+				(s = str+strlen(str)))) {
+		char *user;
+		struct passwd *pass;
+
+		user = xmalloc(s - str);
+		memcpy(user, str+1, s-str-1);
+		user[s-str-1] = 0;
+
+		if ((pass = getpwnam(user)) || (!strlen(user) &&
+					(pass = getpwuid(getuid()))))
+			asprintf(&full, "%s%s", pass->pw_dir, s);
+		else
+			full = xstrdup(str);
+		free(user);
+	} else
+		full = xstrdup(str);
+
+	return full;
 }
 
 /* encodes special characters found in STR
