@@ -3,21 +3,18 @@ dnl Process this file with autoconf to produce an m4 configure script.
 dnl init
 
 AC_PREREQ(2.60)
-AC_INIT(yafc, 1.1.2, [https://github.com/sebastinas/yafc/])
+AC_INIT(yafc, 1.1.2, [https://github.com/sebastinas/yafc/issues/], yafc, [https://github.com/sebastinas/yafc/])
+AC_CONFIG_SRCDIR(src/main.c)
 AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE
 AC_CONFIG_MACRO_DIR([cf])
 AC_CONFIG_AUX_DIR(support)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
-AC_CONFIG_SRCDIR(src/main.c)
 
 CDPATH=""
 
-AM_MAINTAINER_MODE
-
 AC_CANONICAL_HOST
-
 AC_DEFINE_UNQUOTED(HOSTTYPE, "${host_cpu}-${host_vendor}-${host_os}", [the hosttype])
 
 AC_PROG_CC
