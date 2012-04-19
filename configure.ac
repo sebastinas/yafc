@@ -128,6 +128,9 @@ yafc_got_readline="no, disabled"
 YAFC_ARG_WITH(readline, yes, [Readline])
 if test "$yafc_with_readline" = "yes"; then
   AX_LIB_READLINE
+  if test "$ax_cv_lib_readline" != "no"; then
+    yafc_got_readline="yes"
+  fi
 fi
 
 AC_SEARCH_LIBS(inet_aton, resolv nsl)
