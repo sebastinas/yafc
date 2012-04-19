@@ -1,0 +1,52 @@
+TODO Last Updated by John Buswell on Wednesday October 5th 2005
+
+note: This is still very much work in progress.
+
+
+TODO: Yafc 1.1.3
+-----------------
+
+* Fix SFTP slow transfers
+* Add support for usernames with whitespaces
+* Add support for stalled transfers to timeout
+> ability to specify preferred protocol (ssh/ftp) (Steve Grecni)
+> Enhance Documentation
+
+% Test socks5 support
+% Test chgrp / chmod for directories (get)
+% Test local settings in LISTing parse failure
+% Review set command
+
+Roadmap 2.0.0
+--------------
+
+> Feature: Recursive Deletion of Empty Directories
+
+   Add --delete-empty-dir option for get -Dr to remove directories once empty
+   Add --create-empty-dir option for get -Dr to create empty directories locally
+
+> Feature: Intelligent Connection Management
+
+   Add abort/connect/resume when threshold of n bytes not transferred in t time
+   Add connection timeout detection
+   Add alternate URL option
+
+> Feature: Persistant Reconnect
+
+   Add capability to persistantly reconnect until transfer is complete
+
+> Feature: FTP over TLS / SSL support (rfc2228)
+
+> Feature: SSH config file support
+
+> Feature: HTTP proxy support
+
+> Feature: IPv6 support, EPSV and EPRT support (RFC2428)
+
+
+Legend:
+
+* fix bug
+> add feature
+% test
+? questionable

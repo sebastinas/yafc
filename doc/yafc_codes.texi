@@ -1,0 +1,142 @@
+@node Prompt codes, Transfer codes, Keywords, Configuration
+@section Prompt codes
+
+These codes can be used in the prompts, @ref{Keywords}, to reflect dynamic
+information. For all codes, there may be an optional minimum field width.
+This is an integer between the '%' and the code character.
+
+@table @samp
+
+@item %u
+username
+
+@item %h
+remote host name (as passed to open)
+
+@item %H
+%h up to the first '.'
+
+@item %m
+remote machine name (as returned by gethostbyname)
+
+@item %M
+%m up to the first '.'
+
+@item %n
+remote IP number
+
+@item %w
+current remote working directory
+
+@item %W
+basename of %w
+
+@item %~
+as %w but home directory is replaced with ~
+
+@item %l
+current local working directory
+
+@item %L
+basename of %l
+
+@item %c
+Total number of connections open
+
+@item %C
+The number of the currently active connection
+
+@item %%
+a percent sign
+
+@item %#
+a '#' if (local) user is root, else '$'
+
+@item %@{
+begin sequence of non-printing chars, ie escape codes
+
+@item %@}
+end sequence of non-printing chars, ie escape codes
+
+@item \e
+an escape character (hex 0x1B)
+
+@item \n
+a newline
+
+@item \t
+a tab character
+
+@item \r
+a carriage return
+
+@item \x##
+character 0x## (hex)
+
+@end table
+
+Example:
+
+@example
+prompt3 "(%C) %@{\e[1%@}myafc%@{\e[0m%@} %u@@%h:%42~> "
+@end example
+
+@c ===========================================================
+@node Transfer codes, Aliases, Prompt codes, Configuration
+@section Transfer codes
+
+These codes can be used in the transfer strings. For all codes, there may be
+an optional minimum field width. This is an integer between the '%' and the
+code character. For example will %17v be expanded to a visual progress bar
+with length 17. If the field width if negative (start with a minus), the
+string is left-justified, so using %-20S will show the total size, padded with
+spaces to 20 characters.
+
+@table @samp
+
+@item %r
+source filename
+
+@item %R
+source filename w/path
+
+@item %l
+target filename
+
+@item %L
+target filename w/path
+
+@item %s
+size transferred so far
+
+@item %S
+total size (if available)
+
+@item %e
+ETA (time left)
+
+@item %p
+percent transferred so far
+
+@item %%
+percent sign
+
+@item %b
+transfer rate (Bps)
+
+@item %B
+transfer rate (Bps) or "stalled" if stalled
+
+@item %t
+time elapsed
+
+@item %v
+visual progress bar
+
+@end table
+
+Example:
+
+@example
+transfer_string "%5p%% [%@{\e[32m%@}%25v%@{\e[0m%@}] %s/%S ETA %@{\e[32m%@}%e%@{\e[0m%@} %B"
+@end example

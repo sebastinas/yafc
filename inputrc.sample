@@ -1,0 +1,31 @@
+# sample settings for readline
+# insert in your ~/.inputrc if you like...
+# see manpage for readline(3) for further details
+
+# contitionally parse if we are running yafc
+$if yafc
+
+# if you like vi
+#set editing-mode vi
+
+# this is home/end/del on my pc keyboard
+"\e[1~": beginning-of-line
+"\e[4~": end-of-line
+"\e[3~": delete-char
+
+C-d: possible-completions
+
+# make <up> and <down> search in history
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+
+# this makes alt-w, alt-d, alt-c, alt-z issue
+# a ls, ll, clear-screen and cdup, respectively
+"\ew": "ls"
+"\ed": "ll"
+"\ec": clear-screen
+"\ez": "cdup"
+
+$endif
+
+# end of inputrc file

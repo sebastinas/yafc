@@ -1,0 +1,43 @@
+@node Configuration, Bookmarks, The shell, top
+@chapter Configuration
+
+Yafc will parse a system-wide configuration file, @file{/etc/yafcrc}
+(or whatever you set with the @samp{--sysconfdir} option to the
+configure script), first. Then, personal settings are read from
+@file{~/.yafc/yafcrc} (overriding the global ones). If none of those
+files exists, internal defaults will be used.
+
+The @samp{--dump-rc} option of Yafc can be used to dump the default
+configuration file to standard output. You can create your own config
+file with the command @code{yafc --dump-rc > ~/.yafc/yafcrc}. You can
+customize it with your favourite editor, it should be quite self-explaining if
+you read the comments.
+
+Yafc also looks for @file{~/.netrc}, and reads autologin information from
+that file. This file is also used by the standard ftp client.
+
+Yafc uses the Readline library to read commands from the terminal, and
+Readline can be configured via the @file{~/.inputrc} file. In this file
+you can put keybindings and Readline-oriented options. You can use
+@kbd{$yafc} for conditional parsing of the @file{~/.inputrc} file.
+A sample inputrc file is included in the distribution.
+
+@menu
+* Keywords::                    Configuration keywords used
+* Prompt codes::                Special codes in the prompts
+* Transfer codes::              Special codes in the transfer strings
+* Aliases::                     Writing aliases
+* Colors::                      Using colors
+@end menu
+
+@c =====================================================
+@include yafc_keywords.texi
+
+@c =====================================================
+@include yafc_codes.texi
+
+@c =====================================================
+@include yafc_alias.texi
+
+@c =====================================================
+@include yafc_color.texi
