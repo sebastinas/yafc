@@ -143,9 +143,7 @@ static char *remote_completion_function(const char *text, int state)
 	 * readline appends a class character (ie /,@,*) in _local_ filenames
 	 */
 	rl_filename_completion_desired = 1;
-#if (HAVE_LIBREADLINE >= 210)
 	rl_filename_quoting_desired = 1;
-#endif
 
 	if(!state) {
 		bool dir_is_cached;
@@ -218,18 +216,9 @@ static char *remote_completion_function(const char *text, int state)
 			else
 				ret = xstrdup(name);
 			if(isdir == 1) {
-#if (HAVE_LIBREADLINE >= 210)
 				rl_completion_append_character =  '/';
-#else
-				char *tmp;
-				tmp = ret;
-				asprintf(&ret, "%s/", tmp);
-				free(tmp);
-#endif
 			} else {
-#if (HAVE_LIBREADLINE >= 210)
 				rl_completion_append_character =  ' ';
-#endif
 			}
 			return ret;
 		}
@@ -295,9 +284,7 @@ static char *taglist_completion_function(const char *text, int state)
 	}
 
 	rl_filename_completion_desired = 1;
-#if (HAVE_LIBREADLINE >= 210)
 	rl_filename_quoting_desired = 1;
-#endif
 
 	while(lip) {
 		rfile *f = (rfile *)lip->data;
@@ -322,9 +309,7 @@ static char *local_taglist_completion_function(const char *text, int state)
 	}
 
 	rl_filename_completion_desired = 1;
-#if (HAVE_LIBREADLINE >= 210)
 	rl_filename_quoting_desired = 1;
-#endif
 
 	while(lip) {
 		char *p = (char *)lip->data;
@@ -349,9 +334,7 @@ char **the_complete_function(char *text, int start, int end)
 	cpl_t cpl;
 	char quoted;
 
-#if (HAVE_LIBREADLINE >= 210)
 	rl_completion_append_character = ' ';
-#endif
 
 	if(force_completion_type == cpUnset) {
 		int i;

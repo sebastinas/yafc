@@ -172,7 +172,7 @@ int input_read_args(args_t **args, const char *prompt)
 	args_destroy(*args);
 	*args = args_create();
 
-#if (HAVE_LIBREADLINE >= 210)
+#ifdef HAVE_LIBREADLINE
 	rl_completion_append_character = ' ';
 #endif
 	e = input_read_string(prompt);
@@ -220,13 +220,11 @@ void input_init(void)
 
 	rl_completer_word_break_characters = " \t\n\"\';";
 	rl_completer_quote_characters = "'\"\\";
-#if (HAVE_LIBREADLINE >= 210)
 	/* characters that need to be quoted when appearing in filenames. */
 	rl_filename_quote_characters = " \t\n\\\"'@<>=;|&()#$`?*[]!:";
 	rl_filename_quoting_function = bash_quote_filename;
 	rl_filename_dequoting_function = (rl_dequote_func_t *)bash_dequote_filename;
 	rl_char_is_quoted_p = char_is_quoted;
-#endif
 
 	force_completion_type = cpUnset;
 

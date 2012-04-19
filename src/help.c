@@ -68,8 +68,6 @@ void cmd_version(int argc, char **argv)
 	printf(_("Compiled " __TIME__ " " __DATE__ " (" HOSTTYPE ")\n"));
 #if (HAVE_LIBREADLINE >= 210)
 	printf(_("Using Readline version %s\n"), rl_library_version);
-#elif defined(HAVE_LIBREADLINE)
-	printf(_("Using Readline version 2.0\n"));
 #endif
 }
 
