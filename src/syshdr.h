@@ -14,7 +14,7 @@
 #define _syshdr_h_included
 
 #ifdef HAVE_CONFIG_H
-# include <config.h>
+# include "config.h"
 #endif
 
 #ifdef HAVE_SYS_TYPES_H
