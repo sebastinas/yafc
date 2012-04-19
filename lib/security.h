@@ -34,7 +34,6 @@
  * SUCH DAMAGE. 
  */
 
-/* $Id: security.h,v 1.4 2000/10/13 22:43:04 mhe Exp $ */
 
 #ifndef __security_h__
 #define __security_h__

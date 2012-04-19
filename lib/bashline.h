@@ -1,5 +1,4 @@
-/* $Id: bashline.h,v 1.3 2001/05/12 18:42:42 mhe Exp $
- *
+/*
  * bashline.h --
  *
  * Yet Another FTP Client

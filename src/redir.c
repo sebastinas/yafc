@@ -1,5 +1,4 @@
-/* $Id: redir.c,v 1.4 2001/05/12 18:44:37 mhe Exp $
- *
+/*
  * redir.h --
  *
  * Yet Another FTP Client

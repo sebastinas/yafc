@@ -1,5 +1,4 @@
-/* $Id: ftp.h,v 1.15 2004/05/20 11:10:52 mhe Exp $
- *
+/*
  * ftp.h -- lower level FTP stuff
  *
  * Yet Another FTP Client

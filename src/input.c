@@ -1,5 +1,4 @@
-/* $Id: input.c,v 1.11 2005/10/05 19:31:25 splicednetworks Exp $
- *
+/*
  * input.c -- string input and readline stuff
  *
  * Yet Another FTP Client

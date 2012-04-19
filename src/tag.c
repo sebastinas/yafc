@@ -1,5 +1,4 @@
-/* $Id: tag.c,v 1.7 2004/05/20 11:10:52 mhe Exp $
- *
+/*
  * tag.c -- tag files
  *
  * Yet Another FTP Client

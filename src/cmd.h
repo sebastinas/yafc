@@ -1,5 +1,4 @@
-/* $Id: cmd.h,v 1.5 2004/05/20 11:10:52 mhe Exp $
- *
+/*
  * cmd.h -- read and execute commands, this is the main loop
  *
  * Yet Another FTP Client

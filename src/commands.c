@@ -1,5 +1,4 @@
-/* $Id: commands.c,v 1.17 2003/07/12 10:25:41 mhe Exp $
- *
+/*
  * commands.c --
  *
  * Yet Another FTP Client

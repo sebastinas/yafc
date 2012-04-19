@@ -78,7 +78,6 @@
 static gss_OID_desc gss_c_nt_hostbased_service_oid_desc =
 {10, (void *)"\x2a\x86\x48\x86\xf7\x12" "\x01\x02\x01\x04"};
 
-/*RCSID("$Id: gssapi.c,v 1.5 2002/12/05 22:12:36 mhe Exp $");*/
 
 struct gss_data {
     gss_ctx_id_t context_hdl;

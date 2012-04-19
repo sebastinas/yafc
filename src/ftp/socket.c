@@ -1,5 +1,4 @@
-/* $Id: socket.c,v 1.8 2005/10/05 20:02:09 splicednetworks Exp $
- *
+/*
  * socket.c --
  *
  * Yet Another FTP Client

@@ -1,5 +1,4 @@
-/* $Id: ftpsend.c,v 1.18 2005/10/05 19:32:47 splicednetworks Exp $
- *
+/*
  * ftpsend.c -- send/receive files and file listings
  *
  * Yet Another FTP Client

@@ -1,5 +1,4 @@
-/* $Id: args.h,v 1.4 2001/05/21 21:47:55 mhe Exp $
- *
+/*
  * args.h -- handles command arguments
  *
  * Yet Another FTP Client

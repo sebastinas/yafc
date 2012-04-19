@@ -1,5 +1,4 @@
-/* $Id: lscolors.c,v 1.5 2003/07/12 10:25:41 mhe Exp $
- *
+/*
  * lscolors.c -- parsing of env variable LS_COLORS
  *
  * Yet Another FTP Client

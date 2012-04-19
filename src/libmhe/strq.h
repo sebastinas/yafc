@@ -1,5 +1,4 @@
-/* $Id: strq.h,v 1.4 2001/05/12 18:43:01 mhe Exp $
- *
+/*
  * strq.h -- string functions, handles quoted text
  *
  * Yet Another FTP Client

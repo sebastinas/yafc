@@ -1,5 +1,4 @@
-/* $Id: linklist.h,v 1.6 2001/05/12 18:43:01 mhe Exp $
- *
+/*
  * linklist.h -- generic linked list
  *
  * Yet Another FTP Client

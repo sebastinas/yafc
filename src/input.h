@@ -1,5 +1,4 @@
-/* $Id: input.h,v 1.3 2001/05/12 18:44:37 mhe Exp $
- *
+/*
  * input.h -- string input and readline stuff
  *
  * Yet Another FTP Client

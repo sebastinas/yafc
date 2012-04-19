@@ -1,5 +1,4 @@
-/* $Id: completion.c,v 1.10 2003/07/12 10:25:41 mhe Exp $
- *
+/*
  * completion.c -- readline completion functions
  *
  * Yet Another FTP Client

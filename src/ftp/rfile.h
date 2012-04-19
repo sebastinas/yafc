@@ -1,5 +1,4 @@
-/* $Id: rfile.h,v 1.7 2004/05/20 11:10:52 mhe Exp $
- *
+/*
  * rfile.h -- representation of a remote file
  *
  * Yet Another FTP Client

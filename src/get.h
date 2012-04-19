@@ -1,5 +1,4 @@
-/* $Id: get.h,v 1.5 2002/12/02 12:21:19 mhe Exp $
- *
+/*
  * get.h -- get file(s) from remote
  *
  * Yet Another FTP Client

@@ -1,5 +1,4 @@
-/* $Id: set.h,v 1.3 2001/05/12 18:44:37 mhe Exp $
- *
+/*
  * set.h -- sets and shows variables from within Yafc
  *
  * Yet Another FTP Client

@@ -48,7 +48,6 @@
 extern int krb_get_our_ip_for_realm(
     const char *realm, struct in_addr *ip_addr);
 
-/*RCSID("$Id: krb4.c,v 1.4 2002/12/05 22:12:37 mhe Exp $");*/
 
 #define LOCAL_ADDR (&ftp->ctrl->local_addr)
 #define REMOTE_ADDR (&ftp->ctrl->remote_addr)

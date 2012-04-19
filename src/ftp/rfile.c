@@ -1,5 +1,4 @@
-/* $Id: rfile.c,v 1.13 2005/10/05 19:32:47 splicednetworks Exp $
- *
+/*
  * rfile.c -- representation of a remote file
  *
  * Yet Another FTP Client

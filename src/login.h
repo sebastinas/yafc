@@ -1,5 +1,4 @@
-/* $Id: login.h,v 1.5 2001/05/21 19:52:48 mhe Exp $
- *
+/*
  * login.h -- connect and login
  *
  * Yet Another FTP Client

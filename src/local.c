@@ -1,5 +1,4 @@
-/* $Id: local.c,v 1.5 2003/07/12 10:25:41 mhe Exp $
- *
+/*
  * local.c -- local commands
  *
  * Yet Another FTP Client

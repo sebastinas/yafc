@@ -1,5 +1,4 @@
-/* $Id: strq.c,v 1.7 2004/05/20 11:15:17 mhe Exp $
- *
+/*
  * strq.c -- string functions, handles quoted text
  *
  * Yet Another FTP Client

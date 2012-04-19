@@ -1,5 +1,4 @@
-/* $Id: rm.c,v 1.5 2003/07/12 10:25:41 mhe Exp $
- *
+/*
  * rm.c -- remove files, the 'rm' command
  *
  * Yet Another FTP Client

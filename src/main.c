@@ -1,5 +1,4 @@
-/* $Id: main.c,v 1.23 2003/07/12 10:22:45 mhe Exp $
- *
+/*
  * main.c -- parses command line options and starts Yafc
  *
  * Yet Another FTP Client

@@ -1,5 +1,4 @@
-/* $Id: ftpsigs.c,v 1.5 2001/05/28 09:53:44 mhe Exp $
- *
+/*
  * ftpsigs.c -- handles signals
  *
  * Yet Another FTP Client

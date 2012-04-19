@@ -1,6 +1,5 @@
-/* $Id: rglob.c,v 1.8 2004/05/20 11:10:52 mhe Exp $
- *
- * rglob.c -- remote glob functions
+/*
+ / rglob.c -- remote glob functions
  *
  * Yet Another FTP Client
  * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>

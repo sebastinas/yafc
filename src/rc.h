@@ -1,5 +1,4 @@
-/* $Id: rc.h,v 1.4 2001/05/12 18:44:37 mhe Exp $
- *
+/*
  * rc.h -- config file parser + autologin lookup
  *
  * Yet Another FTP Client

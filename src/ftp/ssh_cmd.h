@@ -1,5 +1,4 @@
-/* $Id: ssh_cmd.h,v 1.2 2001/05/12 18:44:04 mhe Exp $
- *
+/*
  * ssh_cmd.h --
  *
  * Yet Another FTP Client

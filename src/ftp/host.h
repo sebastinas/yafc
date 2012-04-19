@@ -1,5 +1,4 @@
-/* $Id: host.h,v 1.3 2001/05/12 18:44:04 mhe Exp $
- *
+/*
  * host.h -- DNS lookups of hostnames
  *
  * Yet Another FTP Client

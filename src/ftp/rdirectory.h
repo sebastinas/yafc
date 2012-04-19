@@ -1,5 +1,4 @@
-/* $Id: rdirectory.h,v 1.5 2002/12/02 12:27:55 mhe Exp $
- *
+/*
  * rdirectory.h -- representation of a remote directory
  *
  * Yet Another FTP Client

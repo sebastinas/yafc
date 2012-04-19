@@ -1,5 +1,4 @@
-/* $Id: transfer.h,v 1.4 2002/12/02 12:22:26 mhe Exp $
- *
+/*
  * transfer.h --
  *
  * Yet Another FTP Client

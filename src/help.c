@@ -1,5 +1,4 @@
-/* $Id: help.c,v 1.10 2004/05/20 11:10:52 mhe Exp $
- *
+/*
  * help.c -- local help and info
  *
  * Yet Another FTP Client

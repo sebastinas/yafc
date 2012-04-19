@@ -1,5 +1,4 @@
-/* $Id: bookmark.h,v 1.3 2001/05/12 18:44:37 mhe Exp $
- *
+/*
  * bookmark.h -- create bookmark(s)
  *
  * Yet Another FTP Client

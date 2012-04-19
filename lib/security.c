@@ -1,4 +1,3 @@
-
 /* modified by Martin Hedenfalk <mhe@home.se> Dec 2002
  */
 
@@ -43,7 +42,6 @@
 #include "base64.h"
 #include "commands.h"
 
-/*RCSID("$Id: security.c,v 1.10 2002/12/05 22:12:37 mhe Exp $");*/
 
 static struct
 {

@@ -1,5 +1,4 @@
-/* $Id: syshdr.h,v 1.13 2002/12/05 22:14:15 mhe Exp $
- *
+/*
  * syshdr.h -- includes global header files etc.
  *
  * Yet Another FTP Client

@@ -1,5 +1,4 @@
-/* $Id: login.c,v 1.19 2003/07/12 10:21:10 mhe Exp $
- *
+/*
  * login.c -- connect and login
  *
  * Yet Another FTP Client

@@ -1,5 +1,4 @@
-/* $Id: xmalloc.h,v 1.4 2003/07/12 10:25:41 mhe Exp $
- *
+/*
  * xmalloc.h -- wrapper for malloc etc.
  *
  * Yet Another FTP Client

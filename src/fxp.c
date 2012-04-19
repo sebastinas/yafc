@@ -1,5 +1,4 @@
-/* $Id: fxp.c,v 1.13 2004/05/20 09:20:43 mhe Exp $
- *
+/*
  * fxp.c -- transfer files between hosts
  *
  * Yet Another FTP Client

@@ -1,5 +1,4 @@
-/* $Id: url.h,v 1.9 2002/02/23 13:16:30 mhe Exp $
- *
+/*
  * url.h -- splits an URL into its components
  *
  * Yet Another FTP Client

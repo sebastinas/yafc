@@ -1,5 +1,4 @@
-/* $Id: put.c,v 1.16 2004/05/20 11:10:52 mhe Exp $
- *
+/*
  * put.c -- upload files
  *
  * Yet Another FTP Client

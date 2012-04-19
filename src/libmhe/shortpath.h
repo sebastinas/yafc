@@ -1,5 +1,4 @@
-/* $Id: shortpath.h,v 1.3 2001/05/12 18:43:01 mhe Exp $
- *
+/*
  * shortpath.h -- shorten path
  *
  * Yet Another FTP Client

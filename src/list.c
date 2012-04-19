@@ -1,5 +1,4 @@
-/* $Id: list.c,v 1.14 2004/05/20 11:10:52 mhe Exp $
- *
+/*
  * list.c -- the remote cached 'ls' command
  *
  * Yet Another FTP Client

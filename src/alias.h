@@ -1,5 +1,4 @@
-/* $Id: alias.h,v 1.3 2001/05/12 18:44:37 mhe Exp $
- *
+/*
  * alias.h -- define and undefine aliases
  *
  * Yet Another FTP Client

@@ -1,5 +1,4 @@
-/* $Id: prompt.c,v 1.5 2003/08/05 07:13:37 mhe Exp $
- *
+/*
  * prompt.c -- expands the prompt
  *
  * Yet Another FTP Client

@@ -1,5 +1,4 @@
-/* $Id: lglob.c,v 1.8 2004/05/20 11:10:52 mhe Exp $
- *
+/*
  * lglob.c -- local glob functions
  *
  * Yet Another FTP Client

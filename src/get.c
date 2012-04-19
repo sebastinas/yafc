@@ -1,5 +1,4 @@
-/* $Id: get.c,v 1.18 2004/05/20 11:10:52 mhe Exp $
- *
+/*
  * get.c -- get file(s) from remote
  *
  * Yet Another FTP Client

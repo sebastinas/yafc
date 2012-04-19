@@ -1,5 +1,4 @@
-/* $Id: utils.c,v 1.6 2004/05/20 11:10:52 mhe Exp $
- *
+/*
  * utils.c -- small (generic) functions
  *
  * Yet Another FTP Client

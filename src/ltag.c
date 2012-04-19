@@ -1,5 +1,4 @@
-/* $Id: ltag.c,v 1.6 2003/07/12 10:25:41 mhe Exp $
- *
+/*
  * ltag.c -- tag local files
  *
  * Yet Another FTP Client

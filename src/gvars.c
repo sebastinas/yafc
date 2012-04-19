@@ -1,5 +1,4 @@
-/* $Id: gvars.c,v 1.20 2003/07/12 10:22:45 mhe Exp $
- *
+/*
  * gvars.c -- global variables
  *
  * Yet Another FTP Client

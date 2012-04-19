@@ -48,7 +48,6 @@
 # define KRB_TICKET_GRANTING_TICKET "krbtgt"
 #endif
 
-/*RCSID("$Id: kauth.c,v 1.6 2003/07/12 10:25:41 mhe Exp $");*/
 
 void cmd_kauth(int argc, char **argv)
 {
