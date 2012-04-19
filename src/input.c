@@ -92,7 +92,7 @@ char *getpass_hook(const char *prompt)
 
 char *getpass_hook(const char *prompt)
 {
-#ifdef KERBEROS
+#ifdef HAVE_KERBEROS
 	char tmp[80];
 	des_read_pw_string(tmp, sizeof(tmp), (char *)prompt,
 					   0);
