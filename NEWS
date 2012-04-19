@@ -19,6 +19,7 @@ New in 1.1.1
 * Confirmed remaining bugs as fixed or non-issues
 * Added KNOWN_ISSUES file
 
+
 New in 1.1
 ----------
 
@@ -112,7 +113,7 @@ New in 0.7.6
 ------------
 
 * Replaced yafc.spec from Ryan Weaver with one by Mandrake (untested!)
-* applied patch from Eduardo Pérez, now yafc by default doesn't send
+* applied patch from Eduardo PÃ©rez, now yafc by default doesn't send
   email address as anonymous password
 * fixed bug with mkdir/rmdir in wrong directory in ssh mode
 * 'yafc ssh://hostname -u' now asks for username
@@ -125,7 +126,7 @@ New in 0.7.6
 New in 0.7.5
 ------------
 
-* fixed reconnection loop (reported by Johan Renström)
+* fixed reconnection loop (reported by Johan RenstrÃ¶m)
 * put didn't transfer .dotdirectories (reported by Alan Hagge)
 * get -a (append) wasn't recognized (reported by Decklin Foster)
 

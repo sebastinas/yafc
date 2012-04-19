@@ -14,11 +14,10 @@ known BUGS
 * issuing a "ls .profile" doesn't list .profile if -a option isn't given
 
 --
-Please report bugs to the Yafc development mailing list:
-    <yafc-devel@lists.sourceforge.net>
+Please report bugs to https://github.com/sebastinas/yafc/issues
 
 Before reporting a bug, please verify you're using the latest version
-(check the sourceforge site at http://sf.net/projects/yafc/). When
+(check the git repo at https://github.com/sebastinas/yafc). When
 reporting bugs, please include information on what machine and
 operating system, including versions, you are running, an example for
 me to reproduce (use the --trace option) and a patch if you have one.
