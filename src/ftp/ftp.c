@@ -23,9 +23,6 @@
 /* in cmd.c */
 void exit_yafc(void);
 
-/* in get.c */
-char *make_unique_filename(const char *path);
-
 /* in tag.c */
 void save_taglist(const char *alt_filename);
 
@@ -1309,7 +1306,6 @@ rdirectory *ftp_read_directory(const char *path)
     FILE *fp = 0;
     rdirectory *rdir;
     bool is_curdir = false;
-    char *tmpfilename, *e;
     bool _failed = false;
     char *dir;
     bool is_mlsd = false;
@@ -1322,26 +1318,11 @@ rdirectory *ftp_read_directory(const char *path)
 
     is_curdir = (strcmp(dir, ftp->curdir) == 0);
 
-    asprintf(&e, "%s/yafclist.tmp", gvWorkingDirectory);
-    tmpfilename = make_unique_filename(e);
-    free(e);
-    fp = fopen(tmpfilename, "w+");
-
-    if(fp == 0) {
-        /* can't create a tmpfile in ~/.yafc, try in /tmp/ */
-
-        tmpfilename = make_unique_filename("/tmp/yafclist.tmp");
-        fp = fopen(tmpfilename, "w+");
-
-        if(fp == 0) {
-            ftp_err("%s: %s\n", tmpfilename, strerror(errno));
+    if((fp = tmpfile()) == NULL) {	/* can't create a tmpfile */
+	    ftp_err("%s\n", strerror(errno));
             free(dir);
-            free(tmpfilename);
             return 0;
-        }
     }
-
-    fchmod(fileno(fp), S_IRUSR | S_IWUSR);
 
     /* we do a "CWD" before the listing, because: we want a listing of
      *  the directory contents, not the directory itself, and some
@@ -1399,16 +1380,12 @@ rdirectory *ftp_read_directory(const char *path)
     ftp_trace("added directory '%s' to cache\n", dir);
     list_additem(ftp->cache, rdir);
     free(dir);
-    unlink(tmpfilename);
-    free(tmpfilename);
     return rdir;
 
   failed: /* forgive me father, for I have goto'ed */
+    if (fp)
+	    fclose(fp);
     free(dir);
-    if(fp)
-        fclose(fp);
-    unlink(tmpfilename);
-    free(tmpfilename);
     return 0;
 }
 
