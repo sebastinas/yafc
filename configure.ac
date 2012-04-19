@@ -1,12 +1,9 @@
 dnl Process this file with autoconf to produce an m4 configure script.
-dnl $Id: configure.ac,v 1.4 2005/10/05 20:10:09 splicednetworks Exp $
 
-dnl
 dnl init
-dnl
 
 AC_PREREQ(2.60)
-AC_INIT(yafc, 1.1.2, [yafc-devel@lists.sourceforge.net])
+AC_INIT(yafc, 1.1.2, [https://github.com/sebastinas/yafc/])
 AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE
 AC_CONFIG_MACRO_DIR([cf])
@@ -17,7 +14,7 @@ AC_CONFIG_SRCDIR(src/main.c)
 
 CDPATH=""
 
-dnl AM_MAINTAINER_MODE
+AM_MAINTAINER_MODE
 
 AC_CANONICAL_HOST
 
@@ -43,7 +40,6 @@ case "$host" in
 	AC_DEFINE([USE_PIPES], [], [define if using pipes instead of socketpair])
 	;;
 esac
-
 
 dnl
 dnl Checks for header files.
