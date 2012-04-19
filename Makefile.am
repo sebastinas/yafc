@@ -2,22 +2,24 @@
 
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = BUGS THANKS COPYRIGHT \
-             yafcrc.sample inputrc.sample
+						 yafcrc.sample \
+						 inputrc.sample \
+						 contrib/yafc-import_ncftp.pl \
+						 contrib/yafc-mandrake.spec \
+						 contrib/yafc-mandrake.spec.in \
+						 contrib/yafc-rw.spec \
+						 contrib/yafc-rw.spec.in \
+						 completion/yafc
 
 SUBDIRS = doc lib src
 
 ACLOCAL_AMFLAGS = -I cf
 
-CONTRIB_FILES = yafc-import_ncftp.pl yafc-mandrake.spec \
- yafc-mandrake.spec.in yafc-rw.spec yafc-rw.spec.in \
- bash_completion
-
-dist-hook:
-	test -d $(distdir)/contrib || mkdir $(distdir)/contrib; \
-	for cf in $(CONTRIB_FILES) ; do \
-		cp -p $(top_srcdir)/contrib/$$cf $(distdir)/contrib ; done
-
 CLEANFILES=*~ \#*\#
 DISTCLEANFILES=build
 
-celan: clean
+if USE_BASH_COMPLETION
+bash_completion_DATA = completion/yafc
+else
+bash_completion_DATA =
+endif

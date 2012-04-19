@@ -162,6 +162,24 @@ if test "$yafc_found_krb5" = "yes"; then
   LDFLAGS="$yafc_found_krb5_lib_flags $LDFLAGS"
 fi
 
+AC_ARG_WITH([bash-completion],
+	AS_HELP_STRING([--with-bash-completion@<:@=DIR@:>@], [install bash_completion conf file (default is yes) - it is possible to specify bash_completion's config file directory (default is SYSCONFDIR/bash_completion.d)]),
+	[
+    if test "$withval" = "no"; then
+	    BASH_COMPLETION_DIR=""
+    elif test "$withval" = "yes"; then
+      BASH_COMPLETION_DIR=$sysconfdir/bash_completion.d
+    else
+	    BASH_COMPLETION_DIR="$withval"
+    fi
+  ],
+  [BASH_COMPLETION_DIR=$sysconfdir/bash_completion.d])
+
+bash_completiondir="${BASH_COMPLETION_DIR}"
+AC_SUBST(BASH_COMPLETION_DIR)
+AC_SUBST(bash_completiondir)
+AM_CONDITIONAL(USE_BASH_COMPLETION, test "${BASH_COMPLETION_DIR}" != "")
+
 AC_CONFIG_FILES([Makefile \
                  doc/Makefile \
                  lib/Makefile \
