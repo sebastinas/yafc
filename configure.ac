@@ -171,37 +171,37 @@ fi
 
 if test "$yafc_found_krb" = "yes"; then
   AC_LIBOBJ(security)
+fi
 
-  if test "$yafc_krb5_vendor" != "Heimdal" ; then
-    AX_CHECK_OPENSSL([
-      AC_CHECK_HEADERS(openssl/ui_compat.h \
-                       openssl/ui.h)
-    ])
-  fi
+if test "$yafc_krb5_vendor" != "Heimdal" ; then
+  AX_CHECK_OPENSSL([
+    AC_CHECK_HEADERS(openssl/ui_compat.h \
+                     openssl/ui.h)
+  ])
+fi
 
-  old_CFLAGS="$CFLAGS $OPENSSL_INCLUDES"
-  yafc_have_read_pw_string="no"
-  AC_CHECK_DECL(des_read_pw_string, [yafc_have_read_pw_string="yes"],,
-    [
-      #ifdef HAVE_OPENSSL_UI_COMPAT_H
-      #include <openssl/ui_compat.h>
-      #endif
-    ])
-  AC_CHECK_DECL(UI_UTIL_read_pw_string, [yafc_have_read_pw_string="yes"],,
-    [
-      #ifdef HAVE_HCRYPTO_UI_H
-      #include <hcrypto/ui.h>
-      #elif defined(HAVE_OPENSSL_UI_H)
-      #include <openssl/ui.h>
-      #endif
-    ])
-  CFLAGS="$old_CFLAGS"
+old_CFLAGS="$CFLAGS $OPENSSL_INCLUDES"
+yafc_have_read_pw_string="no"
+AC_CHECK_DECLS(des_read_pw_string, [yafc_have_read_pw_string="yes"],,
+  [
+    #ifdef HAVE_OPENSSL_UI_COMPAT_H
+    #include <openssl/ui_compat.h>
+    #endif
+  ])
+AC_CHECK_DECLS(UI_UTIL_read_pw_string, [yafc_have_read_pw_string="yes"],,
+  [
+    #ifdef HAVE_HCRYPTO_UI_H
+    #include <hcrypto/ui.h>
+    #elif defined(HAVE_OPENSSL_UI_H)
+    #include <openssl/ui.h>
+    #endif
+  ])
+CFLAGS="$old_CFLAGS"
 
-  if test "$yafc_have_read_pw_string"="yes" ; then
-    LIBS="$OPENSSL_LIBS $LIBS"
-    LDFLAGS="$OPENSSL_LDFLAGS $LDFLAGS"
-    CPPFLAGS="$OPENSSL_INCLUDES $CPPFLAGS"
-  fi
+if test "$yafc_have_read_pw_string"="yes" ; then
+  LIBS="$OPENSSL_LIBS $LIBS"
+  LDFLAGS="$OPENSSL_LDFLAGS $LDFLAGS"
+  CPPFLAGS="$OPENSSL_INCLUDES $CPPFLAGS"
 fi
 
 AC_ARG_WITH([bash-completion],
