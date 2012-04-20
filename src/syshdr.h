@@ -80,11 +80,16 @@ typedef unsigned long long int u_int64_t;
 #include <setjmp.h>
 
 #include <errno.h>
+
+#if 0					// Disabled for mingw32 (get.c, makepath.c/h, )
 #include <grp.h>
+#endif
 
 #include "xmalloc.h"
 
+#if 0					// Disabled for mingw32 (input.c, list.c)
 #include <sys/ioctl.h>
+#endif
 
 #if defined HAVE_DECL_HERROR && !HAVE_DECL_HERROR
 void herror(const char *s);
@@ -251,3 +256,10 @@ typedef enum {false, true} bool;
 #define DEFAULT_PAGER "more"
 
 #endif
+
+
+/**
+* mingw stuff - will eventually get it's own header
+**/
+#include "mingw32.h"
+

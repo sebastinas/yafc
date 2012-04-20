@@ -412,6 +412,9 @@ char *tilde_expand_home(const char *str, const char *home)
 {
 	char *full, *s;
 
+#ifdef IS_WINDOWS
+	full = xstrdup(str);
+#else
 	if(home && (strcmp(str, "~") == 0))
 		full = xstrdup(home);
 	else if(home && (strncmp(str, "~/", 2) == 0))
@@ -433,6 +436,7 @@ char *tilde_expand_home(const char *str, const char *home)
 		free(user);
 	} else
 		full = xstrdup(str);
+#endif
 
 	return full;
 }

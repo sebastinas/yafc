@@ -70,6 +70,11 @@ typedef int uid_t;
 typedef int gid_t;
 #endif
 
+/**
+* mingw stuff - will eventually get it's own header
+**/
+#include "mingw32.h"
+
 #include "makepath.h"
 
 /* in ../src/ftp/ftp.c */
