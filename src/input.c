@@ -18,6 +18,14 @@
 #include "bashline.h"
 #include "commands.h"
 
+#ifdef HAVE_HCRYPTO_UI_H
+#include <hcrypto/ui.h>
+#elif defined(HAVE_OPENSSL_UI_H)
+#include <openssl/ui.h>
+#elif defined(HAVE_OPENSSL_UI_COMPAT_H)
+#include <openssl/ui_compat.h>
+#endif
+
 #undef __  /* gettext no-op */
 #define __(text) (text)
 
@@ -52,20 +60,6 @@ char *input_read_string(const char *prompt)
 #endif
 }
 
-#if 0
-char *getpass_hook(const char *prompt)
-{
-#ifdef KERBEROS
-	char tmp[80];
-	des_read_pw_string(tmp, sizeof(tmp), (char *)prompt, 0);
-	tmp[79] = 0;
-	return xstrdup(tmp);
-#else
-	return xstrdup(getpass(prompt));
-#endif
-}
-#else
-
 /* This is contributed, untested code from an anonymous sender from
  * sourceforge. It didn't compile right away so I commented it out. This is
  * probably a good idea, but I just don't have the time.
@@ -92,10 +86,13 @@ char *getpass_hook(const char *prompt)
 
 char *getpass_hook(const char *prompt)
 {
-#ifdef HAVE_KERBEROS
+#if HAVE_DECL_UI_UTIL_READ_PW_STRING || HAVE_DECLDES_READ_PW_STRING
 	char tmp[80];
-	des_read_pw_string(tmp, sizeof(tmp), (char *)prompt,
-					   0);
+#if HAVE_DECL_UI_UTIL_READ_PW_STRING
+  UI_UTIL_read_pw_string(tmp, sizeof(tmp), (char*)prompt, 0);
+#else
+	des_read_pw_string(tmp, sizeof(tmp), (char *)prompt, 0);
+#endif
 	tmp[79] = 0;
 	return xstrdup(tmp);
 #else
@@ -157,7 +154,6 @@ char *getpass_hook(const char *prompt)
 	return xstrdup(tmp);
 #endif
 }
-#endif
 
 char *getuser_hook(const char *prompt)
 {

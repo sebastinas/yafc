@@ -151,8 +151,8 @@ AC_DEFUN([YAFC_KRB5_CHECK],
       [
         AC_CHECK_HEADERS(gssapi/gssapi.h,
           [
-            AC_CHECK_HEADERS(gssapi/gssapi_krb5.h)
-            AC_CHECK_HEADERS(gssapi/krb5_err.h)
+            AC_CHECK_HEADERS(gssapi/gssapi_krb5.h \
+                             gssapi/krb5_err.h)
           ])
       ])
     CFLAGS="$old_CFLAGS"

@@ -27,6 +27,8 @@ AC_MINIX
 AM_PROG_CC_STDC
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
+AC_PROG_GREP
+AC_PROG_AWK
 LT_INIT
 
 dnl check if to use pipes or socketpair in src/ftp/ssh_ftp.c
@@ -61,7 +63,8 @@ AC_CHECK_HEADERS(unistd.h \
                  sys/ioctl.h \
                  memory.h \
                  setjmp.h \
-                 errno.h
+                 errno.h \
+                 termios.h
 )
 
 AC_CHECK_HEADERS(dirent.h, [], [
@@ -144,11 +147,6 @@ AC_CHECK_DECLS([asprintf, vasprintf])
 AC_CHECK_DECLS([herror],,,[#include<netdb.h>])
 
 YAFC_KERBEROS
-
-if test "$yafc_found_krb" = "yes"; then
-  AC_LIBOBJ(security)
-fi
-
 if test "$yafc_found_krb4" = "yes"; then
   AC_LIBOBJ(krb4)
   AC_LIBOBJ(kauth)
@@ -165,6 +163,45 @@ if test "$yafc_found_krb5" = "yes"; then
   LIBS="$yafc_found_krb5_lib_libs $LIBS"
   CPPFLAGS="$yafc_found_krb5_inc_flags $CPPFLAGS"
   LDFLAGS="$yafc_found_krb5_lib_flags $LDFLAGS"
+
+  if test "$yafc_krb5_vendor" = "Heimdal" ; then
+    AC_CHECK_HEADERS(hcrypto/ui.h)
+  fi
+fi
+
+if test "$yafc_found_krb" = "yes"; then
+  AC_LIBOBJ(security)
+
+  if test "$yafc_krb5_vendor" != "Heimdal" ; then
+    AX_CHECK_OPENSSL([
+      AC_CHECK_HEADERS(openssl/ui_compat.h \
+                       openssl/ui.h)
+    ])
+  fi
+
+  old_CFLAGS="$CFLAGS $OPENSSL_INCLUDES"
+  yafc_have_read_pw_string="no"
+  AC_CHECK_DECL(des_read_pw_string, [yafc_have_read_pw_string="yes"],,
+    [
+      #ifdef HAVE_OPENSSL_UI_COMPAT_H
+      #include <openssl/ui_compat.h>
+      #endif
+    ])
+  AC_CHECK_DECL(UI_UTIL_read_pw_string, [yafc_have_read_pw_string="yes"],,
+    [
+      #ifdef HAVE_HCRYPTO_UI_H
+      #include <hcrypto/ui.h>
+      #elif defined(HAVE_OPENSSL_UI_H)
+      #include <openssl/ui.h>
+      #endif
+    ])
+  CFLAGS="$old_CFLAGS"
+
+  if test "$yafc_have_read_pw_string"="yes" ; then
+    LIBS="$OPENSSL_LIBS $LIBS"
+    LDFLAGS="$OPENSSL_LDFLAGS $LDFLAGS"
+    CPPFLAGS="$OPENSSL_INCLUDES $CPPFLAGS"
+  fi
 fi
 
 AC_ARG_WITH([bash-completion],
