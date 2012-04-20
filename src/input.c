@@ -52,11 +52,27 @@ char *input_read_string(const char *prompt)
 #endif
 }
 
+
 #ifdef IS_WINDOWS
+/* The below breaks in wonderful ways on windows, so we just do
+ * something really simple for now
+ */
+
+#include <stdio.h>
+
 char *getpass_hook(const char *prompt)
 {
-	return xstrdup(getpass(prompt));
+	char *lineptr; int n = 100;
+	
+	puts(prompt);
+	
+	lineptr = (char *) malloc(n+1);
+	getline(&lineptr, &n, stdin);
+	
+	return xstrdup(lineptr);
 }
+
+
 #else
 
 /* This is contributed, untested code from an anonymous sender from
