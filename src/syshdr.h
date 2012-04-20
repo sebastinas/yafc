@@ -203,7 +203,7 @@ extern int read_history ();
 #endif
 
 #ifndef HAVE_STRCASECMP
-# include <strcasecmp.h>  /* our own, in lib/ */
+# include "strcasecmp.h"  /* our own, in lib/ */
 #endif
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
