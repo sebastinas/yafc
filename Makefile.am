@@ -5,10 +5,6 @@ EXTRA_DIST = BUGS THANKS COPYRIGHT \
 						 yafcrc.sample \
 						 inputrc.sample \
 						 contrib/yafc-import_ncftp.pl \
-						 contrib/yafc-mandrake.spec \
-						 contrib/yafc-mandrake.spec.in \
-						 contrib/yafc-rw.spec \
-						 contrib/yafc-rw.spec.in \
 						 completion/yafc
 
 SUBDIRS = doc lib src

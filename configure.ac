@@ -190,9 +190,7 @@ AC_CONFIG_FILES([Makefile \
                  lib/Makefile \
                  src/Makefile \
                  src/ftp/Makefile \
-                 src/libmhe/Makefile \
-                 contrib/yafc-rw.spec
-                 contrib/yafc-mandrake.spec])
+                 src/libmhe/Makefile])
 AC_OUTPUT
 
 echo
