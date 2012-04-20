@@ -52,7 +52,7 @@
 #   include <gssapi/gssapi_krb5.h>
 # endif
  /* This is needed in Gentoo's Heimdal install which correctly creates
-  * symlinks to match MIT's distribution locations for gssapi/*.h
+  * symlinks to match MIT's distribution locations for gssapi/ *.h
   */
 # if defined(HAVE_GSSAPI_KRB5_ERR_H)
 #   include <gssapi/krb5_err.h>

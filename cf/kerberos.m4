@@ -6,13 +6,6 @@ dnl checks for kerberos 5 + gssapi
 dnl checks for kerberos 4 or Kerberos 5 w/ Kerberos 4 compatibility
 dnl
 dnl sets yafc_found_krb5 if found krb5 (libs + headers + gssapi)
-dnl sets yafc_found_krb5_lib if found krb5 libs
-dnl sets yafc_found_krb5_inc if found krb5 headers
-dnl sets yafc_found_gssapi_lib if found gssapi libs
-dnl sets yafc_found_gssapi_inc if found gssapi headers
-dnl
-dnl sets yafc_found_krb5_lib_dir to directory of krb5 libs
-dnl sets yafc_found_krb5_inc_dir to directory of krb5 headers
 dnl sets yafc_found_krb5_lib_libs to required LIBS
 dnl sets yafc_found_krb5_lib_flags to required LDFLAGS
 dnl sets yafc_found_krb5_inc_flags to required CPPFLAGS
@@ -30,64 +23,7 @@ dnl sets yafc_found_krb4_inc_flags to required CPPFLAGS
 AC_DEFUN([YAFC_KERBEROS],
 [
   YAFC_ARG_WITH(krb4, yes, [Kerberos 4])
-  YAFC_ARG_WITH(krb5, yes, [Kerberos 5])
-  YAFC_ARG_WITH(gssapi, yes, [GSSAPI])
-
-  if test "$yafc_with_krb5" = "yes"; then
-    if test -z "$yafc_with_krb5_lib"; then
-      YAFC_SEARCH_KRB5_LIBS(["" \
-                             /usr/heimdal/lib \
-                             /usr/athena/lib \
-                             /usr/kerberos/lib \
-                             /usr/local/lib])
-    else
-      YAFC_SEARCH_KRB5_LIBS([$yafc_with_krb5_lib])
-    fi
-   
-    if test "$yafc_found_krb5_lib" = "yes"; then
-      if test -z "$yafc_with_krb5_inc"; then
-        YAFC_SEARCH_KRB5_HEADERS(["" \
-                                  /usr/heimdal/include \
-                                  /usr/kerberos/include \
-                                  /usr/include/kerberosV \
-                                  /usr/include/kerberos \
-                                  /usr/include/krb5 \
-                                  /usr/local/include \
-                                  /usr/athena/include])
-      else
-        YAFC_SEARCH_KRB5_HEADERS([$yafc_with_krb5_inc])
-      fi
-      if test "$yafc_found_krb5_inc" = "yes"; then
-        yafc_found_krb5="yes"
-      fi
-    fi
-
-    if test "$yafc_found_krb5" = "yes"; then
-      YAFC_CHECK_GSSAPI_LIB
-    fi
-
-    if test "$yafc_found_gssapi_lib" = "yes"; then
-      if test -z "$yafc_with_gssapi_inc"; then
-        YAFC_SEARCH_GSSAPI_HEADERS(["" \
-                                    /usr/heimdal/include \
-                                    /usr/kerberos/include \
-                                    /usr/include/kerberosV \
-                                    /usr/include/kerberos \
-                                    /usr/include/krb5 \
-                                    /usr/local/include \
-                                    /usr/athena/include])
-      else
-        YAFC_SEARCH_GSSAPI_HEADERS([$yafc_with_gssapi_inc])
-      fi
-      if test "$yafc_found_gssapi_inc" = "yes"; then
-        yafc_found_gssapi="yes"
-      fi
-    fi
-  fi
-
-  if test "$yafc_found_gssapi" = "no"; then
-    yafc_found_krb5="no"
-  fi
+  YAFC_KRB5_CHECK
 
   if test "$yafc_with_krb4" = "yes"; then
     if test -z "$yafc_with_krb4_lib"; then
@@ -145,11 +81,6 @@ AC_DEFUN([YAFC_KERBEROS],
     fi
   fi
 
-
-  if test "$yafc_found_krb5" = "yes"; then
-    AC_DEFINE([HAVE_KRB5], [1], [define if you have Kerberos 5])
-  fi
-
   if test "$yafc_found_krb4" = "yes"; then
     AC_DEFINE([HAVE_KRB4], [1], [define if you have Kerberos 4])
   fi
@@ -165,155 +96,68 @@ AC_DEFUN([YAFC_KERBEROS],
 dnl *************************************************************
 dnl Kerberos 5
 
-
-
-AC_DEFUN([YAFC_SEARCH_KRB5_LIBS_IN],
+AC_DEFUN([YAFC_KRB5_CHECK],
 [
-  if test -z "$1"; then
-    AC_MSG_CHECKING([for Kerberos 5])
-  else
-    AC_MSG_CHECKING([for Kerberos 5 in $1])
-  fi
-  saved_LIBS=$LIBS
-  saved_LDFLAGS=$LDFLAGS
-
-  for xlibs in                                dnl
-    "-lk5crypto -lcom_err"                    dnl new mit krb
-    "-lcrypto -lcom_err"                      dnl old mit krb
-    "-lasn1 -ldes -lroken"                    dnl heimda w/o dep on db
-    "-lasn1 -ldes -lroken -lresolv"           dnl heimdal w/o dep on db
-    "-lasn1 -lcrypto -lcom_err -lroken"       dnl heimdal-BSD w/o dep on db
-    "-lasn1 -lcrypto -lcom_err -lroken -lcrypt -lresolv"       dnl 
-    "-lasn1 -ldes -lroken -ldb"               dnl heimdal
-    "-lasn1 -ldes -lroken -ldb -lresolv"      dnl heimdal
-    "-lasn1 -lcrypto -lcom_err -lroken -ldb"  dnl heimdal-BSD
-  ; do
-    LIBS="-lkrb5 $xlibs $saved_LIBS"
-    if test -n "$1"; then
-      LDFLAGS="-L$1 $saved_LDFLAGS"
-    fi
-
-    AC_LINK_IFELSE(
+  AC_ARG_WITH([krb5],
+	  [AS_HELP_STRING([--with-krb5], [support Kerberos 5 @<:@default=yes@:>@])],
+	  [],
+    [with_krb5=yes])
+  
+  yafc_found_krb5="no, disabled"
+  AS_IF([test "x$with_krb5" != "xno"],
     [
-      AC_LANG_PROGRAM([[ void krb5_init_context();  ]],
-                      [[ krb5_init_context(); ]])
-    ], [ # action-if-found
-      yafc_found_krb5_lib="yes"
-      yafc_found_krb5_lib_dir=$1
-      yafc_found_krb5_lib_libs="-lkrb5 $xlibs"
-      if test -n "$1"; then
-        yafc_found_krb5_lib_flags="-L$1"
+      if test "x$withval" = "xyes"; then
+        KRB5ROOT=/usr/local
+      else
+        KRB5ROOT=${withval}
       fi
-      break
-    ], [ # action-if-not-found
-      yafc_found_krb5_lib="no"
-    ])
-  done
-  AC_MSG_RESULT([$yafc_found_krb5_lib])
-  LIBS=$saved_LIBS
-  LDFLAGS=$saved_LDFLAGS
-])
+      AC_PATH_PROG([KRB5CONFIG], [krb5-config],"no",[$KRB5ROOT/bin$PATH_SEPERATOR$PATH])
+      if test "$KRB5CONFIG" = "no" ; then
+        yafc_found_krb5="no, not found"
+      else
+        AC_MSG_CHECKING([for krb5 vendor])
+        yafc_krb5_vendor="`$KRB5CONFIG --vendor`"
+        if test "$yafc_krb5_vendor" = "Massachusetts Institute of Technology"; then
+          yafc_krb5_vendor="MIT"
+        fi
+        AC_MSG_RESULT([$yafc_krb5_vendor])
 
-AC_DEFUN([YAFC_SEARCH_KRB5_LIBS],
-[
-  for p in $1; do
-    if test -z "$p" -o -d "$p"; then
-      YAFC_SEARCH_KRB5_LIBS_IN($p)
-      if test "$yafc_found_krb5_lib" = "yes"; then
-        break
+        AC_MSG_CHECKING([for GSSAPI])
+        if $KRB5CONFIG | $GREP gssapi > /dev/null; then
+          AC_MSG_RESULT([yes])
+          yafc_found_krb5="yes"
+        else
+          AC_MSG_RESULT([no])
+          yafc_found_krb5="no, gssapi not found"
+        fi
       fi
-    fi
-  done
-])
-
-AC_DEFUN([YAFC_CHECK_GSSAPI_LIB],
-[
-  AC_MSG_CHECKING([for GSSAPI library])
-
-  saved_LIBS=$LIBS
-  saved_LDFLAGS=$LDFLAGS
-
-  for lib in "-lgssapi" "-lgssapi_krb5" ; do
-    LDFLAGS="$yafc_found_krb5_lib_flags $saved_LDFLAGS"
-    LIBS="$lib $yafc_found_krb5_lib_libs $saved_LIBS"
-
-    AC_LINK_IFELSE(
-    [
-      AC_LANG_PROGRAM([[ void gss_init_sec_context();  ]],
-                      [[ gss_init_sec_context(); ]])
-    ], [ # action-if-found
-      yafc_found_gssapi_lib="yes"
-      yafc_found_krb5_lib_libs="$lib $yafc_found_krb5_lib_libs"
-      break
-    ], [ # action-if-not-found
-      yafc_found_gssapi_lib="no"
     ])
-  done
 
-  AC_MSG_RESULT([$yafc_found_gssapi_lib])
-
-  LIBS=$saved_LIBS
-  LDFLAGS=$saved_LDFLAGS
-])
-
-AC_DEFUN([YAFC_SEARCH_GSSAPI_HEADERS],
-[
-  saved_LIBS=$LIBS
-  saved_LDFLAGS=$LDFLAGS
-  saved_CPPFLAGS=$CPPFLAGS
-
-  LIBS="$yafc_found_krb5_lib_libs $saved_LIBS"
-  LDFLAGS="$yafc_found_krb5_lib_flags $saved_LDFLAGS"
-
-  for p in $1; do
-   if test -z "$p" -o -d "$p"; then
-    if test -z "$p"; then
-      AC_MSG_CHECKING([for GSSAPI headers])
-    else
-      AC_MSG_CHECKING([for GSSAPI headers in $p])
-      CPPFLAGS="-I$p $saved_CPPFLAGS"
+  if test "$yafc_found_krb5" = "yes" ; then
+    AC_DEFINE([HAVE_KRB5], [1], [define if you have Kerberos 5])
+    if test "$yafc_krb5_vendor" = "MIT" ; then
+      AC_DEFINE([HAVE_KRB5_MIT], [1], [define if you have Kerberos 5 - MIT])
+    elif test "$yafc_krb5_vendor" = "Heimdal" ; then
+      AC_DEFINE([HAVE_KRB5_HEIMDAL], [1], [define if you have Kerberos 5 - Heimdal])
     fi
-    YAFC_SEARCH_HEADER_IN(gssapi,GSSAPI,[gssapi.h], $p, [gss_buffer_desc foo;])
-    if test "$yafc_found_gssapi_inc" = "yes"; then
-      AC_MSG_RESULT([$yafc_found_gssapi_inc])
-    else
-      YAFC_SEARCH_HEADER_IN(gssapi, GSSAPI, [gssapi/gssapi.h], $p,
-        [gss_buffer_desc foo;])
-      AC_MSG_RESULT([$yafc_found_gssapi_inc])
-      if test "$yafc_found_gssapi_inc" = "yes"; then
-        AC_CHECK_HEADERS([gssapi/gssapi_krb5.h],,,
+    yafc_found_krb5_inc_flags="`$KRB5CONFIG --cflags krb5 gssapi`"
+    yafc_found_krb5_lib_libs="`krb5-config --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if (substr($i,0,2)==\"-l\"){ printf \"%s \", $i }}}'`"
+    yafc_found_krb5_lib_flags="`krb5-config --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if (substr($i,0,2)!=\"-l\"){ printf \"%s \", $i }}}'`"
+    old_CFLAGS="$CFLAGS"
+    CFLAGS="$CFLAGS $yafc_found_krb5_inc_flags"
+
+    AC_CHECK_HEADERS(krb5.h)
+    AC_CHECK_HEADERS(gssapi.h,,
+      [
+        AC_CHECK_HEADERS(gssapi/gssapi.h,
           [
-#include <gssapi/gssapi.h>
+            AC_CHECK_HEADERS(gssapi/gssapi_krb5.h)
+            AC_CHECK_HEADERS(gssapi/krb5_err.h)
           ])
-		AC_CHECK_HEADERS([gssapi/krb5_err.h],,,
-		  [
-#include <gssapi/krb5_err.h>
-		  ])
-      fi
-    fi
-    if test "$yafc_found_gssapi_inc" = "yes"; then
-      yafc_found_krb5_inc_flags="$yafc_found_gssapi_inc_flags $yafc_found_krb5_inc_flags"
-      break
-    fi
-   fi
-  done
-
-  LIBS=$saved_LIBS
-  LDFLAGS=$saved_LDFLAGS
-  CPPFLAGS=$saved_CPPFLAGS
-]);
-
-AC_DEFUN([YAFC_SEARCH_KRB5_HEADERS],
-[
-  for p in $1; do
-    if test -z "$p" -o -d "$p"; then
-      YAFC_SEARCH_HEADER(krb5, [Kerberos 5], [krb5.h], $p, [krb5_kvno foo;])
-      if test "$yafc_found_krb5_inc" = "yes"; then
-        break
-      fi
-    fi
-  done
-]);
+      ])
+    CFLAGS="$old_CFLAGS"
+  fi
+])
 
 
 dnl *************************************************************
@@ -335,7 +179,7 @@ AC_DEFUN([YAFC_SEARCH_KRB4_LIBS_IN],
     "-ldes -lroken"            dnl kth-krb in nbsd
     "-ldes -lroken -lcom_err"  dnl kth-krb in nbsd for real
     "-ldes -lcom_err"          dnl kth-krb in fbsd
-    "-ldes -lcom_err -lcrypt"  dnl CNS q96 à la SCS
+    "-ldes -lcom_err -lcrypt"  dnl CNS q96 Ã  la SCS
     "-lcrypto"                 dnl kth-krb with openssl
   ; do
 
