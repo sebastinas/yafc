@@ -290,6 +290,7 @@ transfer_xterm_string "\e]0;%p%% - %R - yafc\x07"
 # 4 - login to proxy, OPEN real_host, USER real_user, PASS real_password
 # 5 - connect to proxy, USER real_user@proxy_user@real_host, PASS real_password@proxy_password
 # 6 - connect to proxy, USER proxy_user@real_host, PASS proxy_password, USER realuser, PASS real_password
+# 7 - connect to proxy, USER real_user@real_host:real_port, PASS real_password
 
 proxy_type 0
 

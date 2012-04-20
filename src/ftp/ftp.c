@@ -307,7 +307,13 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
         ftp_set_signal(SIGALRM, SIG_IGN);
         return -1;
     }
+    /* keep the value in urlp->port
     urlp->port = ntohs(ftp->host->port);
+    and set it to 21 if it is -1 */
+    if(urlp->port == -1) {
+	    urlp->port = 21;
+    }
+
 
     fprintf(stderr, "\r               ");
     i = strlen(use_proxy ? gvProxyUrl->hostname : urlp->hostname);
@@ -857,7 +863,7 @@ int ftp_login(const char *guessed_username, const char *anonpass)
     r = get_username(ftp->url, guessed_username, false);
     if(r != 0)
         return r;
-    if(ptype > 1) {
+    if(ptype > 1 && ptype < 7) {
         r = get_username(purl, 0, true);
         if(r != 0)
             return r;
@@ -967,6 +973,9 @@ int ftp_login(const char *guessed_username, const char *anonpass)
             if(ftp->code < ctTransient)
                 ftp_cmd("USER %s", ftp->url->username);
         }
+        break;
+      case 7:
+        ftp_cmd("USER %s@%s:%i", ftp->url->username, ftp->url->hostname, ftp->url->port);
         break;
     }
 
