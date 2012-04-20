@@ -3,7 +3,7 @@
 [ -d support ] || mkdir support || exit
 
 echo -n "Running autoreconf..."
-autoreconf -i || exit
+autoreconf -i -s || exit
 echo " done"
 
 echo "Running configure $*..."
