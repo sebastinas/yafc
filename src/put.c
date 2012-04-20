@@ -432,7 +432,9 @@ void cmd_put(int argc, char **argv)
 #endif
 		{"skip-empty", no_argument, 0, 'e'},
 		{"force", no_argument, 0, 'f'},
+#ifndef IS_WINDOWS
 		{"nohup", no_argument, 0, 'H'},
+#endif
 		{"interactive", no_argument, 0, 'i'},
 		{"logfile", required_argument, 0, 'L'},
 		{"mask", required_argument, 0, 'm'},

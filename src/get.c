@@ -230,6 +230,7 @@ static int getfile(const rfile *fi, unsigned int opt,
                 free(destdir);
                 return -1;
             }
+#ifndef IS_WINDOWS
             /* change permission and group, if requested */
             if(test(opt, GET_CHMOD)) {
                 if(stat(destdir, &sb) == 0) {
@@ -242,6 +243,7 @@ static int getfile(const rfile *fi, unsigned int opt,
                 if(chown(destdir, -1, group_change) != 0)
                     perror(dest);
             }
+#endif
             free(destdir);
         }
     }
@@ -331,6 +333,7 @@ static int getfile(const rfile *fi, unsigned int opt,
             ret = 0;
             if(test(opt, GET_PRESERVE))
                 get_preserve_attribs(fi, dest);
+#ifndef IS_WINDOWS
             if(test(opt, GET_CHMOD)) {
                 mode_t m = rfile_getmode(fi);
                 m = mode_adjust(m, cmod);
@@ -341,6 +344,7 @@ static int getfile(const rfile *fi, unsigned int opt,
                 if(chown(dest, -1, group_change) != 0)
                     perror(dest);
             }
+#endif
             if(test(opt, GET_DELETE_AFTER)) {
                 bool dodel = false;
                 if(!test(opt, GET_FORCE)
@@ -576,8 +580,10 @@ void cmd_get(int argc, char **argv)
 #endif
     struct option longopts[] = {
         {"append", no_argument, 0, 'a'},
+#ifndef IS_WINDOWS
         {"chmod", required_argument, 0, 'c'},
         {"chgrp", required_argument, 0, '2'},
+#endif
         {"no-dereference", no_argument, 0, 'd'},
         {"delete-after", no_argument, 0, 'D'},
         {"dir-mask", required_argument, 0, '3'},
@@ -593,7 +599,9 @@ void cmd_get(int argc, char **argv)
         {"rx-mask", required_argument, 0, 'M'},
 #endif
         {"newer", no_argument, 0, 'n'},
+#ifndef IS_WINDOWS
         {"nohup", no_argument, 0, 'H'},
+#endif
         {"verbose", no_argument, 0, 'v'},
         {"preserve", no_argument, 0, 'p'},
         {"parents", no_argument, 0, 'P'},
@@ -643,6 +651,7 @@ void cmd_get(int argc, char **argv)
           case 'a':
             opt |= GET_APPEND;
             break;
+#ifndef IS_WINDOWS
           case 'c':
             cmod = mode_compile(optarg,
                                 (MODE_MASK_EQUALS | MODE_MASK_PLUS
@@ -658,6 +667,7 @@ void cmd_get(int argc, char **argv)
             opt |= GET_CHMOD;
             break;
         case '2': /* --chgrp */
+
             grp = getgrnam(optarg);
             if(grp == 0) {
                 fprintf(stderr, _("%s is not a valid group name\n"), optarg);
@@ -678,6 +688,7 @@ void cmd_get(int argc, char **argv)
             group_change = grp->gr_gid;
             opt |= GET_CHGRP;
             break;
+#endif
           case 'D':
             opt |= GET_DELETE_AFTER;
             break;
@@ -750,9 +761,11 @@ void cmd_get(int argc, char **argv)
           case 'P':
             opt |= GET_PARENTS;
             break;
+#ifndef IS_WINDOWS
           case 'H':
             opt |= GET_NOHUP;
             break;
+#endif
           case 'q':
             opt &= ~GET_VERBOSE;
             break;
@@ -844,6 +857,7 @@ void cmd_get(int argc, char **argv)
     gvInTransfer = true;
     gvInterrupted = false;
 
+#ifndef IS_WINDOWS
     if(test(opt, GET_NOHUP)) {
         int r = 0;
         pid = fork();
@@ -885,6 +899,7 @@ void cmd_get(int argc, char **argv)
         reset_xterm_title();
         exit(0);
     }
+#endif
 
     if(list_numitem(gl))
         getfiles(gl, opt, get_output);

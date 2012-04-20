@@ -122,12 +122,17 @@ void init_yafc(void)
 	if(!gvLocalHost)
 		gvLocalHost = xstrdup("localhost");
 
+#ifdef IS_WINDOWS
+	gvUsername = xstrdup("test");
+	gvLocalHomeDir = xstrdup("/test");
+#else
 	{
 		struct passwd *pwd;
 		pwd = getpwuid(geteuid());
 		gvUsername = xstrdup(pwd->pw_name);
 		gvLocalHomeDir = xstrdup(pwd->pw_dir);
 	}
+#endif
 
 	if(!gvLocalHomeDir)
 		gvLocalHomeDir = xstrdup(getenv("HOME"));

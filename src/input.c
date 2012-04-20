@@ -52,17 +52,10 @@ char *input_read_string(const char *prompt)
 #endif
 }
 
-#if 0
+#ifdef IS_WINDOWS
 char *getpass_hook(const char *prompt)
 {
-#ifdef KERBEROS
-	char tmp[80];
-	des_read_pw_string(tmp, sizeof(tmp), (char *)prompt, 0);
-	tmp[79] = 0;
-	return xstrdup(tmp);
-#else
 	return xstrdup(getpass(prompt));
-#endif
 }
 #else
 
