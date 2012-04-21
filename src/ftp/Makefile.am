@@ -18,5 +18,3 @@ DEFS=@DEFS@
 
 CLEANFILES=*~ \#*\#
 DISTCLEANFILES=.deps/*
-
-celan: clean
