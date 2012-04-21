@@ -5,6 +5,7 @@ dnl init
 AC_PREREQ(2.60)
 AC_INIT(yafc, 1.1.2, [https://github.com/sebastinas/yafc/issues/], yafc, [https://github.com/sebastinas/yafc/])
 AC_CONFIG_SRCDIR(src/main.c)
+AC_CONFIG_LIBOBJ_DIR([lib])
 AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE
 AC_CONFIG_MACRO_DIR([cf])
@@ -27,8 +28,6 @@ AC_MINIX
 AM_PROG_CC_STDC
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
-AC_PROG_GREP
-AC_PROG_AWK
 LT_INIT
 
 dnl check if to use pipes or socketpair in src/ftp/ssh_ftp.c
