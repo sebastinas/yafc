@@ -13,7 +13,6 @@ noinst_HEADERS = xmalloc.h \
 								 strcasecmp.h \
 								 krb4.h \
 								 base64.h \
-								 pathmax.h \
 								 makepath.h \
 								 modechange.h \
 								 security.h \
