@@ -401,6 +401,15 @@ static void lsfiles(list *gl, unsigned opt)
 		ls_recursive(gl, opt, doclr);
 }
 
+static bool contains_dotfiles(int optind, int argc, char **argv)
+{
+	while(optind < argc) {
+		char *e = argv[optind++];
+		if (e[0] == '.') return true;
+	}
+	return false;
+}
+
 /* cached ls */
 void cmd_ls(int argc, char **argv)
 {
@@ -520,6 +529,10 @@ void cmd_ls(int argc, char **argv)
 	need_connected();
 	need_loggedin();
 
+	if(contains_dotfiles(optind, argc, argv)) {
+		opt |= LS_ALL;
+	}
+	
 	gl = rglob_create();
 	dontlist_opt = opt;
 	if(optind >= argc) {

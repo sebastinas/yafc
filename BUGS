@@ -11,7 +11,6 @@ known BUGS
 * using a slash ('/') in a bookmarks alias name will lead yafc into thinking
    there is a directory to change into
 * issuing a "ls /usr /var" gives a listing of both directories mixed together
-* issuing a "ls .profile" doesn't list .profile if -a option isn't given
 
 --
 Please report bugs to https://github.com/sebastinas/yafc/issues
