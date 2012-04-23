@@ -11,6 +11,9 @@ src/ftp/libftp.a
 src/libmhe/libmhe.a
 contrib/*.spec
 
+# from make dist
+yafc-*.tar.*
+
 # from auto* tools
 aclocal.m4
 libtool
