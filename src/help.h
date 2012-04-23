@@ -14,8 +14,10 @@
 #define _help_h_included
 
 #define COPYR "Copyright (C) 1998-2001 Martin Hedenfalk <mhe@home.se>,\n" \
-  "Copyright (C) 2011-2012 Various Authors <yafc-ftp.com/credits>"
-#define COPYLINE PACKAGE " " VERSION " " COPYR "."
+  "Copyright (C) 2011 Carles Pagès <page@cubata.homelinux.net>,\n" \
+  "Copyright (C) 2011-2012 Sebastian Ramacher <s.ramacher@gmx.at>,\n" \
+  "Copyright (C) 2011-2012 Josh Heidenreich <josh.sickmate@gmail.com>"
+#define COPYLINE PACKAGE " " VERSION
 #define FULLVER COPYLINE"\n" \
   "This program comes with ABSOLUTELY NO WARRANTY; for details type 'warranty'.\n" \
   "This is free software; type 'copyright' for details.\n"
