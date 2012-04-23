@@ -48,7 +48,9 @@ static void remove_file(const rfile *f, unsigned opt)
 	ftp_set_tmp_verbosity(vbNone);
 	ftp_unlink(f->path);
 	if(test(opt, RM_VERBOSE)) {
-		fprintf(stderr, "%s", shortpath(f->path, 40, ftp->homedir));
+		char* sp = shortpath(f->path, 40, ftp->homedir);
+		fprintf(stderr, "%s", sp);
+		free(sp);
 		if(ftp->code != ctComplete)
 			fprintf(stderr, ": %s", ftp_getreply(false));
 		fprintf(stderr, "\n");
@@ -71,9 +73,10 @@ static void remove_files(const list *gl, unsigned opt)
 			continue;
 
 		if(test(opt, RM_INTERACTIVE) && !rm_batch) {
+			char* sp = shortpath(f->path, 42, ftp->homedir);
 			int a = ask(ASKYES|ASKNO|ASKCANCEL|ASKALL, ASKYES,
-						_("Remove remote file '%s'?"),
-						shortpath(f->path, 42, ftp->homedir));
+						_("Remove remote file '%s'?"), sp);
+			free(sp);
 			if(a == ASKNO)
 				continue;
 			if(a == ASKCANCEL) {
@@ -102,16 +105,19 @@ static void remove_files(const list *gl, unsigned opt)
 				free(recurs_mask);
 				ftp_rmdir(f->path);
 				if(test(opt, RM_VERBOSE)) {
-					fprintf(stderr, "%s", shortpath(f->path, 40,
-													ftp->homedir));
+					char* sp = shortpath(f->path, 40, ftp->homedir);
+					fprintf(stderr, "%s", sp);
+					free(sp);
 					if(ftp->code != ctComplete)
 						fprintf(stderr, "%s", ftp_getreply(false));
 					fprintf(stderr, "\n");
 				}
 
-			} else
-				fprintf(stderr, _("%s  omitting directory\n"),
-						shortpath(f->path, 40, ftp->homedir));
+			} else {
+				char* sp = shortpath(f->path, 40, ftp->homedir);
+				fprintf(stderr, _("%s  omitting directory\n"), sp);
+				free(sp);
+			}
 			continue;
 		}
 		remove_file(f, opt);

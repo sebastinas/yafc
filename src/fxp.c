@@ -224,8 +224,9 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 		how = fxpAppend;
 	} else if(file_exists) {
 		if(test(opt, FXP_SKIP_EXISTING)) {
-			printf(_("Remote file '%s' exists, skipping...\n"),
-				   shortpath(dest, 42, ftp->homedir));
+			char* sp = shortpath(dest, 42, ftp->homedir);
+			printf(_("Remote file '%s' exists, skipping...\n"), sp);
+			free(sp);
 			free(dest);
 			ftp_use(thisftp);
 			return 0;
@@ -241,8 +242,9 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 			dst_ft = ftp_filetime(dest);
 
 			if(src_ft != (time_t)-1 && dst_ft != (time_t)-1 && dst_ft >= src_ft) {
-				printf(_("Remote file '%s' is newer than local, skipping...\n"),
-					   shortpath(dest, 42, ftp->homedir));
+				char* sp = shortpath(dest, 42, ftp->homedir);
+				printf(_("Remote file '%s' is newer than local, skipping...\n"), sp);
+				free(sp);
 				free(dest);
 				ftp_use(thisftp);
 				return 0;
@@ -250,10 +252,12 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 		}
 		else if(!test(opt, FXP_RESUME)) {
 			if(!fxp_owbatch) {
+				char* sp = shortpath(dest, 42, ftp->homedir);
 				int a = ask(ASKYES|ASKNO|ASKUNIQUE|ASKCANCEL|ASKALL|ASKRESUME,
 							ASKRESUME,
 							_("File '%s' exists, overwrite?"),
-							shortpath(dest, 42, ftp->homedir));
+							sp);
+				free(sp);
 				if(a == ASKCANCEL) {
 					fxp_quit = true;
 					free(dest);
@@ -299,9 +303,11 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 		if(!test(opt, FXP_FORCE)
 		   && !fxp_delbatch && !gvSighupReceived)
 			{
+				char* sp = shortpath(fi->path, 42, ftp->homedir);
 				int a = ask(ASKYES|ASKNO|ASKCANCEL|ASKALL, ASKYES,
 							_("Delete remote file '%s'?"),
-							shortpath(fi->path, 42, ftp->homedir));
+							sp);
+				free(sp);
 				if(a == ASKALL) {
 					fxp_delbatch = true;
 					dodel = true;
@@ -315,13 +321,13 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 
 		if(dodel) {
 			ftp_unlink(fi->path);
+			char* sp = shortpath(fi->path, 42, ftp->homedir);
 			if(ftp->code == ctComplete)
-				fprintf(stderr, _("%s: deleted\n"),
-						shortpath(fi->path, 42, ftp->homedir));
+				fprintf(stderr, _("%s: deleted\n"), sp);
 			else
-				fprintf(stderr, _("error deleting '%s': %s\n"),
-						shortpath(fi->path, 42, ftp->homedir),
+				fprintf(stderr, _("error deleting '%s': %s\n"), sp,
 						ftp_getreply(false));
+			free(sp);
 		}
 	}
 
@@ -361,9 +367,11 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 		}
 
 		if(test(opt, FXP_INTERACTIVE) && !fxp_batch && !gvSighupReceived) {
+			char* sp = shortpath(opath, 42, ftp->homedir);
 			int a = ask(ASKYES|ASKNO|ASKCANCEL|ASKALL, ASKYES,
 						_("Get '%s'?"),
-						shortpath(opath, 42, ftp->homedir));
+						sp);
+			free(sp);
 			if(a == ASKNO) {
 				transfer_nextfile(gl, &li, true);
 				continue;
@@ -401,8 +409,9 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 			if(strncmp(opath, lnfp->path, strlen(lnfp->path)) == 0) {
 				ftp_trace("opath == '%s', lnfp->path == '%s'\n", opath,
 						  lnfp->path);
-				fprintf(stderr, _("%s: circular link -- skipping\n"),
-						shortpath(lnfp->path, 42, ftp->homedir));
+				char* sp = shortpath(lnfp->path, 42, ftp->homedir);
+				fprintf(stderr, _("%s: circular link -- skipping\n"), sp);
+				free(sp);
 				transfer_nextfile(gl, &li, true);
 				continue;
 			}
@@ -454,16 +463,19 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 						free(recurs_output);
 					}
 			} else if(test(opt, FXP_VERBOSE)) {
-				fprintf(stderr, _("%s: omitting directory\n"),
-						shortpath(opath, 42, ftp->homedir));
+				char* sp = shortpath(opath, 42, ftp->homedir);
+				fprintf(stderr, _("%s: omitting directory\n"), sp);
+				free(sp);
 			}
 			transfer_nextfile(gl, &li, true);
 			continue;
 		}
 		if(!risreg(fp)) {
-			if(test(opt, FXP_VERBOSE))
-				fprintf(stderr, _("%s: not a regular file\n"),
-						shortpath(opath, 42, ftp->homedir));
+			if(test(opt, FXP_VERBOSE)) {
+				char* sp = shortpath(opath, 42, ftp->homedir);
+				fprintf(stderr, _("%s: not a regular file\n"), sp);
+				free(sp);
+			}
 			transfer_nextfile(gl, &li, true);
 			continue;
 		}

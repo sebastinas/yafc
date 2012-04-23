@@ -22,78 +22,73 @@
  * /usr/bin/averylongfilenamethatistoolongindeed.tar.gz => /...oolongindeed.tar.gz
  */
 
-static char *chop(char *str, unsigned maxlen)
+static char* chop(const char *str, size_t maxlen)
 {
-	int len = strlen(str);
+	const size_t len = strlen(str);
+	if (len <= maxlen)
+		return xstrdup(str);
 
-	if(len <= maxlen)
-		return str;
-
-	strcpy(str, "...");
-	strcat(str, str+(len-maxlen+3));
-	return str;
+	char* result = malloc(maxlen + 1);
+	strncpy(result, "...", 3);
+	strncpy(result + 3, str+(len-maxlen+3), maxlen - 3);
+	result[maxlen] = '\0';
+	return result;
 }
 
-static void dirtodots(char *path, unsigned maxlen)
+static char* dirtodots(const char *path, size_t maxlen)
 {
-	char *first_slash, *end_slash;
+	const char* first_slash = strchr(path, '/');
+	if (!first_slash)
+		return chop(path, maxlen);
 
-	first_slash = strchr(path, '/');
-
-	if(!first_slash) {
-		chop(path, maxlen);
-		return;
-	}
-
-	if(strncmp(first_slash+1, "...", 3) == 0) {
+	const char* end_slash = NULL;
+	if (strncmp(first_slash+1, "...", 3) == 0)
 		end_slash = strchr(first_slash+5, '/');
-	} else
+	else
 		end_slash = strchr(first_slash+1, '/');
 
-	if(!end_slash) {
-		chop(path, maxlen);
-		return;
-	}
+	if (!end_slash)
+		return chop(path, maxlen);
 
-	if(end_slash - first_slash < 4) /* /fu/ */
-		strpush(first_slash+1, 4 - (end_slash - first_slash));
+	size_t first = first_slash - path,
+				 end = end_slash - path;
+	char* result = xstrdup(path);
+	if (end - first < 4) /* /fu/ */
+		strpush(result + first +1, 4 - (end - first));
 	else /* /foobar/ */
-		strcpy(first_slash + 4, end_slash);
-	strncpy(first_slash+1, "...", 3);
+		strcpy(result + first + 4, end_slash);
+	strncpy(result + first + 1, "...", 3);
+	return result;
 }
 
-static char *_shortpath(char *path, unsigned maxlen)
+static char *_shortpath(char *path, size_t maxlen)
 {
-	static char *tmp = NULL;
-	int len = strlen(path);
+	const size_t len = strlen(path);
+	if (len <= maxlen)
+		return xstrdup(path);
 
-	tmp = realloc(tmp, len+1);
-	strcpy(tmp, path);
-
-	if(len <= maxlen)
-		return tmp;
-
-	dirtodots(tmp, maxlen);
-	return _shortpath(tmp, maxlen);
+	char* tmp = dirtodots(path, maxlen);
+	char* result = _shortpath(tmp, maxlen);
+	free(tmp);
+	return result;
 }
 
-/* returns a static buffer, overwritten with each call */
-char *shortpath(const char *path, unsigned maxlen, const char *home)
+/* returns a malloced memory, needs to be deallocated with free */
+char *shortpath(const char *path, size_t maxlen, const char *home)
 {
-	char *e;
-	static char *tmp = NULL;
-	int len = strlen(path);
 	extern bool gvTilde;
 
-	if(!path)
-		return 0;
+	if (!path)
+		return NULL;
 
-	tmp = realloc(tmp, len+1);
-	strcpy(tmp, path);
+	const size_t len = strlen(path);
+	if (!len)
+		return NULL;
 
+	char* tmp = xstrdup(path);
 	path_collapse(tmp);
 
-	if(home && home[0] && strlen(home)>=3 && gvTilde) {
+	if(home && home[0] && strlen(home)>=3u && gvTilde) {
 		if(strncmp(tmp, home, strlen(home)) == 0) {
 			tmp[0] = '~';
 			strpull(tmp+1, strlen(home)-1);
@@ -103,8 +98,9 @@ char *shortpath(const char *path, unsigned maxlen, const char *home)
 	if(maxlen <= 3)
 		return tmp;
 
-	e = _shortpath(tmp, maxlen);
-	return e;
+	char* res = _shortpath(tmp, maxlen);
+	free(tmp);
+	return res;
 }
 
 #ifdef TEST
@@ -126,7 +122,7 @@ int main(int argc, char **argv)
 
 	if(strlen(e) > 30)
 		printf("FAILED!\n");
-
+	free(e);
 	return 0;
 }
 

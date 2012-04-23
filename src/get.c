@@ -249,9 +249,12 @@ static int getfile(const rfile *fi, unsigned int opt,
     /* check if destination file exists */
     if(stat(dest, &sb) == 0) {
         if(test(opt, GET_SKIP_EXISTING)) {
-            if(test(opt, GET_VERBOSE))
-                fprintf(stderr, _("Local file '%s' exists, skipping...\n"),
-                        shortpath(dest, 42, gvLocalHomeDir));
+            if(test(opt, GET_VERBOSE)) {
+							char* sp = shortpath(dest, 42, gvLocalHomeDir);
+              fprintf(stderr, _("Local file '%s' exists, skipping...\n"),
+                      sp);
+							free(sp);
+						}
             return 0;
         }
         if(test(opt, GET_UNIQUE))
@@ -267,10 +270,13 @@ static int getfile(const rfile *fi, unsigned int opt,
             ftp_trace("get -n: local file: %s\n", ctime(&sb.st_mtime));
 
             if(sb.st_mtime >= ft && ft != (time_t)-1) {
-                if(test(opt, GET_VERBOSE))
+                if(test(opt, GET_VERBOSE)) {
+									char* sp = shortpath(dest, 30, gvLocalHomeDir);
                     ftp_err(_(
                         "Local file '%s' is newer than remote, skipping...\n"),
-                            shortpath(dest, 30, gvLocalHomeDir));
+                            sp);
+									free(sp);
+								}
                 return 0;
             }
         } else if(!test(opt, GET_RESUME)) {
@@ -282,12 +288,14 @@ static int getfile(const rfile *fi, unsigned int opt,
 
                 sb.st_mtime = gmt_mktime(fan);
                 e = xstrdup(ctime(&sb.st_mtime));
+								char* sp = shortpath(dest, 42, gvLocalHomeDir);
                 a = ask(ASKYES|ASKNO|ASKUNIQUE|ASKCANCEL|ASKALL|ASKRESUME,
                         ASKRESUME,
                         _("Local file '%s' exists\nLocal: %lld bytes, %sRemote: %lld bytes, %sOverwrite?"),
-                        shortpath(dest, 42, gvLocalHomeDir),
+                        sp,
                         (unsigned long long) sb.st_size, e ? e : "unknown date\n",
                         ftp_filesize(fi->path), ctime(&ft));
+								free(sp);
                 free(e);
                 if(a == ASKCANCEL) {
                     get_quit = true;
@@ -343,12 +351,12 @@ static int getfile(const rfile *fi, unsigned int opt,
             }
             if(test(opt, GET_DELETE_AFTER)) {
                 bool dodel = false;
+								char* sp = shortpath(fi->path, 42, ftp->homedir);
                 if(!test(opt, GET_FORCE)
                    && !get_delbatch && !gvSighupReceived)
                 {
                     int a = ask(ASKYES|ASKNO|ASKCANCEL|ASKALL, ASKYES,
-                                _("Delete remote file '%s'?"),
-                                shortpath(fi->path, 42, ftp->homedir));
+                                _("Delete remote file '%s'?"), sp);
                     if(a == ASKALL) {
                         get_delbatch = true;
                         dodel = true;
@@ -363,13 +371,12 @@ static int getfile(const rfile *fi, unsigned int opt,
                 if(dodel) {
                     ftp_unlink(fi->path);
                     if(ftp->code == ctComplete)
-                        fprintf(stderr, _("%s: deleted\n"),
-                               shortpath(fi->path, 42, ftp->homedir));
+                        fprintf(stderr, _("%s: deleted\n"), sp);
                     else
                         fprintf(stderr, _("error deleting '%s': %s\n"),
-                               shortpath(fi->path, 42, ftp->homedir),
-                               ftp_getreply(false));
+															  sp, ftp_getreply(false));
                 }
+								free(sp);
             }
         } else
             ret = -1;
@@ -427,9 +434,10 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
         }
 
         if(test(opt, GET_INTERACTIVE) && !get_batch && !gvSighupReceived) {
+						char* sp = shortpath(opath, 42, ftp->homedir);
             int a = ask(ASKYES|ASKNO|ASKCANCEL|ASKALL, ASKYES,
-                        _("Get '%s'?"),
-                        shortpath(opath, 42, ftp->homedir));
+                        _("Get '%s'?"), sp);
+						free(sp);
             if(a == ASKNO) {
                 transfer_nextfile(gl, &li, true);
                 continue;
@@ -474,8 +482,9 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
             if(strncmp(opath, lnfp->path, strlen(lnfp->path)) == 0) {
                 ftp_trace("opath == '%s', lnfp->path == '%s'\n", opath,
                           lnfp->path);
-                fprintf(stderr, _("%s: circular link -- skipping\n"),
-                        shortpath(lnfp->path, 42, ftp->homedir));
+								char* sp = shortpath(lnfp->path, 42, ftp->homedir);
+                fprintf(stderr, _("%s: circular link -- skipping\n"), sp);
+								free(sp);
                 transfer_nextfile(gl, &li, true);
                 continue;
             }
@@ -528,16 +537,19 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
                         free(recurs_output);
                     }
             } else if(test(opt, GET_VERBOSE)) {
-                fprintf(stderr, _("%s: omitting directory\n"),
-                        shortpath(opath, 42, ftp->homedir));
+							char* sp = shortpath(opath, 42, ftp->homedir);
+							fprintf(stderr, _("%s: omitting directory\n"), sp);
+							free(sp);
             }
             transfer_nextfile(gl, &li, true);
             continue;
         }
         if(!risreg(fp)) {
-            if(test(opt, GET_VERBOSE))
-                fprintf(stderr, _("%s: not a regular file\n"),
-                        shortpath(opath, 42, ftp->homedir));
+            if(test(opt, GET_VERBOSE)) {
+							char* sp = shortpath(opath, 42, ftp->homedir);
+                fprintf(stderr, _("%s: not a regular file\n"), sp);
+								free(sp);
+						}
             transfer_nextfile(gl, &li, true);
             continue;
         }

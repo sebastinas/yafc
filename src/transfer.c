@@ -125,30 +125,31 @@ static int print_transfer_string(char *str,
 			if(leftjust)
 				minlen = -minlen;
 
+			char* sp = NULL;
 			switch(*e) {
 			case 'r':
-				len += max_printf(fp, minlen, "%s",
-								  shortpath(base_name_ptr(ti->remote_name),
+				sp = shortpath(base_name_ptr(ti->remote_name),
 											leftjust ? -minlen : minlen,
-											ftp->homedir));
+											ftp->homedir);
+				len += max_printf(fp, minlen, "%s", sp);
 				break;
 			case 'R':
-				len += max_printf(fp, minlen, "%s",
-								  shortpath(ti->remote_name,
+				sp = shortpath(ti->remote_name,
 											leftjust ? -minlen : minlen,
-											ftp->homedir));
+											ftp->homedir);
+				len += max_printf(fp, minlen, "%s", sp);
 				break;
 			case 'l':
-				len += max_printf(fp, minlen, "%s",
-								  shortpath(base_name_ptr(ti->local_name),
+				sp = shortpath(base_name_ptr(ti->local_name),
 											leftjust ? -minlen : minlen,
-											gvLocalHomeDir));
+											gvLocalHomeDir);
+				len += max_printf(fp, minlen, "%s", sp);
 				break;
 			case 'L':
-				len += max_printf(fp, minlen, "%s",
-								  shortpath(ti->local_name,
+				sp = shortpath(ti->local_name,
 											leftjust ? -minlen : minlen,
-											gvLocalHomeDir));
+											gvLocalHomeDir);
+				len += max_printf(fp, minlen, "%s", sp);
 				break;
 			case 's':
 				len += max_printf(fp, minlen, "%sB", human_size(ti->size));
@@ -229,6 +230,7 @@ static int print_transfer_string(char *str,
 				len += fprintf(fp, "%%%c", *e);
 				break;
 			}
+			free(sp);
 		} else {
 			fputc(*e, fp);
 			if (inescape <= 0) len++;

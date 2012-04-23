@@ -512,7 +512,11 @@ void cmd_bookmark(int argc, char **argv)
 			printf("%s://%s@%s", u->protocol ? u->protocol : "ftp",
 				   u->username, u->hostname);
 			if(u->directory)
-				printf("/%s", shortpath(u->directory, 30, 0));
+			{
+				char* sp = shortpath(u->directory, 30, 0);
+				printf("/%s", sp);
+				free(sp);
+			}
 			putchar('\n');
 		}
 		return;

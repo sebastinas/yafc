@@ -132,6 +132,7 @@ char *expand_prompt(const char *fmt)
 					break;
 				}
 				ins = shortpath(ftp->curdir, maxlen, 0);
+				freeins = true;
 				break;
 			case 'W': /* basename(%w) */
 				if(!ftp_loggedin()) {
@@ -146,10 +147,12 @@ char *expand_prompt(const char *fmt)
 					break;
 				}
 				ins = shortpath(ftp->curdir, maxlen, ftp->homedir);
+				freeins = true;
 				break;
 			case 'l': /* current local directory */
 				tmp = getcwd(NULL, 0);
 				ins = shortpath(tmp, maxlen, 0);
+				freeins = true;
 				free(tmp);
 				break;
 			case 'L': /* basename(%l) */

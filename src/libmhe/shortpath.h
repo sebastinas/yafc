@@ -13,6 +13,6 @@
 #ifndef _shortpath_h_included
 #define _shortpath_h_included
 
-char *shortpath(const char *path, unsigned maxlen, char *home);
+char *shortpath(const char *path, size_t maxlen, char *home);
 
 #endif

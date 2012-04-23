@@ -188,16 +188,18 @@ static void putfile(const char *path, struct stat *sb,
 		how = putAppend;
 	} else if(file_exists) {
 		if(test(opt, PUT_SKIP_EXISTING)) {
-			printf(_("Remote file '%s' exists, skipping...\n"),
-				   shortpath(dest, 42, ftp->homedir));
+			char* sp = shortpath(dest, 42, ftp->homedir);
+			printf(_("Remote file '%s' exists, skipping...\n"), sp);
+			free(sp);
 			free(dest);
 			return;
 		}
 		else if(test(opt, PUT_NEWER)) {
 			time_t ft = ftp_filetime(dest);
 			if(ft != (time_t)-1 && ft >= sb->st_mtime) {
-				printf(_("Remote file '%s' is newer than local, skipping...\n"),
-					   shortpath(dest, 42, ftp->homedir));
+				char* sp = shortpath(dest, 42, ftp->homedir);
+				printf(_("Remote file '%s' is newer than local, skipping...\n"), sp);
+				free(sp);
 				free(dest);
 				return;
 			}
@@ -214,12 +216,14 @@ static void putfile(const char *path, struct stat *sb,
 				ft = ftp_filetime(f->path);
 				sb->st_mtime = gmt_mktime(fan);
 				e = xstrdup(ctime(&sb->st_mtime));
+				char* sp = shortpath(dest, 42, ftp->homedir);
 				a = ask(ASKYES|ASKNO|ASKUNIQUE|ASKCANCEL|ASKALL|ASKRESUME,
 						ASKRESUME,
 						_("Remote file '%s' exists\nLocal: %lld bytes, %sRemote: %lld bytes, %sOverwrite?"),
-						shortpath(dest, 42, ftp->homedir),
+						sp,
 						(unsigned long long) sb->st_size, e ? e : "unknown size",
 						ftp_filesize(f->path), ctime(&ft));
+				free(sp);
 				free(e);
 				if(a == ASKCANCEL) {
 					put_quit = true;
@@ -259,10 +263,10 @@ static void putfile(const char *path, struct stat *sb,
 	if(test(opt, PUT_DELETE_AFTER)) {
 		bool dodel = false;
 
+		char* sp = shortpath(path, 42, gvLocalHomeDir);
 		if(!test(opt, PUT_FORCE) && !put_delbatch) {
 			int a = ask(ASKYES|ASKNO|ASKCANCEL|ASKALL, ASKYES,
-						_("Delete local file '%s'?"),
-						shortpath(path, 42, gvLocalHomeDir));
+						_("Delete local file '%s'?"), sp);
 			if(a == ASKALL) {
 				put_delbatch = true;
 				dodel = true;
@@ -276,13 +280,11 @@ static void putfile(const char *path, struct stat *sb,
 
 		if(dodel) {
 			if(unlink(path) == 0)
-				printf(_("%s: deleted\n"),
-					   shortpath(path, 42, gvLocalHomeDir));
+				printf(_("%s: deleted\n"), sp);
 			else
-				printf(_("error deleting '%s': %s\n"),
-					   shortpath(path, 42, gvLocalHomeDir),
-					   strerror(errno));
+				printf(_("error deleting '%s': %s\n"), sp, strerror(errno));
 		}
+		free(sp);
 	}
 }
 
@@ -326,9 +328,10 @@ static void putfiles(list *gl, unsigned opt, const char *output)
 			continue;
 
 		if(test(opt, PUT_INTERACTIVE) && !put_batch) {
+			char* sp = shortpath(path, 42, gvLocalHomeDir);
 			int a = ask(ASKYES|ASKNO|ASKCANCEL|ASKALL, ASKYES,
-						_("Put '%s'?"),
-						shortpath(path, 42, gvLocalHomeDir));
+						_("Put '%s'?"), sp);
+			free(sp);
 			if(a == ASKNO)
 				continue;
 			if(a == ASKCANCEL) {
@@ -382,14 +385,17 @@ static void putfiles(list *gl, unsigned opt, const char *output)
 							putfiles(rgl, opt, recurs_output);
 						free(recurs_output);
 					}
-			} else
-				fprintf(stderr, _("%s: omitting directory\n"),
-					   shortpath(path, 42, gvLocalHomeDir));
+			} else {
+				char* sp = shortpath(path, 42, gvLocalHomeDir);
+				fprintf(stderr, _("%s: omitting directory\n"), sp);
+				free(sp);
+			}
 			continue;
 		}
 		if(!S_ISREG(sb.st_mode)) {
-			fprintf(stderr, _("%s: not a regular file\n"),
-					shortpath(path, 42, gvLocalHomeDir));
+			char* sp = shortpath(path, 42, gvLocalHomeDir);
+			fprintf(stderr, _("%s: not a regular file\n"), sp);
+			free(sp);
 			continue;
 		}
 		putfile(path, &sb, opt, output);
