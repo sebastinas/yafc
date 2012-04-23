@@ -167,6 +167,7 @@ fi
 
 #if test "" = "yes"; then
   LIBS="/usr/i586-mingw32msvc/lib/libwsock32.a /usr/i586-mingw32msvc/lib/libws2_32.a /usr/i586-mingw32msvc/lib/libwsnmp32.a $LIBS"
+  CPPFLAGS="-g $CPPFLAGS"
 #fi
 
 AC_ARG_WITH([bash-completion],

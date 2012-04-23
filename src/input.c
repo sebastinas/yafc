@@ -38,6 +38,7 @@ char *input_read_string(const char *prompt)
 
 	fflush(stdin);
 	fprintf(stderr, "%s", prompt);
+	fflush(stderr);
 	if(fgets(tmp, 256, stdin) == 0)
 		return 0;
 	if(tmp[0] == '\n')
