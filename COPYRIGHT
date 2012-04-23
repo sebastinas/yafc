@@ -19,6 +19,28 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
 USA.
 
 
+the work since 2011 is covered by the following copyright:
+----------------------------------------------------------
+
+Copyright (C) 2011 Carles Pagès <page@cubata.homelinux.net>,
+Copyright (C) 2011-2012 Sebastian Ramacher <s.ramacher@gmx.at>
+Copyright (C) 2011-2012 Josh Heidenreich <josh.sickmate@gmail.com>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+USA.
+
 
 RFC2228 and Kerberos stuff is covered by the following copyright:
 -----------------------------------------------------------------
@@ -55,7 +77,6 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 
 
-
 various utility files in lib/ are covered by the following copyright:
 ---------------------------------------------------------------------
 
@@ -75,7 +96,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
 USA.
-
 
 
 some SFTP (SSH support) files are covered by the following license:
