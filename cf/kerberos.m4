@@ -119,7 +119,7 @@ AC_DEFUN([YAFC_KRB5_CHECK],
         yafc_found_krb5="no, not found"
       else
         AC_MSG_CHECKING([for krb5 vendor])
-        yafc_krb5_vendor="`$KRB5CONFIG --vendor`"
+        yafc_krb5_vendor="`$KRB5CONFIG --vendor 2>/dev/null || echo unknown`"
         if test "$yafc_krb5_vendor" = "Massachusetts Institute of Technology"; then
           yafc_krb5_vendor="MIT"
         fi
@@ -148,7 +148,11 @@ AC_DEFUN([YAFC_KRB5_CHECK],
     yafc_found_krb5_lib_flags="`$KRB5CONFIG --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if ($i !~ \"^-l.*\"){ printf \"%s \", $i }}}'`"
 
     old_CFLAGS="$CFLAGS"
+    old_LDFLAGS="$LDFLAGS"
+    old_LIBS="$LIBS"
     CFLAGS="$CFLAGS $yafc_found_krb5_inc_flags"
+    LIBS="$LIBS $yafc_found_krb5_lib_libs"
+    LDFLAGS="$LDFLAGS $yafc_found_krb5_lib_flags"
     AC_CHECK_HEADERS(krb5.h)
     AC_CHECK_HEADERS(gssapi.h,,
       [
@@ -158,7 +162,23 @@ AC_DEFUN([YAFC_KRB5_CHECK],
                              gssapi/krb5_err.h)
           ])
       ])
+    AC_MSG_CHECKING([if krb5 is usable])
+    AC_LINK_IFELSE(
+      [
+        AC_LANG_PROGRAM([[ void gss_init_sec_context();  ]],
+                         [[ gss_init_sec_context(); ]])
+      ], [ # action-if-found
+        AC_MSG_RESULT([yes])
+      ], [ # action-if-not-found
+        AC_MSG_RESULT([no])
+        yafc_found_krb5="no, not usable"
+        yafc_found_krb5_inc_flags=""
+        yafc_found_krb5_lib_libs=""
+        yafc_found_krb5_lib_flags=""
+      ])
     CFLAGS="$old_CFLAGS"
+    LIBS="$old_LIBS"
+    LDFLAGS="$old_LDFLAGS"
   fi
 ])
 
