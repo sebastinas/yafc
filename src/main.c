@@ -61,7 +61,7 @@ void print_syntax_and_exit(char *argv0)
 			 "\n"
 			 "(*) only applies for login to host specified on the command line\n"
 			 "\n"
-			 "Report bugs to <yafc-devel@lists.sourceforge.net>\n\n"), argv0);
+			 "Report bugs to <https://github.com/sebastinas/yafc/issues>\n\n"), argv0);
 	exit(0);
 }
 
