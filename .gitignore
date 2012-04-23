@@ -30,3 +30,9 @@ cf/ltoptions.m4
 cf/ltsugar.m4
 cf/ltversion.m4
 cf/lt~obsolete.m4
+
+# Build files
+src/*.o
+src/ftp/*.o
+src/libmhe/*.o
+lib/*.o
