@@ -165,6 +165,10 @@ if test "$yafc_found_krb5" = "yes"; then
   LDFLAGS="$yafc_found_krb5_lib_flags $LDFLAGS"
 fi
 
+#if test "" = "yes"; then
+  LIBS="/usr/i586-mingw32msvc/lib/libwsock32.a /usr/i586-mingw32msvc/lib/libws2_32.a /usr/i586-mingw32msvc/lib/libwsnmp32.a $LIBS"
+#fi
+
 AC_ARG_WITH([bash-completion],
 	AS_HELP_STRING([--with-bash-completion@<:@=DIR@:>@], [install bash_completion conf file (default is yes) - it is possible to specify bash_completion's config file directory (default is SYSCONFDIR/bash_completion.d)]),
 	[

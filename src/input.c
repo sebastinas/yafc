@@ -60,16 +60,43 @@ char *input_read_string(const char *prompt)
 
 #include <stdio.h>
 
+char * getline(void) {
+    char * line = malloc(100), * linep = line;
+    size_t lenmax = 100, len = lenmax;
+    int c;
+
+    if(line == NULL)
+        return NULL;
+
+    for(;;) {
+        c = fgetc(stdin);
+        if(c == EOF)
+            break;
+
+        if(--len == 0) {
+            char * linen = realloc(linep, lenmax *= 2);
+            len = lenmax;
+
+            if(linen == NULL) {
+                free(linep);
+                return NULL;
+            }
+            line = linen + (line - linep);
+            linep = linen;
+        }
+
+        if((*line++ = c) == '\n')
+            break;
+    }
+    *line = '\0';
+    return linep;
+}
+
+
 char *getpass_hook(const char *prompt)
 {
-	char *lineptr; int n = 100;
-	
 	puts(prompt);
-	
-	lineptr = (char *) malloc(n+1);
-	getline(&lineptr, &n, stdin);
-	
-	return xstrdup(lineptr);
+	return xstrdup(getline());
 }
 
 

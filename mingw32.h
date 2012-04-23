@@ -1,10 +1,10 @@
 /**
 * mingw stuff - will eventually get it's own header
 **/
-
-
 #ifndef _mingw32_h_included
 #define _mingw32_h_included
+
+
 
 #define IS_WINDOWS 1;
 
@@ -17,6 +17,7 @@ typedef int gid_t;
 
 // Need sockets
 #include <winsock2.h>
+#include <ws2tcpip.h>
 
 // No such thing as signals
 #define SIGALRM 0
@@ -41,14 +42,24 @@ typedef int gid_t;
 #define S_IWOTH 00002
 #define S_IXOTH 00001
 
-// mingw32 doesn't seem to include this either
-typedef uint32_t socklen_t;
-
-// Just nuke some stuff
+// I don't think these will ever work
 #define symlink(a, b) 0
-#define sleep(a) 0
 #define fork() 0
+#define chown(a, b, c) 0
+
+// Simulate a non-root user
+#define getuid() 1
+
+// These probably could be defined properly later on
+#define sleep(a) 0
+#define S_ISLNK(a) 0
+#define S_ISSOCK(a) 0
+
+// SIGALRM is used a fair bit - this might be required!
+#define alarm(a) 0
+
+// This is actually obsolete
+#define herror(a) 0
+
 
 #endif		// end guard
-
-

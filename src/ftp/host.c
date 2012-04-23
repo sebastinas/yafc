@@ -57,6 +57,11 @@ int host_lookup(Host *hostp)
 
 	/* check if host is given in numbers-and-dots notation */
 	/* FIXME: should check if inet_aton is not present -> use inet_addr() */
+#ifdef IS_WINDOWS
+	hostp->hep = gethostbyname(hostp->hostname);
+	if(hostp->hep == 0)
+		return -1;
+#else
 	if(inet_aton(hostp->hostname, &ia)) {
 		if(gvReverseDNS)
 			hostp->hep = gethostbyaddr((char *)&ia, sizeof(ia), AF_INET);
@@ -72,6 +77,7 @@ int host_lookup(Host *hostp)
 		if(hostp->hep == 0)
 			return -1;
 	}
+#endif
 
 	if(hostp->hep) {
 		struct in_addr tmp;

@@ -41,6 +41,11 @@ int use_ssh1 = 0;
 
 int ssh_connect(char **args, int *in, int *out, pid_t *sshpid)
 {
+#ifdef IS_WINDOWS
+	ftp_err("No SSH on Windows at this time. Sorry.");
+	return -1;
+#endif
+
 	int c_in, c_out;
 #ifdef USE_PIPES
 	int pin[2], pout[2];
