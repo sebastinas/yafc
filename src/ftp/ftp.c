@@ -346,6 +346,13 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
     }
 
     ftp->ctrl = sock_create();
+    if (ftp->ctrl == 0) {
+        ftp_err(_("Unable to create socket.\n"));
+        alarm(0);
+        ftp_set_signal(SIGALRM, SIG_IGN);
+        return -1;
+    }
+    
     if(sock_connect_host(ftp->ctrl, ftp->host) == -1) {
         alarm(0);
         ftp_set_signal(SIGALRM, SIG_IGN);
