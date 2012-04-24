@@ -79,25 +79,71 @@ void cmd_lcd(int argc, char **argv)
 	cmd_lpwd(0, 0);
 }
 
-/* FIXME: consider the following:
- *  shell wget -r -q %f
+char * shell_replace(const char arg)
+{
+	switch(arg) {
+	   case 'h':
+	   	if (!ftp->connected) return NULL;
+		return xstrdup(ftp->url->hostname);
+	   case 'p':
+	   	if (!ftp->connected) return NULL;
+	   	char buf[10];
+	   	sprintf(buf, "%i", ftp->url->port);
+	  	return xstrdup(buf);
+	   case 'u':
+	   	if (!ftp->loggedin) return NULL;
+		return xstrdup(ftp->url->username);
+	   case 'd':
+	   	if (!ftp->loggedin) return NULL;
+	  	return xstrdup(ftp->curdir);
+	   default:
+		return NULL;
+	}
+}
+
+/* consider the following:
+ *  shell wget -r -q %h
  * which expands to
- *  shell wget -r -q ftp://user:pass@site:port/dir
+ *  shell wget -r -q ftp.foo.bar
  * could be useful!?
  *
- * %f - full path ("ftp://user:pass@site:port/dir")
  * %h - hostname ("ftp.foo.bar")
  * %p - port number
  * %u - username
  * %d - current directory
  */
-
 void cmd_shell(int argc, char **argv)
 {
-	char *e = 0;
+	char *e;
 
-	if(argc > 1)
-		e = args_cat(argc, argv, 1);
+	if(argc > 1) {
+		int i;
+		size_t s = 0;
+	
+		for(i=1; i<argc; i++) {
+			s += strlen(argv[i]) + 1;
+			if (argv[i][0] == '%') s += 100;	// TODO: This is borked for large replacements
+		}
+		
+		e = (char *)xmalloc(s);
+		
+		for(i=1; i<argc; i++) {
+			if (argv[i][0] == '%' && argv[i][1] != 0 && argv[i][2] == 0) {
+				char *repl = shell_replace(argv[i][1]);
+				if (repl != NULL) {
+					strcat(e, repl);
+					free(repl);
+				} else {
+					strcat(e, argv[i]);
+				}
+			} else {
+				strcat(e, argv[i]);
+			}
+			if(i+1 < argc)
+				strcat(e, " ");
+		}
+	}
+	
 	invoke_shell(e);
 	free(e);
 }
