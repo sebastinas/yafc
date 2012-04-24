@@ -346,6 +346,13 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
     }
 
     ftp->ctrl = sock_create();
+    if (ftp->ctrl == 0) {
+        ftp_err(_("Unable to create socket.\n"));
+        alarm(0);
+        ftp_set_signal(SIGALRM, SIG_IGN);
+        return -1;
+    }
+    
     if(sock_connect_host(ftp->ctrl, ftp->host) == -1) {
         alarm(0);
         ftp_set_signal(SIGALRM, SIG_IGN);
@@ -1328,7 +1335,7 @@ rdirectory *ftp_read_directory(const char *path)
     is_curdir = (strcmp(dir, ftp->curdir) == 0);
 
     if((fp = tmpfile()) == NULL) {	/* can't create a tmpfile */
-	    ftp_err("%s\n", strerror(errno));
+	    ftp_err("Unable to create temp file: %s\n", strerror(errno));
             free(dir);
             return 0;
     }
