@@ -329,7 +329,13 @@ ssize_t sock_write(Socket *sockp, void *buf, size_t num)
 
 int sock_get(Socket *sockp)
 {
+#ifdef IS_WINDOWS
+	char buf;
+	recv(sockp->handle, &buf, 1, 0);
+	return (int) buf;
+#else
 	return fgetc(sockp->sin);
+#endif
 }
 
 int sock_put(Socket *sockp, int c)

@@ -347,16 +347,12 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
         return -1;
     }
 
-    printf("DBG   Socket created.\n");
-
     if(sock_connect_host(ftp->ctrl, ftp->host) == -1) {
         alarm(0);
         ftp_set_signal(SIGALRM, SIG_IGN);
         return -1;
     }
     sock_lowdelay(ftp->ctrl);
-
-    printf("DBG   Socket connected.\n");
 
     /* read startup message from server */
     ftp_set_tmp_verbosity(vbCommand);
@@ -372,8 +368,6 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
         return 1;
     }
     ftp->connected = (ftp->fullcode == 220);
-
-    printf("DBG   Got startup message.\n");
 
     if(ftp->connected) {
         void (*tracefunq)(const char *fmt, ...);
