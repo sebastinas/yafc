@@ -411,6 +411,12 @@ static int FILE_send_binary(FILE *in, FILE *out)
 
 static int krb_getc(FILE *fp)
 {
+#ifdef IS_WINDOWS
+	char buf;
+	recv(fp, &buf, 1, 0);
+	return (int) buf;
+#endif
+
 #ifdef SECFTP
 	return sec_getc(fp);
 #else
@@ -420,21 +426,23 @@ static int krb_getc(FILE *fp)
 
 static int FILE_recv_ascii(FILE *in, FILE *out)
 {
+FUNC("FILE_recv_ascii");
 	char *buf = (char *)xmalloc(FTP_BUFSIZ);
 	int c;
 	time_t then = time(0) - 1;
 	time_t now;
-
+CNT();
 	ftp_set_close_handler();
-
+CNT();
 	if(foo_hookf)
 		foo_hookf(&ftp->ti);
 	ftp->ti.begin = false;
-
+CNT();
 	clearerr(in);
 	clearerr(out);
-
-	while((c = krb_getc(in)) != EOF) {
+CNT();
+	while((c = krb_getc(in)) != EOF) {			// This is the problem!
+printf("Got: %i = '%c'\n", c, c);
 		if(ftp_sigints() > 0)
 			break;
 

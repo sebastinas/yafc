@@ -62,4 +62,9 @@ typedef int gid_t;
 #define herror(a) 0
 
 
+#define FUNC(a) printf("IN   " a "\n"); int _c = 0
+#define DBG(a)  printf("DBG  " a "\n")
+#define CNT()   printf("CNT  %i\n", _c); _c++
+
+
 #endif		// end guard

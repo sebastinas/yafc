@@ -234,20 +234,31 @@ int sock_accept(Socket *sockp, const char *mode, bool pasvmode)
 	fclose(sockp->sin);
 	fclose(sockp->sout);
 
+#ifdef IS_WINDOWS
+	if (-1 == (tfd = _open_osfhandle(sockp->handle, 0))) {
+		perror("open_osfhandle()");
+		goto errdup0;
+	}
+#else
 	if (-1 == (tfd = dup(sockp->handle))) {
 		perror("dup()");
 		goto errdup0;
 	}
+#endif
+
 	if (!(sockp->sin = fdopen(tfd, mode))) {
 		close(tfd);
 		perror("fdopen()");
 		goto errdup0;
 	}
 
+#ifndef IS_WINDOWS
 	if (-1 == (tfd = dup(sockp->handle))) {
 		perror("dup()");
 		goto errdup1;
 	}
+#endif
+	
 	if (!(sockp->sout = fdopen(tfd, mode))) {
 		close(tfd);
 		perror("fdopen()");

@@ -562,13 +562,14 @@ static RETSIGTYPE reply_ALRM_handler(int signum)
  */
 int ftp_read_reply(void)
 {
+FUNC("ftp_read_reply");
     char tmp[5]="xxx ";
     int r;
-
+CNT();
     ftp_set_signal(SIGALRM, reply_ALRM_handler);
     if(ftp->reply_timeout)
         alarm(ftp->reply_timeout);
-
+CNT();
     clearerr(ftp->ctrl->sin);
     r = ftp_gets();
     if(!sock_connected(ftp->ctrl)) {
@@ -576,16 +577,16 @@ int ftp_read_reply(void)
         ftp_set_signal(SIGALRM, SIG_DFL);
         return -1;
     }
-
+CNT();
     if(r == -1) {
         alarm(0);
         ftp_set_signal(SIGALRM, SIG_DFL);
         ftp_trace("ftp_gets returned -1\n");
         return -1;
     }
-
+CNT();
     ftp_print_reply();
-
+CNT();
     if(ftp->reply[3] == '-') {  /* multiline response */
         strncpy(tmp, ftp->reply, 3);
         do {
@@ -1325,11 +1326,18 @@ rdirectory *ftp_read_directory(const char *path)
 
     is_curdir = (strcmp(dir, ftp->curdir) == 0);
 
+#ifdef IS_WINDOWS
+    // TODO: This is a really horrible hack.
+    // It appears wine's tmpfile() is broken
+    // We need to fix this later on.
+    fp = fopen("C:/tmp", "w");
+#else
     if((fp = tmpfile()) == NULL) {	/* can't create a tmpfile */
-	    ftp_err("Unable to create temp file: %s\n", strerror(errno));
+        ftp_err("Unable to create temp file: %s\n", strerror(errno));
             free(dir);
             return 0;
     }
+#endif
 
     /* we do a "CWD" before the listing, because: we want a listing of
      *  the directory contents, not the directory itself, and some
