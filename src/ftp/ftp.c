@@ -1335,7 +1335,7 @@ rdirectory *ftp_read_directory(const char *path)
     is_curdir = (strcmp(dir, ftp->curdir) == 0);
 
     if((fp = tmpfile()) == NULL) {	/* can't create a tmpfile */
-	    ftp_err("%s\n", strerror(errno));
+	    ftp_err("Unable to create temp file: %s\n", strerror(errno));
             free(dir);
             return 0;
     }
