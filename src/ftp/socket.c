@@ -16,6 +16,68 @@
 #include "socket.h"
 #include "xmalloc.h"
 
+
+
+/***
+****   TODO: Code a version of this which works on Win32
+***/
+#ifdef IS_WINDOWS
+
+#include <io.h>
+
+Socket *sock_create(void)
+{
+	int tfd;
+	Socket *sockp;
+
+	sockp = (Socket *)xmalloc(sizeof(Socket));
+
+	sockp->remote_addr.sin_family = AF_INET;
+
+	/* create a socket file descriptor */
+	sockp->handle = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if(sockp->handle == INVALID_SOCKET) {
+		printf("Unable to create socket: %i\n", WSAGetLastError());
+		goto err0;
+	}
+	
+	/* open handle for input socket */
+	tfd = _open_osfhandle(sockp->handle, 0);
+	if (tfd == -1) {
+		goto err1;
+	}
+	
+	sockp->sin = fdopen(tfd, "r");
+	if(sockp->sin == 0) {
+		close(tfd);
+		goto err1;
+	}
+
+	/* open handle for output socket */
+	tfd = _open_osfhandle(sockp->handle, 0);
+	if (tfd == -1) {
+		goto err2;
+	}
+	
+	sockp->sout = fdopen(tfd, "w");
+	if(sockp->sout == 0) {
+		close(tfd);
+		goto err2;
+	}
+	
+	return sockp;
+	
+err2:
+	fclose(sockp->sin);
+err1:
+	close(sockp->handle);
+err0:
+	free(sockp);
+	return 0;
+}
+
+#else  // IS_WINDOWS
+
 Socket *sock_create(void)
 {
 #if 0
@@ -76,6 +138,9 @@ err0:
 	free(sockp);
 	return 0;
 }
+
+#endif  // IS_WINDOWS
+
 
 void sock_destroy(Socket *sockp)
 {
