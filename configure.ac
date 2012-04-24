@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce an m4 configure script.
 dnl init
 
 AC_PREREQ(2.60)
-AC_INIT(yafc, 1.1.3-rc1, [https://github.com/sebastinas/yafc/issues/], yafc, [https://github.com/sebastinas/yafc/])
+AC_INIT(yafc, 1.1.3-rc2, [https://github.com/sebastinas/yafc/issues/], yafc, [https://github.com/sebastinas/yafc/])
 AC_CONFIG_SRCDIR(src/main.c)
 AC_CONFIG_LIBOBJ_DIR([lib])
 AC_USE_SYSTEM_EXTENSIONS
@@ -94,12 +94,12 @@ BASH_FUNC_POSIX_SETJMP
 
 AC_SEARCH_LIBS(socket, socket, [],
 [
-  AC_WARN(can't find socket function)
+  AC_WARN(cannot find socket function)
 ])
 
 AC_SEARCH_LIBS(gethostbyname, resolv nsl, [],
 [
-  AC_WARN(can't find resolver functions)
+  AC_WARN(cannot find resolver functions)
 ])
 
 AC_REPLACE_FUNCS(vasprintf)
@@ -204,7 +204,8 @@ if test "$yafc_have_read_pw_string"="yes" ; then
 fi
 
 AC_ARG_WITH([bash-completion],
-	AS_HELP_STRING([--with-bash-completion@<:@=DIR@:>@], [install bash_completion conf file (default is yes) - it is possible to specify bash_completion's config file directory (default is SYSCONFDIR/bash_completion.d)]),
+	AS_HELP_STRING([--with-bash-completion@<:@=DIR@:>@],
+								 [install bash_completion conf file in DIR (default is yes)]),
 	[
     if test "$withval" = "no"; then
 	    BASH_COMPLETION_DIR=""
