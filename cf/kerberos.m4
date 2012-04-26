@@ -109,12 +109,12 @@ AC_DEFUN([YAFC_KRB5_CHECK],
   yafc_found_krb5="no, disabled"
   AS_IF([test "x$with_krb5" != "xno"],
     [
-      if test "x$withval" = "xyes"; then
-        KRB5ROOT=/usr/local
+      if test "x$withval" = "xyes" || test "x$withval" = "x"; then
+        KRB5ROOT="/usr/local"
       else
         KRB5ROOT=${withval}
       fi
-      AC_PATH_PROG([KRB5CONFIG], [krb5-config],"no",[$KRB5ROOT/bin$PATH_SEPERATOR$PATH])
+      AC_PATH_PROG([KRB5CONFIG], [krb5-config],"no",[$KRB5ROOT/bin$PATH_SEPARATOR$PATH])
       if test "x$KRB5CONFIG" = "xno" ; then
         yafc_found_krb5="no, not found"
       else
