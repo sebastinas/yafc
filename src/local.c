@@ -138,7 +138,7 @@ size_t shell_replace_len(const char arg)
 **/
 void cmd_shell(int argc, char **argv)
 {
-	char *e;
+	char *e = 0;
 
 	if(argc > 1) {
 		int i;
