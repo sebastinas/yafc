@@ -409,22 +409,22 @@ static int FILE_send_binary(FILE *in, FILE *out)
 	return maybe_abort(in, out);
 }
 
-static int krb_getc(FILE *fp)
+static int krb_getc(Socket *sock)
 {
 #ifdef IS_WINDOWS
 	char buf;
-	recv(fp, &buf, 1, 0);
+	recv(sock->handle, &buf, 1, 0);
 	return (int) buf;
 #endif
 
 #ifdef SECFTP
-	return sec_getc(fp);
+	return sec_getc(sock->sin);
 #else
-	return fgetc(fp);
+	return fgetc(sock->sin);
 #endif
 }
 
-static int FILE_recv_ascii(FILE *in, FILE *out)
+static int FILE_recv_ascii(Socket *in, FILE *out)
 {
 FUNC("FILE_recv_ascii");
 	char *buf = (char *)xmalloc(FTP_BUFSIZ);
@@ -438,16 +438,16 @@ CNT();
 		foo_hookf(&ftp->ti);
 	ftp->ti.begin = false;
 CNT();
-	clearerr(in);
+	clearerr(in->sin);		// This won't work on windows
 	clearerr(out);
 CNT();
 	while((c = krb_getc(in)) != EOF) {			// This is the problem!
 printf("Got: %i = '%c'\n", c, c);
-		if(ftp_sigints() > 0)
-			break;
+		//if(ftp_sigints() > 0)
+		//	break;
 
-		if(wait_for_input() != 0)
-			break;
+		//if(wait_for_input() != 0)
+		//	break;
 
 		if(c == '\n')
 			ftp->ti.barelfs++;
@@ -456,7 +456,7 @@ printf("Got: %i = '%c'\n", c, c);
 			if(c == EOF)
 				break;
 			if(c != '\n') {
-				ungetc(c, in);
+				ungetc(c, in->sin);		// This won't work on windows (which uses recv)
 				c = '\r';
 			}
 		}
@@ -472,10 +472,10 @@ printf("Got: %i = '%c'\n", c, c);
 			}
 		}
 	}
-
+CNT();
 	free(buf);
 
-	return maybe_abort(in, out);
+	return maybe_abort(in->sin, out);		// This won't work on windows (which uses recv)
 }
 
 static int FILE_send_ascii(FILE *in, FILE *out)
@@ -572,7 +572,7 @@ int ftp_list(const char *cmd, const char *param, FILE *fp)
 		return -1;
 	}
 
-	if(FILE_recv_ascii(ftp->data->sin, fp) != 0)
+	if(FILE_recv_ascii(ftp->data, fp) != 0)
 		return -1;
 
 	sock_destroy(ftp->data);
@@ -656,7 +656,7 @@ static int ftp_do_receive(FILE *fp,
 	if(mode == tmBinary)
 		r = FILE_recv_binary(ftp->data->sin, fp);
 	else
-		r = FILE_recv_ascii(ftp->data->sin, fp);
+		r = FILE_recv_ascii(ftp->data, fp);
 
 	sock_destroy(ftp->data);
 	ftp->data = 0;
