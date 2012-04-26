@@ -62,8 +62,7 @@ AC_CHECK_HEADERS(unistd.h \
                  sys/ioctl.h \
                  memory.h \
                  setjmp.h \
-                 errno.h \
-                 termios.h
+                 errno.h
 )
 
 AC_CHECK_HEADERS(dirent.h, [], [
@@ -143,7 +142,7 @@ AC_SEARCH_LIBS(herror, resolv nsl)
 AC_CHECK_FUNCS(gettimeofday uname setsockopt)
 
 AC_CHECK_DECLS([asprintf, vasprintf])
-AC_CHECK_DECLS([herror],,,[#include<netdb.h>])
+AC_CHECK_DECLS([herror],,,[#include <netdb.h>])
 
 YAFC_KERBEROS
 if test "$yafc_found_krb4" = "yes"; then
@@ -172,7 +171,7 @@ if test "$yafc_found_krb" = "yes"; then
   AC_LIBOBJ(security)
 fi
 
-if test "$yafc_krb5_vendor" != "Heimdal" ; then
+if test "x$yafc_krb5_vendor" != "xHeimdal" ; then
   AX_CHECK_OPENSSL([
     AC_CHECK_HEADERS(openssl/ui_compat.h \
                      openssl/ui.h)
@@ -197,10 +196,46 @@ AC_CHECK_DECLS(UI_UTIL_read_pw_string, [yafc_have_read_pw_string="yes"],,
   ])
 CFLAGS="$old_CFLAGS"
 
-if test "$yafc_have_read_pw_string"="yes" ; then
-  LIBS="$OPENSSL_LIBS $LIBS"
-  LDFLAGS="$OPENSSL_LDFLAGS $LDFLAGS"
-  CPPFLAGS="$OPENSSL_INCLUDES $CPPFLAGS"
+if test "x$yafc_have_read_pw_string" = "xyes" ; then
+  LIBS="$LIBS $OPENSSL_LIBS"
+  LDFLAGS="$LDFLAGS $OPENSSL_LDFLAGS"
+  CPPFLAGS="$CPPFLAGS $OPENSSL_INCLUDES"
+else
+	AC_CHECK_HEADERS(termios.h)
+	AC_CHECK_DECLS([IUCLC],,,
+		[
+			#include <fcntl.h>
+			#include <sys/ioctl.h>
+			#include <termios.h>
+		])
+	AC_CHECK_DECLS([TCGETS],,
+		[AC_CHECK_DECLS([TIOCGETA],,
+			AC_MSG_ERROR([TCGETS and TIOCGETA are not available]),
+			[
+				#include <fcntl.h>
+				#include <sys/ioctl.h>
+				#include <termios.h>
+			])
+		],
+		[
+			#include <fcntl.h>
+			#include <sys/ioctl.h>
+			#include <termios.h>
+		])
+	AC_CHECK_DECLS([TCSETS],,
+		[AC_CHECK_DECLS([TIOCSETA],,
+			AC_MSG_ERROR([TCSETS and TIOCSETA are not available]),
+			[
+				#include <fcntl.h>
+				#include <sys/ioctl.h>
+				#include <termios.h>
+			])
+		],
+		[
+			#include <fcntl.h>
+			#include <sys/ioctl.h>
+			#include <termios.h>
+		])
 fi
 
 AC_ARG_WITH([bash-completion],

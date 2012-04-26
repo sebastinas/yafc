@@ -24,6 +24,19 @@
 #include <openssl/ui.h>
 #elif defined(HAVE_OPENSSL_UI_COMPAT_H)
 #include <openssl/ui_compat.h>
+#else /* des_read_pw_string and UI_UTIL_read_pw_string are not available */
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <termios.h>
+#if !defined(HAVE_DECL_IUCLC) || !HAVE_DECL_IUCLC
+#define IUCLC 0
+#endif
+#if (!defined(HAVE_DECL_TCGETS) || !HAVE_DECL_TCGETS) && HAVE_DECL_TIOCGETA
+#define TCGETS TIOCGETA
+#endif
+#if (!defined(HAVE_DECL_TCSETS) || !HAVE_DECL_TCSETS) && HAVE_DECL_TIOCSETA
+#define TCSETS TIOCSETA
+#endif
 #endif
 
 #undef __  /* gettext no-op */
@@ -50,7 +63,7 @@ char *input_read_string(const char *prompt)
 		return 0;
 	if(tmp[0] == '\n')
 		/* return an empty string, "" */
-		return (char *)xmalloc(1);
+		return xstrdup("");
 	tmp[256] = 0;
 	l = strlen(tmp);
 	/* strip carriage return */
@@ -66,23 +79,6 @@ char *input_read_string(const char *prompt)
  */
 
 /* this compiles ok now, fixes ctrl+c and doesn't use obsolete getpass() */
-
-# include <fcntl.h> 
-# include <sys/ioctl.h> 
-# include <termios.h> 
-
-# if __FreeBSD_kernel__ || defined(__GNU__)
-#  ifndef IUCLC
-    /* Not implemented in FreeBSD 8.0!  */
-#   define IUCLC 0
-#  endif
-#  ifndef TCGETS
-#   define TCGETS TIOCGETA
-#  endif
-#  ifndef TCSETS
-#   define TCSETS TIOCGETA
-#  endif
-# endif /* __FreeBSD_kernel__ */
 
 char *getpass_hook(const char *prompt)
 {

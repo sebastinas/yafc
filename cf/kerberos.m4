@@ -102,7 +102,7 @@ AC_DEFUN([YAFC_KRB5_CHECK],
   AC_REQUIRE([AC_PROG_AWK])
 
   AC_ARG_WITH([krb5],
-	  [AS_HELP_STRING([--with-krb5], [support Kerberos 5 @<:@default=yes@:>@])],
+	  [AS_HELP_STRING([--with-krb5=@<:@=DIR@:>@], [use Kerberos 5 in @<:@=DIR@:>@])],
 	  [],
     [with_krb5=yes])
   
