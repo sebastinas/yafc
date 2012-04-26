@@ -971,7 +971,11 @@ Usage: @code{pwd}
 @c -----------------------------------------------------
 @node quit
 @subsection @code{quit}
-documentation missing...
+Quit yafc.
+
+You can also use the alias @code{exit}.
+
+Usage: @code{quit}
 
 @c -----------------------------------------------------
 @node quote
@@ -1029,7 +1033,13 @@ display help
 @c -----------------------------------------------------
 @node rmdir
 @subsection @code{rmdir}
-documentation missing...
+Remove a directory on the remote server
+
+@example
+rmdir docs
+@end example
+
+You can also use recursive @ref{rm} to achive the same result
 
 @c -----------------------------------------------------
 @node rstatus
@@ -1044,7 +1054,51 @@ documentation missing...
 @c -----------------------------------------------------
 @node shell
 @subsection @code{shell}
-documentation missing...
+Executes a command on the local machine. You can also use the very useful alias @code{!}.
+
+If provided with no arguments, drops into an interactive shell session.
+
+If provided with arguments, executes the specified command and then returns to yafc.
+
+Example:
+
+@example
+! cat document.txt
+@end example
+
+The shell also supports argument replacement for various yafc variables.
+
+Supported variables:
+
+@table @samp
+
+@item  %h
+The current hostname (e.g. "ftp.foo.bar")
+
+@item  %p
+The current port number (e.g. 21)
+
+@item  %u
+The current username (e.g. "fred")
+
+@item  %d
+The current remote directory (e.g. "/home/fred/")
+
+@end table
+
+At this time, substitution is only supported for a whole argument.
+
+Works:
+
+@example
+! ssh %h
+@end example
+
+Doesn't work:
+
+@example
+! ssh %u@@%h
+@end example
 
 @c -----------------------------------------------------
 @node site
@@ -1184,9 +1238,9 @@ Send new user information.
 @c -----------------------------------------------------
 @node version
 @subsection @code{version}
-documentation missing...
+Shows the version of yafc, and compilation information
 
 @c -----------------------------------------------------
 @node warranty
 @subsection @code{warranty}
-documentation missing...
+Shows the yafc warranty.

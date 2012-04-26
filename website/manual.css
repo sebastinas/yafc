@@ -32,3 +32,11 @@ hr {
 	border-top: 1px #ccc dashed;
 	height: 1px;
 }
+
+dl {
+	margin-left: 10px;
+}
+
+dd p {
+	margin-top: 2px;
+}
