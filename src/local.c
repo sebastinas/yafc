@@ -79,39 +79,63 @@ void cmd_lcd(int argc, char **argv)
 	cmd_lpwd(0, 0);
 }
 
+/**
+* Return a string for the replacement of a specific arg in the shell.
+* Don't forget to free() when done.
+*
+* %h - hostname ("ftp.foo.bar")
+* %p - port number
+* %u - username
+* %d - current directory
+**/
 char * shell_replace(const char arg)
 {
 	switch(arg) {
-	   case 'h':
-	   	if (!ftp->connected) return NULL;
-		return xstrdup(ftp->url->hostname);
-	   case 'p':
-	   	if (!ftp->connected) return NULL;
-	   	char buf[10];
-	   	sprintf(buf, "%i", ftp->url->port);
-	  	return xstrdup(buf);
-	   case 'u':
-	   	if (!ftp->loggedin) return NULL;
-		return xstrdup(ftp->url->username);
-	   case 'd':
-	   	if (!ftp->loggedin) return NULL;
-	  	return xstrdup(ftp->curdir);
-	   default:
-		return NULL;
+		case 'h':
+			if (!ftp->connected) return NULL;
+			return xstrdup(ftp->url->hostname);
+		case 'p':
+			if (!ftp->connected) return NULL;
+			char buf[5];
+			sprintf(buf, "%i", ftp->url->port);
+			return xstrdup(buf);
+		case 'u':
+			if (!ftp->loggedin) return NULL;
+			return xstrdup(ftp->url->username);
+		case 'd':
+			if (!ftp->loggedin) return NULL;
+			return xstrdup(ftp->curdir);
+		default:
+			return NULL;
 	}
 }
 
-/* consider the following:
- *  shell wget -r -q %h
- * which expands to
- *  shell wget -r -q ftp.foo.bar
- * could be useful!?
- *
- * %h - hostname ("ftp.foo.bar")
- * %p - port number
- * %u - username
- * %d - current directory
- */
+/**
+* Return the length of the replacement arg.
+**/
+size_t shell_replace_len(const char arg)
+{
+	switch(arg) {
+		case 'h':
+			if (!ftp->connected) return 0;
+			return strlen(ftp->url->hostname);
+		case 'p':
+			if (!ftp->connected) return 0;
+			return 5;
+		case 'u':
+			if (!ftp->loggedin) return 0;
+			return strlen(ftp->url->username);
+		case 'd':
+			if (!ftp->loggedin) return 0;
+			return strlen(ftp->curdir);
+		default:
+			return 0;
+	}
+}
+
+/**
+* Executes shell commands. Supports replacements for arguments (see func shell_replace)
+**/
 void cmd_shell(int argc, char **argv)
 {
 	char *e;
@@ -119,14 +143,14 @@ void cmd_shell(int argc, char **argv)
 	if(argc > 1) {
 		int i;
 		size_t s = 0;
-	
+
 		for(i=1; i<argc; i++) {
 			s += strlen(argv[i]) + 1;
-			if (argv[i][0] == '%') s += 100;	// TODO: This is borked for large replacements
+			if (argv[i][0] == '%') s += shell_replace_len(argv[i][1]);
 		}
-		
+
 		e = (char *)xmalloc(s);
-		
+
 		for(i=1; i<argc; i++) {
 			if (argv[i][0] == '%' && argv[i][1] != 0 && argv[i][2] == 0) {
 				char *repl = shell_replace(argv[i][1]);
@@ -143,7 +167,7 @@ void cmd_shell(int argc, char **argv)
 				strcat(e, " ");
 		}
 	}
-	
+
 	invoke_shell(e);
 	free(e);
 }
