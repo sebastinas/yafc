@@ -15,7 +15,7 @@
 
 #define COPYR "Copyright (C) 1998-2001 Martin Hedenfalk <mhe@home.se>,\n" \
   "Copyright (C) 2011 Carles Pagès <page@cubata.homelinux.net>,\n" \
-  "Copyright (C) 2011-2012 Sebastian Ramacher <s.ramacher@gmx.at>,\n" \
+  "Copyright (C) 2011-2012 Sebastian Ramacher <sebastian+dev@ramacher.at>,\n" \
   "Copyright (C) 2011-2012 Josh Heidenreich <josh.sickmate@gmail.com>"
 #define COPYLINE PACKAGE " " VERSION
 #define FULLVER COPYLINE"\n" \

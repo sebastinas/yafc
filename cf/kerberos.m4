@@ -102,7 +102,7 @@ AC_DEFUN([YAFC_KRB5_CHECK],
   AC_REQUIRE([AC_PROG_AWK])
 
   AC_ARG_WITH([krb5],
-	  [AS_HELP_STRING([--with-krb5], [support Kerberos 5 @<:@default=yes@:>@])],
+	  [AS_HELP_STRING([--with-krb5=@<:@=DIR@:>@], [use Kerberos 5 in @<:@=DIR@:>@])],
 	  [],
     [with_krb5=yes])
   
@@ -115,14 +115,17 @@ AC_DEFUN([YAFC_KRB5_CHECK],
         KRB5ROOT=${withval}
       fi
       AC_PATH_PROG([KRB5CONFIG], [krb5-config],"no",[$KRB5ROOT/bin$PATH_SEPERATOR$PATH])
-      if test "$KRB5CONFIG" = "no" ; then
+      if test "x$KRB5CONFIG" = "xno" ; then
         yafc_found_krb5="no, not found"
       else
         AC_MSG_CHECKING([for krb5 vendor])
         yafc_krb5_vendor="`$KRB5CONFIG --vendor 2>/dev/null || echo unknown`"
-        if test "$yafc_krb5_vendor" = "Massachusetts Institute of Technology"; then
+        if test "x$yafc_krb5_vendor" = "xMassachusetts Institute of Technology"; then
           yafc_krb5_vendor="MIT"
+        elif test "x$yafc_krb5_vendor" != "xHeimdal"; then
+          yafc_krb5_vendor="unknown"
         fi
+
         AC_MSG_RESULT([$yafc_krb5_vendor])
 
         AC_MSG_CHECKING([for GSSAPI])
@@ -136,16 +139,23 @@ AC_DEFUN([YAFC_KRB5_CHECK],
       fi
     ])
 
-  if test "$yafc_found_krb5" = "yes" ; then
+  if test "x$yafc_found_krb5" = "xyes" ; then
     AC_DEFINE([HAVE_KRB5], [1], [define if you have Kerberos 5])
-    if test "$yafc_krb5_vendor" = "MIT" ; then
+    if test "x$yafc_krb5_vendor" = "xMIT" ; then
       AC_DEFINE([HAVE_KRB5_MIT], [1], [define if you have Kerberos 5 - MIT])
-    elif test "$yafc_krb5_vendor" = "Heimdal" ; then
+    elif test "x$yafc_krb5_vendor" = "xHeimdal" ; then
       AC_DEFINE([HAVE_KRB5_HEIMDAL], [1], [define if you have Kerberos 5 - Heimdal])
     fi
     yafc_found_krb5_inc_flags="`$KRB5CONFIG --cflags krb5 gssapi`"
     yafc_found_krb5_lib_libs="`$KRB5CONFIG --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if ($i ~ \"^-l.*\"){ printf \"%s \", $i }}}'`"
     yafc_found_krb5_lib_flags="`$KRB5CONFIG --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if ($i !~ \"^-l.*\"){ printf \"%s \", $i }}}'`"
+
+    AC_MSG_CHECKING([for krb5 CFLAGS])
+    AC_MSG_RESULT([$yafc_found_krb5_inc_flags])
+    AC_MSG_CHECKING([for krb5 LDFLAGS])
+    AC_MSG_RESULT([$yafc_found_krb5_lib_flags])
+    AC_MSG_CHECKING([for krb5 LIBS])
+    AC_MSG_RESULT([$yafc_found_krb5_lib_libs])
 
     old_CFLAGS="$CFLAGS"
     old_LDFLAGS="$LDFLAGS"
@@ -166,7 +176,7 @@ AC_DEFUN([YAFC_KRB5_CHECK],
     AC_LINK_IFELSE(
       [
         AC_LANG_PROGRAM([[ void gss_init_sec_context();  ]],
-                         [[ gss_init_sec_context(); ]])
+                        [[ gss_init_sec_context(); ]])
       ], [ # action-if-found
         AC_MSG_RESULT([yes])
       ], [ # action-if-not-found
