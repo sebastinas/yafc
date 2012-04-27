@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce an m4 configure script.
 dnl init
 
 AC_PREREQ(2.60)
-AC_INIT(yafc, 1.1.3-rc2, [https://github.com/sebastinas/yafc/issues/], yafc, [https://github.com/sebastinas/yafc/])
+AC_INIT(yafc, 1.1.3-rc3, [https://github.com/sebastinas/yafc/issues/], yafc, [https://github.com/sebastinas/yafc/])
 AC_CONFIG_SRCDIR(src/main.c)
 AC_CONFIG_LIBOBJ_DIR([lib])
 AC_USE_SYSTEM_EXTENSIONS
