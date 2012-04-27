@@ -1,0 +1,70 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.clear {
+	clear: both;
+}
+
+body {
+	font-family: sans-serif;
+	font-size: 14px;
+}
+
+#head {
+	width: 970px;
+	margin: 20px auto 0 auto;
+	padding: 13px;
+	border: 2px #333 solid;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+}
+
+	#head h1,
+	#head p {
+		margin: 3px 0;
+	}
+
+#nav {
+	width: 1000px;
+	margin: 0 auto;
+	background: #333;
+	font-family: monospace;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+	
+	#nav a {
+		display: block;
+		float: left;
+		padding: 10px 15px;
+		border-right: 1px #555 solid;
+		color: #FFF;
+		font-family: monospace;
+		text-decoration: none;
+	}
+	
+#body {
+	width: 1000px;
+	margin: 30px auto;
+	padding: 13px;
+}
+
+
+h1, h2, h3, h4 {
+	margin: 0.8em 0;
+}
+
+p {
+	margin: 0.8em 0;
+	line-height: 1.7em;
+}
+
+ul, ol {
+	margin-left: 2em;
+}
+
+
+
+

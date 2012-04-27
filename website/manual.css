@@ -1,0 +1,42 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.clear {
+	clear: both;
+}
+
+body {
+	font-family: sans-serif;
+	font-size: 14px;
+	margin: 20px;
+}
+
+h1, h2, h3, h4 {
+	margin: 0.8em 0;
+}
+
+p {
+	margin: 0.8em 0;
+	line-height: 1.7em;
+}
+
+ul, ol {
+	margin-left: 2em;
+}
+
+hr {
+	margin: 14px 0;
+	border: none;
+	border-top: 1px #ccc dashed;
+	height: 1px;
+}
+
+dl {
+	margin-left: 10px;
+}
+
+dd p {
+	margin-top: 2px;
+}

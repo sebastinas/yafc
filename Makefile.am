@@ -19,3 +19,6 @@ bash_completion_DATA = completion/yafc
 else
 bash_completion_DATA =
 endif
+
+website-manual:
+	cd website; ./generate_docs.sh
