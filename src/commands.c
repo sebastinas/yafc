@@ -486,7 +486,7 @@ void opt_help(int argc, char **argv, char *help)
 	while((c = getopt_long(argc, argv, "h", longopts, 0)) != EOF) {
 		switch(c) {
 		  case 'h':
-			fprintf(stderr, help);
+			fprintf(stderr, "%s", help);
 		  case '?':
 			optind = -1;
 			return;

@@ -302,7 +302,6 @@ char *ssh_realpath(char *path)
 	Buffer msg;
 	u_int type, expected_id, count, id;
 	char *filename, *longname;
-	Attrib *a;
 
 	expected_id = id = ftp->ssh_id++;
 	ssh_send_string_request(id, SSH2_FXP_REALPATH, path, strlen(path));
@@ -338,7 +337,7 @@ char *ssh_realpath(char *path)
 
 	filename = buffer_get_string(&msg, NULL);
 	longname = buffer_get_string(&msg, NULL);
-	a = decode_attrib(&msg);
+	decode_attrib(&msg);
 
 	free(longname);
 
@@ -651,7 +650,7 @@ u_int ssh_get_status(int expected_id)
 int ssh_recv_binary(const char *remote_path, FILE *local_fp,
 					ftp_transfer_func hookf, u_int64_t offset)
 {
-	u_int expected_id, handle_len, mode, type, id;
+	u_int expected_id, handle_len, type, id;
 /*	u_int64_t offset;*/
 	char *handle;
 	Buffer msg;
@@ -669,11 +668,14 @@ int ssh_recv_binary(const char *remote_path, FILE *local_fp,
 	if(a == 0)
 		return -1;
 
+#if 0
+	uint_t mode = 0;
 	/* XXX: should we preserve set[ug]id? */
 	if (a->flags & SSH2_FILEXFER_ATTR_PERMISSIONS)
 		mode = S_IWRITE | (a->perm & 0777);
 	else
 		mode = 0666;
+#endif
 
 	if ((a->flags & SSH2_FILEXFER_ATTR_PERMISSIONS) &&
 	    (a->perm & S_IFDIR)) {
@@ -901,7 +903,6 @@ char *ssh_readlink(char *path)
 	Buffer msg;
 	u_int type, expected_id, count, id;
 	char *filename, *longname;
-	Attrib *a;
 
 	expected_id = id = ftp->ssh_id++;
 	ssh_send_string_request(id, SSH2_FXP_READLINK, path, strlen(path));
@@ -937,7 +938,7 @@ char *ssh_readlink(char *path)
 
 	filename = buffer_get_string(&msg, 0);
 	longname = buffer_get_string(&msg, 0);
-	a = decode_attrib(&msg);
+	decode_attrib(&msg);
 
 	free(longname);
 

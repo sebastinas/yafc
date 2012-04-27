@@ -353,7 +353,6 @@ static void putfiles(list *gl, unsigned opt, const char *output)
 				char *recurs_output;
 				char *recurs_mask;
 				list *rgl;
-				int r;
 
 				if((put_dir_glob_mask
 					&& fnmatch(put_dir_glob_mask,
@@ -377,8 +376,7 @@ static void putfiles(list *gl, unsigned opt, const char *output)
 
 						asprintf(&recurs_mask, "%s/*", path);
 						rgl = lglob_create();
-						r = lglob_glob(rgl, recurs_mask, true,
-									   put_exclude_func);
+						lglob_glob(rgl, recurs_mask, true, put_exclude_func);
 						free(recurs_mask);
 
 						if(list_numitem(rgl) > 0)
