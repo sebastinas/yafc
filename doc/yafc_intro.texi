@@ -11,7 +11,8 @@ cached directory listings, autologin and bookmarks, powerful aliases and
 extensive tab completion. It has also support for Kerberos authentication.
 
 This manual is incomplete, and possibly out of date. If you would like
-to improve this manual, please send a message to @email{yafc-devel@@lists.sourceforge.net}.
+to improve this manual, please add a pull request or issue on the GitHub
+repository located at @uref{https://github.com/sebastinas/yafc}.
 
 @menu
 * Bugs::                Reporting bugs and requests
@@ -23,14 +24,15 @@ to improve this manual, please send a message to @email{yafc-devel@@lists.source
 @node Bugs, Obtaining Yafc, , Overview
 @subsection Bugs
 
-Please report bugs to @email{yafc-devel@@lists.sourceforge.net}.
+Please report bugs at @uref{https://github.com/sebastinas/yafc}.
 Before reporting a bug, please verify you're using the latest version
 (check the ftp site.) You can get the version number of your copy of yafc
 with the command @code{yafc --version}.
 
 When reporting bugs, please include information on
 what machine and operating system, including versions, you are running, an
-example for me to reproduce (use the @code{--trace} option) and a patch if you have one.
+example for me to reproduce (use the @code{--trace} option) and a patch if
+you have one.
 
 @c -----------------------------------------------------
 @node    Obtaining Yafc, Motivation, Bugs, Overview
@@ -39,10 +41,10 @@ example for me to reproduce (use the @code{--trace} option) and a patch if you h
 @table @asis
 
 @item Yafc homepage
-@uref{http://yafc.sourceforge.net/}
+@uref{http://www.yafc-ftp.com/}
 
-@item Yafc SourceForge Project Page
-@uref{http://sourceforge.net/projects/yafc/}
+@item Yafc GitHub Project Page
+@uref{https://github.com/sebastinas/yafc}
 
 @end table
 
