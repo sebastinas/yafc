@@ -1,4 +1,4 @@
-@node Yafc commands, Nohup transfers, , The shell
+@node Yafc commands, Command redirection, The shell, The shell
 @section Yafc commands
 
 All commands follow the usual GNU command line syntax,
@@ -80,6 +80,10 @@ Obtain remote AFS tokens.
 @node alias
 @subsection @code{alias}
 Define an alias.
+
+You normally set up aliases in your config.
+
+For more information, see @ref{Aliases}.
 
 @c -----------------------------------------------------
 @node bookmark
@@ -590,6 +594,8 @@ Set file used for Kerberos tickets.
 @subsection @code{lcd}
 Change local working directory.
 
+If provided with no arguments, changes to your home directory.
+
 @c -----------------------------------------------------
 @node list
 @subsection @code{list}
@@ -721,7 +727,12 @@ mkdir directory
 @c -----------------------------------------------------
 @node mv
 @subsection @code{mv}
-Documentation missing...
+Moves or renames a remote file.
+
+Usage:
+@example
+mv foo bar
+@end example
 
 @c -----------------------------------------------------
 @node nlist

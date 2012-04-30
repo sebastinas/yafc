@@ -8,6 +8,9 @@ Aliases can be defined in the configuration file or directly
 on the command line. Aliases defined on the command line are
 only valid in the current session. @ref{alias}.
 
+The default config (see also @ref{Configuration}) includes a number
+of useful aliases.
+
 The best way to explain aliases, I think, is to look at some examples:
 
 @menu
@@ -34,6 +37,11 @@ This is fine, but will generate a warning;
 @code{warning: alias 'ls' shadows a command with the same name},
 because the original command @code{ls} is lost and can't be referenced (except
 through another alias.)
+
+@item alias lls "! ls"
+Provide local file listings through the command @code{lls}.
+This alias (along with a number of similar ones), is actually provided in
+the default configuration file.
 
 @item alias pls "ls %1 | less"
 Create a new command @code{pls}, which lists the contents of a directory and
