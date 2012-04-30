@@ -1,14 +1,11 @@
 @node The shell, Configuration, Invoking Yafc, top
 @chapter The shell
 
-Yafc presents the user with an internal shell. Command redirection is
-available, using the conventional shell syntax (eg @code{cat foo.txt > foo}
-will copy the remote file foo.txt to the local file foo.) Input redirection,
-however, is not supported. Also asynchronous mode is not supported. The
-following will thus be rejected: @code{ls |emacs &} or @code{open < login.foo}.
+Yafc presents the user with an internal shell.
 
 @menu
 * Yafc commands::               all yafc internal commands
+* Command redirection::
 * Nohup transfers::             
 @end menu
 
@@ -16,10 +13,38 @@ following will thus be rejected: @code{ls |emacs &} or @code{open < login.foo}.
 @include yafc_commands.texi
 
 @c =====================================================
-@node Nohup transfers, ,Yafc commands ,The shell
+@node Command redirection, Nohup transfers, Yafc commands, The shell
+@section Command redirection
+
+Command redirection is available, using the conventional shell syntax.
+However, there are some restrictions. Firstly, input redirection is not supported.
+Also asynchronous mode is not supported.
+
+Examples:
+
+@table @samp
+
+@item @code{cat foo.txt > foo}
+Will copy the remote file foo.txt to the local file foo.
+
+@item @code{ls -l | less}
+Will list all the files in long format, paged through less.
+
+@item @code{ls -l | emacs &}
+This won't work, you can't use asynchronous mode.
+
+@item @code{open < login.foo}
+Input redirection is not supported.
+
+@end table
+
+@c =====================================================
+@node Nohup transfers, , Command redirection, The shell
 @section Nohup transfers
 
-get and put has an option @samp{--nohup}. When given, Yafc will fork itself
+Get and Put has an option @samp{--nohup}.
+
+When given, Yafc will fork itself
 to the background and continue to transfer the specified files,
 allowing you to use your shell or even logout. Output
 is redirected to the file @file{~/.yafc/nohup/nohup.pid}, or to file specified
