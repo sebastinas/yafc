@@ -393,6 +393,8 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 
     if(strncmp(str, "total ", 6) == 0)
         return 1;
+    if(strncmp(str, "insgesamt ", 10) == 0)    // de "overall"
+        return 1;
 
     cf = str;
 
