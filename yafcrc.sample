@@ -157,7 +157,6 @@ alias ls "ls -F"
 alias rels "cache --touch %*; ls -F %*"
 alias pls "ls -F %* |$PAGER"
 alias bye quit
-alias exit quit
 alias ? "help"
 alias binary "set type binary"
 alias ascii "set type ascii"
