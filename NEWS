@@ -1,14 +1,15 @@
 New in 1.1.3
 ------------
 
-
 * Applied several patches from Debian.
-* Fix segfault on ' <TAB>'.
-* Replace some custom autoconf checks with macros from autoconf-archive.
-* Fix Kerberos 5 detection and make yafc buildable again if Kerberos 5 is
+* Fixed segfault on ' <TAB>'.
+* Replaced some custom autoconf checks with macros from autoconf-archive.
+* Fixed Kerberos 5 detection and make yafc buildable again if Kerberos 5 is
   enabled.
-* Add a bash completion.
-* Implement ignore masks for the put command.
+* Added a bash completion.
+* Implemented ignore masks for the put command.
+* Implemented support for argument replacement in shell command.
+* Fixed some invalid reads/writes.
 
 
 New in 1.1.2
