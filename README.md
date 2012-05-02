@@ -1,15 +1,11 @@
-README
----------------
-For installation instructions see the file 'INSTALL' in this directory.
-For planned improvements/features see the file 'TODO' in this directory.
-See the file 'BUGS' for known problems.
-Read 'COPYRIGHT' for copyright information.
-
-WHAT IS YAFC?
+YAFC
+====
 
 Yafc is yet another ftp client.
 
+
 FEATURES
+--------
 
 * cached directory listings
 * extensive tab completion
@@ -26,9 +22,9 @@ FEATURES
 * automatically enters nohup-mode when SIGHUP received (in get and put)
 * redirection to local command or file ('>', '>>' and '|')
 * proxy support
+* variable substitution for shell commands
+* ignore masks for uploads
+
 
 For more information, visit:
   http://www.yafc-ftp.com
-
-If you encounter bugs, please report them at:
-  https://github.com/sebastinas/yafc/issues
