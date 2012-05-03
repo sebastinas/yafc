@@ -192,6 +192,16 @@ void args_push_back(args_t *args, const char *str)
 	args_destroy(add_args);
 }
 
+void args_push_back_nosplit(args_t *args, const char *str)
+{
+	args_t *add_args = args_create();
+	add_args->argv = alloc_argv(1);
+	add_args->argv[0] = xstrdup(str);
+	add_args->argc = 1;
+	args_add_args(args, add_args);
+	args_destroy(add_args);
+}
+
 void args_push_front(args_t *args, const char *str)
 {
 	args_t *a = split_args(str);

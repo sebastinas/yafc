@@ -56,8 +56,8 @@ int ssh_open_url(url_t *urlp)
 		return r;
 
 	if(urlp->username) {
-		args_push_back(ftp->ssh_args, "-l");
-		args_push_back(ftp->ssh_args, urlp->username);
+		args_push_back_nosplit(ftp->ssh_args, "-l");
+		args_push_back_nosplit(ftp->ssh_args, urlp->username);
 	} else {
 		/* we need a username, otherwise other functions will fail
 		 */

@@ -35,6 +35,7 @@ void args_add_args3(args_t *args, const args_t *add_args, unsigned int first,
 void args_del(args_t *args, unsigned int first, unsigned int n);
 void args_add_null(args_t *args);
 void args_push_back(args_t *args, const char *str);
+void args_push_back_nosplit(args_t *args, const char *str);
 void args_push_front(args_t *args, const char *str);
 void args_remove_empty(args_t *args);
 void args_unquote(args_t *args);
