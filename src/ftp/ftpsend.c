@@ -111,6 +111,7 @@ static int ftp_init_transfer(void)
 
  err1:
 	sock_destroy(ftp->data);
+	ftp->data = 0;
  err0:
 	return -1;
 }
@@ -568,10 +569,10 @@ int ftp_list(const char *cmd, const char *param, FILE *fp)
 		return -1;
 
 	sock_destroy(ftp->data);
+	ftp->data = 0;
 
 	ftp_read_reply();
 
-	ftp->data = 0;
 	return ftp->code == ctComplete ? 0 : -1;
 }
 
