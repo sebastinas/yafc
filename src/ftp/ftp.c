@@ -395,13 +395,6 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
     }
 }
 
-int ftp_open(const char *host)
-{
-    url_t *url;
-    url = url_init(host);
-    return ftp_open_url(ftp->url, true);
-}
-
 int ftp_reopen(void)
 {
     if(ftp && ftp->url) {
