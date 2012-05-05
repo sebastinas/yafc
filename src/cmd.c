@@ -245,7 +245,7 @@ void exe_cmdline(char *str, bool aliases_are_expanded)
 		args_remove_empty(args);
 		if(args->argc == 0) {
 			args_destroy(args);
-		   continue;
+		  continue;
 		}
 
 		rearrange_redirections(args);
@@ -269,6 +269,7 @@ void exe_cmdline(char *str, bool aliases_are_expanded)
 
 			if(c != 0)
 				exe_cmd(c, args);
+			args_destroy(args);
 		} else {
 			args_t *expanded_cmd;
 			char *cmd;
@@ -304,6 +305,7 @@ void exe_cmdline(char *str, bool aliases_are_expanded)
 				/* remove empty arguments */
 				args_remove_empty(expanded_cmd);
 				if(expanded_cmd->argc == 0) {
+					free(cmd);
 					args_destroy(expanded_cmd);
 					continue;
 				}
