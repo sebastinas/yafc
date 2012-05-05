@@ -89,6 +89,7 @@ void url_parse(url_t *urlp, const char *str)
 	adr = _adr = xstrdup(str);
 
 	urlp->port = -1;
+  list_free(urlp->mech);
 	urlp->mech = 0;
 
 	e = strstr(adr, "://");
