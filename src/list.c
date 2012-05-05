@@ -587,8 +587,10 @@ void cmd_ls(int argc, char **argv)
 	if(list_numitem(gl) == 0) {
 		if(test(opt, LS_LONG))
 			printf(_("total 0\n"));
+		list_free(gl);
 		return;
 	}
 
 	lsfiles(gl, opt);
+	list_free(gl);
 }
