@@ -3,6 +3,7 @@
  *
  * Yet Another FTP Client
  * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ * Copyright (C) 2012, Sebastian Ramacher <sebastian+dev@ramacher.at>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,83 +18,108 @@
 #include "lscolors.h"
 
 typedef struct {
-	char *msk;
-	char *clr;
+  char *msk;
+  char *clr;
 } lscolor;
 
 static bool colors_initialized = false;
 static int number_of_colors = 0;
 
 /* these are the default colors */
-static char *diclr="01;34", *lnclr="01;36", *ficlr="00", *exclr="01;32";
-static char *bdclr="40;01;33", *cdclr="40;01;33", *piclr="40;33", *soclr="01;35";
-static char *lc="\x1B[", *rc="m", *ec="\x1B[0m";
+static char *diclr = NULL, *lnclr = NULL, *ficlr = NULL, *exclr = NULL;
+static char *bdclr = NULL, *cdclr = NULL, *piclr = NULL, *soclr = NULL;
+static char *lc = NULL, *rc = NULL, *ec = NULL;
 
-static lscolor *clrs;
+static lscolor *clrs = NULL;
 
 char *endcolor(void)
 {
-	return ec;
+  return ec;
 }
 
 void init_colors(void)
 {
-	int i = 0;
-	char *p, *e, *q, *org;
-	unsigned int n;
+  int i = 0;
+  char *p, *e, *org;
+  unsigned int n;
 
-	if(colors_initialized)
-		return;
+  if(colors_initialized)
+    return;
 
-	p = getenv("LS_COLORS");
-	if(!p)
-		p = getenv("LS_COLOURS");
+  p = getenv("LS_COLORS");
+  if(!p)
+    p = getenv("LS_COLOURS");
 
-	if(p && *p) {
-		org = p = xstrdup(p);
-		n = strqnchr(p, ':')+2;
-		clrs = (lscolor *)xmalloc(n * sizeof(lscolor));
-		e = strqsep(&p, ':');
-		while(e && *e) {
-			q = strqsep(&e, '=');
-			clrs[i].msk = xstrdup(q);
-			q = strqsep(&e, ':');
-			clrs[i].clr = xstrdup(q);
+  if(p && *p) {
+    org = p = xstrdup(p);
+    n = strqnchr(p, ':')+2;
+    clrs = (lscolor *)xmalloc(n * sizeof(lscolor));
+    e = strqsep(&p, ':');
+    while(e && *e) {
+      char* msk = strqsep(&e, '=');
+      char* clr = xstrdup(strqsep(&e, ':'));
+      e = strqsep(&p, ':');
 
-			e = strqsep(&p, ':');
+      if(strcmp(msk, "di")==0) /* directory */
+        diclr = clr;
+      else if(strcmp(msk, "ln")==0) /* link */
+        lnclr = clr;
+      else if(strcmp(msk, "fi")==0) /* normal file */
+        ficlr = clr;
+      else if(strcmp(msk, "ex")==0) /* executable */
+        exclr = clr;
+      else if(strcmp(msk, "bd")==0) /* block device */
+        bdclr = clr;
+      else if(strcmp(msk, "cd")==0) /* character device */
+        cdclr = clr;
+      else if(strcmp(msk, "pi")==0) /* pipe */
+        piclr = clr;
+      else if(strcmp(msk, "so")==0) /* socket */
+        soclr = clr;
+      else if(strcmp(msk, "lc") == 0) /* left code */
+        lc = clr;
+      else if(strcmp(msk, "rc") == 0) /* right code */
+        rc = clr;
+      else if(strcmp(msk, "ec") == 0) /* end code (lc+fi+rc) */
+        ec = clr;
+      else
+      {
+        clrs[i].msk = xstrdup(msk);
+        clrs[i].clr = clr;
+        i++;
+      }
+    }
+    number_of_colors = i;
+    free(org);
+    if(!ec && lc && ficlr && rc) {
+      ec = xmalloc(strlen(lc)+strlen(ficlr)+strlen(rc)+1);
+      sprintf(ec, "%s%s%s", lc, ficlr, rc);
+    }
+  }
 
-			if(strcmp(clrs[i].msk, "di")==0) /* directory */
-				diclr = clrs[i].clr;
-			else if(strcmp(clrs[i].msk, "ln")==0) /* link */
-				lnclr = clrs[i].clr;
-			else if(strcmp(clrs[i].msk, "fi")==0) /* normal file */
-				ficlr = clrs[i].clr;
-			else if(strcmp(clrs[i].msk, "ex")==0) /* executable */
-				exclr = clrs[i].clr;
-			else if(strcmp(clrs[i].msk, "bd")==0) /* block device */
-				bdclr = clrs[i].clr;
-			else if(strcmp(clrs[i].msk, "cd")==0) /* character device */
-				cdclr = clrs[i].clr;
-			else if(strcmp(clrs[i].msk, "pi")==0) /* pipe */
-				piclr = clrs[i].clr;
-			else if(strcmp(clrs[i].msk, "so")==0) /* socket */
-				soclr = clrs[i].clr;
-			else if(strcmp(clrs[i].msk, "lc") == 0) /* left code */
-				lc = clrs[i].clr;
-			else if(strcmp(clrs[i].msk, "rc") == 0) /* right code */
-				rc = clrs[i].clr;
-			else if(strcmp(clrs[i].msk, "ec") == 0) /* end code (lc+fi+rc) */
-				ec = clrs[i].clr;
-			else
-				i++;
-		}
-		number_of_colors = i;
-		free(org);
-		if(!ec) {
-			ec = xmalloc(strlen(lc)+strlen(ficlr)+strlen(rc)+1);
-			sprintf(ec, "%s%s%s", lc, ficlr, rc);
-		}
-	}
+  if (!diclr)
+    diclr = xstrdup("01;34");
+  if (!lnclr)
+    lnclr = xstrdup("01;36");
+  if (!ficlr)
+    ficlr = xstrdup("00");
+  if (!exclr)
+    exclr = xstrdup("01;32");
+  if (!bdclr)
+    bdclr = xstrdup("40;01;33");
+  if (!cdclr)
+    cdclr = xstrdup("40;01;33");
+  if (!piclr)
+    piclr = xstrdup("40;33");
+  if (!soclr)
+    soclr = xstrdup("01;35");
+  if (!lc)
+    lc = xstrdup("\x1B[");
+  if (!rc)
+    rc = xstrdup("m");
+  if (!ec)
+    ec = xstrdup("\x1B[0m");
+
   colors_initialized = true;
 }
 
@@ -108,45 +134,59 @@ void free_colors(void)
     free(clrs[i].clr);
   }
   free(clrs);
+  free(diclr);
+  free(lnclr);
+  free(ficlr);
+  free(exclr);
+  free(bdclr);
+  free(cdclr);
+  free(piclr);
+  free(soclr);
+  free(lc);
+  free(rc);
+  free(ec);
+
   clrs = NULL;
+  diclr = lnclr = ficlr = exclr = bdclr = cdclr = piclr = soclr = lc =
+    rc = ec = NULL;
   colors_initialized = false;
 }
 
 void rfile_parse_colors(rfile *f)
 {
-	char *e, *q;
-	int i;
+  char *e, *q;
+  int i;
 
-	/* colors should already been initialized by init_colors */
+  /* colors should already been initialized by init_colors */
 
-	e = 0;
-	if(risdir(f))
-		e = diclr;
-	else if(rislink(f))
-		e = lnclr;
-	else if(rischardev(f))
-		e = cdclr;
-	else if(risblockdev(f))
-		e = bdclr;
-	else if(rispipe(f))
-		e = piclr;
-	else if(rissock(f))
-		e = soclr;
+  e = 0;
+  if(risdir(f))
+    e = diclr;
+  else if(rislink(f))
+    e = lnclr;
+  else if(rischardev(f))
+    e = cdclr;
+  else if(risblockdev(f))
+    e = bdclr;
+  else if(rispipe(f))
+    e = piclr;
+  else if(rissock(f))
+    e = soclr;
 
-	/* do this before checking for executable, because
-	 * on [v]fat filesystems, all files are 'executable'
-	 */
-	for(i=0;i<number_of_colors && !e;i++) {
-		if(fnmatch(clrs[i].msk, base_name_ptr(f->path), 0) == 0)
-			e = clrs[i].clr;
-	}
+  /* do this before checking for executable, because
+   * on [v]fat filesystems, all files are 'executable'
+   */
+  for(i=0;i<number_of_colors && !e;i++) {
+    if(fnmatch(clrs[i].msk, base_name_ptr(f->path), 0) == 0)
+      e = clrs[i].clr;
+  }
 
-	/* a file is considered executable if there is
-	 * an 'x' anywhere in its permission string */
-	if(!e && risexec(f))
-		e = exclr;
+  /* a file is considered executable if there is
+   * an 'x' anywhere in its permission string */
+  if(!e && risexec(f))
+    e = exclr;
 
-	q = e ? e : ficlr;
-	f->color = (char *)xmalloc(strlen(lc) + strlen(q) + strlen(rc) + 1);
-	sprintf(f->color, "%s%s%s", lc, q, rc);
+  q = e ? e : ficlr;
+  f->color = (char *)xmalloc(strlen(lc) + strlen(q) + strlen(rc) + 1);
+  sprintf(f->color, "%s%s%s", lc, q, rc);
 }
