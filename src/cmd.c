@@ -26,6 +26,7 @@
 #include "redir.h"
 #include "prompt.h"
 #include "ltag.h"
+#include "lscolors.h"
 
 //static void exe_cmdline(char *str, bool aliases_are_expanded);
 
@@ -37,6 +38,7 @@ void exit_yafc(void)
 	save_ltaglist(0);
 	gvars_destroy();
 	reset_xterm_title();
+	free_colors();
 	exit(0);
 }
 

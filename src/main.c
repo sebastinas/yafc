@@ -26,6 +26,7 @@
 #include "utils.h"
 #include "rc.h"
 #include "ltag.h"
+#include "lscolors.h"
 
 #ifdef HAVE_LOCALE_H
 # include <locale.h>

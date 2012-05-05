@@ -279,11 +279,6 @@ void ftp_pwd(void);
 char *perm2string(int perm);
 void ftp_get_feat(void);
 
-/* in lscolors.h */
-void init_colors(void);
-
-
-
 void connect_to_server(char **args, int *in, int *out, pid_t *sshpid);
 char ** make_ssh_args(char ***args, char *add_arg);
 

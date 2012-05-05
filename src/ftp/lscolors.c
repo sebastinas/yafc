@@ -14,6 +14,7 @@
 #include "rfile.h"
 #include "xmalloc.h"
 #include "strq.h"
+#include "lscolors.h"
 
 typedef struct {
 	char *msk;
@@ -93,6 +94,22 @@ void init_colors(void)
 			sprintf(ec, "%s%s%s", lc, ficlr, rc);
 		}
 	}
+  colors_initialized = true;
+}
+
+void free_colors(void)
+{
+  if (!colors_initialized)
+    return;
+
+  for (unsigned int i = 0; i != number_of_colors; ++i)
+  {
+    free(clrs[i].msk);
+    free(clrs[i].clr);
+  }
+  free(clrs);
+  clrs = NULL;
+  colors_initialized = false;
 }
 
 void rfile_parse_colors(rfile *f)
