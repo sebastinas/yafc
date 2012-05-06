@@ -4,10 +4,10 @@ dnl init
 
 AC_PREREQ(2.60)
 AC_INIT(yafc,
-				1.1.3,
-				[https://github.com/sebastinas/yafc/issues/],
-				yafc,
-				[http://yafc-ftp.com])
+        1.1.3,
+        [https://github.com/sebastinas/yafc/issues/],
+        yafc,
+        [http://yafc-ftp.com])
 AC_CONFIG_SRCDIR(src/main.c)
 AC_CONFIG_LIBOBJ_DIR([lib])
 AC_USE_SYSTEM_EXTENSIONS
@@ -39,8 +39,8 @@ dnl checks taken from openssh-2.9p1
 case "$host" in
 *-*-hpux10* | *-*-hpux11* | *-next-* | *-*-sunos4* | *-sni-sysv* | \
 *-*-sysv4.2* | *-*-sysv5* | *-*-sco3.2v4* | *-*-sco3.2v5*)
-	AC_DEFINE([USE_PIPES], [], [define if using pipes instead of socketpair])
-	;;
+  AC_DEFINE([USE_PIPES], [], [define if using pipes instead of socketpair])
+  ;;
 esac
 
 dnl
@@ -190,11 +190,19 @@ AC_CHECK_DECLS(des_read_pw_string, [yafc_have_read_pw_string="yes"],,
     #include <openssl/ui_compat.h>
     #endif
   ])
-AC_CHECK_DECLS(UI_UTIL_read_pw_string, [yafc_have_read_pw_string="yes"],,
+AC_CHECK_DECLS(hc_UI_UTIL_read_pw_string,
+  [
+   AC_SEARCH_LIBS(hc_UI_UTIL_read_pw_string, hcrypto,
+                  [yafc_have_read_pw_string="yes"])
+  ],,
   [
     #ifdef HAVE_HCRYPTO_UI_H
     #include <hcrypto/ui.h>
-    #elif defined(HAVE_OPENSSL_UI_H)
+    #endif
+  ])
+AC_CHECK_DECLS(UI_UTIL_read_pw_string, [yafc_have_read_pw_string="yes"],,
+  [
+    #if defined(HAVE_OPENSSL_UI_H)
     #include <openssl/ui.h>
     #endif
   ])
@@ -205,53 +213,53 @@ if test "x$yafc_have_read_pw_string" = "xyes" ; then
   LDFLAGS="$LDFLAGS $OPENSSL_LDFLAGS"
   CPPFLAGS="$CPPFLAGS $OPENSSL_INCLUDES"
 else
-	AC_CHECK_HEADERS(termios.h)
-	AC_CHECK_DECLS([IUCLC],,,
-		[
-			#include <fcntl.h>
-			#include <sys/ioctl.h>
-			#include <termios.h>
-		])
-	AC_CHECK_DECLS([TCGETS],,
-		[AC_CHECK_DECLS([TIOCGETA],,
-			AC_MSG_ERROR([TCGETS and TIOCGETA are not available]),
-			[
-				#include <fcntl.h>
-				#include <sys/ioctl.h>
-				#include <termios.h>
-			])
-		],
-		[
-			#include <fcntl.h>
-			#include <sys/ioctl.h>
-			#include <termios.h>
-		])
-	AC_CHECK_DECLS([TCSETS],,
-		[AC_CHECK_DECLS([TIOCSETA],,
-			AC_MSG_ERROR([TCSETS and TIOCSETA are not available]),
-			[
-				#include <fcntl.h>
-				#include <sys/ioctl.h>
-				#include <termios.h>
-			])
-		],
-		[
-			#include <fcntl.h>
-			#include <sys/ioctl.h>
-			#include <termios.h>
-		])
+  AC_CHECK_HEADERS(termios.h)
+  AC_CHECK_DECLS([IUCLC],,,
+    [
+      #include <fcntl.h>
+      #include <sys/ioctl.h>
+      #include <termios.h>
+    ])
+  AC_CHECK_DECLS([TCGETS],,
+    [AC_CHECK_DECLS([TIOCGETA],,
+      AC_MSG_ERROR([TCGETS and TIOCGETA are not available]),
+      [
+        #include <fcntl.h>
+        #include <sys/ioctl.h>
+        #include <termios.h>
+      ])
+    ],
+    [
+      #include <fcntl.h>
+      #include <sys/ioctl.h>
+      #include <termios.h>
+    ])
+  AC_CHECK_DECLS([TCSETS],,
+    [AC_CHECK_DECLS([TIOCSETA],,
+      AC_MSG_ERROR([TCSETS and TIOCSETA are not available]),
+      [
+        #include <fcntl.h>
+        #include <sys/ioctl.h>
+        #include <termios.h>
+      ])
+    ],
+    [
+      #include <fcntl.h>
+      #include <sys/ioctl.h>
+      #include <termios.h>
+    ])
 fi
 
 AC_ARG_WITH([bash-completion],
-	AS_HELP_STRING([--with-bash-completion@<:@=DIR@:>@],
-								 [install bash_completion conf file in DIR (default is yes)]),
-	[
+  AS_HELP_STRING([--with-bash-completion@<:@=DIR@:>@],
+                 [install bash_completion conf file in DIR (default is yes)]),
+  [
     if test "$withval" = "no"; then
-	    BASH_COMPLETION_DIR=""
+      BASH_COMPLETION_DIR=""
     elif test "$withval" = "yes"; then
       BASH_COMPLETION_DIR=$sysconfdir/bash_completion.d
     else
-	    BASH_COMPLETION_DIR="$withval"
+      BASH_COMPLETION_DIR="$withval"
     fi
   ],
   [BASH_COMPLETION_DIR=$sysconfdir/bash_completion.d])

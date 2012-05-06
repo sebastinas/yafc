@@ -82,9 +82,11 @@ char *input_read_string(const char *prompt)
 
 char *getpass_hook(const char *prompt)
 {
-#if HAVE_DECL_UI_UTIL_READ_PW_STRING || HAVE_DECLDES_READ_PW_STRING
+#if HAVE_DECL_HC_UI_UTIL_READ_PW_STRING || HAVE_DECL_UI_UTIL_READ_PW_STRING || HAVE_DECL_DES_READ_PW_STRING
 	char tmp[80];
-#if HAVE_DECL_UI_UTIL_READ_PW_STRING
+#if HAVE_DECL_HC_UI_UTIL_READ_PW_STRING
+	hc_UI_UTIL_read_pw_string(tmp, sizeof(tmp), (char*)prompt, 0);
+#elif HAVE_DECL_UI_UTIL_READ_PW_STRING
   UI_UTIL_read_pw_string(tmp, sizeof(tmp), (char*)prompt, 0);
 #else
 	des_read_pw_string(tmp, sizeof(tmp), (char *)prompt, 0);
