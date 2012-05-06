@@ -410,7 +410,8 @@ int str2bool(const char *e)
  */
 char *tilde_expand_home(const char *str, const char *home)
 {
-	char *full, *s;
+	char *full;
+  const char *s;
 
 	if(home && (strcmp(str, "~") == 0))
 		full = xstrdup(home);
