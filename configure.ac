@@ -10,6 +10,7 @@ AC_INIT(yafc,
         [http://yafc-ftp.com])
 AC_CONFIG_SRCDIR(src/main.c)
 AC_CONFIG_LIBOBJ_DIR([lib])
+AC_PROG_CC_C99
 AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE
 AC_CONFIG_MACRO_DIR([cf])
@@ -22,14 +23,11 @@ CDPATH=""
 AC_CANONICAL_HOST
 AC_DEFINE_UNQUOTED(HOSTTYPE, "${host_cpu}-${host_vendor}-${host_os}", [the hosttype])
 
-AC_PROG_CC
-
 dnl checks for different unix variants
 AC_ISC_POSIX
 AC_AIX
 AC_MINIX
 
-AM_PROG_CC_STDC
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 LT_INIT
