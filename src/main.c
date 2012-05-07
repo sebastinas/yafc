@@ -225,6 +225,7 @@ void check_if_first_time(void)
 		fflush(stdout);
 		if(mkdir(dir, S_IRUSR|S_IWUSR|S_IXUSR) != 0) {
 			perror("");
+			free(dir);
 			return;
 		}
 		chmod(dir, S_IRUSR|S_IWUSR|S_IXUSR);
@@ -236,6 +237,7 @@ void check_if_first_time(void)
 		fflush(stdout);
 		if(mkdir(dir, S_IRUSR|S_IWUSR|S_IXUSR) != 0) {
 			perror("");
+			free(dir);
 			return;
 		}
 		chmod(dir, S_IRUSR|S_IWUSR|S_IXUSR);

@@ -430,6 +430,8 @@ void transfer_end_nohup(void)
 
 		asprintf(&cmd, "%s %s", gvSendmailPath, gvNohupMailAddress);
 		fp = popen(cmd, "w");
+		free(cmd);
+
 		if(fp == 0)
 			printf(_("Unable to send mail (using %s)\n"), gvSendmailPath);
 		else {
