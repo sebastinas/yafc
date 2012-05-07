@@ -32,15 +32,6 @@ AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 LT_INIT
 
-dnl check if to use pipes or socketpair in src/ftp/ssh_ftp.c
-dnl checks taken from openssh-2.9p1
-case "$host" in
-*-*-hpux10* | *-*-hpux11* | *-next-* | *-*-sunos4* | *-sni-sysv* | \
-*-*-sysv4.2* | *-*-sysv5* | *-*-sco3.2v4* | *-*-sco3.2v5*)
-  AC_DEFINE([USE_PIPES], [], [define if using pipes instead of socketpair])
-  ;;
-esac
-
 dnl
 dnl Checks for header files.
 dnl
@@ -246,6 +237,13 @@ else
       #include <sys/ioctl.h>
       #include <termios.h>
     ])
+fi
+
+AC_ARG_WITH([ssh],
+  AS_HELP_STRING([--with-ssh], [Build with SSH support]))
+if test "x$with_ssh" != "xno"; then
+  PKG_CHECK_MODULES([SSH], [libssh],
+    [AC_DEFINE(HAVE_LIBSSH, [], [Define if you have libssh installed.])])
 fi
 
 AC_ARG_WITH([bash-completion],
