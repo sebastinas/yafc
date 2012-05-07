@@ -90,8 +90,10 @@ void load_ltaglist(bool showerr, bool always_autoload,
 	if(gvLoadTaglist == 2 && !always_autoload) {
 		c = ask(ASKYES|ASKNO, ASKYES,
 				_("Found saved local taglist, load it now?"));
-		if(c == ASKNO)
+		if(c == ASKNO) {
+			fclose(fp);
 			return;
+		}
 	} /* else gvLoadTaglist == 1 == yes */
 
 	if(fgets(tmp, 4096, fp) != 0) {
