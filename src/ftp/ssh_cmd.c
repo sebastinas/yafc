@@ -327,13 +327,13 @@ int ssh_cdup(void)
 
 int ssh_mkdir_verb(const char *path, verbose_t verb)
 {
-	char* bspath = ftp_path_absolute(path);
+	char* abspath = ftp_path_absolute(path);
 	stripslash(abspath);
 
-	int r = sftp_mkdir(ftp->sftp_session, abspath, S_IRWXU);
+	int rc = sftp_mkdir(ftp->sftp_session, abspath, S_IRWXU);
 	if (rc != SSH_OK && sftp_get_error(ftp->sftp_session) != SSH_FX_FILE_ALREADY_EXISTS)
 	{
-		ftp_err("Couldn't create directory: %s\n", ssh_get_error(session));
+		ftp_err("Couldn't create directory: %s\n", ssh_get_error(ftp->session));
 		free(abspath);
 		return rc;
 	}
@@ -345,13 +345,13 @@ int ssh_mkdir_verb(const char *path, verbose_t verb)
 
 int ssh_rmdir(const char *path)
 {
-	char* bspath = ftp_path_absolute(path);
+	char* abspath = ftp_path_absolute(path);
 	stripslash(abspath);
 
-	int r = sftp_rmdir(ftp->sftp_session, abspath);
+	int rc = sftp_rmdir(ftp->sftp_session, abspath);
 	if (rc != SSH_OK && sftp_get_error(ftp->sftp_session) != SSH_FX_NO_SUCH_FILE)
 	{
-		ftp_err("Couldn't remove directory: %s\n", ssh_get_error(session));
+		ftp_err("Couldn't remove directory: %s\n", ssh_get_error(ftp->session));
 		free(abspath);
 		return rc;
 	}
