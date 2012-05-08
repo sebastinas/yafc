@@ -328,11 +328,13 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
     fprintf(stderr, "\r");
     ftp_trace("\n");
 
+#ifdef HAVE_LIBSSH
     if(urlp->protocol && strcmp(urlp->protocol, "ssh") == 0) {
         int ret = ssh_open_url(urlp);
         alarm(0);
         return ret;
     }
+#endif
 
     if(urlp->protocol && strcmp(urlp->protocol, "ftp") != 0) {
         ftp_err(_("Sorry, don't know how to handle your '%s' protocol\n"

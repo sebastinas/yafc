@@ -243,7 +243,15 @@ AC_ARG_WITH([ssh],
   AS_HELP_STRING([--with-ssh], [Build with SSH support]))
 if test "x$with_ssh" != "xno"; then
   PKG_CHECK_MODULES([SSH], [libssh],
-    [AC_DEFINE(HAVE_LIBSSH, [], [Define if you have libssh installed.])])
+    [
+      AC_DEFINE(HAVE_LIBSSH, [], [Define if you have libssh installed.])
+      AM_CONDITIONAL(HAVE_LIBSSH, [true])
+    ],
+    [
+      AM_CONDITIONAL(HAVE_LIBSSH, [false])
+    ])
+else
+  AM_CONDITIONAL(HAVE_LIBSSH, [false])
 fi
 
 AC_ARG_WITH([bash-completion],

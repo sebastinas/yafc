@@ -13,8 +13,10 @@ libftp_a_SOURCES = ftp.c \
 									 cache.c \
 									 ftpsend.c \
 									 ftpsigs.c \
-									 atomicio.c \
-									 ssh_cmd.c
+if HAVE_LIBSSH
+									 ssh_cmd.c \
+endif
+									 atomicio.c
 
 noinst_HEADERS = ftp.h \
 								 socket.h \

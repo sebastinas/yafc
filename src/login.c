@@ -122,9 +122,9 @@ void yafc_open(const char *host, unsigned int opt,
 			if(!((Ftp *)li->data)->connected
 			   || (!sock_connected(((Ftp *)li->data)->ctrl)
 #ifdef HAVE_LIBSSH
-				   && !((Ftp *)li->data)->session)
+				   && !((Ftp *)li->data)->session
 #endif
-				 )
+				))
 			{
 				gvCurrentFtp = li;
 				found_unconnected = true;
