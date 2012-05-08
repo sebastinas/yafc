@@ -725,10 +725,12 @@ void cmd_fxp(int argc, char **argv)
 		return;
 	}
 
-	if(ftp->ssh_pid || fxp_target->ssh_pid) {
+#ifdef HAVE_LIBSSH
+	if(ftp->session || fxp_target->session) {
 		ftp_err("FxP for SSH connections no implemented\n");
 		return;
 	}
+#endif
 
 	gl = rglob_create();
 	while(optind < argc) {

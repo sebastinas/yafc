@@ -669,10 +669,12 @@ void cmd_rstatus(int argc, char **argv)
 	maxargs(optind - 1);
 	need_connected();
 
-	if(ftp->ssh_pid) {
+#ifdef HAVE_LIBSSH
+	if(ftp->session) {
 		printf("No status for SSH connection\n");
 		return;
 	}
+#endif
 
 	ftp_set_tmp_verbosity(vbCommand);
 	ftp_cmd("STAT");
@@ -709,10 +711,12 @@ void cmd_site(int argc, char **argv)
 	minargs_nohelp(1);
 	need_connected();
 
-	if(ftp->ssh_pid) {
+#ifdef HAVE_LIBSSH
+	if(ftp->session) {
 		printf("SITE commands not available in SSH connections\n");
 		return;
 	}
+#endif
 
 	e = args_cat(argc, argv, 1);
 	ftp_set_tmp_verbosity(vbCommand);
@@ -834,10 +838,12 @@ void cmd_quote(int argc, char **argv)
 	minargs(optind);
 	need_connected();
 
-	if(ftp->ssh_pid) {
+#ifdef HAVE_LIBSSH
+	if(ftp->session) {
 		printf("Command not available in SSH connection\n");
 		return;
 	}
+#endif
 
 	e = args_cat(argc, argv, optind);
 	ftp_set_tmp_verbosity(vbDebug);
@@ -902,10 +908,12 @@ void cmd_system(int argc, char **argv)
 	need_connected();
 	need_loggedin();
 
-	if(ftp->ssh_pid) {
+#ifdef HAVE_LIBSSH
+	if(ftp->session) {
 		fprintf(stderr, "remote system: SSH (version %d)\n", ftp->ssh_version);
 		return;
 	}
+#endif
 
 	if(ftp_get_verbosity() != vbDebug)
 		fprintf(stderr, _("remote system: "));

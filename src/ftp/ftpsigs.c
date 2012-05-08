@@ -90,7 +90,11 @@ RETSIGTYPE sigint_close_handler(int signum)
 	 * program?
 	 */
 
-	if(sigints >= 4 || ftp->ssh_pid) {
+	if (sigints >= 4
+#ifdef HAVE_LIBSSH
+			|| ftp->session
+#endif
+		) {
 		ftp_close();
 		sigints = 0;
 		if(gvJmpBufSet) {
@@ -125,7 +129,11 @@ RETSIGTYPE sigint_abort_handler(int signum)
 
 	gvInterrupted = true;
 
-	if(sigints >= 3 || ftp->ssh_pid) {
+	if (sigints >= 3
+#ifdef HAVE_LIBSSH
+			|| ftp->session
+#endif
+		) {
 		sigints = 0;
 		alarm(0);
 		if(gvJmpBufSet) {
@@ -150,8 +158,10 @@ RETSIGTYPE sigint_jmp_handler(int signum)
 	alarm(0);
 	if(gvJmpBufSet) {
 		ftp_trace("jumping to gvRestartJmp\n");
-		if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+		if(ftp->session)
 			ftp_close();
+#endif
 		ftp_longjmp(gvRestartJmp, 1);
 	} else {
 		ftp_err(_("Interrupt received, exiting...         \n"));

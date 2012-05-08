@@ -14,11 +14,7 @@ libftp_a_SOURCES = ftp.c \
 									 ftpsend.c \
 									 ftpsigs.c \
 									 atomicio.c \
-									 buffer.c \
-									 bufaux.c \
-									 sftp-common.c \
-									 ssh_cmd.c \
-									 ssh_ftp.c
+									 ssh_cmd.c
 
 noinst_HEADERS = ftp.h \
 								 socket.h \
@@ -27,14 +23,10 @@ noinst_HEADERS = ftp.h \
 								 rfile.h \
 								 rdirectory.h \
 								 url.h \
-                 ftpsigs.h \
+								 ftpsigs.h \
 								 atomicio.h \
-								 buffer.h \
-								 bufaux.h \
-								 sftp-common.h \
 								 getput.h \
-								 ssh_cmd.h \
-								 ssh_ftp.h
+								 ssh_cmd.h
 
 AM_CPPFLAGS = $(SSH_CFLAGS)
 

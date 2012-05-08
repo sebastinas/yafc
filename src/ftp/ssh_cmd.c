@@ -29,97 +29,248 @@
 #include "ftp.h"
 #include "strq.h"
 #include "gvars.h"
-#include "buffer.h"
-#include "bufaux.h"
 /*#include "pathnames.h"*/
-#include "ssh_ftp.h"
 #include "rfile.h"
 
-int ssh_open_url(url_t *urlp)
+/* from libssh examples */
+static int verify_knownhost(ssh_session session)
 {
-	char *sftp = gvSFTPServerProgram;
-	char *s;
-	int r;
+  unsigned char *hash = NULL;
+  char *hexa;
+  char buf[10];
 
-	args_clear(ftp->ssh_args);
+  int state = ssh_is_server_known(session);
+  int hlen = ssh_get_pubkey_hash(session, &hash);
+  if (hlen < 0)
+    return -1;
 
-	if(urlp->sftp_server)
-		sftp = urlp->sftp_server;
+  switch (state)
+  {
+    case SSH_SERVER_KNOWN_OK:
+      break; /* ok */
 
-	args_push_back(ftp->ssh_args, gvSSHProgram);
-	if(gvSSHOptions && strlen(gvSSHOptions))
-		args_push_back(ftp->ssh_args, gvSSHOptions);
-	args_push_back(ftp->ssh_args, urlp->hostname);
+    case SSH_SERVER_KNOWN_CHANGED:
+      fprintf(stderr, "Host key for server changed: it is now:\n");
+      ssh_print_hexa("Public key hash", hash, hlen);
+      fprintf(stderr, "For security reasons, connection will be stopped\n");
+      free(hash);
+      return -1;
 
-	r = get_username(urlp, gvUsername, false);
-	if(r != 0)
+    case SSH_SERVER_FOUND_OTHER:
+      fprintf(stderr, "The host key for this server was not found but an other"
+        "type of key exists.\n");
+      fprintf(stderr, "An attacker might change the default server key to"
+        "confuse your client into thinking the key does not exist\n");
+      free(hash);
+      return -1;
+
+    case SSH_SERVER_FILE_NOT_FOUND:
+      fprintf(stderr, "Could not find known host file.\n");
+      fprintf(stderr, "If you accept the host key here, the file will be"
+       "automatically created.\n");
+      /* fallback to SSH_SERVER_NOT_KNOWN behavior */
+
+    case SSH_SERVER_NOT_KNOWN:
+      hexa = ssh_get_hexa(hash, hlen);
+      fprintf(stderr,"The server is unknown. Do you trust the host key?\n");
+      fprintf(stderr, "Public key hash: %s\n", hexa);
+      free(hexa);
+      if (fgets(buf, sizeof(buf), stdin) == NULL)
+      {
+        free(hash);
+        return -1;
+      }
+      if (strncasecmp(buf, "yes", 3) != 0)
+      {
+        free(hash);
+        return -1;
+      }
+      if (ssh_write_knownhost(session) < 0)
+      {
+        fprintf(stderr, "Error %s\n", strerror(errno));
+        free(hash);
+        return -1;
+      }
+      break;
+
+    case SSH_SERVER_ERROR:
+      fprintf(stderr, "Error %s", ssh_get_error(session));
+      free(hash);
+      return -1;
+  }
+
+  free(hash);
+  return 0;
+}
+
+static int authenticate_pubkey(ssh_session session)
+{
+  return ssh_userauth_publickey_auto(session, NULL);
+}
+
+static int authenticate_password(ssh_session session)
+{
+  char* password = getpass("Enter your password: ");
+  return ssh_userauth_password(session, NULL, password);
+}
+
+static int test_several_auth_methods(ssh_session session)
+{
+  int rc = ssh_userauth_none(session, NULL);
+  if (rc != SSH_AUTH_SUCCESS) {
+      return rc;
+  }
+
+  int method = ssh_userauth_list(session, NULL);
+#if 0
+  if (method & SSH_AUTH_METHOD_NONE)
+  { // For the source code of function authenticate_none(),
+    // refer to the corresponding example
+    rc = authenticate_none(session);
+    if (rc == SSH_AUTH_SUCCESS) return rc;
+  }
+#endif
+  if (method & SSH_AUTH_METHOD_PUBLICKEY)
+  { // For the source code of function authenticate_pubkey(),
+    // refer to the corresponding example
+    rc = authenticate_pubkey(session);
+    if (rc == SSH_AUTH_SUCCESS) return rc;
+  }
+#if 0
+  if (method & SSH_AUTH_METHOD_INTERACTIVE)
+  { // For the source code of function authenticate_kbdint(),
+    // refer to the corresponding example
+    rc = authenticate_kbdint(session);
+    if (rc == SSH_AUTH_SUCCESS) return rc;
+  }
+#endif
+  if (method & SSH_AUTH_METHOD_PASSWORD)
+  { // For the source code of function authenticate_password(),
+    // refer to the corresponding example
+    rc = authenticate_password(session);
+    if (rc == SSH_AUTH_SUCCESS) return rc;
+  }
+  return SSH_AUTH_ERROR;
+}
+
+int ssh_open_url(url_t* urlp)
+{
+	ftp->session = ssh_new();
+	if (!ftp->session)
+		return -1;
+
+	/* set log level */
+	if (ftp_get_verbosity() == vbDebug)
+	{
+		int verbosity = SSH_LOG_PROTOCOL;
+		ssh_options_set(ftp->session, SSH_OPTIONS_LOG_VERBOSITY, &verbosity);
+	}
+
+	/* set host name and port */
+	ssh_options_set(ftp->session, SSH_OPTIONS_HOST, urlp->hostname);
+	if (urlp->port)
+		ssh_options_set(ftp->session, SSH_OPTIONS_PORT, &urlp->port);
+	
+	/* parse .ssh/config */
+	int r = ssh_options_parse_config(ftp->session, NULL); 
+	if (r != SSH_OK)
+	{
+		ftp_err("Failed to parse ssh config: %s\n", ssh_get_error(ftp->session));
+		ssh_free(ftp->session);
+		ftp->session = NULL;
 		return r;
-
-	if(urlp->username) {
-		args_push_back_nosplit(ftp->ssh_args, "-l");
-		args_push_back_nosplit(ftp->ssh_args, urlp->username);
-	} else {
-		/* we need a username, otherwise other functions will fail
-		 */
-		urlp->username = xstrdup(gvUsername);
+	}
+	
+	/* get user name */
+	char* default_username = NULL;
+	ssh_options_get(ftp->session, SSH_OPTIONS_USER, &default_username);
+	r = get_username(urlp, default_username, false);
+	ssh_string_free_char(default_username);
+	if (r)
+	{
+		ssh_free(ftp->session);
+		ftp->session = NULL;
+		return r;
 	}
 
-	if(urlp->port) {
-		char *p;
-		asprintf(&p, "%d", urlp->port);
-		args_push_back(ftp->ssh_args, "-p");
-		args_push_back(ftp->ssh_args, p);
-		free(p);
+	/* set user name */
+	ssh_options_set(ftp->session, SSH_OPTIONS_USER, urlp->username);
+
+	/* connect to server */
+	r = ssh_connect(ftp->session);
+	if (r != SSH_OK)
+	{
+		ftp_err("Couldn't initialise connection to server: %s\n", ssh_get_error(ftp->session));
+		ssh_free(ftp->session);
+		ftp->session = NULL;
+		return r;
 	}
 
-	if(ftp_get_verbosity() == vbDebug)
-		args_push_back(ftp->ssh_args, "-v");
+	/* verify server */
+	if (verify_knownhost(ftp->session))
+	{
+		ssh_disconnect(ftp->session);
+		ssh_free(ftp->session);
+		ftp->session = NULL;
+		return -1;
+	}
 
-	/* no subsystem if the server-spec contains a '/' */
-	if(sftp == 0 || strchr(sftp, '/') == 0)
-		args_push_back(ftp->ssh_args, "-s");
+	/* authenticate user */
+	r = test_several_auth_methods(ftp->session);
+	if (r != SSH_OK)
+	{
+		ftp_err("Authentication failed: %s\n", ssh_get_error(ftp->session));
+		ssh_disconnect(ftp->session);
+		ssh_free(ftp->session);
+		ftp->session = NULL;
+		return -1;
+	}
 
-	/* Otherwise finish up and return the arg array */
-	if(sftp != 0)
-		args_push_back(ftp->ssh_args, sftp);
-	else
-		args_push_back(ftp->ssh_args, "sftp");
-
-	s = args_cat2(ftp->ssh_args, 0);
-	ftp_trace("SSH args: %s\n", s);
-	if(ftp_get_verbosity() == vbDebug)
-		fprintf(stderr, "SSH args: %s\n", s);
-	free(s);
-
-	args_add_null(ftp->ssh_args);
-
-	if(ssh_connect(ftp->ssh_args->argv, &ftp->ssh_in, &ftp->ssh_out,
-				   &ftp->ssh_pid) == -1)
-		{
-			return -1;
-		}
-
-	ftp->ssh_version = ssh_init();
-	if(ftp->ssh_version == -1) {
+	ftp->ssh_version = ssh_get_openssh_version(ftp->session);
+	if (!ftp->ssh_version) {
 		ftp_err("Couldn't initialise connection to server\n");
 		return -1;
+	}
+
+	ftp->sftp_session = sftp_new(ftp->session);
+	if (!ftp->sftp_session)
+	{
+		ftp_err("Couldn't initialise ftp subsystem: %s\n", ssh_get_error(ftp->session));
+		ssh_disconnect(ftp->session);
+		ssh_free(ftp->session);
+		ftp->session = NULL;
+		return -1;
+	}
+
+	r = sftp_init(ftp->sftp_session);
+	if (r != SSH_OK)
+	{
+		ftp_err("Couldn't initialise ftp subsystem: %s\n", ssh_get_error(ftp->sftp_session));
+		sftp_free(ftp->sftp_session);
+		ftp->sftp_session = NULL;
+		ssh_disconnect(ftp->session);
+		ssh_free(ftp->session);
+		ftp->session = NULL;
+		return r;
 	}
 
 	ftp->connected = true;
 	ftp->loggedin = true;
 
+	free(ftp->homedir);
 	ftp->homedir = ftp_getcurdir();
 
 	url_destroy(ftp->url);
 	ftp->url = url_clone(urlp);
 
+	free(ftp->curdir);
 	ftp->curdir = xstrdup(ftp->homedir);
+	free(ftp->prevdir);
 	ftp->prevdir = xstrdup(ftp->homedir);
-	if(ftp->url->directory)
+	if (ftp->url->directory)
 		ftp_chdir(ftp->url->directory);
 
 	ftp_get_feat();
-
 	return 0;
 }
 

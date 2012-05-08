@@ -17,8 +17,9 @@
 #include "xmalloc.h"
 #include "ftpsigs.h"
 #include "gvars.h"
+#ifdef HAVE_LIBSSH
 #include "ssh_cmd.h"
-#include "ssh_ftp.h"
+#endif
 
 static int ftp_pasv(unsigned char result[6])
 {
@@ -118,9 +119,11 @@ static int ftp_init_transfer(void)
 
 int ftp_type(transfer_mode_t type)
 {
-	if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+	if (ftp->session)
 		/* FIXME: is this relevant for ssh ? */
 		return 0;
+#endif
 
 	if(type == tmCurrent)
 		return 0;
@@ -144,9 +147,11 @@ int ftp_abort(FILE *fp)
 	fd_set ready;
 	struct timeval poll;
 
-	if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+	if(ftp->session)
 		/* FIXME: what? */
 		return 0;
+#endif
 
 	if(!ftp_connected())
 		return -1;
@@ -539,8 +544,10 @@ int ftp_list(const char *cmd, const char *param, FILE *fp)
 	if(!cmd || !fp || !ftp_connected())
 		return -1;
 
-	if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+	if (ftp->session)
 		return ssh_list(cmd, param, fp);
+#endif
 
 	reset_transfer_info();
 	foo_hookf = 0;
@@ -671,8 +678,10 @@ static int ftp_do_receive(FILE *fp,
 int ftp_receive(const char *path, FILE *fp,
 				transfer_mode_t mode, ftp_transfer_func hookf)
 {
-	if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+	if(ftp->session)
 		return ssh_do_receive(path, fp, mode, hookf);
+#endif
 
 	if(ftp_init_receive(path, mode, hookf) != 0)
 		return -1;
@@ -794,10 +803,12 @@ int ftp_fxpfile(Ftp *srcftp, const char *srcfile,
 		return -1;
 	}
 
-	if(ftp->ssh_pid) {
+#ifdef HAVE_LIBSSH
+	if(ftp->session) {
 		ftp_err("FxP with SSH not implemented\n");
 		return -1;
 	}
+#endif
 
 	thisftp = ftp; /* save currently active connection */
 
@@ -939,7 +950,9 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 	rp = ftp->restart_offset;
 
 	reset_transfer_info();
-	if(ftp->ssh_pid) {
+#ifdef HAVE_LIBSSH
+	if (ftp->session)
+	{
 		/* we need to stat the remote file, so we are sure we can read it
 		 * this needs to be done before we call ssh_do_receive, because by
 		 * then, the file is created, and would leave a zero-size file opon
@@ -953,7 +966,10 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 		/* FIXME: how can we check if it will be possible to transfer
 		 * the specified file?
 		 */
-	} else if(ftp_init_receive(infile, mode, hookf) != 0)
+	}
+	else
+#endif
+	if (ftp_init_receive(infile, mode, hookf) != 0)
 		return -1;
 
 	if(how == getPipe) {
@@ -987,9 +1003,11 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 
 	foo_hookf = hookf;
 
-	if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+	if(ftp->session)
 		r = ssh_do_receive(infile, fp, mode, hookf);
 	else
+#endif
 		r = ftp_do_receive(fp, mode, hookf);
 	close_func(fp);
 	return r;
@@ -1054,9 +1072,11 @@ int ftp_putfile(const char *infile, const char *outfile, putmode_t how,
 
 	foo_hookf = hookf;
 
-	if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+	if(ftp->session)
 		r = ssh_send(outfile, fp, how, mode, hookf);
 	else
+#endif
 		r = ftp_send(outfile, fp, how, mode, hookf);
 	fclose(fp);
 	return r;

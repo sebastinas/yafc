@@ -25,6 +25,11 @@
 #include "rglob.h"
 #include "args.h"
 
+#ifdef HAVE_LIBSSH
+#include <libssh/libssh.h>
+#include <libssh/sftp.h>
+#endif
+
 #define MAXREPLY 512      /* max size of (one line of) reply string */
 
 #define FTP_BUFSIZ 4096
@@ -119,13 +124,12 @@ typedef struct Ftp
 	list *cache;             /* list of rdirectory */
 	list *dirs_to_flush;     /* list of (char *) */
 
-	pid_t ssh_pid;           /* process id of ssh program, or 0 if
-							  * ssh is not in use */
-	args_t *ssh_args;
-	int ssh_in, ssh_out;     /* file descriptors for use by ssh */
+#ifdef HAVE_LIBSSH
+	ssh_session session;
+	sftp_session sftp_session;
 	int ssh_version;
 	unsigned int ssh_id;
-	int ssh_last_status;
+#endif
 
 	char reply[MAXREPLY+1];  /* last reply string from server */
 

@@ -16,8 +16,9 @@
 #include "xmalloc.h"
 #include "strq.h"
 #include "gvars.h"
+#ifdef HAVE_LIBSSH
 #include "ssh_cmd.h"
-#include "sftp-common.h"
+#endif
 #include "args.h"
 
 /* in cmd.c */
@@ -51,8 +52,11 @@ Ftp *ftp_create(void)
 /*  ftp->out_buffer = 0;*/
 #endif
     ftp->LIST_type = ltUnknown;
-    ftp->ssh_id = 1;
-    ftp->ssh_args = args_create();
+#ifdef HAVE_LIBSSH
+		ftp->session = NULL;
+		ftp->sftp_session = NULL;
+		ftp->ssh_id = 1;
+#endif
 
     return ftp;
 }
@@ -125,8 +129,6 @@ void ftp_destroy(Ftp *ftp)
     free(ftp->curdir);
     free(ftp->prevdir);
     list_free(ftp->taglist);
-    args_destroy(ftp->ssh_args);
-    ftp->ssh_args = 0;
 
 #ifdef SECFTP
     sec_end();
@@ -177,16 +179,20 @@ void ftp_reset_vars(void)
     host_destroy(ftp->host);
     ftp->host = 0;
 
-    if(ftp->ssh_pid) {
-        ftp->ssh_pid = 0;
-        close(ftp->ssh_in);
-        close(ftp->ssh_out);
-        ftp->ssh_id = 0;
-    }
-    args_clear(ftp->ssh_args);
+#ifdef HAVE_LIBSSH
+		ftp->ssh_id = 0;
+		if (ftp->session)
+		{
+			sftp_free(ftp->sftp_session);
+			ssh_disconnect(ftp->session);
+			ssh_free(ftp->session);
+			ftp->sftp_session = NULL;
+			ftp->session = NULL;
+		}
+#endif
 
     url_destroy(ftp->url);
-    ftp->url = 0;
+    ftp->url = NULL;
 
     ftp->connected = false;
     ftp->loggedin = false;
@@ -513,8 +519,10 @@ const char *ftp_getreply(bool withcode)
 {
     char *r = ftp->reply;
 
-    if(ftp->ssh_pid)
-        return fx2txt(ftp->ssh_last_status);
+#ifdef HAVE_LIBSSH
+    if (ftp->session)
+        return ssh_get_error(ftp->session);
+#endif
 
     if(withcode)
         return r;
@@ -690,12 +698,17 @@ int ftp_cmd(const char *cmd, ...)
 
 void ftp_quit(void)
 {
-    if(ftp_connected() && !ftp->ssh_pid) {
-        ftp_reply_timeout(10);
-        ftp_set_tmp_verbosity(vbCommand);
-        ftp_cmd("QUIT");
-    }
-    ftp_close();
+#ifdef HAVE_LIBSSH
+	if (ftp_connected() && !ftp->session)
+#else
+	if (ftp_connected())
+#endif
+	{
+		ftp_reply_timeout(10);
+    ftp_set_tmp_verbosity(vbCommand);
+    ftp_cmd("QUIT");
+  }
+  ftp_close();
 }
 
 int ftp_get_verbosity(void)
@@ -848,9 +861,11 @@ int ftp_login(const char *guessed_username, const char *anonpass)
     if(!ftp->url)
         return -1;
 
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if (ftp->session)
         /* login authentication is performed by the ssh program */
         return 0;
+#endif
 
     ptype = proxy_type(ftp->url);
     if(purl) {
@@ -1056,13 +1071,19 @@ bool ftp_loggedin(void)
 
 bool ftp_connected(void)
 {
-    return (ftp->connected && (sock_connected(ftp->ctrl) || ftp->ssh_pid));
+#ifdef HAVE_LIBSSH
+	return (ftp->connected && (sock_connected(ftp->ctrl) || ftp->session));
+#else
+	return (ftp->connected && sock_connected(ftp->ctrl));
+#endif
 }
 
 char *ftp_getcurdir(void)
 {
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if (ftp->session)
         return ssh_getcurdir();
+#endif
 
     ftp_set_tmp_verbosity(vbNone);
     ftp_cmd("PWD");
@@ -1102,8 +1123,10 @@ static void ftp_update_curdir(void)
 
 int ftp_chdir(const char *path)
 {
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if (ftp->session)
         return ssh_chdir(path);
+#endif
 
     ftp_set_tmp_verbosity(vbCommand);
     ftp_cmd("CWD %s", path);
@@ -1150,8 +1173,10 @@ int ftp_chdir(const char *path)
 
 int ftp_cdup(void)
 {
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if(ftp->session)
         return ssh_cdup();
+#endif
 
     ftp_set_tmp_verbosity(vbCommand);
     ftp_cmd("CDUP");
@@ -1166,8 +1191,10 @@ static int ftp_mkdir_verb(const char *path, verbose_t verb)
 {
     char *p;
 
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if(ftp->session)
         return ssh_mkdir_verb(path, verb);
+#endif
 
     p = xstrdup(path);
     stripslash(p);
@@ -1189,8 +1216,10 @@ int ftp_rmdir(const char *path)
 {
     char *p;
 
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if(ftp->session)
         return ssh_rmdir(path);
+#endif
 
     p = xstrdup(path);
     stripslash(p);
@@ -1206,8 +1235,10 @@ int ftp_rmdir(const char *path)
 
 int ftp_unlink(const char *path)
 {
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if(ftp->session)
         return ssh_unlink(path);
+#endif
 
     ftp_cmd("DELE %s", path);
     if(ftp->code == ctComplete) {
@@ -1219,8 +1250,10 @@ int ftp_unlink(const char *path)
 
 int ftp_chmod(const char *path, const char *mode)
 {
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if(ftp->session)
         return ssh_chmod(path, mode);
+#endif
 
     if(ftp->has_site_chmod_command) {
         ftp_set_tmp_verbosity(vbNone);
@@ -1244,8 +1277,10 @@ void ftp_reply_timeout(unsigned int secs)
 
 int ftp_idle(const char *idletime)
 {
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if(ftp->session)
         return ssh_idle(idletime);
+#endif
 
     if(!ftp->has_site_idle_command) {
         ftp_err(_("Server doesn't support SITE IDLE\n"));
@@ -1265,8 +1300,10 @@ int ftp_idle(const char *idletime)
 
 int ftp_noop(void)
 {
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if(ftp->session)
         return ssh_noop();
+#endif
 
     ftp_set_tmp_verbosity(vbCommand);
     ftp_cmd("NOOP");
@@ -1275,8 +1312,10 @@ int ftp_noop(void)
 
 int ftp_help(const char *arg)
 {
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if(ftp->session)
         return ssh_help(arg);
+#endif
 
     ftp_set_tmp_verbosity(vbCommand);
     if(arg)
@@ -1290,8 +1329,10 @@ unsigned long long ftp_filesize(const char *path)
 {
     unsigned long long ret;
 
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if(ftp->session)
         return ssh_filesize(path);
+#endif
 
     if(!ftp->has_size_command)
         return -1;
@@ -1319,8 +1360,10 @@ rdirectory *ftp_read_directory(const char *path)
     char *dir;
     bool is_mlsd = false;
 
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if(ftp->session)
         return ssh_read_directory(path);
+#endif
 
     dir = ftp_path_absolute(path);
     stripslash(dir);
@@ -1545,8 +1588,10 @@ void ftp_flush_reply(void)
     if(!ftp_connected())
         return;
 
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if (ftp->session)
         return;
+#endif
 
 /*  ftp_set_signal(SIGINT, SIG_IGN);*/
     fprintf(stderr, "flushing replies...\r");
@@ -1575,8 +1620,10 @@ int ftp_rename(const char *oldname, const char *newname)
     char *on;
     char *nn;
 
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if (ftp->session)
         return ssh_rename(oldname, newname);
+#endif
 
     on = xstrdup(oldname);
     stripslash(on);
@@ -1699,8 +1746,10 @@ time_t ftp_filetime(const char *filename)
     if(!ftp_connected())
         return -1;
 
-    if(ftp->ssh_pid)
+#ifdef HAVE_LIBSSH
+    if(ftp->session)
         return ssh_filetime(filename);
+#endif
 
     if(!ftp->has_mdtm_command)
         return -1;
@@ -1749,10 +1798,13 @@ int ftp_maybe_isdir(rfile *fp)
 
 void ftp_pwd(void)
 {
-    if(ftp->ssh_pid) {
+#ifdef HAVE_LIBSSH
+    if (ftp->session)
+		{
         ssh_pwd();
         return;
     }
+#endif
 
     ftp_set_tmp_verbosity(vbCommand);
     ftp_cmd("PWD");
