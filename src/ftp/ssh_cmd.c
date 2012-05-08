@@ -31,6 +31,9 @@
 #include "gvars.h"
 /*#include "pathnames.h"*/
 #include "rfile.h"
+#ifdef HAVE_SYS_STAT_H
+#include <sys/stat.h>
+#endif
 
 /* from libssh examples */
 static int verify_knownhost(ssh_session session)
@@ -105,7 +108,7 @@ static int verify_knownhost(ssh_session session)
 
 static int authenticate_pubkey(ssh_session session)
 {
-  return ssh_userauth_publickey_auto(session, NULL);
+  return ssh_userauth_autopubkey(session, NULL);
 }
 
 static int authenticate_password(ssh_session session)
@@ -276,7 +279,7 @@ int ssh_open_url(url_t* urlp)
 
 char *ssh_getcurdir(void)
 {
-	char *ret = ssh_realpath(".");
+	char *ret = sftp_canonicalize_path(ftp->sftp_session, ".");
 	if(!ret)
 		return xstrdup("CWD?");
 	stripslash(ret);
@@ -285,7 +288,6 @@ char *ssh_getcurdir(void)
 
 int ssh_chdir(const char *path)
 {
-	Attrib *aa;
 	char *p = ftp_path_absolute(path);
 	bool isdir = false;
 
@@ -299,23 +301,25 @@ int ssh_chdir(const char *path)
 		rfile *rf = ftp_cache_get_file(p);
 		isdir = (rf && risdir(rf));
 	}
-	if(!isdir) {
-		if ((aa = ssh_stat(p)) == 0) {
+	if (!isdir)
+	{
+		sftp_attributes attrib = sftp_stat(ftp->sftp_session, p);
+		if (!attrib)
+		{
+			ftp_err("Couldn't stat directory: %s\n", ssh_get_error(ftp->session));
 			free(p);
 			return -1;
 		}
-		if (!(aa->flags & SSH2_FILEXFER_ATTR_PERMISSIONS)) {
-			ftp_err("Can't change directory: Can't check target");
-			free(p);
-			return -1;
-		}
-		if (!S_ISDIR(aa->perm)) {
+		if (!S_ISDIR(attrib->permissions)) {
 			ftp_err("%s: not a directory\n", p);
+			sftp_attributes_free(attrib);
 			free(p);
 			return -1;
 		}
+		sftp_attributes_free(attrib);
 	}
 	ftp_update_curdir_x(p);
+	free(p);
 
 	return 0;
 }
@@ -364,17 +368,15 @@ int ssh_rmdir(const char *path)
 
 int ssh_unlink(const char *path)
 {
-	u_int status, id;
-
-	id = ftp->ssh_id++;
-	ssh_send_string_request(id, SSH2_FXP_REMOVE, path, strlen(path));
-	status = ssh_get_status(id);
-	if(status != SSH2_FX_OK) {
-/*		ftp_err("Couldn't delete file: %s\n", fx2txt(status));*/
+	int rc = sftp_unlink(ftp->sftp_session, path);
+	if (rc != SSH_OK && sftp_get_error(ftp->sftp_session) != SSH_FX_NO_SUCH_FILE)
+	{
+		ftp_err("Couldn't delete file: %s\n", ssh_get_error(ftp->session));
 		ftp->code = ctError;
 		ftp->fullcode = 500;
 		return -1;
-	} else
+	}
+	else
 		ftp_cache_flush_mark_for(path);
 
 	return 0;
@@ -384,13 +386,13 @@ int ssh_unlink(const char *path)
  */
 int ssh_chmod(const char *path, const char *mode)
 {
-	Attrib a;
-
-	attrib_clear(&a);
-	a.flags |= SSH2_FILEXFER_ATTR_PERMISSIONS;
-	a.perm = strtoul(mode, 0, 8);
-	if(ssh_setstat(path, &a) == -1)
+	mode_t perm = strtoul(mode, 0, 9);
+	int rc = sftp_chmod(ftp->sftp_session, path, perm);
+	if (rc != SSH_OK)
+	{
+		ftp_err("Couldn't chmod file: %s\n", ssh_get_error(ftp->session));
 		return -1;
+	}
 	ftp_cache_flush_mark_for(path);
 	return 0;
 }
@@ -410,85 +412,75 @@ int ssh_help(const char *arg)
 	return 0;
 }
 
-unsigned long ssh_filesize(const char *path)
+uint64_t ssh_filesize(const char *path)
 {
-	Attrib *a = ssh_stat(path);
-	return a ? a->size : 0;
+	sftp_attributes attrib = sftp_stat(ftp->sftp_session, path);
+	if (!attrib)
+		return 0;
+
+	uint64_t res = attrib->size;
+	sftp_attributes_free(attrib);
+	return res;
 }
 
 rdirectory *ssh_read_directory(const char *path)
 {
-	rdirectory *rdir;
-	int i;
-	SFTP_DIRENT **dir;
 	char *p = ftp_path_absolute(path);
 	stripslash(p);
 
-	if(ssh_readdir(p, &dir) != 0) {
+	sftp_dir dir = sftp_opendir(ftp->sftp_session, p);
+	if (!dir)
+	{
 		free(p);
 		return 0;
 	}
 
-	rdir = rdir_create();
-
 	ftp_trace("*** start parsing directory listing ***\n");
+	rdirectory* rdir = rdir_create();
+	sftp_attributes attrib = NULL;
+	while ((attrib = sftp_readdir(ftp->sftp_session, dir)) != NULL)
+	{
+		ftp_trace("%s\n", attrib->longname);
 
-	for(i = 0; dir[i]; i++) {
-		rfile *rf;
-		char *e, *cf = dir[i]->longname;
+		rfile* rf = rfile_create();
+		rf->perm = perm2string(attrib->permissions);
 
-		ftp_trace("%s\n", dir[i]->longname);
+		rf->nhl = 0; // atoi(e);
+		if (attrib->owner)
+			rf->owner = xstrdup(attrib->owner);
+		if (attrib->group)
+			rf->group = xstrdup(attrib->group);
 
-		rf = rfile_create();
-
-		rf->perm = perm2string(dir[i]->a.perm);
-
-		e = strqsep(&cf, ' ');  /* skip permissions */
-		e = strqsep(&cf, ' ');  /* nhl? */
-/*		if(ftp->ssh_version > 2) {*/
-			rf->nhl = atoi(e);
-/*		} else*/
-/*			rf->nhl = 0;*/
-#if 1
-		e = strqsep(&cf, ' ');
-		rf->owner = xstrdup(e);
-		e = strqsep(&cf, ' ');
-		rf->group = xstrdup(e);
-#else
-		asprintf(&rf->owner, "%d", dir[i]->a.uid);
-		asprintf(&rf->group, "%d", dir[i]->a.gid);
-#endif
-
-		asprintf(&rf->path, "%s/%s", p, dir[i]->filename);
-		rf->mtime = dir[i]->a.mtime;
-		if(rf->mtime == 0) {
-			char *m, *d, *y;
-			while(e && month_number(e) == -1)
-				e = strqsep(&cf, ' ');
-			if(e) {
-				m = e;
-				d = strqsep(&cf, ' ');
-				y = strqsep(&cf, ' ');
-				ftp_trace("parsing time: m:%s d:%s y:%s\n", m, d, y);
-				rfile_parse_time(rf, m, d, y);
-			}
-		}
+		asprintf(&rf->path, "%s/%s", p, attrib->name);
+		rf->mtime = attrib->mtime;
 		rf->date = time_to_string(rf->mtime);
-		rf->size = dir[i]->a.size;
+		rf->size = attrib->size;
 		rfile_parse_colors(rf);
 
-		rf->link = 0;
-		if(rislink(rf) && ftp->ssh_version > 2)
-			rf->link = ssh_readlink(rf->path);
+		rf->link = NULL;
+		if (rislink(rf))
+		{
+			char* tmp = sftp_readlink(ftp->sftp_session, rf->path);
+			if (tmp)
+				rf->link = xstrdup(tmp);
+		}
 
 		list_additem(rdir->files, (void *)rf);
+		sftp_attributes_free(attrib);
 	}
 	ftp_trace("*** end parsing directory listing ***\n");
 
-	ssh_free_dirents(dir);
+	if (!sftp_dir_eof(dir))
+	{
+		ftp_err("Couldn't list directory: %s\n", ssh_get_error(ftp->session));
+		sftp_closedir(dir);
+		free(p);
+		rdir_destroy(rdir);
+		return NULL;
+	}
 
+	sftp_closedir(dir);
 	rdir->path = p;
-
 	ftp_trace("added directory '%s' to cache\n", p);
 	list_additem(ftp->cache, rdir);
 
@@ -497,30 +489,16 @@ rdirectory *ssh_read_directory(const char *path)
 
 int ssh_rename(const char *oldname, const char *newname)
 {
-	Buffer msg;
-	u_int status, id;
-	char *on, *nn;
-
-	buffer_init(&msg);
-
-	on = ftp_path_absolute(oldname);
-	nn = ftp_path_absolute(newname);
+	char* on = ftp_path_absolute(oldname);
+	char* nn = ftp_path_absolute(newname);
 	stripslash(on);
 	stripslash(nn);
 
-	/* Send rename request */
-	id = ftp->ssh_id++;
-	buffer_put_char(&msg, SSH2_FXP_RENAME);
-	buffer_put_int(&msg, id);
-	buffer_put_cstring(&msg, on);
-	buffer_put_cstring(&msg, nn);
-	ssh_cmd( &msg);
-	buffer_free(&msg);
-
-	status = ssh_get_status(id);
-	if(status != SSH2_FX_OK) {
+	int rc = sftp_rename(ftp->sftp_session, on, nn);
+	if (rc != SSH_OK)
+	{
 		ftp_err("Couldn't rename file \"%s\" to \"%s\": %s\n",
-				on, nn, fx2txt(status));
+				on, nn, ssh_get_error(ftp->session));
 		free(on);
 		free(nn);
 		return -1;
@@ -535,8 +513,13 @@ int ssh_rename(const char *oldname, const char *newname)
 
 time_t ssh_filetime(const char *filename)
 {
-	Attrib *a = ssh_stat(filename);
-	return a ? a->mtime : -1;
+	sftp_attributes attrib = sftp_stat(ftp->sftp_session, filename);
+	if (!attrib)
+		return -1;
+
+	time_t res = attrib->mtime; /* mtime 64? */
+	sftp_attributes_free(attrib);
+	return res;
 }
 
 int ssh_list(const char *cmd, const char *param, FILE *fp)
@@ -552,7 +535,7 @@ void ssh_pwd(void)
 }
 
 int ssh_do_receive(const char *infile, FILE *fp, getmode_t mode,
-				   ftp_transfer_func hookf)
+					 ftp_transfer_func hookf)
 {
 	int r;
 	rfile *f;
@@ -604,7 +587,7 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
 				else
 					ftp->ti.local_name = xstrndup(e, l-1);
 				ftp_trace("parsed unique filename as '%s'\n",
-						  ftp->ti.local_name);
+							ftp->ti.local_name);
 			}
 		}
 #endif

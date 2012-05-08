@@ -25,7 +25,7 @@ int ssh_chmod(const char *path, const char *mode);
 int ssh_idle(const char *idletime);
 int ssh_noop(void);
 int ssh_help(const char *arg);
-unsigned long ssh_filesize(const char *path);
+uint64_t ssh_filesize(const char *path);
 rdirectory *ssh_read_directory(const char *path);
 int ssh_rename(const char *oldname, const char *newname);
 time_t ssh_filetime(const char *filename);
