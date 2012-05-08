@@ -958,11 +958,12 @@ int ftp_getfile(const char *infile, const char *outfile, getmode_t how,
 		 * then, the file is created, and would leave a zero-size file opon
 		 * failure
 		 */
-		Attrib *a = ssh_stat(infile);
-		if(a == 0) {
-			ftp_err(_("Unable to stat file '%s'\n"), infile);
+		sftp_attributes a = sftp_stat(ftp->sftp_session, infile);
+		if(!a) {
+			ftp_err(_("Unable to stat file '%s': %s\n"), infile, ssh_get_error(ftp->session));
 			return -1;
 		}
+		sftp_attributes_free(a);
 		/* FIXME: how can we check if it will be possible to transfer
 		 * the specified file?
 		 */
