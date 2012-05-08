@@ -55,7 +55,8 @@ AC_CHECK_HEADERS(unistd.h \
                  sys/ioctl.h \
                  memory.h \
                  setjmp.h \
-                 errno.h
+                 errno.h \
+                 fcntl.h
 )
 
 AC_CHECK_HEADERS(dirent.h, [], [
