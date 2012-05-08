@@ -44,17 +44,6 @@ trace off
 # waiting for the directory listing to be downloaded.
 waiting_dots on
 
-# path to the SSH program
-#ssh_program "/usr/bin/ssh"
-
-# Custom options that will be passed to the SSH program
-#ssh_option "-c blowfish"
-
-# Path to the remote sftp-server program (global option)
-# Leave commented to use sftp subsystem (requires ssh > 2.3.0)
-# See also the per-bookmark 'sftp' keyword
-#sftp_server_program "/usr/libexec/sftp-server"
-
 # set to true to skip query of remote system on connect
 inhibit_startup_syst no
 

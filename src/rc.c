@@ -420,18 +420,6 @@ int parse_rc(const char *file, bool warn)
 			NEXTSTR;
 			free(gvPrompt3);
 			gvPrompt3 = xstrdup(e);
-		} else if(strcasecmp(e, "ssh_program") == 0) {
-			NEXTSTR;
-			free(gvSSHProgram);
-			gvSSHProgram = xstrdup(e);
-		} else if(strcasecmp(e, "ssh_options") == 0) {
-			NEXTSTR;
-			free(gvSSHOptions);
-			gvSSHOptions = xstrdup(e);
-		} else if(strcasecmp(e, "sftp_server_program") == 0) {
-			NEXTSTR;
-			free(gvSFTPServerProgram);
-			gvSFTPServerProgram = xstrdup(e);
 		} else if(strcasecmp(e, "xterm_title_terms") == 0) {
 			NEXTSTR;
 			free(gvXtermTitleTerms);

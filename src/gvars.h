@@ -39,17 +39,6 @@ extern bool gvReverseDNS;
 /* add ... while waiting for a completion? */
 extern bool gvWaitingDots;
 
-/* path to the SSH program */
-extern char *gvSSHProgram ;
-
-/* custom user options like -C */
-extern char *gvSSHOptions ;
-
-/* path to the remote sftp-server program
- * leave blank to use sftp subsystem
- */
-extern char *gvSFTPServerProgram;
-
 /* automatically reconnect on connection timeout */
 extern bool gvAutoReconnect;
 

@@ -147,6 +147,8 @@ AC_DEFUN([YAFC_KRB5_CHECK],
       AC_DEFINE([HAVE_KRB5_HEIMDAL], [1], [define if you have Kerberos 5 - Heimdal])
     fi
     yafc_found_krb5_inc_flags="`$KRB5CONFIG --cflags krb5 gssapi`"
+    dnl yafc_found_krb5_lib_libs="`$KRB5CONFIG --libs krb5 gssapi | $AWK -v RS=' ' '/^-l/ { printf \"%s \", $1 }'`"
+    dnl yafc_found_krb5_lib_flags="`$KRB5CONFIG --libs krb5 gssapi | $AWK -v RS=' ' '!/^-l/ { printf \"%s \", $1 }'`"
     yafc_found_krb5_lib_libs="`$KRB5CONFIG --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if ($i ~ \"^-l.*\"){ printf \"%s \", $i }}}'`"
     yafc_found_krb5_lib_flags="`$KRB5CONFIG --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if ($i !~ \"^-l.*\"){ printf \"%s \", $i }}}'`"
 
