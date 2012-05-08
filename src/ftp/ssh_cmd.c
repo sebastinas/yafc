@@ -327,53 +327,38 @@ int ssh_cdup(void)
 
 int ssh_mkdir_verb(const char *path, verbose_t verb)
 {
-	Attrib a;
-	u_int status, id;
-	char *abspath;
-
-	attrib_clear(&a);
-	a.flags |= SSH2_FILEXFER_ATTR_PERMISSIONS;
-	a.perm = 0777;
-
-	id = ftp->ssh_id++;
-	abspath = ftp_path_absolute(path);
+	char* bspath = ftp_path_absolute(path);
 	stripslash(abspath);
-	ssh_send_string_attrs_request(id, SSH2_FXP_MKDIR, abspath,
-								  strlen(abspath), &a);
 
-	status = ssh_get_status(id);
-	if(status != SSH2_FX_OK) {
-		ftp_err("Couldn't create directory: %s\n", fx2txt(status));
+	int r = sftp_mkdir(ftp->sftp_session, abspath, S_IRWXU);
+	if (rc != SSH_OK && sftp_get_error(ftp->sftp_session) != SSH_FX_FILE_ALREADY_EXISTS)
+	{
+		ftp_err("Couldn't create directory: %s\n", ssh_get_error(session));
 		free(abspath);
-		return -1;
+		return rc;
 	}
+
 	ftp_cache_flush_mark_for(abspath);
 	free(abspath);
-
 	return 0;
 }
 
 int ssh_rmdir(const char *path)
 {
-	char *p;
-	u_int status, id;
+	char* bspath = ftp_path_absolute(path);
+	stripslash(abspath);
 
-	p = ftp_path_absolute(path);
-	stripslash(p);
-
-	id = ftp->ssh_id++;
-	ssh_send_string_request(id, SSH2_FXP_RMDIR, p, strlen(p));
-
-	status = ssh_get_status(id);
-	if(status != SSH2_FX_OK) {
-		ftp_err("Couldn't remove directory: %s\n", fx2txt(status));
-		free(p);
-		return -1;
+	int r = sftp_rmdir(ftp->sftp_session, abspath);
+	if (rc != SSH_OK && sftp_get_error(ftp->sftp_session) != SSH_FX_NO_SUCH_FILE)
+	{
+		ftp_err("Couldn't remove directory: %s\n", ssh_get_error(session));
+		free(abspath);
+		return rc;
 	}
-	ftp_cache_flush_mark(p);
-	ftp_cache_flush_mark_for(p);
-	free(p);
 
+	ftp_cache_flush_mark(abspath);
+	ftp_cache_flush_mark_for(abspath);
+	free(abspath);
 	return 0;
 }
 

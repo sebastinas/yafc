@@ -2,6 +2,12 @@
 
 noinst_LIBRARIES = libftp.a
 
+if HAVE_LIBSSH
+SSHSRCS = ssh_cmd.c
+else
+SSHSRCS =
+endif
+
 libftp_a_SOURCES = ftp.c \
 									 socket.c \
 									 host.c \
@@ -13,10 +19,8 @@ libftp_a_SOURCES = ftp.c \
 									 cache.c \
 									 ftpsend.c \
 									 ftpsigs.c \
-if HAVE_LIBSSH
-									 ssh_cmd.c \
-endif
-									 atomicio.c
+									 atomicio.c \
+									 $(SSHSRCS)
 
 noinst_HEADERS = ftp.h \
 								 socket.h \
