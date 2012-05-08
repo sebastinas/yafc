@@ -29,7 +29,6 @@
 #include "ftp.h"
 #include "strq.h"
 #include "gvars.h"
-/*#include "pathnames.h"*/
 #include "rfile.h"
 #ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
@@ -38,8 +37,12 @@
 #include <fcntl.h>
 #endif
 
+#if defined(BUFSIZ) && BUFSIZ < 16384
+#undef BUFSIZ
+#endif
+
 #ifndef BUFSIZ
-#define BUFSIZ 8192
+#define BUFSIZ 16384
 #endif
 
 /* from libssh examples */
@@ -123,13 +126,24 @@ static int authenticate_pubkey(ssh_session session)
   return ssh_userauth_autopubkey(session, NULL);
 }
 
-static int authenticate_password(ssh_session session)
+static int authenticate_password(ssh_session session, const char* password)
 {
-  char* password = getpass("Enter your password: ");
-  return ssh_userauth_password(session, NULL, password);
+  if (password)
+	  return ssh_userauth_password(session, NULL, password);
+
+	if (!ftp->getpass_hook)
+		return SSH_AUTH_ERROR;
+
+	char* pw = ftp->getpass_hook(_("password: "));
+	if (!pw)
+		return SSH_AUTH_ERROR;
+
+	int rc = return ssh_userauth_password(session, NULL,pw);
+	free(pw);
+	return rc;
 }
 
-static int test_several_auth_methods(ssh_session session)
+static int test_several_auth_methods(ssh_session session, const char* password)
 {
   int rc = ssh_userauth_none(session, NULL);
   /* if (rc != SSH_AUTH_SUCCESS) {
@@ -138,29 +152,25 @@ static int test_several_auth_methods(ssh_session session)
 
   int method = ssh_userauth_list(session, NULL);
   if (method & SSH_AUTH_METHOD_NONE)
-  { // For the source code of function authenticate_none(),
-    // refer to the corresponding example
-    rc = authenticate_none(session);
+  {
+		rc = authenticate_none(session);
     if (rc == SSH_AUTH_SUCCESS) return rc;
   }
   if (method & SSH_AUTH_METHOD_PUBLICKEY)
-  { // For the source code of function authenticate_pubkey(),
-    // refer to the corresponding example
-    rc = authenticate_pubkey(session);
+  {
+		rc = authenticate_pubkey(session);
     if (rc == SSH_AUTH_SUCCESS) return rc;
   }
 #if 0
   if (method & SSH_AUTH_METHOD_INTERACTIVE)
-  { // For the source code of function authenticate_kbdint(),
-    // refer to the corresponding example
-    rc = authenticate_kbdint(session);
+  {
+		rc = authenticate_kbdint(session);
     if (rc == SSH_AUTH_SUCCESS) return rc;
   }
 #endif
   if (method & SSH_AUTH_METHOD_PASSWORD)
-  { // For the source code of function authenticate_password(),
-    // refer to the corresponding example
-    rc = authenticate_password(session);
+  {
+		rc = authenticate_password(session, password);
     if (rc == SSH_AUTH_SUCCESS) return rc;
   }
   return SSH_AUTH_ERROR;
@@ -592,7 +602,7 @@ static int do_read(const char* infile, FILE* fp, getmode_t mode,
 		}
 
 		errno = 0;
-		if (fwrite(buffer, sizeof(char), nbytes, fp) != nbytes)
+		if (fwrite(buffer, nbytes, 1, fp) != 1)
 		{
 			ftp_err("Error while writing to file: %s\n", strerror(errno));
 			ftp->ti.ioerror = true;
@@ -641,8 +651,8 @@ int ssh_do_receive(const char *infile, FILE *fp, getmode_t mode,
 	return (r == 0 && !ftp->ti.ioerror && !ftp->ti.interrupted) ? 0 : -1;
 }
 
-static do_write(const char* path, FILE* fp, ftp_transfer_func hookf,
-							  uint64_t offset)
+static int do_write(const char* path, FILE* fp, ftp_transfer_func hookf,
+							      uint64_t offset)
 {
 	time_t then = time(NULL) - 1;
 	ftp_set_close_handler();
