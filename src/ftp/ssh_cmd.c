@@ -129,7 +129,7 @@ static int authenticate_pubkey(ssh_session session)
 static int authenticate_password(ssh_session session, const char* password)
 {
   if (password)
-	  return ssh_userauth_password(session, NULL, password);
+		return ssh_userauth_password(session, NULL, password);
 
 	if (!ftp->getpass_hook)
 		return SSH_AUTH_ERROR;
@@ -138,7 +138,7 @@ static int authenticate_password(ssh_session session, const char* password)
 	if (!pw)
 		return SSH_AUTH_ERROR;
 
-	int rc = return ssh_userauth_password(session, NULL,pw);
+	int rc = ssh_userauth_password(session, NULL, pw);
 	free(pw);
 	return rc;
 }
@@ -189,11 +189,12 @@ int ssh_open_url(url_t* urlp)
 		ssh_options_set(ftp->session, SSH_OPTIONS_LOG_VERBOSITY, &verbosity);
 	}
 
-	/* set host name and port */
+	/* set host name */
 	ssh_options_set(ftp->session, SSH_OPTIONS_HOST, urlp->hostname);
-	if (urlp->port)
+	/* if we have port use that one */
+	if (urlp->port > 0)
 		ssh_options_set(ftp->session, SSH_OPTIONS_PORT, &urlp->port);
-	
+
 	/* parse .ssh/config */
 	int r = ssh_options_parse_config(ftp->session, NULL); 
 	if (r != SSH_OK)
@@ -204,20 +205,9 @@ int ssh_open_url(url_t* urlp)
 		return r;
 	}
 	
-	/* get user name */
-	char* default_username = gvUsername;
-	// ssh_options_get(ftp->session, SSH_OPTIONS_USER, &default_username);
-	r = get_username(urlp, default_username, false);
-	// ssh_string_free_char(default_username);
-	if (r)
-	{
-		ssh_free(ftp->session);
-		ftp->session = NULL;
-		return r;
-	}
-
-	/* set user name */
-	ssh_options_set(ftp->session, SSH_OPTIONS_USER, urlp->username);
+	/* if we have username use that one */
+	if (urlp->username)
+		ssh_options_set(ftp->session, SSH_OPTIONS_USER, urlp->username);
 
 	/* connect to server */
 	r = ssh_connect(ftp->session);
@@ -239,7 +229,7 @@ int ssh_open_url(url_t* urlp)
 	}
 
 	/* authenticate user */
-	r = test_several_auth_methods(ftp->session);
+	r = test_several_auth_methods(ftp->session, urlp->password);
 	if (r != SSH_OK)
 	{
 		ftp_err("Authentication failed: %s\n", ssh_get_error(ftp->session));
@@ -652,7 +642,7 @@ int ssh_do_receive(const char *infile, FILE *fp, getmode_t mode,
 }
 
 static int do_write(const char* path, FILE* fp, ftp_transfer_func hookf,
-							      uint64_t offset)
+										uint64_t offset)
 {
 	time_t then = time(NULL) - 1;
 	ftp_set_close_handler();

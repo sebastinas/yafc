@@ -34,7 +34,7 @@ int ssh_receive(const char *path, FILE *fp,
 				transfer_mode_t mode, ftp_transfer_func hookf);
 void ssh_pwd(void);
 int ssh_do_receive(const char *infile, FILE *fp, getmode_t mode,
-				   ftp_transfer_func hookf);
+					 ftp_transfer_func hookf);
 int ssh_send(const char *path, FILE *fp, putmode_t how,
 			 transfer_mode_t mode, ftp_transfer_func hookf);
 
