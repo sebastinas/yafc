@@ -19,7 +19,6 @@ libftp_a_SOURCES = ftp.c \
 									 cache.c \
 									 ftpsend.c \
 									 ftpsigs.c \
-									 atomicio.c \
 									 $(SSHSRCS)
 
 noinst_HEADERS = ftp.h \
@@ -30,8 +29,6 @@ noinst_HEADERS = ftp.h \
 								 rdirectory.h \
 								 url.h \
 								 ftpsigs.h \
-								 atomicio.h \
-								 getput.h \
 								 ssh_cmd.h
 
 AM_CPPFLAGS = $(SSH_CFLAGS)
