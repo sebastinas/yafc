@@ -38,6 +38,10 @@
 #include <fcntl.h>
 #endif
 
+#ifndef BUFSIZ
+#define BUFSIZ 8192
+#endif
+
 /* from libssh examples */
 static int verify_knownhost(ssh_session session)
 {
