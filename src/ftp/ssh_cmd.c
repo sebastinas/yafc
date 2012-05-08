@@ -106,6 +106,11 @@ static int verify_knownhost(ssh_session session)
   return 0;
 }
 
+static int authenticate_none(ssh_session session)
+{
+  return ssh_userauth_none(session, NULL);
+}
+
 static int authenticate_pubkey(ssh_session session)
 {
   return ssh_userauth_autopubkey(session, NULL);
@@ -120,19 +125,17 @@ static int authenticate_password(ssh_session session)
 static int test_several_auth_methods(ssh_session session)
 {
   int rc = ssh_userauth_none(session, NULL);
-  if (rc != SSH_AUTH_SUCCESS) {
+  /* if (rc != SSH_AUTH_SUCCESS) {
       return rc;
-  }
+  } */
 
   int method = ssh_userauth_list(session, NULL);
-#if 0
   if (method & SSH_AUTH_METHOD_NONE)
   { // For the source code of function authenticate_none(),
     // refer to the corresponding example
     rc = authenticate_none(session);
     if (rc == SSH_AUTH_SUCCESS) return rc;
   }
-#endif
   if (method & SSH_AUTH_METHOD_PUBLICKEY)
   { // For the source code of function authenticate_pubkey(),
     // refer to the corresponding example
@@ -185,10 +188,10 @@ int ssh_open_url(url_t* urlp)
 	}
 	
 	/* get user name */
-	char* default_username = NULL;
-	ssh_options_get(ftp->session, SSH_OPTIONS_USER, &default_username);
+	char* default_username = gvUsername;
+	// ssh_options_get(ftp->session, SSH_OPTIONS_USER, &default_username);
 	r = get_username(urlp, default_username, false);
-	ssh_string_free_char(default_username);
+	// ssh_string_free_char(default_username);
 	if (r)
 	{
 		ssh_free(ftp->session);
@@ -458,12 +461,8 @@ rdirectory *ssh_read_directory(const char *path)
 		rfile_parse_colors(rf);
 
 		rf->link = NULL;
-		if (rislink(rf))
-		{
-			char* tmp = sftp_readlink(ftp->sftp_session, rf->path);
-			if (tmp)
-				rf->link = xstrdup(tmp);
-		}
+		if (rislink(rf) && ftp->ssh_version > 2)
+			rf->link = sftp_readlink(ftp->sftp_session, rf->path);
 
 		list_additem(rdir->files, (void *)rf);
 		sftp_attributes_free(attrib);
@@ -537,6 +536,7 @@ void ssh_pwd(void)
 int ssh_do_receive(const char *infile, FILE *fp, getmode_t mode,
 					 ftp_transfer_func hookf)
 {
+	/*
 	int r;
 	rfile *f;
 	u_int64_t offset = ftp->restart_offset;
@@ -554,12 +554,14 @@ int ssh_do_receive(const char *infile, FILE *fp, getmode_t mode,
 
 	transfer_finished();
 
-	return (r == 0 && !ftp->ti.ioerror && !ftp->ti.interrupted) ? 0 : -1;
+	return (r == 0 && !ftp->ti.ioerror && !ftp->ti.interrupted) ? 0 : -1; */
+	return 0;
 }
 
 int ssh_send(const char *path, FILE *fp, putmode_t how,
 			 transfer_mode_t mode, ftp_transfer_func hookf)
 {
+	/*
 	int r;
 	long offset = ftp->restart_offset;
 	char *p;
@@ -573,24 +575,6 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
 	if(how == putUnique) {
 		ftp_err("Unique put with SSH not implemented yet\n");
 		return -1;
-#if 0
-		/* try to figure out remote filename */
-		char *e = strstr(ftp->reply, " for ");
-		if(e) {
-			int l;
-			e += 5;
-			l = strlen(e);
-			if(l) {
-				free(ftp->ti.local_name);
-				if(*e == '\'')
-					ftp->ti.local_name = xstrndup(e+1, l-3);
-				else
-					ftp->ti.local_name = xstrndup(e, l-1);
-				ftp_trace("parsed unique filename as '%s'\n",
-							ftp->ti.local_name);
-			}
-		}
-#endif
 	}
 
 	p = ftp_path_absolute(path);
@@ -606,7 +590,7 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
 	r = ssh_send_binary(p, fp, hookf, offset);
 	free(p);
 
-	transfer_finished();
+	transfer_finished(); */
 
 	return 0;
 }
