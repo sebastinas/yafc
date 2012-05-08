@@ -1,3 +1,9 @@
+New in git
+----------
+
+* Fixed several memory leaks.
+* Fixed segfault if connection to the server got lost.
+
 New in 1.1.3
 ------------
 
