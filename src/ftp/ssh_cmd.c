@@ -34,6 +34,7 @@
 #ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
 #endif
+#include <fcntl.h>
 
 /* from libssh examples */
 static int verify_knownhost(ssh_session session)
@@ -534,28 +535,104 @@ void ssh_pwd(void)
 }
 
 int ssh_do_receive(const char *infile, FILE *fp, getmode_t mode,
-					 ftp_transfer_func hookf)
+									 ftp_transfer_func hookf)
 {
-	/*
-	int r;
-	rfile *f;
 	u_int64_t offset = ftp->restart_offset;
-
 	ftp->ti.size = ftp->ti.restart_size = offset;
 	ftp->restart_offset = 0L;
 
-	f = ftp_cache_get_file(infile);
-	if(f)
+	rfile* f = ftp_cache_get_file(infile);
+	if (f)
 		ftp->ti.total_size = f->size;
 	else
 		ftp->ti.total_size = ssh_filesize(infile);
 
-	r = ssh_recv_binary(infile, fp, hookf, offset);
+	time_t then = time(NULL) - 1;
+	ftp_set_close_handler();
 
+	if (hookf)
+		hookf(&ftp->ti);
+	ftp->ti.begin = false;
+
+	/* check if remote file is not a directory */
+	sftp_attributes attrib = sftp_stat(ftp->sftp_session, infile);
+	if (!attrib)
+	{
+		transfer_finished();
+		return -1;
+	}
+
+	if (S_ISDIR(attrib->permissions))
+	{
+		ftp_err("Cannot download a directory: %s\n", infile);
+		sftp_attributes_free(attrib);
+		transfer_finished();
+		return -1;
+	}
+	sftp_attributes_free(attrib);
+
+	/* open remote file */
+	sftp_file file = sftp_open(ftp->sftp_session, infile, O_RDONLY, 0);
+	if (!file)
+	{
+		ftp_err("Cannot open file for reading: %s\n", ssh_get_error(ftp->session));
+		transfer_finished();
+		return -1;
+	}
+
+	/* seek to offset */
+	int r = sftp_seek64(file, offset);
+	if (r != SSH_OK)
+	{
+		ftp_err("Failed to seek: %s\n", ssh_get_error(ftp->session));
+		sftp_close(file);
+		transfer_finished();
+		return -1;
+	}
+
+	/* read file */
+	char buffer[BUFSIZ];
+	ssize_t nbytes = 0;
+	while ((nbytes = sftp_read(file, buffer, sizeof(buffer))) > 0)
+	{
+		if (ftp_sigints() > 0)
+		{
+			ftp_trace("break due to sigint\n");
+			break;
+		}
+
+		errno = 0;
+		if (fwrite(buffer, sizeof(char), nbytes, fp) != nbytes)
+		{
+			ftp_err("Error while writing to file: %s\n", strerror(errno));
+			ftp->ti.ioerror = true;
+			sftp_close(file);
+			transfer_finished();
+			return -1;
+		}
+
+		ftp->ti.size += nbytes;
+		if (hookf)
+		{
+			time_t now = time(NULL);
+			if (now > then)
+			{
+				hookf(&ftp->ti);
+				then = now;
+			}
+		}
+	}
+
+	if (nbytes < 0)
+	{
+		ftp_err("Error while reading from file: %s\n", ssh_get_error(ftp->session));
+		r = -1;
+	}
+
+	sftp_close(file);
 	transfer_finished();
 
-	return (r == 0 && !ftp->ti.ioerror && !ftp->ti.interrupted) ? 0 : -1; */
-	return 0;
+	return (r == 0 && !ftp->ti.ioerror && !ftp->ti.interrupted) ? 0 : -1;
 }
 
 int ssh_send(const char *path, FILE *fp, putmode_t how,
