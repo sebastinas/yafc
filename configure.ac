@@ -25,6 +25,8 @@ AC_DEFINE_UNQUOTED(HOSTTYPE, "${host_cpu}-${host_vendor}-${host_os}", [the hostt
 
 dnl checks for different unix variants
 AC_ISC_POSIX
+AC_AIX
+AC_MINIX
 
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL

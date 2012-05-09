@@ -7,8 +7,4 @@ autoreconf -i -s || exit
 echo " done"
 
 echo "Running configure $*..."
-
-export CFLAGS="`dpkg-buildflags --get CFLAGS` -Wall -pedantic"
-export LDFLAGS="`dpkg-buildflags --get LDFLAGS`"
-export CPPFLAGS="`dpkg-buildflags --get CPPFLAGS`"
-./configure $*
+CFLAGS="-Wall -O2 -g" ./configure $*
