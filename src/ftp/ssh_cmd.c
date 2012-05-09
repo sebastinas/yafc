@@ -139,8 +139,63 @@ static int authenticate_password(ssh_session session, const char* password)
 		return SSH_AUTH_ERROR;
 
 	int rc = ssh_userauth_password(session, NULL, pw);
+	memset(pw, 0, strlen(pw));
 	free(pw);
 	return rc;
+}
+
+static int authenticate_kbdint(ssh_session session)
+{
+  int rc = ssh_userauth_kbdint(session, NULL, NULL);
+  while (rc == SSH_AUTH_INFO)
+  {
+    const char* name = ssh_userauth_kbdint_getname(session);
+    const char* instruction = ssh_userauth_kbdint_getinstruction(session);
+    int nprompts = ssh_userauth_kbdint_getnprompts(session);
+
+    if (strlen(name) > 0)
+      printf("%s\n", name);
+    if (strlen(instruction) > 0)
+      printf("%s\n", instruction);
+    for (int iprompt = 0; iprompt < nprompts; iprompt++)
+    {
+      const char* prompt = NULL;
+      char echo;
+
+      prompt = ssh_userauth_kbdint_getprompt(session, iprompt, &echo);
+      if (echo)
+      {
+        char buffer[128], *ptr;
+
+        printf("%s", prompt);
+        if (fgets(buffer, sizeof(buffer), stdin) == NULL)
+          return SSH_AUTH_ERROR;
+        buffer[sizeof(buffer) - 1] = '\0';
+        if ((ptr = strchr(buffer, '\n')) != NULL)
+          *ptr = '\0';
+        if (ssh_userauth_kbdint_setanswer(session, iprompt, buffer) < 0)
+          return SSH_AUTH_ERROR;
+        memset(buffer, 0, strlen(buffer));
+      }
+      else
+      {
+				if (!ftp->getpass_hook)
+					return SSH_AUTH_ERROR;
+
+				char* pw = ftp->getpass_hook(prompt);
+				if (!pw)
+					return SSH_AUTH_ERROR;
+
+        rc = ssh_userauth_kbdint_setanswer(session, iprompt, pw);
+				memset(pw, 0, strlen(pw));
+				free(pw);
+				if (rc < 0)
+          return SSH_AUTH_ERROR;
+      }
+    }
+    rc = ssh_userauth_kbdint(session, NULL, NULL);
+  }
+  return rc;
 }
 
 static int test_several_auth_methods(ssh_session session, const char* password)
@@ -161,13 +216,11 @@ static int test_several_auth_methods(ssh_session session, const char* password)
 		rc = authenticate_pubkey(session);
     if (rc == SSH_AUTH_SUCCESS) return rc;
   }
-#if 0
   if (method & SSH_AUTH_METHOD_INTERACTIVE)
   {
 		rc = authenticate_kbdint(session);
     if (rc == SSH_AUTH_SUCCESS) return rc;
   }
-#endif
   if (method & SSH_AUTH_METHOD_PASSWORD)
   {
 		rc = authenticate_password(session, password);
