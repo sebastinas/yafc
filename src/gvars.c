@@ -36,6 +36,9 @@ bool gvReverseDNS = true;
 /* add ... while waiting for a completion? */
 bool gvWaitingDots = true;
 
+/* various ssh options like -C */
+char *gvSSHOptions = 0;
+
 /* automatically reconnect on connection timeout */
 bool gvAutoReconnect = true;
 
@@ -180,6 +183,7 @@ void gvars_destroy(void)
 	free(gvTransferBeginString);
 	free(gvTransferString);
 	free(gvTransferEndString);
+	free(gvSSHOptions);
 	free(gvWorkingDirectory);
 	list_free(gvAsciiMasks);
 	list_free(gvIgnoreMasks);

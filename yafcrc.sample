@@ -44,6 +44,11 @@ trace off
 # waiting for the directory listing to be downloaded.
 waiting_dots on
 
+# Custom options that will be passed to SSH.
+# Supports:
+#   -l USER; -p PORT; -v; -r; -d; -c CIPHER; -i IDENTITY; -C; -1; -2
+#ssh_options "-c blowfish"
+
 # set to true to skip query of remote system on connect
 inhibit_startup_syst no
 

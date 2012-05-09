@@ -39,6 +39,9 @@ extern bool gvReverseDNS;
 /* add ... while waiting for a completion? */
 extern bool gvWaitingDots;
 
+/* custom user options like -C */
+extern char *gvSSHOptions;
+
 /* automatically reconnect on connection timeout */
 extern bool gvAutoReconnect;
 

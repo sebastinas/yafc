@@ -29,6 +29,7 @@
 #include "ftp.h"
 #include "strq.h"
 #include "gvars.h"
+#include "libmhe/args.h"
 #include "rfile.h"
 #ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
@@ -187,6 +188,20 @@ int ssh_open_url(url_t* urlp)
 	{
 		int verbosity = SSH_LOG_PROTOCOL;
 		ssh_options_set(ftp->session, SSH_OPTIONS_LOG_VERBOSITY, &verbosity);
+	}
+
+	/* If we have ssh options from yafcrc, load them */
+	if (gvSSHOptions) {
+		args_t *args = args_create();
+		args_init(args, 0, NULL);
+		args_push_back(args, gvSSHOptions);
+		if (ssh_options_getopt(ftp->session, &args->argc, args->argv) != SSH_OK) {
+			ftp_err("Failed to load SSH options from yafcrc config (ssh_options = '%s')\n", gvSSHOptions);
+			ssh_free(ftp->session);
+			ftp->session = NULL;
+			return -1;
+		}
+		args_destroy(args);
 	}
 
 	/* set host name */
