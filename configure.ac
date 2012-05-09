@@ -248,8 +248,17 @@ if test "x$with_ssh" != "xno"; then
       yafc_got_ssh="yes"
     ],
     [
-      AM_CONDITIONAL(HAVE_LIBSSH, [false])
-      yafc_got_ssh="no, not found"
+      AC_CHECK_HEADERS([libssh/libssh.h],
+      [
+        AC_DEFINE(HAVE_LIBSSH, [], [Define if you have libssh installed.])
+        AM_CONDITIONAL(HAVE_LIBSSH, [true])
+        LIBS="$LIBS -lssh"
+        yafc_got_ssh="yes"
+      ],
+      [
+        AM_CONDITIONAL(HAVE_LIBSSH, [false])
+        yafc_got_ssh="no, not found"
+      ])
     ])
 else
   AM_CONDITIONAL(HAVE_LIBSSH, [false])
