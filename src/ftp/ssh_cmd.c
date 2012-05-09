@@ -37,12 +37,12 @@
 #include <fcntl.h>
 #endif
 
-#if defined(BUFSIZ) && BUFSIZ < 16384
+#if defined(BUFSIZ) && BUFSIZ < 131072
 #undef BUFSIZ
 #endif
 
 #ifndef BUFSIZ
-#define BUFSIZ 16384
+#define BUFSIZ 131072
 #endif
 
 /* from libssh examples */
