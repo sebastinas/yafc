@@ -239,7 +239,7 @@ int ssh_open_url(url_t* urlp)
 		return -1;
 	}
 
-	ftp->ssh_version = ssh_get_openssh_version(ftp->session);
+	ftp->ssh_version = ssh_get_version(ftp->session);
 	if (!ftp->ssh_version) {
 		ftp_err("Couldn't initialise connection to server\n");
 		return -1;
