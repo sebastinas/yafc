@@ -67,7 +67,11 @@ void cmd_version(int argc, char **argv)
 
 	printf(_("Compiled " __TIME__ " " __DATE__ " (" HOSTTYPE ")\n"));
 #if HAVE_LIBREADLINE
-	printf(_("Using Readline version %s\n"), rl_library_version);
+	printf(_("Using Readline version %s.\n"), rl_library_version);
+#endif
+#ifdef HAVE_LIBSSH
+	printf(_("Using libssh version %d.%d.%d.\n"), LIBSSH_VERSION_MAJOR,
+			LIBSSH_VERSION_MINOR, LIBSSH_VERSION_MICRO);
 #endif
 }
 
