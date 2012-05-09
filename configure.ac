@@ -245,12 +245,15 @@ if test "x$with_ssh" != "xno"; then
     [
       AC_DEFINE(HAVE_LIBSSH, [], [Define if you have libssh installed.])
       AM_CONDITIONAL(HAVE_LIBSSH, [true])
+      yafc_got_ssh="yes"
     ],
     [
       AM_CONDITIONAL(HAVE_LIBSSH, [false])
+      yafc_got_ssh="no, not found"
     ])
 else
   AM_CONDITIONAL(HAVE_LIBSSH, [false])
+  yafc_got_ssh="no, disabled"
 fi
 
 AC_ARG_WITH([bash-completion],
@@ -289,4 +292,5 @@ echo "installation prefix ............ $prefix"
 echo "using Kerberos 4 ............... $yafc_found_krb4"
 echo "using Kerberos 5 ............... $yafc_found_krb5"
 echo "using readline ................. $yafc_got_readline"
+echo "using ssh ...................... $yafc_got_ssh"
 echo
