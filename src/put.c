@@ -190,6 +190,7 @@ static void putfile(const char *path, struct stat *sb,
 		if(test(opt, PUT_SKIP_EXISTING)) {
 			char* sp = shortpath(dest, 42, ftp->homedir);
 			printf(_("Remote file '%s' exists, skipping...\n"), sp);
+			stats_file(STATS_SKIP, 0);
 			free(sp);
 			free(dest);
 			return;
@@ -199,6 +200,7 @@ static void putfile(const char *path, struct stat *sb,
 			if(ft != (time_t)-1 && ft >= sb->st_mtime) {
 				char* sp = shortpath(dest, 42, ftp->homedir);
 				printf(_("Remote file '%s' is newer than local, skipping...\n"), sp);
+				stats_file(STATS_SKIP, 0);
 				free(sp);
 				free(dest);
 				return;
@@ -252,8 +254,13 @@ static void putfile(const char *path, struct stat *sb,
 
 	r = do_the_put(path, dest, how, opt);
 	free(dest);
-	if(r != 0)
+
+	if(r != 0) {
+		stats_file(STATS_FAIL, 0);
 		return;
+	} else {
+		stats_file(STATS_SUCCESS, ftp->ti.total_size);
+	}
 
 	if(test(opt, PUT_PRESERVE)) {
 		if(ftp->has_site_chmod_command)
@@ -382,11 +389,13 @@ static void putfiles(list *gl, unsigned opt, const char *output)
 						if(list_numitem(rgl) > 0)
 							putfiles(rgl, opt, recurs_output);
 						free(recurs_output);
+						stats_dir(STATS_SUCCESS);
 					}
 			} else {
 				char* sp = shortpath(path, 42, gvLocalHomeDir);
 				fprintf(stderr, _("%s: omitting directory\n"), sp);
 				free(sp);
+				stats_dir(STATS_SKIP);
 			}
 			continue;
 		}
@@ -657,6 +666,8 @@ void cmd_put(int argc, char **argv)
 			opt |= PUT_OUTPUT_FILE;
 		}
 
+	stats_reset(gvStatsTransfer);
+
 	gvInTransfer = true;
 	gvInterrupted = false;
 
@@ -711,4 +722,6 @@ void cmd_put(int argc, char **argv)
 	}
 	free(put_output);
 	gvInTransfer = false;
+
+	stats_display(gvStatsTransfer, 20);
 }

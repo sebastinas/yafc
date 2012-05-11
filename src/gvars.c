@@ -13,6 +13,7 @@
 #include "syshdr.h"
 #include "ftp.h"
 #include "linklist.h"
+#include "stats.h"
 
 /* time (in seconds) before a cached directory times out, 0 == never */
 int gvCacheTimeout = 0;
@@ -163,6 +164,8 @@ char *gvTransferString = 0;
 char *gvTransferEndString = 0;
 char *gvTransferXtermString = 0;
 
+Stats *gvStatsTransfer = 0;
+
 int gvProxyType = 0;
 url_t *gvProxyUrl = 0;
 list *gvProxyExclude = 0;
@@ -201,6 +204,7 @@ void gvars_destroy(void)
 	list_free(gvBookmarks);
 	url_destroy(gvDefaultUrl);
 	url_destroy(gvLocalUrl);
+	stats_destroy(gvStatsTransfer);
 
 	if(gvLogfp)
 		fclose(gvLogfp);

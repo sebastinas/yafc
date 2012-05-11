@@ -16,6 +16,7 @@
 #include "syshdr.h"
 #include "ftp.h"
 #include "linklist.h"
+#include "stats.h"
 
 /* time (in seconds) before a cached directory times out, 0 == never */
 extern int gvCacheTimeout;
@@ -158,6 +159,8 @@ extern char *gvTransferBeginString;
 extern char *gvTransferString;
 extern char *gvTransferEndString;
 extern char *gvTransferXtermString;
+
+extern Stats *gvStatsTransfer;
 
 extern int gvProxyType;
 extern url_t *gvProxyUrl;

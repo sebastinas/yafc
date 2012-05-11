@@ -198,6 +198,8 @@ void init_yafc(void)
 
 	gvTransferXtermString = xstrdup("\x1B]0;yafc - (%p%%) %r\x07");
 
+	gvStatsTransfer = stats_create();
+
 	input_init();
 }
 
