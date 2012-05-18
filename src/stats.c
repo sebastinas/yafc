@@ -29,8 +29,6 @@ void stats_destroy(Stats *stats)
 
 void stats_reset(Stats *stats)
 {
-	stats->file = 0;
-	stats->dir = 0;
 	stats->success = 0;
 	stats->skip = 0;
 	stats->fail = 0;
@@ -39,19 +37,7 @@ void stats_reset(Stats *stats)
 
 void stats_file(int type, u_int64_t size)
 {
-	gvStatsTransfer->file++;
 	gvStatsTransfer->size += size;
-
-	switch(type) {
-		case STATS_SUCCESS: gvStatsTransfer->success++; break;
-		case STATS_SKIP: gvStatsTransfer->skip++; break;
-		case STATS_FAIL: gvStatsTransfer->fail++; break;
-	}
-}
-
-void stats_dir(int type)
-{
-	gvStatsTransfer->dir++;
 
 	switch(type) {
 		case STATS_SUCCESS: gvStatsTransfer->success++; break;
@@ -62,21 +48,16 @@ void stats_dir(int type)
 
 void stats_display(Stats *s, unsigned int threshold)
 {
-	if (s->file == 0 && s->dir == 0) return;
-	if (s->file + s->dir < threshold) return;
+	if ((s->success + s->skip + s->fail) < threshold) return;
 
-	printf(_("\nTransferred "));
-	if (s->file > 0)
-		printf(_("%u files, "), s->file);
-	if (s->dir > 0)
-		printf(_("%u dirs, "), s->dir);
+	printf("\n");
+	if (s->success > 0)
+		printf(_("Transferred %u files, "), s->success);
+	if (s->skip > 0)
+		printf(_("Skipped %u files, "), s->skip);
+	if (s->fail > 0)
+		printf(_("%u failures, "), s->fail);
+
 	printf(_("total size %u bytes.\n\n"), s->size);
-
-	if (s->skip || s->fail) {
-		printf(_("Success: %u\n"), s->success);
-		printf(_("Skipped: %u\n"), s->skip);
-		printf(_("Failed:  %u\n"), s->fail);
-		printf("\n");
-	}
 }
 

@@ -389,13 +389,11 @@ static void putfiles(list *gl, unsigned opt, const char *output)
 						if(list_numitem(rgl) > 0)
 							putfiles(rgl, opt, recurs_output);
 						free(recurs_output);
-						stats_dir(STATS_SUCCESS);
 					}
 			} else {
 				char* sp = shortpath(path, 42, gvLocalHomeDir);
 				fprintf(stderr, _("%s: omitting directory\n"), sp);
 				free(sp);
-				stats_dir(STATS_SKIP);
 			}
 			continue;
 		}

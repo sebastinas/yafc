@@ -17,16 +17,9 @@
 
 typedef struct Stats
 {
-	/* Total number of files & dirs */
-	unsigned int file;
-	unsigned int dir;
-	
-	/* Total num of success, skip & fail */
 	unsigned int success;
 	unsigned int skip;
 	unsigned int fail;
-	
-	/* Total size of files, in bytes */
 	u_int64_t size;
 	
 } Stats;
@@ -40,12 +33,11 @@ void stats_destroy(Stats *stats);
 void stats_reset(Stats *stats);
 
 /**
-* Called for each file or dir uploaded.
+* Called for each file  uploaded.
 * These operate on the global variable gvStatsTransfer
 * One day we might keep more stats (whole connection), so then these will operate on that object too.
 **/
 void stats_file(int type, u_int64_t size);
-void stats_dir(int type);
 
 #define STATS_SUCCESS 1
 #define STATS_SKIP 2
