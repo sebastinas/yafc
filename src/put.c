@@ -67,6 +67,7 @@ static void print_put_syntax(void)
 			 "  -r, --recursive      upload directories recursively\n"
 			 "  -R, --resume         resume broken transfer (restart at EOF)\n"
 			 "  -s, --skip-existing  always skip existing files\n"
+			 "  -S, --stats[=NUM]    set stats transfer threshold; default is always\n"
 			 "  -t, --tagged         transfer (locally) tagged file(s)\n"
 			 "      --type=TYPE      specify transfer type, 'ascii' or 'binary'\n"
 			 "  -v, --verbose        explain what is being done\n"
@@ -430,6 +431,7 @@ void cmd_put(int argc, char **argv)
 	char *put_output = 0;
 	char *logfile = 0;
 	pid_t pid;
+	int stat_thresh = 20;
 #ifdef HAVE_REGEX
 	int ret;
 	char put_rx_errbuf[129];
@@ -458,6 +460,7 @@ void cmd_put(int argc, char **argv)
 		{"recursive", no_argument, 0, 'r'},
 		{"resume", no_argument, 0, 'R'},
 		{"skip-existing", no_argument, 0, 's'},
+		{"stats", optional_argument, 0, 'S'},
 		{"tagged", no_argument, 0, 't'},
 		{"type", required_argument, 0, '1'},
 		{"verbose", no_argument, 0, 'v'},
@@ -489,7 +492,7 @@ void cmd_put(int argc, char **argv)
 
 	optind = 0; /* force getopt() to re-initialize */
 	while((c = getopt_long(argc, argv,
-						   "aDefHiL:no:pPqrRstvum:M:", longopts, 0)) != EOF)
+						   "aDefHiL:no:pPqrRsStvum:M:", longopts, 0)) != EOF)
 	{
 		switch(c) {
 		case 'i':
@@ -584,6 +587,9 @@ void cmd_put(int argc, char **argv)
 			break;
 		  case 's':
 			opt |= PUT_SKIP_EXISTING;
+			break;
+		  case 'S':
+			stat_thresh = optarg ? atoi(optarg) : 0;
 			break;
 		  case 'R':
 			opt |= PUT_RESUME;
@@ -721,5 +727,5 @@ void cmd_put(int argc, char **argv)
 	free(put_output);
 	gvInTransfer = false;
 
-	stats_display(gvStatsTransfer, 20);
+	stats_display(gvStatsTransfer, stat_thresh);
 }
