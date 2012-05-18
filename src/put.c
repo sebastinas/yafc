@@ -431,7 +431,7 @@ void cmd_put(int argc, char **argv)
 	char *put_output = 0;
 	char *logfile = 0;
 	pid_t pid;
-	int stat_thresh = 20;
+	int stat_thresh = gvStatsThreshold;
 #ifdef HAVE_REGEX
 	int ret;
 	char put_rx_errbuf[129];

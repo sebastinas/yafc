@@ -492,6 +492,14 @@ int parse_rc(const char *file, bool warn)
 		} else if(strcasecmp(e, "ignore_mask") == 0) {
 			NEXTSTR;
 			listify_string(e, gvIgnoreMasks);
+		} else if(strcasecmp(e, "stats_threshold") == 0) {
+			NEXTSTR;
+			gvStatsThreshold = atoi(e);
+			if(gvStatsThreshold < 0) {
+				errp(_("Invalid value for stats_threshold: %i\n"),
+					 gvStatsThreshold);
+				gvStatsThreshold = 20;
+			}
 		} else if(strcasecmp(e, "startup_local_directory") == 0) {
 			NEXTSTR;
 			e = tilde_expand_home(e, gvLocalHomeDir);

@@ -161,6 +161,7 @@ extern char *gvTransferEndString;
 extern char *gvTransferXtermString;
 
 extern Stats *gvStatsTransfer;
+extern int gvStatsThreshold;
 
 extern int gvProxyType;
 extern url_t *gvProxyUrl;

@@ -165,6 +165,7 @@ char *gvTransferEndString = 0;
 char *gvTransferXtermString = 0;
 
 Stats *gvStatsTransfer = 0;
+int gvStatsThreshold = 20;
 
 int gvProxyType = 0;
 url_t *gvProxyUrl = 0;
