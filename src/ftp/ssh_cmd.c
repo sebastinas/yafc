@@ -127,22 +127,18 @@ static int authenticate_pubkey(ssh_session session)
   return ssh_userauth_autopubkey(session, NULL);
 }
 
-static int authenticate_password(ssh_session session, const char* password)
+static int authenticate_password(ssh_session session, url_t* urlp)
 {
-  if (password)
-		return ssh_userauth_password(session, NULL, password);
+  if (urlp->password)
+		return ssh_userauth_password(session, NULL, urlp->password);
 
 	if (!ftp->getpass_hook)
 		return SSH_AUTH_ERROR;
 
-	char* pw = ftp->getpass_hook(_("password: "));
-	if (!pw)
+  if (get_password(urlp, NULL, false))
 		return SSH_AUTH_ERROR;
 
-	int rc = ssh_userauth_password(session, NULL, pw);
-	memset(pw, 0, strlen(pw));
-	free(pw);
-	return rc;
+	return ssh_userauth_password(session, NULL, urlp->password);
 }
 
 static int authenticate_kbdint(ssh_session session)
@@ -199,7 +195,7 @@ static int authenticate_kbdint(ssh_session session)
   return rc;
 }
 
-static int test_several_auth_methods(ssh_session session, const char* password)
+static int test_several_auth_methods(ssh_session session, url_t* urlp)
 {
   int rc = ssh_userauth_none(session, NULL);
   /* if (rc != SSH_AUTH_SUCCESS) {
@@ -224,7 +220,7 @@ static int test_several_auth_methods(ssh_session session, const char* password)
   }
   if (method & SSH_AUTH_METHOD_PASSWORD)
   {
-		rc = authenticate_password(session, password);
+		rc = authenticate_password(session, urlp);
     if (rc == SSH_AUTH_SUCCESS) return rc;
   }
   return SSH_AUTH_ERROR;
@@ -297,7 +293,7 @@ int ssh_open_url(url_t* urlp)
 	}
 
 	/* authenticate user */
-	r = test_several_auth_methods(ftp->session, urlp->password);
+	r = test_several_auth_methods(ftp->session, urlp);
 	if (r != SSH_OK)
 	{
 		ftp_err("Authentication failed: %s\n", ssh_get_error(ftp->session));

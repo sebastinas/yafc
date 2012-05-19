@@ -770,7 +770,7 @@ int get_username(url_t *url, const char *guessed_username, bool isproxy)
     return 0;
 }
 
-static int get_password(url_t *url, const char *anonpass, bool isproxy)
+int get_password(url_t *url, const char *anonpass, bool isproxy)
 {
     if(!url->password) {
         char *e;
