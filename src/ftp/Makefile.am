@@ -29,7 +29,8 @@ noinst_HEADERS = ftp.h \
 								 rdirectory.h \
 								 url.h \
 								 ftpsigs.h \
-								 ssh_cmd.h
+								 ssh_cmd.h \
+								 lscolors.h
 
 AM_CPPFLAGS = $(SSH_CFLAGS)
 
