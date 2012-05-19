@@ -35,7 +35,7 @@ AM_CPPFLAGS = -DLOCALEDIR=\"${YAFC_LOCALEDIR}\"
 CLEANFILES=*~ \#*\#
 DISTCLEANFILES=.deps/* yafcrc.h
 
-yafcrc.h: $(top_srcdir)/yafcrc.sample
+yafcrc.h: $(top_srcdir)/samples/yafcrc
 	echo "const char *default_yafcrc = \"\"" > yafcrc.h
-	cat $(top_srcdir)/yafcrc.sample | sed 's/\\/\\\\/g' | sed 's/"/\\\"/g' | sed 's/^\(.*\)$$/\"\1\\n\"/' >> yafcrc.h
+	cat $(top_srcdir)/samples/yafcrc | sed 's/\\/\\\\/g' | sed 's/"/\\\"/g' | sed 's/^\(.*\)$$/\"\1\\n\"/' >> yafcrc.h
 	echo ";" >> yafcrc.h
