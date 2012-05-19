@@ -32,8 +32,6 @@ Roadmap 2.0.0
 
 > Feature: FTP over TLS / SSL support (rfc2228)
 
-> Feature: SSH config file support
-
 > Feature: HTTP proxy support
 
 > Feature: IPv6 support, EPSV and EPRT support (RFC2428)

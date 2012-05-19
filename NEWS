@@ -3,6 +3,9 @@ New in git
 
 * Fixed several memory leaks.
 * Fixed segfault if connection to the server got lost.
+* Use libssh for sftp transport.
+  - This adds support for ssh's config file.
+* Reenable internationalization support.
 
 New in 1.1.3
 ------------
