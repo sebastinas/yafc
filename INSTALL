@@ -8,6 +8,9 @@ Readline is available from ftp://ftp.gnu.org/pub/gnu/readline.
 If you want support for KerberosIV authentication you need the KTH-KRB
 Kerberos4 implementation. KTH-KRB is available from ftp://ftp.pdc.kth.se/pub/krb.
 
+If you want support for sftp you need the libssh library. libssh is available
+from http://www.libssh.org.
+
 To build Yafc, just follow these steps:
 
   * run './configure'
