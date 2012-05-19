@@ -138,9 +138,6 @@ void init_yafc(void)
 		get_local_curdir(),
 		gvLocalHomeDir);
 
-	gvSSHProgram = xstrdup("/usr/bin/ssh");
-	gvSSHOptions = xstrdup("");
-
 	gvAnonPasswd = xstrdup("anonymous@");
 
 	/* init colors from LS_COLORS for ls */

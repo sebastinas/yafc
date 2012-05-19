@@ -29,103 +29,331 @@
 #include "ftp.h"
 #include "strq.h"
 #include "gvars.h"
-#include "buffer.h"
-#include "bufaux.h"
-/*#include "pathnames.h"*/
-#include "ssh_ftp.h"
+#include "libmhe/args.h"
 #include "rfile.h"
+#ifdef HAVE_SYS_STAT_H
+#include <sys/stat.h>
+#endif
+#ifdef HAVE_FCNTL_H
+#include <fcntl.h>
+#endif
 
-int ssh_open_url(url_t *urlp)
+#if defined(BUFSIZ) && BUFSIZ < 131072
+#undef BUFSIZ
+#endif
+
+#ifndef BUFSIZ
+#define BUFSIZ 131072
+#endif
+
+/* from libssh examples */
+static int verify_knownhost(ssh_session session)
 {
-	char *sftp = gvSFTPServerProgram;
-	char *s;
-	int r;
+  unsigned char *hash = NULL;
+  char *hexa;
+  char buf[10];
 
-	args_clear(ftp->ssh_args);
+  int state = ssh_is_server_known(session);
+  int hlen = ssh_get_pubkey_hash(session, &hash);
+  if (hlen < 0)
+    return -1;
 
-	if(urlp->sftp_server)
-		sftp = urlp->sftp_server;
+  switch (state)
+  {
+    case SSH_SERVER_KNOWN_OK:
+      break; /* ok */
 
-	args_push_back(ftp->ssh_args, gvSSHProgram);
-	if(gvSSHOptions && strlen(gvSSHOptions))
-		args_push_back(ftp->ssh_args, gvSSHOptions);
-	args_push_back(ftp->ssh_args, urlp->hostname);
+    case SSH_SERVER_KNOWN_CHANGED:
+      fprintf(stderr, "Host key for server changed: it is now:\n");
+      ssh_print_hexa("Public key hash", hash, hlen);
+      fprintf(stderr, "For security reasons, connection will be stopped\n");
+      free(hash);
+      return -1;
 
-	r = get_username(urlp, gvUsername, false);
-	if(r != 0)
-		return r;
+    case SSH_SERVER_FOUND_OTHER:
+      fprintf(stderr, "The host key for this server was not found but an other"
+        "type of key exists.\n");
+      fprintf(stderr, "An attacker might change the default server key to"
+        "confuse your client into thinking the key does not exist\n");
+      free(hash);
+      return -1;
 
-	if(urlp->username) {
-		args_push_back_nosplit(ftp->ssh_args, "-l");
-		args_push_back_nosplit(ftp->ssh_args, urlp->username);
-	} else {
-		/* we need a username, otherwise other functions will fail
-		 */
-		urlp->username = xstrdup(gvUsername);
+    case SSH_SERVER_FILE_NOT_FOUND:
+      fprintf(stderr, "Could not find known host file.\n");
+      fprintf(stderr, "If you accept the host key here, the file will be"
+       "automatically created.\n");
+      /* fallback to SSH_SERVER_NOT_KNOWN behavior */
+
+    case SSH_SERVER_NOT_KNOWN:
+      hexa = ssh_get_hexa(hash, hlen);
+      fprintf(stderr,"The server is unknown. Do you trust the host key?\n");
+      fprintf(stderr, "Public key hash: %s\n", hexa);
+      free(hexa);
+      if (fgets(buf, sizeof(buf), stdin) == NULL)
+      {
+        free(hash);
+        return -1;
+      }
+      if (strncasecmp(buf, "yes", 3) != 0)
+      {
+        free(hash);
+        return -1;
+      }
+      if (ssh_write_knownhost(session) < 0)
+      {
+        fprintf(stderr, "Error %s\n", strerror(errno));
+        free(hash);
+        return -1;
+      }
+      break;
+
+    case SSH_SERVER_ERROR:
+      fprintf(stderr, "Error %s", ssh_get_error(session));
+      free(hash);
+      return -1;
+  }
+
+  free(hash);
+  return 0;
+}
+
+static int authenticate_none(ssh_session session)
+{
+  return ssh_userauth_none(session, NULL);
+}
+
+static int authenticate_pubkey(ssh_session session)
+{
+  return ssh_userauth_autopubkey(session, NULL);
+}
+
+static int authenticate_password(ssh_session session, url_t* urlp)
+{
+  if (urlp->password)
+		return ssh_userauth_password(session, NULL, urlp->password);
+
+	if (!ftp->getpass_hook)
+		return SSH_AUTH_ERROR;
+
+  if (get_password(urlp, NULL, false))
+		return SSH_AUTH_ERROR;
+
+	return ssh_userauth_password(session, NULL, urlp->password);
+}
+
+static int authenticate_kbdint(ssh_session session)
+{
+  int rc = ssh_userauth_kbdint(session, NULL, NULL);
+  while (rc == SSH_AUTH_INFO)
+  {
+    const char* name = ssh_userauth_kbdint_getname(session);
+    const char* instruction = ssh_userauth_kbdint_getinstruction(session);
+    int nprompts = ssh_userauth_kbdint_getnprompts(session);
+
+    if (strlen(name) > 0)
+      printf("%s\n", name);
+    if (strlen(instruction) > 0)
+      printf("%s\n", instruction);
+    for (int iprompt = 0; iprompt < nprompts; iprompt++)
+    {
+      const char* prompt = NULL;
+      char echo;
+
+      prompt = ssh_userauth_kbdint_getprompt(session, iprompt, &echo);
+      if (echo)
+      {
+        char buffer[128], *ptr;
+
+        printf("%s", prompt);
+        if (fgets(buffer, sizeof(buffer), stdin) == NULL)
+          return SSH_AUTH_ERROR;
+        buffer[sizeof(buffer) - 1] = '\0';
+        if ((ptr = strchr(buffer, '\n')) != NULL)
+          *ptr = '\0';
+        if (ssh_userauth_kbdint_setanswer(session, iprompt, buffer) < 0)
+          return SSH_AUTH_ERROR;
+        memset(buffer, 0, strlen(buffer));
+      }
+      else
+      {
+				if (!ftp->getpass_hook)
+					return SSH_AUTH_ERROR;
+
+				char* pw = ftp->getpass_hook(prompt);
+				if (!pw)
+					return SSH_AUTH_ERROR;
+
+        rc = ssh_userauth_kbdint_setanswer(session, iprompt, pw);
+				memset(pw, 0, strlen(pw));
+				free(pw);
+				if (rc < 0)
+          return SSH_AUTH_ERROR;
+      }
+    }
+    rc = ssh_userauth_kbdint(session, NULL, NULL);
+  }
+  return rc;
+}
+
+static int test_several_auth_methods(ssh_session session, url_t* urlp)
+{
+  int rc = ssh_userauth_none(session, NULL);
+  /* if (rc != SSH_AUTH_SUCCESS) {
+      return rc;
+  } */
+
+  int method = ssh_userauth_list(session, NULL);
+  if (method & SSH_AUTH_METHOD_NONE)
+  {
+		rc = authenticate_none(session);
+    if (rc == SSH_AUTH_SUCCESS) return rc;
+  }
+  if (method & SSH_AUTH_METHOD_PUBLICKEY)
+  {
+		rc = authenticate_pubkey(session);
+    if (rc == SSH_AUTH_SUCCESS) return rc;
+  }
+  if (method & SSH_AUTH_METHOD_INTERACTIVE)
+  {
+		rc = authenticate_kbdint(session);
+    if (rc == SSH_AUTH_SUCCESS) return rc;
+  }
+  if (method & SSH_AUTH_METHOD_PASSWORD)
+  {
+		rc = authenticate_password(session, urlp);
+    if (rc == SSH_AUTH_SUCCESS) return rc;
+  }
+  return SSH_AUTH_ERROR;
+}
+
+int ssh_open_url(url_t* urlp)
+{
+	ftp->session = ssh_new();
+	if (!ftp->session)
+		return -1;
+
+	/* set log level */
+	if (ftp_get_verbosity() == vbDebug)
+	{
+		int verbosity = SSH_LOG_PROTOCOL;
+		ssh_options_set(ftp->session, SSH_OPTIONS_LOG_VERBOSITY, &verbosity);
 	}
 
-	if(urlp->port) {
-		char *p;
-		asprintf(&p, "%d", urlp->port);
-		args_push_back(ftp->ssh_args, "-p");
-		args_push_back(ftp->ssh_args, p);
-		free(p);
-	}
-
-	if(ftp_get_verbosity() == vbDebug)
-		args_push_back(ftp->ssh_args, "-v");
-
-	/* no subsystem if the server-spec contains a '/' */
-	if(sftp == 0 || strchr(sftp, '/') == 0)
-		args_push_back(ftp->ssh_args, "-s");
-
-	/* Otherwise finish up and return the arg array */
-	if(sftp != 0)
-		args_push_back(ftp->ssh_args, sftp);
-	else
-		args_push_back(ftp->ssh_args, "sftp");
-
-	s = args_cat2(ftp->ssh_args, 0);
-	ftp_trace("SSH args: %s\n", s);
-	if(ftp_get_verbosity() == vbDebug)
-		fprintf(stderr, "SSH args: %s\n", s);
-	free(s);
-
-	args_add_null(ftp->ssh_args);
-
-	if(ssh_connect(ftp->ssh_args->argv, &ftp->ssh_in, &ftp->ssh_out,
-				   &ftp->ssh_pid) == -1)
-		{
+	/* If we have ssh options from yafcrc, load them */
+	if (gvSSHOptions) {
+		args_t *args = args_create();
+		args_init(args, 0, NULL);
+		args_push_back(args, gvSSHOptions);
+		if (ssh_options_getopt(ftp->session, &args->argc, args->argv) != SSH_OK) {
+			ftp_err("Failed to load SSH options from yafcrc config (ssh_options = '%s')\n", gvSSHOptions);
+			ssh_free(ftp->session);
+			ftp->session = NULL;
 			return -1;
 		}
+		args_destroy(args);
+	}
 
-	ftp->ssh_version = ssh_init();
-	if(ftp->ssh_version == -1) {
+	/* set host name */
+	ssh_options_set(ftp->session, SSH_OPTIONS_HOST, urlp->hostname);
+	/* if we have port use that one */
+	if (urlp->port > 0)
+		ssh_options_set(ftp->session, SSH_OPTIONS_PORT, &urlp->port);
+
+	/* parse .ssh/config */
+	int r = ssh_options_parse_config(ftp->session, NULL); 
+	if (r != SSH_OK)
+	{
+		ftp_err("Failed to parse ssh config: %s\n", ssh_get_error(ftp->session));
+		ssh_free(ftp->session);
+		ftp->session = NULL;
+		return r;
+	}
+	
+	/* if we have username use that one */
+	if (urlp->username)
+		ssh_options_set(ftp->session, SSH_OPTIONS_USER, urlp->username);
+
+	/* connect to server */
+	r = ssh_connect(ftp->session);
+	if (r != SSH_OK)
+	{
+		ftp_err("Couldn't initialise connection to server: %s\n", ssh_get_error(ftp->session));
+		ssh_free(ftp->session);
+		ftp->session = NULL;
+		return r;
+	}
+
+	/* verify server */
+	if (verify_knownhost(ftp->session))
+	{
+		ssh_disconnect(ftp->session);
+		ssh_free(ftp->session);
+		ftp->session = NULL;
+		return -1;
+	}
+
+	/* authenticate user */
+	r = test_several_auth_methods(ftp->session, urlp);
+	if (r != SSH_OK)
+	{
+		ftp_err("Authentication failed: %s\n", ssh_get_error(ftp->session));
+		ssh_disconnect(ftp->session);
+		ssh_free(ftp->session);
+		ftp->session = NULL;
+		return -1;
+	}
+
+	ftp->ssh_version = ssh_get_version(ftp->session);
+	if (!ftp->ssh_version) {
 		ftp_err("Couldn't initialise connection to server\n");
 		return -1;
+	}
+
+	ftp->sftp_session = sftp_new(ftp->session);
+	if (!ftp->sftp_session)
+	{
+		ftp_err("Couldn't initialise ftp subsystem: %s\n", ssh_get_error(ftp->session));
+		ssh_disconnect(ftp->session);
+		ssh_free(ftp->session);
+		ftp->session = NULL;
+		return -1;
+	}
+
+	r = sftp_init(ftp->sftp_session);
+	if (r != SSH_OK)
+	{
+		ftp_err("Couldn't initialise ftp subsystem: %s\n", ssh_get_error(ftp->sftp_session));
+		sftp_free(ftp->sftp_session);
+		ftp->sftp_session = NULL;
+		ssh_disconnect(ftp->session);
+		ssh_free(ftp->session);
+		ftp->session = NULL;
+		return r;
 	}
 
 	ftp->connected = true;
 	ftp->loggedin = true;
 
+	free(ftp->homedir);
 	ftp->homedir = ftp_getcurdir();
 
 	url_destroy(ftp->url);
 	ftp->url = url_clone(urlp);
 
+	free(ftp->curdir);
 	ftp->curdir = xstrdup(ftp->homedir);
+	free(ftp->prevdir);
 	ftp->prevdir = xstrdup(ftp->homedir);
-	if(ftp->url->directory)
+	if (ftp->url->directory)
 		ftp_chdir(ftp->url->directory);
 
 	ftp_get_feat();
-
 	return 0;
 }
 
 char *ssh_getcurdir(void)
 {
-	char *ret = ssh_realpath(".");
+	char *ret = sftp_canonicalize_path(ftp->sftp_session, ".");
 	if(!ret)
 		return xstrdup("CWD?");
 	stripslash(ret);
@@ -134,7 +362,6 @@ char *ssh_getcurdir(void)
 
 int ssh_chdir(const char *path)
 {
-	Attrib *aa;
 	char *p = ftp_path_absolute(path);
 	bool isdir = false;
 
@@ -148,23 +375,25 @@ int ssh_chdir(const char *path)
 		rfile *rf = ftp_cache_get_file(p);
 		isdir = (rf && risdir(rf));
 	}
-	if(!isdir) {
-		if ((aa = ssh_stat(p)) == 0) {
+	if (!isdir)
+	{
+		sftp_attributes attrib = sftp_stat(ftp->sftp_session, p);
+		if (!attrib)
+		{
+			ftp_err("Couldn't stat directory: %s\n", ssh_get_error(ftp->session));
 			free(p);
 			return -1;
 		}
-		if (!(aa->flags & SSH2_FILEXFER_ATTR_PERMISSIONS)) {
-			ftp_err("Can't change directory: Can't check target");
-			free(p);
-			return -1;
-		}
-		if (!S_ISDIR(aa->perm)) {
+		if (!S_ISDIR(attrib->permissions)) {
 			ftp_err("%s: not a directory\n", p);
+			sftp_attributes_free(attrib);
 			free(p);
 			return -1;
 		}
+		sftp_attributes_free(attrib);
 	}
 	ftp_update_curdir_x(p);
+	free(p);
 
 	return 0;
 }
@@ -176,69 +405,52 @@ int ssh_cdup(void)
 
 int ssh_mkdir_verb(const char *path, verbose_t verb)
 {
-	Attrib a;
-	u_int status, id;
-	char *abspath;
-
-	attrib_clear(&a);
-	a.flags |= SSH2_FILEXFER_ATTR_PERMISSIONS;
-	a.perm = 0777;
-
-	id = ftp->ssh_id++;
-	abspath = ftp_path_absolute(path);
+	char* abspath = ftp_path_absolute(path);
 	stripslash(abspath);
-	ssh_send_string_attrs_request(id, SSH2_FXP_MKDIR, abspath,
-								  strlen(abspath), &a);
 
-	status = ssh_get_status(id);
-	if(status != SSH2_FX_OK) {
-		ftp_err("Couldn't create directory: %s\n", fx2txt(status));
+	int rc = sftp_mkdir(ftp->sftp_session, abspath, S_IRWXU);
+	if (rc != SSH_OK && sftp_get_error(ftp->sftp_session) != SSH_FX_FILE_ALREADY_EXISTS)
+	{
+		ftp_err("Couldn't create directory: %s\n", ssh_get_error(ftp->session));
 		free(abspath);
-		return -1;
+		return rc;
 	}
+
 	ftp_cache_flush_mark_for(abspath);
 	free(abspath);
-
 	return 0;
 }
 
 int ssh_rmdir(const char *path)
 {
-	char *p;
-	u_int status, id;
+	char* abspath = ftp_path_absolute(path);
+	stripslash(abspath);
 
-	p = ftp_path_absolute(path);
-	stripslash(p);
-
-	id = ftp->ssh_id++;
-	ssh_send_string_request(id, SSH2_FXP_RMDIR, p, strlen(p));
-
-	status = ssh_get_status(id);
-	if(status != SSH2_FX_OK) {
-		ftp_err("Couldn't remove directory: %s\n", fx2txt(status));
-		free(p);
-		return -1;
+	int rc = sftp_rmdir(ftp->sftp_session, abspath);
+	if (rc != SSH_OK && sftp_get_error(ftp->sftp_session) != SSH_FX_NO_SUCH_FILE)
+	{
+		ftp_err("Couldn't remove directory: %s\n", ssh_get_error(ftp->session));
+		free(abspath);
+		return rc;
 	}
-	ftp_cache_flush_mark(p);
-	ftp_cache_flush_mark_for(p);
-	free(p);
 
+	ftp_cache_flush_mark(abspath);
+	ftp_cache_flush_mark_for(abspath);
+	free(abspath);
 	return 0;
 }
 
 int ssh_unlink(const char *path)
 {
-	u_int status, id;
-
-	id = ftp->ssh_id++;
-	ssh_send_string_request(id, SSH2_FXP_REMOVE, path, strlen(path));
-	status = ssh_get_status(id);
-	if(status != SSH2_FX_OK) {
-/*		ftp_err("Couldn't delete file: %s\n", fx2txt(status));*/
+	int rc = sftp_unlink(ftp->sftp_session, path);
+	if (rc != SSH_OK && sftp_get_error(ftp->sftp_session) != SSH_FX_NO_SUCH_FILE)
+	{
+		ftp_err("Couldn't delete file: %s\n", ssh_get_error(ftp->session));
 		ftp->code = ctError;
 		ftp->fullcode = 500;
 		return -1;
-	} else
+	}
+	else
 		ftp_cache_flush_mark_for(path);
 
 	return 0;
@@ -248,13 +460,13 @@ int ssh_unlink(const char *path)
  */
 int ssh_chmod(const char *path, const char *mode)
 {
-	Attrib a;
-
-	attrib_clear(&a);
-	a.flags |= SSH2_FILEXFER_ATTR_PERMISSIONS;
-	a.perm = strtoul(mode, 0, 8);
-	if(ssh_setstat(path, &a) == -1)
+	mode_t perm = strtoul(mode, 0, 9);
+	int rc = sftp_chmod(ftp->sftp_session, path, perm);
+	if (rc != SSH_OK)
+	{
+		ftp_err("Couldn't chmod file: %s\n", ssh_get_error(ftp->session));
 		return -1;
+	}
 	ftp_cache_flush_mark_for(path);
 	return 0;
 }
@@ -274,85 +486,71 @@ int ssh_help(const char *arg)
 	return 0;
 }
 
-unsigned long ssh_filesize(const char *path)
+uint64_t ssh_filesize(const char *path)
 {
-	Attrib *a = ssh_stat(path);
-	return a ? a->size : 0;
+	sftp_attributes attrib = sftp_stat(ftp->sftp_session, path);
+	if (!attrib)
+		return 0;
+
+	uint64_t res = attrib->size;
+	sftp_attributes_free(attrib);
+	return res;
 }
 
 rdirectory *ssh_read_directory(const char *path)
 {
-	rdirectory *rdir;
-	int i;
-	SFTP_DIRENT **dir;
 	char *p = ftp_path_absolute(path);
 	stripslash(p);
 
-	if(ssh_readdir(p, &dir) != 0) {
+	sftp_dir dir = sftp_opendir(ftp->sftp_session, p);
+	if (!dir)
+	{
 		free(p);
 		return 0;
 	}
 
-	rdir = rdir_create();
-
 	ftp_trace("*** start parsing directory listing ***\n");
+	rdirectory* rdir = rdir_create();
+	sftp_attributes attrib = NULL;
+	while ((attrib = sftp_readdir(ftp->sftp_session, dir)) != NULL)
+	{
+		ftp_trace("%s\n", attrib->longname);
 
-	for(i = 0; dir[i]; i++) {
-		rfile *rf;
-		char *e, *cf = dir[i]->longname;
+		rfile* rf = rfile_create();
+		rf->perm = perm2string(attrib->permissions);
 
-		ftp_trace("%s\n", dir[i]->longname);
+		rf->nhl = 0; // atoi(e);
+		if (attrib->owner)
+			rf->owner = xstrdup(attrib->owner);
+		if (attrib->group)
+			rf->group = xstrdup(attrib->group);
 
-		rf = rfile_create();
-
-		rf->perm = perm2string(dir[i]->a.perm);
-
-		e = strqsep(&cf, ' ');  /* skip permissions */
-		e = strqsep(&cf, ' ');  /* nhl? */
-/*		if(ftp->ssh_version > 2) {*/
-			rf->nhl = atoi(e);
-/*		} else*/
-/*			rf->nhl = 0;*/
-#if 1
-		e = strqsep(&cf, ' ');
-		rf->owner = xstrdup(e);
-		e = strqsep(&cf, ' ');
-		rf->group = xstrdup(e);
-#else
-		asprintf(&rf->owner, "%d", dir[i]->a.uid);
-		asprintf(&rf->group, "%d", dir[i]->a.gid);
-#endif
-
-		asprintf(&rf->path, "%s/%s", p, dir[i]->filename);
-		rf->mtime = dir[i]->a.mtime;
-		if(rf->mtime == 0) {
-			char *m, *d, *y;
-			while(e && month_number(e) == -1)
-				e = strqsep(&cf, ' ');
-			if(e) {
-				m = e;
-				d = strqsep(&cf, ' ');
-				y = strqsep(&cf, ' ');
-				ftp_trace("parsing time: m:%s d:%s y:%s\n", m, d, y);
-				rfile_parse_time(rf, m, d, y);
-			}
-		}
+		asprintf(&rf->path, "%s/%s", p, attrib->name);
+		rf->mtime = attrib->mtime;
 		rf->date = time_to_string(rf->mtime);
-		rf->size = dir[i]->a.size;
+		rf->size = attrib->size;
 		rfile_parse_colors(rf);
 
-		rf->link = 0;
-		if(rislink(rf) && ftp->ssh_version > 2)
-			rf->link = ssh_readlink(rf->path);
+		rf->link = NULL;
+		if (rislink(rf) && ftp->ssh_version > 2)
+			rf->link = sftp_readlink(ftp->sftp_session, rf->path);
 
 		list_additem(rdir->files, (void *)rf);
+		sftp_attributes_free(attrib);
 	}
 	ftp_trace("*** end parsing directory listing ***\n");
 
-	ssh_free_dirents(dir);
+	if (!sftp_dir_eof(dir))
+	{
+		ftp_err("Couldn't list directory: %s\n", ssh_get_error(ftp->session));
+		sftp_closedir(dir);
+		free(p);
+		rdir_destroy(rdir);
+		return NULL;
+	}
 
+	sftp_closedir(dir);
 	rdir->path = p;
-
 	ftp_trace("added directory '%s' to cache\n", p);
 	list_additem(ftp->cache, rdir);
 
@@ -361,30 +559,16 @@ rdirectory *ssh_read_directory(const char *path)
 
 int ssh_rename(const char *oldname, const char *newname)
 {
-	Buffer msg;
-	u_int status, id;
-	char *on, *nn;
-
-	buffer_init(&msg);
-
-	on = ftp_path_absolute(oldname);
-	nn = ftp_path_absolute(newname);
+	char* on = ftp_path_absolute(oldname);
+	char* nn = ftp_path_absolute(newname);
 	stripslash(on);
 	stripslash(nn);
 
-	/* Send rename request */
-	id = ftp->ssh_id++;
-	buffer_put_char(&msg, SSH2_FXP_RENAME);
-	buffer_put_int(&msg, id);
-	buffer_put_cstring(&msg, on);
-	buffer_put_cstring(&msg, nn);
-	ssh_cmd( &msg);
-	buffer_free(&msg);
-
-	status = ssh_get_status(id);
-	if(status != SSH2_FX_OK) {
+	int rc = sftp_rename(ftp->sftp_session, on, nn);
+	if (rc != SSH_OK)
+	{
 		ftp_err("Couldn't rename file \"%s\" to \"%s\": %s\n",
-				on, nn, fx2txt(status));
+				on, nn, ssh_get_error(ftp->session));
 		free(on);
 		free(nn);
 		return -1;
@@ -399,8 +583,13 @@ int ssh_rename(const char *oldname, const char *newname)
 
 time_t ssh_filetime(const char *filename)
 {
-	Attrib *a = ssh_stat(filename);
-	return a ? a->mtime : -1;
+	sftp_attributes attrib = sftp_stat(ftp->sftp_session, filename);
+	if (!attrib)
+		return -1;
+
+	time_t res = attrib->mtime; /* mtime 64? */
+	sftp_attributes_free(attrib);
+	return res;
 }
 
 int ssh_list(const char *cmd, const char *param, FILE *fp)
@@ -415,35 +604,191 @@ void ssh_pwd(void)
 	printf("%s\n", ftp->curdir);
 }
 
-int ssh_do_receive(const char *infile, FILE *fp, getmode_t mode,
-				   ftp_transfer_func hookf)
+static int do_read(const char* infile, FILE* fp, getmode_t mode,
+									 ftp_transfer_func hookf, uint64_t offset)
 {
-	int r;
-	rfile *f;
-	u_int64_t offset = ftp->restart_offset;
+	time_t then = time(NULL) - 1;
+	ftp_set_close_handler();
 
+	if (hookf)
+		hookf(&ftp->ti);
+	ftp->ti.begin = false;
+
+	/* check if remote file is not a directory */
+	sftp_attributes attrib = sftp_stat(ftp->sftp_session, infile);
+	if (!attrib)
+		return -1;
+
+	if (S_ISDIR(attrib->permissions))
+	{
+		ftp_err("Cannot download a directory: %s\n", infile);
+		sftp_attributes_free(attrib);
+		return -1;
+	}
+	sftp_attributes_free(attrib);
+
+	/* open remote file */
+	sftp_file file = sftp_open(ftp->sftp_session, infile, O_RDONLY, 0);
+	if (!file)
+	{
+		ftp_err("Cannot open file for reading: %s\n", ssh_get_error(ftp->session));
+		return -1;
+	}
+
+	/* seek to offset */
+	int r = sftp_seek64(file, offset);
+	if (r != SSH_OK)
+	{
+		ftp_err("Failed to seek: %s\n", ssh_get_error(ftp->session));
+		sftp_close(file);
+		return -1;
+	}
+
+	/* read file */
+	char buffer[BUFSIZ];
+	ssize_t nbytes = 0;
+	while ((nbytes = sftp_read(file, buffer, sizeof(buffer))) > 0)
+	{
+		if (ftp_sigints() > 0)
+		{
+			ftp_trace("break due to sigint\n");
+			break;
+		}
+
+		errno = 0;
+		if (fwrite(buffer, nbytes, 1, fp) != 1)
+		{
+			ftp_err("Error while writing to file: %s\n", strerror(errno));
+			ftp->ti.ioerror = true;
+			sftp_close(file);
+			return -1;
+		}
+
+		ftp->ti.size += nbytes;
+		if (hookf)
+		{
+			time_t now = time(NULL);
+			if (now > then)
+			{
+				hookf(&ftp->ti);
+				then = now;
+			}
+		}
+	}
+
+	if (nbytes < 0)
+	{
+		ftp_err("Error while reading from file: %s\n", ssh_get_error(ftp->session));
+		r = -1;
+	}
+
+	sftp_close(file);
+	return r;
+}
+
+int ssh_do_receive(const char *infile, FILE *fp, getmode_t mode,
+									 ftp_transfer_func hookf)
+{
+	uint64_t offset = ftp->restart_offset;
 	ftp->ti.size = ftp->ti.restart_size = offset;
 	ftp->restart_offset = 0L;
 
-	f = ftp_cache_get_file(infile);
-	if(f)
+	rfile* f = ftp_cache_get_file(infile);
+	if (f)
 		ftp->ti.total_size = f->size;
 	else
 		ftp->ti.total_size = ssh_filesize(infile);
 
-	r = ssh_recv_binary(infile, fp, hookf, offset);
-
+	int r = do_read(infile, fp, mode, hookf, offset);
 	transfer_finished();
 
 	return (r == 0 && !ftp->ti.ioerror && !ftp->ti.interrupted) ? 0 : -1;
 }
 
+static int do_write(const char* path, FILE* fp, ftp_transfer_func hookf,
+										uint64_t offset)
+{
+	time_t then = time(NULL) - 1;
+	ftp_set_close_handler();
+
+	if (hookf)
+		hookf(&ftp->ti);
+	ftp->ti.begin = false;
+
+	struct stat sb;
+	errno = 0;
+	if (fstat(fileno(fp), &sb) == -1)
+	{
+		ftp_err("Couldn't fstat local file: &s\n", strerror(errno));
+		return -1;
+	}
+
+	/* open remote file */
+	sftp_file file = sftp_open(ftp->sftp_session, path, O_WRONLY | O_CREAT |
+			(offset == 0u ? O_TRUNC : 0), sb.st_mode);
+	if (!file)
+	{
+		ftp_err("Cannot open file for writing: %s\n", ssh_get_error(ftp->session));
+		return -1;
+	}
+
+	/* seek to offset */
+	int r = sftp_seek64(file, offset);
+	if (r != SSH_OK)
+	{
+		ftp_err("Failed to seek: %s\n", ssh_get_error(ftp->session));
+		sftp_close(file);
+		return -1;
+	}
+
+	/* read file */
+	char buffer[BUFSIZ];
+	ssize_t nbytes = 0;
+	errno = 0;
+	while ((nbytes = fread(buffer, sizeof(char), sizeof(buffer), fp)) > 0)
+	{
+		if (ftp_sigints() > 0)
+		{
+			ftp_trace("break due to sigint\n");
+			break;
+		}
+
+		ssize_t nwritten = sftp_write(file, buffer, nbytes);
+		if (nwritten != nbytes)
+		{
+			ftp_err("Error while writing to file: %s\n", ssh_get_error(ftp->session));
+			sftp_close(file);
+			return -1;
+		}
+
+		ftp->ti.size += nbytes;
+		if (hookf)
+		{
+			time_t now = time(NULL);
+			if (now > then)
+			{
+				hookf(&ftp->ti);
+				then = now;
+			}
+		}
+		errno = 0;
+	}
+
+	if (ferror(fp))
+	{
+		ftp_err("Failed to read from file: %s\n", strerror(errno));
+		r = -1;
+	}
+
+	sftp_close(file);
+	return r;
+
+}
+
 int ssh_send(const char *path, FILE *fp, putmode_t how,
 			 transfer_mode_t mode, ftp_transfer_func hookf)
 {
-	int r;
-	long offset = ftp->restart_offset;
-	char *p;
+	uint64_t offset = ftp->restart_offset;
 
 	reset_transfer_info();
 	ftp->ti.size = ftp->ti.restart_size = offset;
@@ -454,29 +799,10 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
 	if(how == putUnique) {
 		ftp_err("Unique put with SSH not implemented yet\n");
 		return -1;
-#if 0
-		/* try to figure out remote filename */
-		char *e = strstr(ftp->reply, " for ");
-		if(e) {
-			int l;
-			e += 5;
-			l = strlen(e);
-			if(l) {
-				free(ftp->ti.local_name);
-				if(*e == '\'')
-					ftp->ti.local_name = xstrndup(e+1, l-3);
-				else
-					ftp->ti.local_name = xstrndup(e, l-1);
-				ftp_trace("parsed unique filename as '%s'\n",
-						  ftp->ti.local_name);
-			}
-		}
-#endif
 	}
 
-	p = ftp_path_absolute(path);
+	char* p = ftp_path_absolute(path);
 	stripslash(p);
-
 	ftp_cache_flush_mark_for(p);
 
 	if(how == putAppend) {
@@ -484,10 +810,9 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
 		offset = ftp_filesize(p);
 	}
 
-	r = ssh_send_binary(p, fp, hookf, offset);
+	int r = do_write(p, fp, hookf, offset);
 	free(p);
 
 	transfer_finished();
-
-	return 0;
+	return r;
 }

@@ -17,11 +17,16 @@ noinst_HEADERS = \
    set.h stats.h syshdr.h redir.h login.h utils.h bookmark.h tag.h ltag.h prompt.h \
    redir.h rc.h
 
-yafc_LDADD = ftp/libftp.a libmhe/libmhe.a ../lib/libfoo.a
+yafc_LDADD = ftp/libftp.a \
+						 libmhe/libmhe.a \
+						 ../lib/libfoo.a $(SSH_LIBS)
 
 yafc_DEPENDENCIES = $(yafc_LDADD) yafcrc.h
-INCLUDES = -I. -I.. -I$(srcdir) -I$(top_srcdir)/lib \
--I$(top_srcdir)/src/ftp -I$(top_srcdir)/src/libmhe
+
+INCLUDES = -I$(srcdir) \
+					 -I$(top_srcdir)/lib \
+					 -I$(top_srcdir)/src/ftp \
+					 -I$(top_srcdir)/src/libmhe
 
 DEFS = -DSYSCONFDIR=\"@sysconfdir@\" @DEFS@
 

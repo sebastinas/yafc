@@ -25,7 +25,7 @@ int ssh_chmod(const char *path, const char *mode);
 int ssh_idle(const char *idletime);
 int ssh_noop(void);
 int ssh_help(const char *arg);
-unsigned long ssh_filesize(const char *path);
+uint64_t ssh_filesize(const char *path);
 rdirectory *ssh_read_directory(const char *path);
 int ssh_rename(const char *oldname, const char *newname);
 time_t ssh_filetime(const char *filename);
@@ -34,7 +34,7 @@ int ssh_receive(const char *path, FILE *fp,
 				transfer_mode_t mode, ftp_transfer_func hookf);
 void ssh_pwd(void);
 int ssh_do_receive(const char *infile, FILE *fp, getmode_t mode,
-				   ftp_transfer_func hookf);
+					 ftp_transfer_func hookf);
 int ssh_send(const char *path, FILE *fp, putmode_t how,
 			 transfer_mode_t mode, ftp_transfer_func hookf);
 

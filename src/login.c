@@ -65,11 +65,12 @@ void cmd_user(int argc, char **argv)
 
 	maxargs(1);
 	need_connected();
-
-	if(ftp->ssh_pid) {
+#ifdef HAVE_LIBSSH
+	if(ftp->session) {
 		printf("Can't do this in SSH\n");
 		return;
 	}
+#endif
 
 	u = xstrdup(ftp->url->username);
 	p = xstrdup(ftp->url->password);
@@ -120,7 +121,10 @@ void yafc_open(const char *host, unsigned int opt,
 		for(li=gvFtpList->first; li; li=li->next) {
 			if(!((Ftp *)li->data)->connected
 			   || (!sock_connected(((Ftp *)li->data)->ctrl)
-				   && !((Ftp *)li->data)->ssh_pid))
+#ifdef HAVE_LIBSSH
+				   && !((Ftp *)li->data)->session
+#endif
+				))
 			{
 				gvCurrentFtp = li;
 				found_unconnected = true;

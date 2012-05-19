@@ -32,15 +32,6 @@ AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 LT_INIT
 
-dnl check if to use pipes or socketpair in src/ftp/ssh_ftp.c
-dnl checks taken from openssh-2.9p1
-case "$host" in
-*-*-hpux10* | *-*-hpux11* | *-next-* | *-*-sunos4* | *-sni-sysv* | \
-*-*-sysv4.2* | *-*-sysv5* | *-*-sco3.2v4* | *-*-sco3.2v5*)
-  AC_DEFINE([USE_PIPES], [], [define if using pipes instead of socketpair])
-  ;;
-esac
-
 dnl
 dnl Checks for header files.
 dnl
@@ -64,7 +55,8 @@ AC_CHECK_HEADERS(unistd.h \
                  sys/ioctl.h \
                  memory.h \
                  setjmp.h \
-                 errno.h
+                 errno.h \
+                 fcntl.h
 )
 
 AC_CHECK_HEADERS(dirent.h, [], [
@@ -248,6 +240,33 @@ else
     ])
 fi
 
+AC_ARG_WITH([ssh],
+  AS_HELP_STRING([--with-ssh], [Build with SSH support]))
+if test "x$with_ssh" != "xno"; then
+  PKG_CHECK_MODULES([SSH], [libssh],
+    [
+      AC_DEFINE(HAVE_LIBSSH, [], [Define if you have libssh installed.])
+      AM_CONDITIONAL(HAVE_LIBSSH, [true])
+      yafc_got_ssh="yes"
+    ],
+    [
+      AC_CHECK_HEADERS([libssh/libssh.h],
+      [
+        AC_DEFINE(HAVE_LIBSSH, [], [Define if you have libssh installed.])
+        AM_CONDITIONAL(HAVE_LIBSSH, [true])
+        LIBS="$LIBS -lssh"
+        yafc_got_ssh="yes"
+      ],
+      [
+        AM_CONDITIONAL(HAVE_LIBSSH, [false])
+        yafc_got_ssh="no, not found"
+      ])
+    ])
+else
+  AM_CONDITIONAL(HAVE_LIBSSH, [false])
+  yafc_got_ssh="no, disabled"
+fi
+
 AC_ARG_WITH([bash-completion],
   AS_HELP_STRING([--with-bash-completion@<:@=DIR@:>@],
                  [install bash_completion conf file in DIR (default is yes)]),
@@ -284,4 +303,5 @@ echo "installation prefix ............ $prefix"
 echo "using Kerberos 4 ............... $yafc_found_krb4"
 echo "using Kerberos 5 ............... $yafc_found_krb5"
 echo "using readline ................. $yafc_got_readline"
+echo "using ssh ...................... $yafc_got_ssh"
 echo

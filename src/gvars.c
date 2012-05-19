@@ -37,16 +37,8 @@ bool gvReverseDNS = true;
 /* add ... while waiting for a completion? */
 bool gvWaitingDots = true;
 
-/* path to the SSH program */
-char *gvSSHProgram = 0;
-
 /* various ssh options like -C */
 char *gvSSHOptions = 0;
-
-/* path to the remote sftp-server program
- * leave blank to use sftp subsystem
- */
-char *gvSFTPServerProgram = 0;
 
 /* automatically reconnect on connection timeout */
 bool gvAutoReconnect = true;
@@ -195,8 +187,7 @@ void gvars_destroy(void)
 	free(gvTransferBeginString);
 	free(gvTransferString);
 	free(gvTransferEndString);
-	free(gvSSHProgram);
-	free(gvSFTPServerProgram);
+	free(gvSSHOptions);
 	free(gvWorkingDirectory);
 	list_free(gvAsciiMasks);
 	list_free(gvIgnoreMasks);
