@@ -1,0 +1,1571 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-05-20 01:11+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../lib/getopt.c:515
+#, c-format
+msgid "%s: option `%s' is ambiguous\n"
+msgstr ""
+
+#: ../lib/getopt.c:539
+#, c-format
+msgid "%s: option `--%s' doesn't allow an argument\n"
+msgstr ""
+
+#: ../lib/getopt.c:544
+#, c-format
+msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgstr ""
+
+#: ../lib/getopt.c:558
+#, c-format
+msgid "%s: option `%s' requires an argument\n"
+msgstr ""
+
+#. --option
+#: ../lib/getopt.c:586
+#, c-format
+msgid "%s: unrecognized option `--%s'\n"
+msgstr ""
+
+#. +option or -option
+#: ../lib/getopt.c:590
+#, c-format
+msgid "%s: unrecognized option `%c%s'\n"
+msgstr ""
+
+#. 1003.2 specifies the format of this message.
+#: ../lib/getopt.c:614
+#, c-format
+msgid "%s: illegal option -- %c\n"
+msgstr ""
+
+#. 1003.2 specifies the format of this message.
+#: ../lib/getopt.c:648
+#, c-format
+msgid "%s: option requires an argument -- %c\n"
+msgstr ""
+
+#: ../lib/kauth.c:90 ../lib/kauth.c:106
+msgid "Bad reply from server\n"
+msgstr ""
+
+#: ../lib/kauth.c:97
+msgid "Failed to decode base64 in reply\n"
+msgstr ""
+
+#: ../lib/kauth.c:114
+#, c-format
+msgid "Password for %s:"
+msgstr ""
+
+#: ../lib/kauth.c:141 ../lib/krb4.c:196
+msgid "Out of memory base64-encoding\n"
+msgstr ""
+
+#: ../lib/krb4.c:183
+#, c-format
+msgid "Can't get address for realm %s\n"
+msgstr ""
+
+#: ../lib/krb4.c:187
+#, c-format
+msgid "Using NAT IP address (%s) for kerberos 4\n"
+msgstr ""
+
+#: ../lib/krb4.c:203
+msgid "Server didn't accept auth data\n"
+msgstr ""
+
+#: ../lib/krb4.c:209
+msgid "Remote host didn't send adat reply\n"
+msgstr ""
+
+#: ../lib/krb4.c:215
+msgid "Failed to decode base64 from server\n"
+msgstr ""
+
+#: ../lib/krb4.c:223
+#, c-format
+msgid "Error reading reply from server: %s\n"
+msgstr ""
+
+#: ../lib/krb4.c:229
+msgid "Bad checksum returned from server\n"
+msgstr ""
+
+#: ../lib/security.c:65
+msgid "unknown"
+msgstr ""
+
+#: ../lib/security.c:349
+#, c-format
+msgid "Failed to encode command.\n"
+msgstr ""
+
+#: ../lib/security.c:353
+#, c-format
+msgid "Out of memory base64-encoding.\n"
+msgstr ""
+
+#: ../lib/security.c:382
+#, c-format
+msgid "Using %s for authentication.\n"
+msgstr ""
+
+#: ../lib/security.c:383
+#, c-format
+msgid "Using %s command channel.\n"
+msgstr ""
+
+#: ../lib/security.c:385
+#, c-format
+msgid "Using %s data channel.\n"
+msgstr ""
+
+#: ../lib/security.c:387
+#, c-format
+msgid "Protection buffer size: %lu.\n"
+msgstr ""
+
+#: ../lib/security.c:390
+#, c-format
+msgid "Not using any security mechanism.\n"
+msgstr ""
+
+#: ../lib/security.c:403
+msgid "No security data exchange has taken place.\n"
+msgstr ""
+
+#: ../lib/security.c:410
+msgid "Failed to set protection buffer size.\n"
+msgstr ""
+
+#: ../lib/security.c:423
+msgid "Failed to set protection level.\n"
+msgstr ""
+
+#: ../lib/security.c:455
+msgid "No security data exchange has taken place\n"
+msgstr ""
+
+#: ../lib/security.c:461
+#, c-format
+msgid "Unrecognized protection level %s\n"
+msgstr ""
+
+#: ../lib/security.c:466
+#, c-format
+msgid "%s does not implement %s protection\n"
+msgstr ""
+
+#: ../lib/security.c:479
+#, c-format
+msgid "Syntax error, try %s --help for more information\n"
+msgstr ""
+
+#: ../lib/security.c:539
+#, c-format
+msgid "realloc %u failed"
+msgstr ""
+
+#: ../lib/security.c:545
+#, c-format
+msgid "Skipping %s...\n"
+msgstr ""
+
+#: ../lib/security.c:548
+#, c-format
+msgid "Trying %s...\n"
+msgstr ""
+
+#: ../lib/security.c:552
+#, c-format
+msgid "%s is not supported by the server.\n"
+msgstr ""
+
+#: ../lib/security.c:554
+#, c-format
+msgid "%s rejected as security mechanism.\n"
+msgstr ""
+
+#: ../lib/security.c:556
+#, c-format
+msgid "The server doesn't support the FTP security extensions.\n"
+msgstr ""
+
+#: ../src/alias.c:103
+#, c-format
+msgid "warning: alias '%s' shadows a command with the same name\n"
+msgstr ""
+
+#: ../src/alias.c:110
+#, c-format
+msgid "warning: alias '%s' points to a non-existing command\n"
+msgstr ""
+
+#: ../src/alias.c:113
+#, c-format
+msgid "warning: alias '%s' is ambiguous\n"
+msgstr ""
+
+#: ../src/alias.c:139 ../src/alias.c:193
+#, c-format
+msgid "no aliases defined\n"
+msgstr ""
+
+#: ../src/alias.c:156 ../src/alias.c:204
+#, c-format
+msgid "no such alias '%s'\n"
+msgstr ""
+
+#: ../src/alias.c:158 ../src/cmd.c:288 ../src/commands.c:275
+#, c-format
+msgid "ambiguous alias '%s'\n"
+msgstr ""
+
+#: ../src/bookmark.c:253
+#, c-format
+msgid "a bookmark named '%s' already exists, overwrite?"
+msgstr ""
+
+#: ../src/bookmark.c:267
+msgid "Save password?"
+msgstr ""
+
+#: ../src/bookmark.c:273 ../src/bookmark.c:405
+#, c-format
+msgid "created bookmark %s\n"
+msgstr ""
+
+#: ../src/bookmark.c:331
+msgid "Do you want to update the bookmark for this site?"
+msgstr ""
+
+#: ../src/bookmark.c:343
+msgid "Do you want to create a bookmark for this site?"
+msgstr ""
+
+#: ../src/bookmark.c:403
+#, c-format
+msgid "updated bookmark %s\n"
+msgstr ""
+
+#: ../src/bookmark.c:412
+#, c-format
+msgid ""
+"Handle bookmarks.  Usage:\n"
+"  bookmark [options] [bookmark alias ...]\n"
+"Options:\n"
+"  -s, --save[=FILE]      save bookmarks to bookmarks FILE\n"
+"  -e, --edit             edit bookmarks file with your $EDITOR\n"
+"  -r, --read[=FILE]      re-read bookmarks FILE\n"
+"  -d, --delete           delete specified bookmarks from file\n"
+"  -l, --list             list bookmarks in memory\n"
+"  -u, --noupdate         toggle noupdate flag\n"
+"  -h, --help             show this help\n"
+msgstr ""
+
+#: ../src/bookmark.c:476
+#, c-format
+msgid "bookmarks saved in %s\n"
+msgstr ""
+
+#: ../src/bookmark.c:478 ../src/bookmark.c:547 ../src/bookmark.c:599
+#, c-format
+msgid "bookmarks saved in %s/bookmarks\n"
+msgstr ""
+
+#: ../src/bookmark.c:492
+#, c-format
+msgid "bookmarks read from %s\n"
+msgstr ""
+
+#: ../src/bookmark.c:506
+#, c-format
+msgid "%u bookmarks present in memory\n"
+msgstr ""
+
+#: ../src/bookmark.c:538
+#, c-format
+msgid "deleted bookmark %s\n"
+msgstr ""
+
+#: ../src/bookmark.c:568 ../src/bookmark.c:576 ../src/bookmark.c:590
+#, c-format
+msgid "%s: noupdate: %s\n"
+msgstr ""
+
+#: ../src/bookmark.c:570 ../src/bookmark.c:578 ../src/bookmark.c:592
+msgid "yes"
+msgstr ""
+
+#: ../src/bookmark.c:570 ../src/bookmark.c:578 ../src/bookmark.c:592
+msgid "no"
+msgstr ""
+
+#: ../src/cmd.c:79
+#, c-format
+msgid "restarted command loop, connection closed\n"
+msgstr ""
+
+#: ../src/cmd.c:81
+#, c-format
+msgid "restarted command loop, command aborted\n"
+msgstr ""
+
+#: ../src/cmd.c:99 ../src/commands.c:695
+msgid "not connected"
+msgstr ""
+
+#: ../src/cmd.c:160
+#, c-format
+msgid "Not connected. Try 'open --help' for more information.\n"
+msgstr ""
+
+#: ../src/cmd.c:163
+#, c-format
+msgid "Not logged in. Try 'user --help' for more information.\n"
+msgstr ""
+
+#: ../src/cmd.c:179
+#, c-format
+msgid "input redirection not supported\n"
+msgstr ""
+
+#: ../src/commands.c:265
+#, c-format
+msgid "No such command '%s', try 'help'\n"
+msgstr ""
+
+#: ../src/commands.c:283
+#, c-format
+msgid "ambiguous command '%s'\n"
+msgstr ""
+
+#: ../src/commands.c:306
+#, c-format
+msgid "ambiguous alias/command '%s'\n"
+msgstr ""
+
+#: ../src/commands.c:315
+#, c-format
+msgid "No such command '%s' (expanded alias '%s')\n"
+msgstr ""
+
+#: ../src/commands.c:322
+#, c-format
+msgid "ambiguous command '%s' (expanded alias '%s')\n"
+msgstr ""
+
+#: ../src/commands.c:393 ../src/fxp.c:689 ../src/get.c:786 ../src/put.c:606
+#, c-format
+msgid "Invalid option argument --type=%s\n"
+msgstr ""
+
+#: ../src/commands.c:420 ../src/fxp.c:739 ../src/get.c:823 ../src/ltag.c:232
+#: ../src/tag.c:262
+#, c-format
+msgid "%s: no matches found\n"
+msgstr ""
+
+#: ../src/commands.c:525
+#, c-format
+msgid ""
+"Print the current URL.  Usage:\n"
+"  url [options]\n"
+"Options:\n"
+"  -e, --no-encoding    don't encode URL as rfc1738 says\n"
+"  -h, --help           show this help\n"
+msgstr ""
+
+#: ../src/commands.c:693
+#, c-format
+msgid "connected to '%s'\n"
+msgstr ""
+
+#: ../src/commands.c:697
+#, c-format
+msgid "logged in as '%s'\n"
+msgstr ""
+
+#: ../src/commands.c:703
+#, c-format
+msgid "There are totally %u connections open\n"
+msgstr ""
+
+#: ../src/commands.c:798
+#, c-format
+msgid ""
+"Control the directory cache.  Usage:\n"
+"  cache [option] [directories]\n"
+"Options:\n"
+"  -c, --clear        clear whole directory cache\n"
+"  -l, --list         list contents of cache\n"
+"  -t, --touch        remove directories from cache\n"
+"                     if none given, remove current directory\n"
+"  -h, --help         show this help\n"
+msgstr ""
+
+#: ../src/commands.c:919
+#, c-format
+msgid "remote system: "
+msgstr ""
+
+#: ../src/ftp/ftp.c:285
+#, c-format
+msgid "Connection timeout after %u seconds\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:294
+#, c-format
+msgid "Looking up %s... "
+msgstr ""
+
+#: ../src/ftp/ftp.c:340
+#, c-format
+msgid ""
+"Sorry, don't know how to handle your '%s' protocol\n"
+"trying 'ftp' instead...\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:347
+#, c-format
+msgid "Connecting to proxy %s (%s) at port %d...\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:351
+#, c-format
+msgid "Connecting to %s (%s) at port %d...\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:358
+msgid "Unable to create socket.\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:436 ../src/ftp/ftp.c:643
+msgid "No control connection\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:443
+msgid "Server has closed control connection\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:487
+msgid "Reply too long (truncated)\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:559
+#, c-format
+msgid "Tired of waiting for reply, timeout after %u seconds\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:660
+msgid "error writing command"
+msgstr ""
+
+#. server is closing control connection!
+#: ../src/ftp/ftp.c:681
+msgid "Server closed control connection\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:684
+msgid "Reconnect failed\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:686
+msgid "Automatic reconnect...\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:746
+msgid "Proxy login: "
+msgstr ""
+
+#: ../src/ftp/ftp.c:748
+#, c-format
+msgid "login (%s): "
+msgstr ""
+
+#: ../src/ftp/ftp.c:750
+msgid "login (anonymous): "
+msgstr ""
+
+#: ../src/ftp/ftp.c:760 ../src/ftp/ftp.c:802
+#, c-format
+msgid "You loose\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:784
+#, c-format
+msgid "password (%s): "
+msgstr ""
+
+#: ../src/ftp/ftp.c:786 ../src/ftp/ftp.c:798
+msgid "password: "
+msgstr ""
+
+#: ../src/ftp/ftp.c:797
+msgid "Proxy password: "
+msgstr ""
+
+#: ../src/ftp/ftp.c:901
+#, c-format
+msgid "Invalid protection level '%s'\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:916
+#, c-format
+msgid "unknown mechanism '%s'\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:920
+#, c-format
+msgid "Yafc was not compiled with support for %s\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:935
+msgid "Authentication successful.\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:937 ../src/login.c:58 ../src/login.c:294
+msgid "*** Using plaintext username and password ***\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:943
+#, c-format
+msgid "logging in anonymously...\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:1052
+#, c-format
+msgid "Data protection is %s\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:1270
+msgid "Server doesn't support SITE CHMOD\n"
+msgstr ""
+
+#: ../src/ftp/ftp.c:1288
+msgid "Server doesn't support SITE IDLE\n"
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:31
+msgid "Host doesn't support passive mode\n"
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:43
+msgid "Unable to enter passive mode\n"
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:55
+#, c-format
+msgid "Error parsing PASV reply: '%s'\n"
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:173
+msgid "Waiting for remote to finish abort...\n"
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:298
+#, c-format
+msgid "read error: %s\n"
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:302
+#, c-format
+msgid "write error: %s\n"
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:623 ../src/ftp/ftpsend.c:758
+msgid "data connection not accepted\n"
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:802
+msgid "FxP between same hosts\n"
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:846 ../src/ftp/ftpsend.c:1055
+#, c-format
+msgid "unable to get remote filesize of '%s', unable to resume\n"
+msgstr ""
+
+#. can't overwrite a directory
+#: ../src/ftp/ftpsend.c:935 ../src/ftp/ftpsend.c:1030 ../src/fxp.c:217
+#: ../src/put.c:182
+#, c-format
+msgid "%s: is a directory\n"
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:939
+#, c-format
+msgid "%s: permission denied\n"
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:963
+#, c-format
+msgid "Unable to stat file '%s': %s\n"
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:992 ../src/ftp/ftpsend.c:1067
+#, c-format
+msgid "%s: %s, transfer cancelled\n"
+msgstr ""
+
+#: ../src/ftp/ftpsigs.c:109
+msgid "OK, one more to close connection...          \n"
+msgstr ""
+
+#: ../src/ftp/ftpsigs.c:111
+msgid "OK, one more to exit program...          \n"
+msgstr ""
+
+#: ../src/ftp/ftpsigs.c:146
+msgid "OK, one more to abort command...          \n"
+msgstr ""
+
+#: ../src/ftp/ftpsigs.c:167
+msgid "Interrupt received, exiting...         \n"
+msgstr ""
+
+#: ../src/ftp/ftpsigs.c:175 ../src/transfer.c:338 ../src/transfer.c:344
+#, c-format
+msgid "SIGTERM (terminate) received, exiting...\n"
+msgstr ""
+
+#: ../src/ftp/ftpsigs.c:192
+msgid "Hangup received, continuing transfer in background...\n"
+msgstr ""
+
+#: ../src/ftp/ftpsigs.c:194
+msgid "Hangup received, exiting...\n"
+msgstr ""
+
+#: ../src/ftp/ftpsigs.c:200
+msgid "Can't redirect output, exiting...\n"
+msgstr ""
+
+#: ../src/ftp/socket.c:231
+msgid "setsockopt(THROUGHPUT)... ignored"
+msgstr ""
+
+#: ../src/ftp/socket.c:241
+msgid "setsockopt(LOWDELAY)... ignored"
+msgstr ""
+
+#: ../src/fxp.c:69
+#, c-format
+msgid ""
+"Transfers files between two remote servers.  Usage:\n"
+"  fxp [options] files\n"
+"Options:\n"
+"  -a, --append         append if destination exists\n"
+"  -D, --delete-after   delete source file after successful transfer\n"
+"      --dir-mask=GLOB  enter only directories matching GLOB pattern\n"
+"      --dir-rx-mask=REGEXP\n"
+"                       enter only directories matching REGEXP pattern\n"
+"  -f, --force          overwrite existing destinations, never prompt\n"
+"  -e, --skip-empty     skip empty files\n"
+"  -H, --nohup          transfer files in background (nohup mode), quits "
+"yafc\n"
+"  -i, --interactive    prompt before each transfer\n"
+"  -L, --logfile=FILE   use FILE as logfile instead of ~/.yafc/nohup/nohup."
+"<pid>\n"
+"  -m, --mask=GLOB      only transfer files matching GLOB pattern\n"
+"  -M, --rx-mask=REGEXP only transfer files matching REGEXP pattern\n"
+"  -n, --newer          transfer file if destination is newer than source "
+"file\n"
+"  -o, --output=DEST    store in destination file/directory DEST\n"
+"  -p, --preserve       try to preserve file attributes\n"
+"  -P, --parents        append source path to destination\n"
+"  -q, --quiet          overrides --verbose\n"
+"  -r, --recursive      transfer directories recursively\n"
+"  -R, --resume         resume broken download (restart at eof)\n"
+"  -s, --skip-existing  skip file if destination exists\n"
+"  -t, --tagged         transfer tagged files\n"
+"  -T, --target=HOST    specify target host\n"
+"      --type=TYPE      specify transfer type, 'ascii' or 'binary'\n"
+"  -u, --unique         store in unique filename (if target supports STOU)\n"
+"  -v, --verbose        explain what is being done\n"
+"      --help           display this help\n"
+msgstr ""
+
+#: ../src/fxp.c:149 ../src/put.c:119
+#, c-format
+msgid "sent %s\n"
+msgstr ""
+
+#: ../src/fxp.c:151 ../src/put.c:121
+#, c-format
+msgid "failed to send %s: %s\n"
+msgstr ""
+
+#: ../src/fxp.c:203 ../src/get.c:228 ../src/put.c:169
+#, c-format
+msgid "failed to create directory %s\n"
+msgstr ""
+
+#: ../src/fxp.c:228 ../src/put.c:193
+#, c-format
+msgid "Remote file '%s' exists, skipping...\n"
+msgstr ""
+
+#: ../src/fxp.c:246 ../src/put.c:203
+#, c-format
+msgid "Remote file '%s' is newer than local, skipping...\n"
+msgstr ""
+
+#: ../src/fxp.c:258
+#, c-format
+msgid "File '%s' exists, overwrite?"
+msgstr ""
+
+#: ../src/fxp.c:308 ../src/get.c:359
+#, c-format
+msgid "Delete remote file '%s'?"
+msgstr ""
+
+#: ../src/fxp.c:326 ../src/get.c:374 ../src/put.c:291
+#, c-format
+msgid "%s: deleted\n"
+msgstr ""
+
+#: ../src/fxp.c:328 ../src/get.c:376 ../src/put.c:293
+#, c-format
+msgid "error deleting '%s': %s\n"
+msgstr ""
+
+#: ../src/fxp.c:372 ../src/get.c:439
+#, c-format
+msgid "Get '%s'?"
+msgstr ""
+
+#: ../src/fxp.c:413 ../src/get.c:486
+#, c-format
+msgid "%s: circular link -- skipping\n"
+msgstr ""
+
+#: ../src/fxp.c:467 ../src/get.c:541 ../src/put.c:396
+#, c-format
+msgid "%s: omitting directory\n"
+msgstr ""
+
+#: ../src/fxp.c:476 ../src/get.c:550 ../src/put.c:403
+#, c-format
+msgid "%s: not a regular file\n"
+msgstr ""
+
+#: ../src/fxp.c:491 ../src/get.c:565 ../src/put.c:414
+msgid "Continue transfer?"
+msgstr ""
+
+#. else a == ASKYES
+#: ../src/fxp.c:497 ../src/get.c:571 ../src/put.c:420
+#, c-format
+msgid "Excellent!!!\n"
+msgstr ""
+
+#: ../src/fxp.c:608 ../src/fxp.c:642 ../src/get.c:718 ../src/get.c:745
+#: ../src/put.c:523 ../src/put.c:556
+#, c-format
+msgid "Regexp '%s' failed: %s\n"
+msgstr ""
+
+#: ../src/fxp.c:654
+#, c-format
+msgid "FxP target not set, use --target=NAME (as first option)\n"
+msgstr ""
+
+#: ../src/fxp.c:723
+#, c-format
+msgid "No target specified, try '%s --help' for more information\n"
+msgstr ""
+
+#: ../src/fxp.c:749 ../src/get.c:833 ../src/put.c:653 ../src/rm.c:188
+#, c-format
+msgid "no tagged files\n"
+msgstr ""
+
+#: ../src/get.c:49
+#, c-format
+msgid ""
+"Receives files from remote.  Usage:\n"
+"  get [options] files\n"
+"Options:\n"
+"  -a, --append         append if destination exists\n"
+"  -c, --chmod=PERM     change mode of transferred files to PERM\n"
+"      --chgrp=GROUP    change group of transferred files to GROUP\n"
+"  -d, --no-dereference copy symbolic links as symbolic links\n"
+"  -D, --delete-after   delete remote file after successful transfer\n"
+"      --dir-mask=GLOB  enter only directories matching GLOB pattern\n"
+"      --dir-rx-mask=REGEXP\n"
+"                       enter only directories matching REGEXP pattern\n"
+"  -f, --force          overwrite existing destinations, never prompt\n"
+"  -e, --skip-empty     skip empty files\n"
+"  -H, --nohup          transfer files in background (nohup mode), quits "
+"yafc\n"
+"  -i, --interactive    prompt before each transfer\n"
+"  -L, --logfile=FILE   use FILE as logfile instead of ~/.yafc/nohup/nohup."
+"<pid>\n"
+"  -m, --mask=GLOB      get only files matching GLOB pattern\n"
+"  -M, --rx-mask=REGEXP get only files matching REGEXP pattern\n"
+"  -n, --newer          get file if remote is newer than local file\n"
+"  -o, --output=DEST    store in local file/directory DEST\n"
+"  -p, --preserve       try to preserve file attributes and timestamps\n"
+"  -P, --parents        append source path to destination\n"
+"  -q, --quiet          overrides --verbose\n"
+"  -r, --recursive      get directories recursively\n"
+"  -R, --resume         resume broken download (restart at eof)\n"
+"  -s, --skip-existing  skip file if destination exists\n"
+"  -t, --tagged         transfer tagged file(s)\n"
+"      --type=TYPE      specify transfer type, 'ascii' or 'binary'\n"
+"  -u, --unique         always store as unique local file\n"
+"  -v, --verbose        explain what is being done\n"
+"      --help           display this help\n"
+msgstr ""
+
+#: ../src/get.c:132
+#, c-format
+msgid "received %s\n"
+msgstr ""
+
+#: ../src/get.c:134
+#, c-format
+msgid "failed to receive %s: %s\n"
+msgstr ""
+
+#: ../src/get.c:254
+#, c-format
+msgid "Local file '%s' exists, skipping...\n"
+msgstr ""
+
+#: ../src/get.c:276
+#, c-format
+msgid "Local file '%s' is newer than remote, skipping...\n"
+msgstr ""
+
+#: ../src/get.c:294
+#, c-format
+msgid ""
+"Local file '%s' exists\n"
+"Local: %lld bytes, %sRemote: %lld bytes, %sOverwrite?"
+msgstr ""
+
+#: ../src/get.c:330
+#, c-format
+msgid "symlinking '%s' to '%s'\n"
+msgstr ""
+
+#: ../src/get.c:663
+#, c-format
+msgid "Invalid mode for --chmod: %s\n"
+msgstr ""
+
+#: ../src/get.c:667
+#, c-format
+msgid "virtual memory exhausted\n"
+msgstr ""
+
+#: ../src/get.c:675
+#, c-format
+msgid "%s is not a valid group name\n"
+msgstr ""
+
+#: ../src/get.c:686
+#, c-format
+msgid "you are not a member of group %s\n"
+msgstr ""
+
+#: ../src/help.c:40
+#, c-format
+msgid ""
+"No such command '%s'!\n"
+"\n"
+msgstr ""
+
+#: ../src/help.c:44
+#, c-format
+msgid "Available commands: (commands may be abbreviated)\n"
+msgstr ""
+
+#: ../src/help.c:68
+#, c-format
+msgid "Compiled "
+msgstr ""
+
+#: ../src/help.c:70
+#, c-format
+msgid "Using Readline version %s.\n"
+msgstr ""
+
+#: ../src/help.c:73
+#, c-format
+msgid "Using libssh version %d.%d.%d.\n"
+msgstr ""
+
+#: ../src/list.c:45
+#, c-format
+msgid ""
+"List information about FILE (the current directory by default).  Usage:\n"
+"  ls [options] [file]\n"
+"Options:\n"
+"  -a, --all                do not hide entries starting with .\n"
+"  -A, --almost-all         as --all but do not list . and ..\n"
+"  -B, --ignore-backups     do not list implied entries ending with ~\n"
+"  -C                       list entries by columns\n"
+"      --color[=WHEN]       control whether color is used to distinguish "
+"file\n"
+"                             types. WHEN may be 'never', 'always' or 'auto'\n"
+"  -d, --directory          list directory entries instead of contents\n"
+"      --dirs-first         shows directories first (last with --reverse)\n"
+"  -F, --classify           append a character for typing each entry\n"
+"  -g                       (ignored)\n"
+"  -G, --no-group           inhibit display of group information\n"
+"  -h, --human-readable     print sizes in human readable format (e.g., 1K "
+"234M)\n"
+"  -l                       use a long listing format\n"
+"  -N, --literal            print raw entry names (don't treat e.g. control\n"
+"                             characters specially)\n"
+"  -o                       use long listing format without group info\n"
+"  -r, --reverse            reverse order while sorting\n"
+"  -R, --recursive          list subdirectories recursively\n"
+"  -S                       sort by file size\n"
+"  -t                       sort by modification time\n"
+"  -U                       do not sort; list entries in directory order\n"
+"  -x                       list entries by lines instead of by columns\n"
+"  -X                       sort alphabetically by entry extension\n"
+"  -1                       list one file per line\n"
+"      --help               display this help\n"
+msgstr ""
+
+#: ../src/list.c:124
+#, c-format
+msgid "total %s\n"
+msgstr ""
+
+#: ../src/list.c:126
+#, c-format
+msgid "total %llu\n"
+msgstr ""
+
+#: ../src/list.c:589
+#, c-format
+msgid "total 0\n"
+msgstr ""
+
+#: ../src/local.c:36
+#, c-format
+msgid "Couldn't get local working directory...\n"
+msgstr ""
+
+#: ../src/local.c:39
+#, c-format
+msgid "local working directory is '%s'\n"
+msgstr ""
+
+#: ../src/local.c:68
+#, c-format
+msgid "Couldn't change local working directory...\n"
+msgstr ""
+
+#: ../src/login.c:28
+#, c-format
+msgid ""
+"Send new user information.  Usage:\n"
+"  user [options] [username]\n"
+"Options:\n"
+"  -m, --mechanism=MECH       try MECH as security mechanism(s) when logging "
+"in\n"
+"      --help             display this help\n"
+msgstr ""
+
+#: ../src/login.c:57 ../src/login.c:293
+msgid "Yafc was not compiled with security extensions.\n"
+msgstr ""
+
+#: ../src/login.c:105
+#, c-format
+msgid "Connect to what!? Need a hostname!\n"
+msgstr ""
+
+#: ../src/login.c:111
+#, c-format
+msgid ""
+"Ambiguous alias/hostname, use 'open --noalias' to skip bookmark alias "
+"lookup\n"
+msgstr ""
+
+#: ../src/login.c:216
+#, c-format
+msgid "Sleeping %u seconds before connecting again (attempt #%d)...\n"
+msgstr ""
+
+#: ../src/login.c:221
+#, c-format
+msgid "connection aborted\n"
+msgstr ""
+
+#: ../src/login.c:238
+#, c-format
+msgid ""
+"Connect and login to remote host.  Usage:\n"
+"  open [options] [proto://][user[:password]@]hostname[:port][/"
+"directory] ...\n"
+" proto can be either 'ftp' or 'ssh'\n"
+"Options:\n"
+"  -a, --anon                 try to login anonymously\n"
+"  -u, --noauto               disable autologin\n"
+"  -U, --noalias              disable bookmark alias lookup and abbreviation\n"
+"  -m, --mechanism=MECH       try MECH as security mechanism(s) when logging "
+"in\n"
+"  -p, --noproxy              don't connect via proxy\n"
+"  -s, --sftp=PATH            specify path to remote sftp_server\n"
+"      --help                 display this help and exit\n"
+msgstr ""
+
+#: ../src/ltag.c:23
+#, c-format
+msgid ""
+"Tag local file(s) for later transferring.  Usage:\n"
+"  ltag [option(s)] file(s)\n"
+"Options:\n"
+"  -c, --clear             clear the local taglist\n"
+"  -i, --info              show info of tagged files\n"
+"  -l, --list              list tagged files\n"
+"  -L, --load[=FILE]       load saved local taglist file\n"
+"  -s, --save[=FILE]       save local taglist\n"
+"  -h, --help              show this help\n"
+msgstr ""
+
+#: ../src/ltag.c:49
+msgid "Unable to save local taglist file"
+msgstr ""
+
+#: ../src/ltag.c:58
+#, c-format
+msgid "Saved local taglist to %s\n"
+msgstr ""
+
+#: ../src/ltag.c:84
+#, c-format
+msgid "No saved local taglist\n"
+msgstr ""
+
+#: ../src/ltag.c:92
+msgid "Found saved local taglist, load it now?"
+msgstr ""
+
+#: ../src/ltag.c:130 ../src/ltag.c:142 ../src/ltag.c:214
+#, c-format
+msgid "nothing tagged -- use 'ltag' to tag files\n"
+msgstr ""
+
+#: ../src/ltag.c:145
+#, c-format
+msgid "%u files tagged\n"
+msgstr ""
+
+#: ../src/main.c:40
+#, c-format
+msgid ""
+"This is yet another FTP client.  Usage:\n"
+" %s [options] [[proto://][user[:password]@]hostname[:port][/directory] ...]\n"
+" proto can be either 'ftp' or 'ssh'\n"
+"Options:\n"
+"  -a, --anon        (*) anonymous login\n"
+"  -d, --debug           print all commands sent to/from server\n"
+"  -D, --dump-rc         prints the default config file to stdout\n"
+"  -m, --mechanism=MECH\n"
+"                    (*) try MECH as security mechanism(s)\n"
+"  -n, --norc            don't parse config file\n"
+"  -p, --noproxy     (*) don't connect via proxy\n"
+"  -q, --quiet           don't print the yafc welcome message\n"
+"  -r, --rcfile=FILE     use other config file instead of ~/.yafc/yafcrc\n"
+"  -t, --trace[=FILE]    use a trace file (mainly for debugging)\n"
+"               if FILE specified, use it instead of ~/.yafc/trace/trace."
+"<pid>\n"
+"  -u, --noauto      (*) disable autologin\n"
+"  -U, --noalias     (*) disable bookmark alias lookup and abbreviation\n"
+"  -v, --verbose         print all replies from server\n"
+"  -w, --wait=TIME       use a different wait time for reconnecting\n"
+"  -W, --workdir=DIR     use a different working directory (instead of ~/."
+"yafc)\n"
+"  -V, --version         print version information and quit\n"
+"  -h, --help            print this help and quit\n"
+"\n"
+"(*) only applies for login to host specified on the command line\n"
+"\n"
+"Report bugs to "
+msgstr ""
+
+#. printf(_("This seems to be the first time you run Yafc...\n"));
+#: ../src/main.c:213
+#, c-format
+msgid "creating working directory %s: "
+msgstr ""
+
+#: ../src/main.c:220 ../src/main.c:231 ../src/main.c:243 ../src/main.c:261
+#, c-format
+msgid "done\n"
+msgstr ""
+
+#: ../src/main.c:223 ../src/main.c:235
+#, c-format
+msgid "creating directory %s: "
+msgstr ""
+
+#: ../src/main.c:248
+#, c-format
+msgid "creating default config file /yafcrc: "
+msgstr ""
+
+#: ../src/main.c:402
+#, c-format
+msgid ""
+"No proxy host defined!\n"
+"\n"
+msgstr ""
+
+#: ../src/main.c:412
+#, c-format
+msgid "Invalid value for --wait: %d\n"
+msgstr ""
+
+#: ../src/main.c:424
+#, c-format
+msgid "Couldn't open tracefile '%s': %s\n"
+msgstr ""
+
+#: ../src/put.c:47
+#, c-format
+msgid ""
+"Send files to remote.  Usage:\n"
+"  put [options] file(s) (can include wildcards)\n"
+"Options:\n"
+"  -a, --append         append if destination file exists\n"
+"  -D, --delete-after   delete local file after successful transfer\n"
+"      --dir-mask=GLOB  enter only directories matching GLOB pattern\n"
+"      --dir-rx-mask=REGEXP\n"
+"                       enter only directories matching REGEXP pattern\n"
+"  -e, --skip-empty     skip empty files\n"
+"  -f, --force          overwrite existing destinations, never prompt\n"
+"  -H, --nohup          transfer files in background (nohup mode), quits "
+"yafc\n"
+"  -i, --interactive    prompt before transferring each file\n"
+"  -L, --logfile=FILE   specify other logfile used by --nohup\n"
+"  -m, --mask=GLOB      put only files matching GLOB pattern\n"
+"  -M, --rx-mask=REGEXP put only files matching REGEXP pattern\n"
+"  -n, --newer          transfer file if local is newer than remote file\n"
+"  -o, --output=DEST    store in remote file/directory DEST\n"
+"  -p, --preserve       try to preserve file attributes\n"
+"  -P, --parents        append source path to destination\n"
+"  -q, --quiet          overrides --verbose\n"
+"  -r, --recursive      upload directories recursively\n"
+"  -R, --resume         resume broken transfer (restart at EOF)\n"
+"  -s, --skip-existing  always skip existing files\n"
+"  -S, --stats[=NUM]    set stats transfer threshold; default is always\n"
+"  -t, --tagged         transfer (locally) tagged file(s)\n"
+"      --type=TYPE      specify transfer type, 'ascii' or 'binary'\n"
+"  -v, --verbose        explain what is being done\n"
+"  -u, --unique         store in unique filename (if server supports STOU)\n"
+"      --help           display this help\n"
+msgstr ""
+
+#: ../src/put.c:225
+#, c-format
+msgid ""
+"Remote file '%s' exists\n"
+"Local: %lld bytes, %sRemote: %lld bytes, %sOverwrite?"
+msgstr ""
+
+#: ../src/put.c:277
+#, c-format
+msgid "Delete local file '%s'?"
+msgstr ""
+
+#: ../src/put.c:341
+#, c-format
+msgid "Put '%s'?"
+msgstr ""
+
+#: ../src/put.c:580
+#, c-format
+msgid "Remote doesn't support the STOU (store unique) command\n"
+msgstr ""
+
+#: ../src/rc.c:32
+#, c-format
+msgid "Error(s) while parsing '%s':\n"
+msgstr ""
+
+#: ../src/rc.c:92
+msgid "unmatched quote\n"
+msgstr ""
+
+#: ../src/rc.c:99
+msgid "string too long or unmatched quote, truncated\n"
+msgstr ""
+
+#: ../src/rc.c:114
+msgid "Unexpected end of file encountered\n"
+msgstr ""
+
+#: ../src/rc.c:121 ../src/set.c:170
+#, c-format
+msgid "Expected boolean value, but got '%s'\n"
+msgstr ""
+
+#: ../src/rc.c:146
+msgid "'machine' directive needs a hostname\n"
+msgstr ""
+
+#: ../src/rc.c:162
+#, c-format
+msgid "'alias' directive not useful with domains\n"
+msgstr ""
+
+#: ../src/rc.c:174
+#, c-format
+msgid ""
+"WARNING! Config file contains passwords but is readable by others (mode "
+"%03o)\n"
+msgstr ""
+
+#: ../src/rc.c:259
+msgid ""
+"As a computer, I find your faith in technology amusing...\n"
+"Too many errors\n"
+msgstr ""
+
+#: ../src/rc.c:315 ../src/rc.c:328 ../src/rc.c:341
+#, c-format
+msgid "Expected boolean value or 'ask', but got '%s'\n"
+msgstr ""
+
+#: ../src/rc.c:353
+#, c-format
+msgid "Unknown default_type parameter '%s'... (use 'ascii' or 'binary')\n"
+msgstr ""
+
+#: ../src/rc.c:368
+#, c-format
+msgid "Invalid value for long_command_time: %d\n"
+msgstr ""
+
+#: ../src/rc.c:376
+#, c-format
+msgid "Invalid value for connect_wait_time: %d\n"
+msgstr ""
+
+#: ../src/rc.c:384
+#, c-format
+msgid "Invalid value for cache_timeout: %d\n"
+msgstr ""
+
+#: ../src/rc.c:405
+#, c-format
+msgid "Skipping circular include statement: %s\n"
+msgstr ""
+
+#: ../src/rc.c:475
+#, c-format
+msgid "Invalid value for history_max: %d\n"
+msgstr ""
+
+#: ../src/rc.c:491
+#, c-format
+msgid "Invalid value for stats_threshold: %i\n"
+msgstr ""
+
+#: ../src/rc.c:522
+#, c-format
+msgid "Invalid value for proxy_type: %d\n"
+msgstr ""
+
+#: ../src/rc.c:540
+#, c-format
+msgid "Config parse error: '%s'\n"
+msgstr ""
+
+#: ../src/redir.c:33
+#, c-format
+msgid "Asynchronous mode NOT supported (found '&' in command)\n"
+msgstr ""
+
+#: ../src/redir.c:67 ../src/redir.c:81
+#, c-format
+msgid "missing redirection argument\n"
+msgstr ""
+
+#: ../src/redir.c:149
+#, c-format
+msgid "Error, cannot restore stdout!\n"
+msgstr ""
+
+#: ../src/rm.c:30
+#, c-format
+msgid ""
+"Remove file(s).  Usage:\n"
+"  rm [options] file ...\n"
+"Options:\n"
+"  -f, --force           never prompt\n"
+"  -i, --interactive     prompt before any removal\n"
+"  -r, --recursive       remove the contents of directories recursively\n"
+"                          CAREFUL!\n"
+"  -t, --tagged          remove tagged files\n"
+"  -v, --verbose         explain what is being done\n"
+"      --help            display this help\n"
+msgstr ""
+
+#: ../src/rm.c:78
+#, c-format
+msgid "Remove remote file '%s'?"
+msgstr ""
+
+#: ../src/rm.c:118
+#, c-format
+msgid "%s  omitting directory\n"
+msgstr ""
+
+#: ../src/rm.c:182
+#, c-format
+msgid "no files found\n"
+msgstr ""
+
+#: ../src/set.c:25
+msgid "autologin is on"
+msgstr ""
+
+#: ../src/set.c:27
+msgid "autologin is off"
+msgstr ""
+
+#: ../src/set.c:40
+msgid "verbose is on"
+msgstr ""
+
+#: ../src/set.c:43
+msgid "verbose is off"
+msgstr ""
+
+#: ../src/set.c:61
+msgid "passive mode is on"
+msgstr ""
+
+#: ../src/set.c:63
+msgid "passive mode is off"
+msgstr ""
+
+#: ../src/set.c:76
+msgid "debug is on"
+msgstr ""
+
+#: ../src/set.c:79
+msgid "debug is off"
+msgstr ""
+
+#: ../src/set.c:94
+#, c-format
+msgid "Unknown type '%s'? Use 'ascii' or 'binary'\n"
+msgstr ""
+
+#: ../src/set.c:99
+#, c-format
+msgid "default type is '%s'\n"
+msgstr ""
+
+#: ../src/set.c:110
+#, c-format
+msgid "anonymous password is '%s'\n"
+msgstr ""
+
+#: ../src/set.c:158
+#, c-format
+msgid "No such variable '%s'\n"
+msgstr ""
+
+#: ../src/set.c:161
+#, c-format
+msgid "Ambiguous variable '%s'\n"
+msgstr ""
+
+#: ../src/stats.c:55
+#, c-format
+msgid "Transferred %u files, "
+msgstr ""
+
+#: ../src/stats.c:57
+#, c-format
+msgid "Skipped %u files, "
+msgstr ""
+
+#: ../src/stats.c:59
+#, c-format
+msgid "%u failures, "
+msgstr ""
+
+#: ../src/stats.c:61
+#, c-format
+msgid ""
+"total size %u bytes.\n"
+"\n"
+msgstr ""
+
+#: ../src/tag.c:23
+#, c-format
+msgid ""
+"Tag file(s) for later transferring.  Usage:\n"
+"  tag [option(s)] [file(s)]\n"
+"Options:\n"
+"  -c, --clear             clear the taglist\n"
+"  -i, --info              show info of tagged files\n"
+"  -l, --list              list tagged files\n"
+"  -L, --load[=FILE]       load saved taglist file for this host\n"
+"  -s, --save[=FILE]       save taglist\n"
+"  -h, --help              show this help\n"
+msgstr ""
+
+#: ../src/tag.c:52
+msgid "Unable to save taglist file"
+msgstr ""
+
+#: ../src/tag.c:62
+#, c-format
+msgid "Saved taglist to %s\n"
+msgstr ""
+
+#: ../src/tag.c:92
+#, c-format
+msgid "No saved taglist for %s\n"
+msgstr ""
+
+#: ../src/tag.c:101
+msgid "Found saved taglist, load it now?"
+msgstr ""
+
+#: ../src/tag.c:148 ../src/tag.c:162
+#, c-format
+msgid "nothing tagged -- use 'tag' to tag files\n"
+msgstr ""
+
+#: ../src/tag.c:166
+#, c-format
+msgid "%lu bytes (%s) in %u files tagged\n"
+msgstr ""
+
+#: ../src/tag.c:168
+#, c-format
+msgid "%llu directories tagged\n"
+msgstr ""
+
+#: ../src/tag.c:244
+msgid "nothing tagged -- use 'tag' to tag files"
+msgstr ""
+
+#: ../src/transfer.c:169
+msgid "stalled"
+msgstr ""
+
+#: ../src/transfer.c:263
+#, c-format
+msgid "transfer interrupted\n"
+msgstr ""
+
+#: ../src/transfer.c:265
+#, c-format
+msgid "transfer I/O error\n"
+msgstr ""
+
+#: ../src/transfer.c:325
+#, c-format
+msgid "Redirecting output to %s\n"
+msgstr ""
+
+#: ../src/transfer.c:339 ../src/transfer.c:345
+#, c-format
+msgid "Transfer aborted %s"
+msgstr ""
+
+#: ../src/transfer.c:341 ../src/transfer.c:346
+#, c-format
+msgid "%s may not have transferred correctly\n"
+msgstr ""
+
+#: ../src/transfer.c:368
+#, c-format
+msgid "Connected to %s as user %s\n"
+msgstr ""
+
+#: ../src/transfer.c:372
+#, c-format
+msgid "Transfer started %s\n"
+msgstr ""
+
+#: ../src/transfer.c:374
+#, c-format
+msgid "Transfer received SIGHUP %s\n"
+msgstr ""
+
+#: ../src/transfer.c:377
+#, c-format
+msgid "Command: '%s'\n"
+msgstr ""
+
+#. change buffering
+#: ../src/transfer.c:394
+#, c-format
+msgid ""
+"From: yafc@%s\n"
+"Subject: yafc transfer finished on %s\n"
+"\n"
+"This is an automatic message sent by yafc\n"
+"Your transfer is finished!\n"
+"\n"
+"connected to %s as user %s\n"
+"command was: %s\n"
+"started %s\n"
+"\n"
+"(please do not reply to this mail)\n"
+"\n"
+msgstr ""
+
+#: ../src/transfer.c:425
+#, c-format
+msgid ""
+"Done\n"
+"Transfer ended %s\n"
+msgstr ""
+
+#: ../src/transfer.c:436
+#, c-format
+msgid "Unable to send mail (using %s)\n"
+msgstr ""
+
+#: ../src/utils.c:172
+#, c-format
+msgid "invalid connection number: '%d'\n"
+msgstr ""
+
+#: ../src/utils.c:185
+#, c-format
+msgid "no such connection open: '%s'\n"
+msgstr ""
+
+#: ../src/utils.c:215
+#, c-format
+msgid "Executing '%s', use 'exit' to exit from shell...\n"
+msgstr ""

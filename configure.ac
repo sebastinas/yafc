@@ -32,6 +32,18 @@ AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 LT_INIT
 
+dnl gettext et al
+IT_PROG_INTLTOOL
+
+GETTEXT_PACKAGE=yafc
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"],
+                   [The domain to use with gettext])
+AM_GLIB_GNU_GETTEXT
+
+YAFC_LOCALEDIR=[${datadir}/locale]
+AC_SUBST(YAFC_LOCALEDIR)
+
 dnl
 dnl Checks for header files.
 dnl
@@ -291,7 +303,8 @@ AC_CONFIG_FILES([Makefile \
                  lib/Makefile \
                  src/Makefile \
                  src/ftp/Makefile \
-                 src/libmhe/Makefile])
+                 src/libmhe/Makefile \
+                 po/Makefile.in])
 AC_OUTPUT
 
 echo

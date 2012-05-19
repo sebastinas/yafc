@@ -30,6 +30,8 @@ INCLUDES = -I$(srcdir) \
 
 DEFS = -DSYSCONFDIR=\"@sysconfdir@\" @DEFS@
 
+AM_CPPFLAGS = -DLOCALEDIR=\"${YAFC_LOCALEDIR}\"
+
 CLEANFILES=*~ \#*\#
 DISTCLEANFILES=.deps/* yafcrc.h
 

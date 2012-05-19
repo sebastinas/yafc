@@ -7,7 +7,7 @@ EXTRA_DIST = BUGS THANKS COPYRIGHT \
 						 contrib/yafc-import_ncftp.pl \
 						 completion/yafc
 
-SUBDIRS = doc lib src
+SUBDIRS = doc lib src po
 
 ACLOCAL_AMFLAGS = -I cf
 
