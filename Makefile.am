@@ -2,8 +2,8 @@
 
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = BUGS THANKS COPYRIGHT \
-						 yafcrc.sample \
-						 inputrc.sample \
+						 samples/yafcrc \
+						 samples/inputrc \
 						 contrib/yafc-import_ncftp.pl \
 						 completion/yafc
 
