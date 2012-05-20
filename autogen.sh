@@ -2,12 +2,12 @@
 
 [ -d support ] || mkdir support || exit
 
-echo -n "Running autoreconf..."
-autoreconf -i -s || exit
-echo " done"
-
 echo -n "Running intltoolize..."
 intltoolize -f --automake || exit
+echo " done"
+
+echo -n "Running autoreconf..."
+autoreconf -i -s || exit
 echo " done"
 
 echo "Running configure $*..."
