@@ -11,6 +11,8 @@ known BUGS
 * using a slash ('/') in a bookmarks alias name will lead yafc into thinking
    there is a directory to change into
 * issuing a "ls /usr /var" gives a listing of both directories mixed together
+* slow SFTP transfers
+* Stalled transfers never timeout
 
 --
 Please report bugs to https://github.com/sebastinas/yafc/issues
