@@ -77,6 +77,7 @@ void list_delitem(list *lp, listitem *lip)
 		lp->last = lip->prev;
 	if(lp->freefunc)
 		lp->freefunc(lip->data);
+  free(lip);
 	lp->numitem--;
 }
 
