@@ -13,6 +13,7 @@
 #ifndef _input_h_included
 #define _input_h_included
 
+#include "syshdr.h"
 #include "args.h"
 
 #define HISTORY_FILENAME ".yafc_history"
@@ -34,7 +35,7 @@ char *input_read_string(const char *prompt);
 int input_read_args(args_t **args, const char *prompt);
 void input_save_history(void);
 void input_redisplay_prompt(void);
-int ask(int opt, int def, const char *prompt, ...);
+int ask(int opt, int def, const char *prompt, ...) YAFC_PRINTF(3, 4);
 
 char *make_dequoted_filename(const char *text, int quote_char);
 

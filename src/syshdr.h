@@ -13,6 +13,15 @@
 #ifndef _syshdr_h_included
 #define _syshdr_h_included
 
+#ifndef YAFC_PRINTF
+# if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4)
+#  define YAFC_PRINTF(format_idx, arg_idx) \
+    __attribute__((__format__ (__printf__, format_idx, arg_idx)))
+# else
+#  define YAFC_PRINTF(format_idx, arg_idx)
+# endif
+#endif
+
 #ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif
@@ -90,7 +99,7 @@ typedef unsigned long long int u_int64_t;
 void herror(const char *s);
 #endif
 #if defined HAVE_DECL_ASPRINTF && !HAVE_DECL_ASPRINTF
-int asprintf(char **strp, const char *format, ...);
+int asprintf(char **strp, const char *format, ...) YAFC_PRINTF(2, 3);
 #endif
 #if defined HAVE_DECL_VASPRINTF && !HAVE_DECL_VASPRINTF
 int vasprintf(char **strp, const char *format, va_list ap);
@@ -249,15 +258,5 @@ typedef enum {false, true} bool;
 #define test(a, b)   (((a) & (b)) == (b))
 #define STD_SHELL "/bin/sh"
 #define DEFAULT_PAGER "more"
-
-
-#ifndef YAFC_PRINTF
-# if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4)
-#  define YAFC_PRINTF(format_idx, arg_idx) \
-    __attribute__((__format__ (__printf__, format_idx, arg_idx)))
-# else
-#  define YAFC_PRINTF(format_idx, arg_idx)
-# endif
-#endif
 
 #endif

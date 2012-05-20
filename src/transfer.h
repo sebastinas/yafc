@@ -18,7 +18,7 @@ int transfer_init_nohup(const char *str);
 void transfer_begin_nohup(int argc, char **argv);
 void transfer_end_nohup(void);
 void transfer_nextfile(list *gl, listitem **li, bool removeitem);
-void transfer_mail_msg(const char *fmt, ...);
+void transfer_mail_msg(const char *fmt, ...) YAFC_PRINTF(1, 2);
 
 void add_ascii_transfer_masks(const char *str);
 bool ascii_transfer(const char *mask);
