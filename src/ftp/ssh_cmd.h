@@ -1,5 +1,5 @@
 /*
- * ssh_cmd.h --
+ * ssh_cmd.h -- sftp support via libssh.
  *
  * Yet Another FTP Client
  * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
@@ -13,7 +13,6 @@
 #ifndef _ssh_cmd_h_
 #define _ssh_cmd_h_
 
-/* ssh_cmd.c */
 int ssh_open_url(url_t *urlp);
 char *ssh_getcurdir(void);
 int ssh_chdir(const char *path);
@@ -30,12 +29,12 @@ rdirectory *ssh_read_directory(const char *path);
 int ssh_rename(const char *oldname, const char *newname);
 time_t ssh_filetime(const char *filename);
 int ssh_list(const char *cmd, const char *param, FILE *fp);
-int ssh_receive(const char *path, FILE *fp,
-				transfer_mode_t mode, ftp_transfer_func hookf);
+int ssh_receive(const char *path, FILE *fp, transfer_mode_t mode,
+    ftp_transfer_func hookf);
 void ssh_pwd(void);
 int ssh_do_receive(const char *infile, FILE *fp, getmode_t mode,
-					 ftp_transfer_func hookf);
+    ftp_transfer_func hookf);
 int ssh_send(const char *path, FILE *fp, putmode_t how,
-			 transfer_mode_t mode, ftp_transfer_func hookf);
+    transfer_mode_t mode, ftp_transfer_func hookf);
 
 #endif
