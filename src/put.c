@@ -553,7 +553,7 @@ void cmd_put(int argc, char **argv)
 			ret = regcomp(&put_rx_mask, optarg, REG_EXTENDED);
 			if(ret != 0) {
 				regerror(ret, &put_rx_mask, put_rx_errbuf, 128);
-				ftp_err(_("Regexp '%s' failed: %s\n"), optind, put_rx_errbuf);
+				ftp_err(_("Regexp '%s' failed: %s\n"), optarg, put_rx_errbuf);
 				return;
 			} else
 				put_rx_mask_set = true;

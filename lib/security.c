@@ -536,7 +536,7 @@ int sec_login(char *host, const char *mech_to_try)
 
 	tmp = realloc(ftp->app_data, (*m)->size);
 	if (tmp == NULL) {
-		ftp_err(_("realloc %u failed"), (*m)->size);
+		ftp_err(_("realloc %zu failed"), (*m)->size);
 		return -1;
 	}
 	ftp->app_data = tmp;
