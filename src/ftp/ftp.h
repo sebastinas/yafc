@@ -128,7 +128,6 @@ typedef struct Ftp
 	ssh_session session;
 	sftp_session sftp_session;
 	int ssh_version;
-	unsigned int ssh_id;
 #endif
 
 	char reply[MAXREPLY+1];  /* last reply string from server */

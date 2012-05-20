@@ -55,7 +55,6 @@ Ftp *ftp_create(void)
 #ifdef HAVE_LIBSSH
 		ftp->session = NULL;
 		ftp->sftp_session = NULL;
-		ftp->ssh_id = 1;
 #endif
 
     return ftp;
@@ -180,7 +179,6 @@ void ftp_reset_vars(void)
     ftp->host = 0;
 
 #ifdef HAVE_LIBSSH
-		ftp->ssh_id = 0;
 		if (ftp->session)
 		{
 			sftp_free(ftp->sftp_session);
