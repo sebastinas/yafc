@@ -2,11 +2,12 @@ New in git
 ----------
 
 * Fixed several memory leaks.
-* Fixed segfault if connection to the server got lost.
+* Fixed segfault if connection to the server got lost. (#19)
 * Use libssh for sftp transport.
-  - This adds support for ssh's config file. (Debian bug: ##224140)
+  - This adds support for ssh's config file. (Debian bug: #224140)
 * Reenable internationalization support.
 * Try to fix invalid addresses returned by PASV. (Debian bug: #365108)
+* Add support for usernames with white spaces. (#18)
 
 New in 1.1.3
 ------------

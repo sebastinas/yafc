@@ -2,7 +2,6 @@ TODO: Yafc 1.2.0
 -----------------
 
 * Fix SFTP slow transfers
-* Add support for usernames with whitespaces
 * Add support for stalled transfers to timeout
 > ability to specify preferred protocol (ssh/ftp) (Steve Grecni)
 > Enhance Documentation
