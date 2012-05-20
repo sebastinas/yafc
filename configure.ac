@@ -52,13 +52,13 @@ AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_HEADER_STAT
 AC_HEADER_TIME
+AX_CREATE_STDINT_H
 AC_CHECK_HEADERS(unistd.h \
                  stdlib.h \
                  pwd.h \
                  sys/stat.h \
                  sys/socket.h \
                  sys/types.h \
-                 sys/bitypes.h \
                  netdb.h \
                  netinet/in.h \
                  netinet/ip.h \
@@ -84,7 +84,6 @@ AC_TYPE_PID_T
 AC_TYPE_SIZE_T
 AC_TYPE_MODE_T
 dnl AC_STRUCT_TM
-YAFC_CHECK_TYPES
 
 AC_FUNC_ALLOCA
 AC_FUNC_FNMATCH_GNU
