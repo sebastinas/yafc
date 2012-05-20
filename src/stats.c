@@ -35,7 +35,7 @@ void stats_reset(Stats *stats)
 	stats->size = 0;
 }
 
-void stats_file(int type, u_int64_t size)
+void stats_file(int type, uint64_t size)
 {
 	gvStatsTransfer->size += size;
 
@@ -58,6 +58,6 @@ void stats_display(Stats *s, unsigned int threshold)
 	if (s->fail > 0)
 		printf(_("%u failures, "), s->fail);
 
-	printf(_("total size %u bytes.\n\n"), s->size);
+	printf(_("total size %lu bytes.\n\n"), s->size);
 }
 

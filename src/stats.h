@@ -20,7 +20,7 @@ typedef struct Stats
 	unsigned int success;
 	unsigned int skip;
 	unsigned int fail;
-	u_int64_t size;
+  uint64_t size;
 	
 } Stats;
 
@@ -37,7 +37,7 @@ void stats_reset(Stats *stats);
 * These operate on the global variable gvStatsTransfer
 * One day we might keep more stats (whole connection), so then these will operate on that object too.
 **/
-void stats_file(int type, u_int64_t size);
+void stats_file(int type, uint64_t size);
 
 #define STATS_SUCCESS 1
 #define STATS_SKIP 2

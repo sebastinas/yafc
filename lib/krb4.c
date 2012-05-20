@@ -157,7 +157,7 @@ krb4_auth(void *app_data, char *host)
     KTEXT_ST adat;
     MSG_DAT msg_data;
     int checksum;
-    u_int32_t cs;
+    uint32_t cs;
     struct krb4_data *d = app_data;
 #ifdef HAVE_KRB_GET_OUR_IP_FOR_REALM
     struct sockaddr_in *localaddr  = (struct sockaddr_in *)LOCAL_ADDR;
