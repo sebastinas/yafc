@@ -21,6 +21,55 @@
 #include "ssh_cmd.h"
 #endif
 
+static bool is_private(struct sockaddr* sa)
+{
+  if (sa->sa_family == AF_INET)
+  {
+    struct sockaddr_in* in = (struct sockaddr_in*) sa;
+    unsigned char* addr = (unsigned char*) &in->sin_addr.s_addr;
+    return (addr[0] == 10 ||
+        (addr[0] == 172 && addr[1] >= 16 && addr[1] < 32) ||
+        (addr[0] == 192 && addr[1] == 168));
+  }
+  return false;
+}
+
+static bool is_multicast(struct sockaddr* sa)
+{
+  if (sa->sa_family == AF_INET)
+  {
+    struct sockaddr_in* in = (struct sockaddr_in*) sa;
+    unsigned char* addr = (unsigned char*) &in->sin_addr.s_addr;
+    return (addr[0] >= 224 && addr[0] < 240);
+  }
+  return false;
+}
+
+static bool is_loopback(struct sockaddr* sa)
+{
+  if (sa->sa_family == AF_INET)
+  {
+    struct sockaddr_in* in = (struct sockaddr_in*) sa;
+    unsigned char* addr = (unsigned char*) &in->sin_addr.s_addr;
+    return (addr[0] >= 127 && addr[1] == 0 && addr[2] == 0 && addr[3] == 1);
+  }
+  return false;
+}
+
+
+static bool is_reserved(struct sockaddr* sa)
+{
+  if (sa->sa_family == AF_INET)
+  {
+    struct sockaddr_in* in = (struct sockaddr_in*) sa;
+    unsigned char* addr = (unsigned char*) &in->sin_addr.s_addr;
+    return (addr[0] >= 0 ||
+        (addr[0] == 127 && !is_loopback(sa)) ||
+        addr[0] >= 240);
+  }
+  return false;
+}
+
 static int ftp_pasv(unsigned char result[6])
 {
 	int pa[6];
@@ -83,17 +132,34 @@ static int ftp_init_transfer(void)
 	}
 	sock_copy(ftp->data, ftp->ctrl);
 
-	if(ftp_is_passive()) {
-		if(ftp_pasv(pac) != 0) {
+	if (ftp_is_passive())
+  {
+		if (ftp_pasv(pac) != 0) {
 			goto err1;
 		}
 
 		sock_getsockname(ftp->ctrl, &sa);
 		memcpy(&sa.sin_addr, pac, (size_t)4);
 		memcpy(&sa.sin_port, pac+4, (size_t)2);
-		if(sock_connect_addr(ftp->data, &sa) == -1)
+
+    struct sockaddr_in tmp;
+    sock_getsockname(ftp->ctrl, &tmp);
+    if (is_reserved((struct sockaddr*) &sa) ||
+        is_multicast((struct sockaddr*) &sa)  ||
+        (is_private((struct sockaddr*) &sa) != is_private((struct sockaddr*) &tmp)) ||
+        (is_loopback((struct sockaddr*) &sa) != is_loopback((struct sockaddr*) &tmp)))
+    {
+      // Invalid address returned by PASV. Replace with address from control
+      // socket.
+      ftp_err(_("Address returned by PASV seemds to be incorrect."));
+      sa.sin_addr = tmp.sin_addr;
+    }
+
+    if (sock_connect_addr(ftp->data, &sa) == -1)
 			goto err1;
-	} else {
+  }
+  else
+  {
 		sock_listen(ftp->data);
 
 		a = (unsigned char *)&ftp->data->local_addr.sin_addr;
