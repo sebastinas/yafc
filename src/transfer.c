@@ -451,6 +451,7 @@ void transfer_end_nohup(void)
 
 	ftp_quit_all();
 	list_free(gvFtpList);
+  gvFtpList = NULL;
 	free(nohup_logfile);
 	free(nohup_command);
 	gvars_destroy();

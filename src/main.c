@@ -461,5 +461,6 @@ int main(int argc, char **argv, char **envp)
 	command_loop();
 	/* should not return */
 	list_free(gvFtpList);
+  gvFtpList = NULL;
 	return 0;
 }

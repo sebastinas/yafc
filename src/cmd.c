@@ -34,6 +34,7 @@ void exit_yafc(void)
 {
 	ftp_quit_all();
 	list_free(gvFtpList);
+  gvFtpList = NULL;
 	input_save_history();
 	save_ltaglist(0);
 	gvars_destroy();
