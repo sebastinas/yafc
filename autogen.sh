@@ -11,4 +11,4 @@ intltoolize -f --automake || exit
 echo " done"
 
 echo "Running configure $*..."
-CFLAGS="-Wall -O2 -g" ./configure $*
+CFLAGS="-Wall -O2 -g $CFLAGS" ./configure $*
