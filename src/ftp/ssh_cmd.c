@@ -48,30 +48,30 @@ static int verify_knownhost(ssh_session session)
       break; /* ok */
 
     case SSH_SERVER_KNOWN_CHANGED:
-      fprintf(stderr, "Host key for server changed: it is now:\n");
-      ssh_print_hexa("Public key hash", hash, hlen);
-      fprintf(stderr, "For security reasons, connection will be stopped\n");
+      fprintf(stderr, _("Host key for server changed. It is now:\n"));
+      ssh_print_hexa(_("Public key hash"), hash, hlen);
+      fprintf(stderr, _("For security reasons, connection will be stopped.\n"));
       free(hash);
       return -1;
 
     case SSH_SERVER_FOUND_OTHER:
-      fprintf(stderr, "The host key for this server was not found but an other"
-        "type of key exists.\n");
-      fprintf(stderr, "An attacker might change the default server key to"
-        "confuse your client into thinking the key does not exist\n");
+      fprintf(stderr, _("The host key for this server was not found but an other"
+        "type of key exists.\n"));
+      fprintf(stderr, _("An attacker might change the default server key to"
+        "confuse your client into thinking the key does not exist\n"));
       free(hash);
       return -1;
 
     case SSH_SERVER_FILE_NOT_FOUND:
-      fprintf(stderr, "Could not find known host file.\n");
-      fprintf(stderr, "If you accept the host key here, the file will be"
-       "automatically created.\n");
+      fprintf(stderr, _("Could not find known host file.\n"));
+      fprintf(stderr, _("If you accept the host key here, the file will be"
+       "automatically created.\n"));
       /* fallback to SSH_SERVER_NOT_KNOWN behavior */
 
     case SSH_SERVER_NOT_KNOWN:
       hexa = ssh_get_hexa(hash, hlen);
-      fprintf(stderr,"The server is unknown. Do you trust the host key?\n");
-      fprintf(stderr, "Public key hash: %s\n", hexa);
+      fprintf(stderr, _("The server is unknown. Do you trust the host key?\n"));
+      fprintf(stderr, _("Public key hash: %s\n"), hexa);
       free(hexa);
       if (fgets(buf, sizeof(buf), stdin) == NULL)
       {
@@ -85,14 +85,14 @@ static int verify_knownhost(ssh_session session)
       }
       if (ssh_write_knownhost(session) < 0)
       {
-        fprintf(stderr, "Error %s\n", strerror(errno));
+        fprintf(stderr, _("Error %s\n"), strerror(errno));
         free(hash);
         return -1;
       }
       break;
 
     case SSH_SERVER_ERROR:
-      fprintf(stderr, "Error %s", ssh_get_error(session));
+      fprintf(stderr, _("Error %s\n"), ssh_get_error(session));
       free(hash);
       return -1;
   }
@@ -229,7 +229,7 @@ int ssh_open_url(url_t* urlp)
     args_init(args, 0, NULL);
     args_push_back(args, gvSSHOptions);
     if (ssh_options_getopt(ftp->session, &args->argc, args->argv) != SSH_OK) {
-      ftp_err("Failed to load SSH options from yafcrc config (ssh_options = '%s')\n", gvSSHOptions);
+      ftp_err(_("Failed to load SSH options from yafcrc config (ssh_options = '%s')\n"), gvSSHOptions);
       ssh_free(ftp->session);
       ftp->session = NULL;
       return -1;
@@ -247,7 +247,7 @@ int ssh_open_url(url_t* urlp)
   int r = ssh_options_parse_config(ftp->session, NULL);
   if (r != SSH_OK)
   {
-    ftp_err("Failed to parse ssh config: %s\n", ssh_get_error(ftp->session));
+    ftp_err(_("Failed to parse ssh config: %s\n"), ssh_get_error(ftp->session));
     ssh_free(ftp->session);
     ftp->session = NULL;
     return r;
@@ -261,7 +261,7 @@ int ssh_open_url(url_t* urlp)
   r = ssh_connect(ftp->session);
   if (r != SSH_OK)
   {
-    ftp_err("Couldn't initialise connection to server: %s\n", ssh_get_error(ftp->session));
+    ftp_err(_("Couldn't initialise connection to server: %s\n"), ssh_get_error(ftp->session));
     ssh_free(ftp->session);
     ftp->session = NULL;
     return r;
@@ -280,7 +280,7 @@ int ssh_open_url(url_t* urlp)
   r = test_several_auth_methods(ftp->session, urlp);
   if (r != SSH_OK)
   {
-    ftp_err("Authentication failed: %s\n", ssh_get_error(ftp->session));
+    ftp_err(_("Authentication failed: %s\n"), ssh_get_error(ftp->session));
     ssh_disconnect(ftp->session);
     ssh_free(ftp->session);
     ftp->session = NULL;
@@ -289,14 +289,14 @@ int ssh_open_url(url_t* urlp)
 
   ftp->ssh_version = ssh_get_version(ftp->session);
   if (!ftp->ssh_version) {
-    ftp_err("Couldn't initialise connection to server\n");
+    ftp_err(_("Couldn't initialise connection to server\n"));
     return -1;
   }
 
   ftp->sftp_session = sftp_new(ftp->session);
   if (!ftp->sftp_session)
   {
-    ftp_err("Couldn't initialise ftp subsystem: %s\n", ssh_get_error(ftp->session));
+    ftp_err(_("Couldn't initialise ftp subsystem: %s\n"), ssh_get_error(ftp->session));
     ssh_disconnect(ftp->session);
     ssh_free(ftp->session);
     ftp->session = NULL;
@@ -306,7 +306,7 @@ int ssh_open_url(url_t* urlp)
   r = sftp_init(ftp->sftp_session);
   if (r != SSH_OK)
   {
-    ftp_err("Couldn't initialise ftp subsystem: %s\n", ssh_get_error(ftp->sftp_session));
+    ftp_err(_("Couldn't initialise ftp subsystem: %s\n"), ssh_get_error(ftp->sftp_session));
     sftp_free(ftp->sftp_session);
     ftp->sftp_session = NULL;
     ssh_disconnect(ftp->session);
@@ -364,12 +364,12 @@ int ssh_chdir(const char *path)
     sftp_attributes attrib = sftp_stat(ftp->sftp_session, p);
     if (!attrib)
     {
-      ftp_err("Couldn't stat directory: %s\n", ssh_get_error(ftp->session));
+      ftp_err(_("Couldn't stat directory: %s\n"), ssh_get_error(ftp->session));
       free(p);
       return -1;
     }
     if (!S_ISDIR(attrib->permissions)) {
-      ftp_err("%s: not a directory\n", p);
+      ftp_err(_("%s: not a directory\n"), p);
       sftp_attributes_free(attrib);
       free(p);
       return -1;
@@ -395,7 +395,7 @@ int ssh_mkdir_verb(const char *path, verbose_t verb)
   int rc = sftp_mkdir(ftp->sftp_session, abspath, S_IRWXU);
   if (rc != SSH_OK && sftp_get_error(ftp->sftp_session) != SSH_FX_FILE_ALREADY_EXISTS)
   {
-    ftp_err("Couldn't create directory: %s\n", ssh_get_error(ftp->session));
+    ftp_err(_("Couldn't create directory: %s\n"), ssh_get_error(ftp->session));
     free(abspath);
     return rc;
   }
@@ -413,7 +413,7 @@ int ssh_rmdir(const char *path)
   int rc = sftp_rmdir(ftp->sftp_session, abspath);
   if (rc != SSH_OK && sftp_get_error(ftp->sftp_session) != SSH_FX_NO_SUCH_FILE)
   {
-    ftp_err("Couldn't remove directory: %s\n", ssh_get_error(ftp->session));
+    ftp_err(_("Couldn't remove directory: %s\n"), ssh_get_error(ftp->session));
     free(abspath);
     return rc;
   }
@@ -429,7 +429,7 @@ int ssh_unlink(const char *path)
   int rc = sftp_unlink(ftp->sftp_session, path);
   if (rc != SSH_OK && sftp_get_error(ftp->sftp_session) != SSH_FX_NO_SUCH_FILE)
   {
-    ftp_err("Couldn't delete file: %s\n", ssh_get_error(ftp->session));
+    ftp_err(_("Couldn't delete file: %s\n"), ssh_get_error(ftp->session));
     ftp->code = ctError;
     ftp->fullcode = 500;
     return -1;
@@ -448,7 +448,7 @@ int ssh_chmod(const char *path, const char *mode)
   int rc = sftp_chmod(ftp->sftp_session, path, perm);
   if (rc != SSH_OK)
   {
-    ftp_err("Couldn't chmod file: %s\n", ssh_get_error(ftp->session));
+    ftp_err(_("Couldn't chmod file: %s\n"), ssh_get_error(ftp->session));
     return -1;
   }
   ftp_cache_flush_mark_for(path);
@@ -526,7 +526,7 @@ rdirectory *ssh_read_directory(const char *path)
 
   if (!sftp_dir_eof(dir))
   {
-    ftp_err("Couldn't list directory: %s\n", ssh_get_error(ftp->session));
+    ftp_err(_("Couldn't list directory: %s\n"), ssh_get_error(ftp->session));
     sftp_closedir(dir);
     free(p);
     rdir_destroy(rdir);
@@ -551,7 +551,7 @@ int ssh_rename(const char *oldname, const char *newname)
   int rc = sftp_rename(ftp->sftp_session, on, nn);
   if (rc != SSH_OK)
   {
-    ftp_err("Couldn't rename file \"%s\" to \"%s\": %s\n",
+    ftp_err(_("Couldn't rename file '%s' to '%s': %s\n"),
         on, nn, ssh_get_error(ftp->session));
     free(on);
     free(nn);
@@ -578,7 +578,7 @@ time_t ssh_filetime(const char *filename)
 
 int ssh_list(const char *cmd, const char *param, FILE *fp)
 {
-  ftp_err("ssh_list() not implemented yet\n");
+  ftp_err(_("ssh_list() not implemented yet\n"));
 
   return -1;
 }
@@ -605,7 +605,7 @@ static int do_read(const char* infile, FILE* fp, getmode_t mode,
 
   if (S_ISDIR(attrib->permissions))
   {
-    ftp_err("Cannot download a directory: %s\n", infile);
+    ftp_err(_("Cannot download a directory: %s\n"), infile);
     sftp_attributes_free(attrib);
     return -1;
   }
@@ -615,7 +615,7 @@ static int do_read(const char* infile, FILE* fp, getmode_t mode,
   sftp_file file = sftp_open(ftp->sftp_session, infile, O_RDONLY, 0);
   if (!file)
   {
-    ftp_err("Cannot open file for reading: %s\n", ssh_get_error(ftp->session));
+    ftp_err(_("Cannot open file for reading: %s\n"), ssh_get_error(ftp->session));
     return -1;
   }
 
@@ -623,7 +623,7 @@ static int do_read(const char* infile, FILE* fp, getmode_t mode,
   int r = sftp_seek64(file, offset);
   if (r != SSH_OK)
   {
-    ftp_err("Failed to seek: %s\n", ssh_get_error(ftp->session));
+    ftp_err(_("Failed to seek: %s\n"), ssh_get_error(ftp->session));
     sftp_close(file);
     return -1;
   }
@@ -642,7 +642,7 @@ static int do_read(const char* infile, FILE* fp, getmode_t mode,
     errno = 0;
     if (fwrite(buffer, nbytes, 1, fp) != 1)
     {
-      ftp_err("Error while writing to file: %s\n", strerror(errno));
+      ftp_err(_("Error while writing to file: %s\n"), strerror(errno));
       ftp->ti.ioerror = true;
       sftp_close(file);
       return -1;
@@ -662,7 +662,7 @@ static int do_read(const char* infile, FILE* fp, getmode_t mode,
 
   if (nbytes < 0)
   {
-    ftp_err("Error while reading from file: %s\n", ssh_get_error(ftp->session));
+    ftp_err(_("Error while reading from file: %s\n"), ssh_get_error(ftp->session));
     r = -1;
   }
 
@@ -703,7 +703,7 @@ static int do_write(const char* path, FILE* fp, ftp_transfer_func hookf,
   errno = 0;
   if (fstat(fileno(fp), &sb) == -1)
   {
-    ftp_err("Couldn't fstat local file: &s\n", strerror(errno));
+    ftp_err(_("Couldn't fstat local file: %s\n"), strerror(errno));
     return -1;
   }
 
@@ -712,7 +712,7 @@ static int do_write(const char* path, FILE* fp, ftp_transfer_func hookf,
       (offset == 0u ? O_TRUNC : 0), sb.st_mode);
   if (!file)
   {
-    ftp_err("Cannot open file for writing: %s\n", ssh_get_error(ftp->session));
+    ftp_err(_("Cannot open file for writing: %s\n"), ssh_get_error(ftp->session));
     return -1;
   }
 
@@ -720,7 +720,7 @@ static int do_write(const char* path, FILE* fp, ftp_transfer_func hookf,
   int r = sftp_seek64(file, offset);
   if (r != SSH_OK)
   {
-    ftp_err("Failed to seek: %s\n", ssh_get_error(ftp->session));
+    ftp_err(_("Failed to seek: %s\n"), ssh_get_error(ftp->session));
     sftp_close(file);
     return -1;
   }
@@ -740,7 +740,7 @@ static int do_write(const char* path, FILE* fp, ftp_transfer_func hookf,
     ssize_t nwritten = sftp_write(file, buffer, nbytes);
     if (nwritten != nbytes)
     {
-      ftp_err("Error while writing to file: %s\n", ssh_get_error(ftp->session));
+      ftp_err(_("Error while writing to file: %s\n"), ssh_get_error(ftp->session));
       sftp_close(file);
       return -1;
     }
@@ -760,7 +760,7 @@ static int do_write(const char* path, FILE* fp, ftp_transfer_func hookf,
 
   if (ferror(fp))
   {
-    ftp_err("Failed to read from file: %s\n", strerror(errno));
+    ftp_err(_("Failed to read from file: %s\n"), strerror(errno));
     r = -1;
   }
 
@@ -781,7 +781,7 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
   ftp->ti.transfer_is_put = true;
 
   if(how == putUnique) {
-    ftp_err("Unique put with SSH not implemented yet\n");
+    ftp_err(_("Unique put with SSH not implemented yet\n"));
     return -1;
   }
 

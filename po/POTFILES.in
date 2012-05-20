@@ -10,6 +10,7 @@ src/ftp/ftp.c
 src/ftp/ftpsend.c
 src/ftp/ftpsigs.c
 src/ftp/socket.c
+src/ftp/ssh_cmd.c
 src/fxp.c
 src/get.c
 src/help.c
