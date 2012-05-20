@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: yafc 1.1.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-20 01:18+0200\n"
+"POT-Creation-Date: 2012-05-20 15:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,9 +16,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../lib/getopt.c:515
-#, fuzzy, c-format
+#, c-format
 msgid "%s: option `%s' is ambiguous\n"
-msgstr "varning: aliaset \"%s\" är tvetydigt\n"
+msgstr ""
 
 #: ../lib/getopt.c:539
 #, c-format
@@ -31,9 +31,9 @@ msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr ""
 
 #: ../lib/getopt.c:558
-#, fuzzy, c-format
+#, c-format
 msgid "%s: option `%s' requires an argument\n"
-msgstr "Saknar omdirigeringsargument\n"
+msgstr ""
 
 #. --option
 #: ../lib/getopt.c:586
@@ -68,9 +68,9 @@ msgid "Failed to decode base64 in reply\n"
 msgstr ""
 
 #: ../lib/kauth.c:114
-#, fuzzy, c-format
+#, c-format
 msgid "Password for %s:"
-msgstr "lösenord (%s): "
+msgstr ""
 
 #: ../lib/kauth.c:141 ../lib/krb4.c:196
 msgid "Out of memory base64-encoding\n"
@@ -99,9 +99,9 @@ msgid "Failed to decode base64 from server\n"
 msgstr ""
 
 #: ../lib/krb4.c:223
-#, fuzzy, c-format
+#, c-format
 msgid "Error reading reply from server: %s\n"
-msgstr "Fel vid tolkning av PASV-svar: \"%s\"\n"
+msgstr ""
 
 #: ../lib/krb4.c:229
 msgid "Bad checksum returned from server\n"
@@ -173,9 +173,9 @@ msgid "%s does not implement %s protection\n"
 msgstr ""
 
 #: ../lib/security.c:479
-#, fuzzy, c-format
+#, c-format
 msgid "Syntax error, try %s --help for more information\n"
-msgstr "Ej inloggad. Pröva \"user --help\" för mer information.\n"
+msgstr ""
 
 #: ../lib/security.c:539
 #, c-format
@@ -183,14 +183,14 @@ msgid "realloc %u failed"
 msgstr ""
 
 #: ../lib/security.c:545
-#, fuzzy, c-format
+#, c-format
 msgid "Skipping %s...\n"
-msgstr "Letar efter %s... "
+msgstr ""
 
 #: ../lib/security.c:548
-#, fuzzy, c-format
+#, c-format
 msgid "Trying %s...\n"
-msgstr "Letar efter %s... "
+msgstr ""
 
 #: ../lib/security.c:552
 #, c-format
@@ -232,7 +232,7 @@ msgstr "inga alias definierade\n"
 msgid "no such alias '%s'\n"
 msgstr "det finns inget alias \"%s\"\n"
 
-#: ../src/alias.c:158 ../src/cmd.c:288 ../src/commands.c:275
+#: ../src/alias.c:158 ../src/cmd.c:289 ../src/commands.c:275
 #, c-format
 msgid "ambiguous alias '%s'\n"
 msgstr "tvetydigt alias \"%s\"\n"
@@ -252,9 +252,8 @@ msgid "created bookmark %s\n"
 msgstr "skapade bokmärke %s\n"
 
 #: ../src/bookmark.c:331
-#, fuzzy
 msgid "Do you want to update the bookmark for this site?"
-msgstr "Vill du skapa ett bokmärke för den här platsen?"
+msgstr ""
 
 #: ../src/bookmark.c:343
 msgid "Do you want to create a bookmark for this site?"
@@ -266,7 +265,7 @@ msgid "updated bookmark %s\n"
 msgstr "uppdaterade bokmärke %s\n"
 
 #: ../src/bookmark.c:412
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Handle bookmarks.  Usage:\n"
 "  bookmark [options] [bookmark alias ...]\n"
@@ -279,24 +278,16 @@ msgid ""
 "  -u, --noupdate         toggle noupdate flag\n"
 "  -h, --help             show this help\n"
 msgstr ""
-"Hanterar bokmärken.  Användning:\n"
-"  bookmark [flaggor] [bokmärksalias ...]\n"
-"Flaggor:\n"
-"  -s, --save            spara bokmärken till ~/.yafc/bookmarks\n"
-"  -e, --edit            editera ~/.yafc/bookmarks med din $EDITOR\n"
-"  -r, --read            läs in bokmärkena från ~/.yafc/bookmarks igen\n"
-"  -l, --list            lista bokmärkena som finns i minnet\n"
-"  -h, --help            visa den här hjälptexten\n"
 
 #: ../src/bookmark.c:476
-#, fuzzy, c-format
+#, c-format
 msgid "bookmarks saved in %s\n"
-msgstr "bokmärken sparade i %s/bookmarks"
+msgstr ""
 
 #: ../src/bookmark.c:478 ../src/bookmark.c:547 ../src/bookmark.c:599
-#, fuzzy, c-format
+#, c-format
 msgid "bookmarks saved in %s/bookmarks\n"
-msgstr "bokmärken sparade i %s/bookmarks"
+msgstr "bokmärken sparade i %s/bookmarks\n"
 
 #: ../src/bookmark.c:492
 #, c-format
@@ -304,14 +295,14 @@ msgid "bookmarks read from %s\n"
 msgstr "läste in bokmärken från %s\n"
 
 #: ../src/bookmark.c:506
-#, fuzzy, c-format
+#, c-format
 msgid "%u bookmarks present in memory\n"
-msgstr "bokmärken sparade i %s/bookmarks"
+msgstr ""
 
 #: ../src/bookmark.c:538
-#, fuzzy, c-format
+#, c-format
 msgid "deleted bookmark %s\n"
-msgstr "skapade bokmärke %s\n"
+msgstr ""
 
 #: ../src/bookmark.c:568 ../src/bookmark.c:576 ../src/bookmark.c:590
 #, c-format
@@ -319,40 +310,38 @@ msgid "%s: noupdate: %s\n"
 msgstr ""
 
 #: ../src/bookmark.c:570 ../src/bookmark.c:578 ../src/bookmark.c:592
-#, fuzzy
 msgid "yes"
-msgstr "&ja"
+msgstr "ja"
 
 #: ../src/bookmark.c:570 ../src/bookmark.c:578 ../src/bookmark.c:592
-#, fuzzy
 msgid "no"
-msgstr "&nej"
+msgstr "nej"
 
-#: ../src/cmd.c:79
+#: ../src/cmd.c:80
 #, c-format
 msgid "restarted command loop, connection closed\n"
 msgstr "startade om kommando-loopen, anslutningen stängd\n"
 
-#: ../src/cmd.c:81
+#: ../src/cmd.c:82
 #, c-format
 msgid "restarted command loop, command aborted\n"
 msgstr "startade om kommando-loopen, kommandot avbrutet\n"
 
-#: ../src/cmd.c:99 ../src/commands.c:695
+#: ../src/cmd.c:100 ../src/commands.c:695
 msgid "not connected"
 msgstr "ej ansluten"
 
-#: ../src/cmd.c:160
+#: ../src/cmd.c:161
 #, c-format
 msgid "Not connected. Try 'open --help' for more information.\n"
 msgstr "Ej ansluten. Pröva \"open --help\" för mer information.\n"
 
-#: ../src/cmd.c:163
+#: ../src/cmd.c:164
 #, c-format
 msgid "Not logged in. Try 'user --help' for more information.\n"
 msgstr "Ej inloggad. Pröva \"user --help\" för mer information.\n"
 
-#: ../src/cmd.c:179
+#: ../src/cmd.c:180
 #, c-format
 msgid "input redirection not supported\n"
 msgstr "Omdirigering av indata ej tillåten\n"
@@ -466,9 +455,8 @@ msgid "Connecting to %s (%s) at port %d...\n"
 msgstr "Ansluter till %s (%s) på port %d...\n"
 
 #: ../src/ftp/ftp.c:358
-#, fuzzy
 msgid "Unable to create socket.\n"
-msgstr "Kan inte använda passivt läge\n"
+msgstr ""
 
 #: ../src/ftp/ftp.c:436 ../src/ftp/ftp.c:643
 msgid "No control connection\n"
@@ -493,14 +481,12 @@ msgstr "fel vid skrivning av kommando"
 
 #. server is closing control connection!
 #: ../src/ftp/ftp.c:681
-#, fuzzy
 msgid "Server closed control connection\n"
-msgstr "Värddatorn stängde anslutningen?\n"
+msgstr ""
 
 #: ../src/ftp/ftp.c:684
-#, fuzzy
 msgid "Reconnect failed\n"
-msgstr "anslutningen avbröts\n"
+msgstr ""
 
 #: ../src/ftp/ftp.c:686
 msgid "Automatic reconnect...\n"
@@ -543,14 +529,14 @@ msgid "Invalid protection level '%s'\n"
 msgstr ""
 
 #: ../src/ftp/ftp.c:916
-#, fuzzy, c-format
+#, c-format
 msgid "unknown mechanism '%s'\n"
-msgstr "det finns inget alias \"%s\"\n"
+msgstr ""
 
 #: ../src/ftp/ftp.c:920
-#, fuzzy, c-format
+#, c-format
 msgid "Yafc was not compiled with support for %s\n"
-msgstr "Yafc kompilerades inte med stöd för Kerberos4\n"
+msgstr "Yafc kompilerades inte med stöd för %s\n"
 
 #: ../src/ftp/ftp.c:935
 msgid "Authentication successful.\n"
@@ -578,64 +564,70 @@ msgstr "Värddatorn stöder inte SITE CHMOD\n"
 msgid "Server doesn't support SITE IDLE\n"
 msgstr "Värddatorn stöder inte SITE IDLE\n"
 
-#: ../src/ftp/ftpsend.c:31
+#: ../src/ftp/ftpsend.c:80
 msgid "Host doesn't support passive mode\n"
 msgstr "Värddatorn stöder inte passivt läge\n"
 
-#: ../src/ftp/ftpsend.c:43
+#: ../src/ftp/ftpsend.c:92
 msgid "Unable to enter passive mode\n"
 msgstr "Kan inte använda passivt läge\n"
 
-#: ../src/ftp/ftpsend.c:55
-#, fuzzy, c-format
+#: ../src/ftp/ftpsend.c:104
+#, c-format
 msgid "Error parsing PASV reply: '%s'\n"
-msgstr "Fel vid tolkning av PASV-svar: \"%s\"\n"
+msgstr "Fel vid tolkning av PASV-svar: '%s'\n"
 
-#: ../src/ftp/ftpsend.c:173
+#. Invalid address returned by PASV. Replace with address from control
+#. socket.
+#: ../src/ftp/ftpsend.c:154
+msgid "Address returned by PASV seemds to be incorrect."
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:239
 msgid "Waiting for remote to finish abort...\n"
 msgstr "Väntar på att värddatorn ska avsluta...\n"
 
-#: ../src/ftp/ftpsend.c:298
+#: ../src/ftp/ftpsend.c:364
 #, c-format
 msgid "read error: %s\n"
 msgstr "läsfel: %s\n"
 
-#: ../src/ftp/ftpsend.c:302
+#: ../src/ftp/ftpsend.c:368
 #, c-format
 msgid "write error: %s\n"
 msgstr "skrivfel: %s\n"
 
-#: ../src/ftp/ftpsend.c:623 ../src/ftp/ftpsend.c:758
+#: ../src/ftp/ftpsend.c:689 ../src/ftp/ftpsend.c:824
 msgid "data connection not accepted\n"
 msgstr "överföring vägrades\n"
 
-#: ../src/ftp/ftpsend.c:802
+#: ../src/ftp/ftpsend.c:868
 msgid "FxP between same hosts\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:846 ../src/ftp/ftpsend.c:1055
+#: ../src/ftp/ftpsend.c:912 ../src/ftp/ftpsend.c:1121
 #, c-format
 msgid "unable to get remote filesize of '%s', unable to resume\n"
 msgstr ""
 
 #. can't overwrite a directory
-#: ../src/ftp/ftpsend.c:935 ../src/ftp/ftpsend.c:1030 ../src/fxp.c:217
+#: ../src/ftp/ftpsend.c:1001 ../src/ftp/ftpsend.c:1096 ../src/fxp.c:217
 #: ../src/put.c:182
 #, c-format
 msgid "%s: is a directory\n"
 msgstr "%s är en katalog\n"
 
-#: ../src/ftp/ftpsend.c:939
+#: ../src/ftp/ftpsend.c:1005
 #, c-format
 msgid "%s: permission denied\n"
 msgstr "%s: åtkomst nekas\n"
 
-#: ../src/ftp/ftpsend.c:963
-#, fuzzy, c-format
+#: ../src/ftp/ftpsend.c:1029
+#, c-format
 msgid "Unable to stat file '%s': %s\n"
-msgstr "Kunde inte spara tagglista"
+msgstr ""
 
-#: ../src/ftp/ftpsend.c:992 ../src/ftp/ftpsend.c:1067
+#: ../src/ftp/ftpsend.c:1058 ../src/ftp/ftpsend.c:1133
 #, c-format
 msgid "%s: %s, transfer cancelled\n"
 msgstr "%s: %s, överföring avslutad\n"
@@ -682,7 +674,7 @@ msgid "setsockopt(LOWDELAY)... ignored"
 msgstr ""
 
 #: ../src/fxp.c:69
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Transfers files between two remote servers.  Usage:\n"
 "  fxp [options] files\n"
@@ -717,36 +709,6 @@ msgid ""
 "  -v, --verbose        explain what is being done\n"
 "      --help           display this help\n"
 msgstr ""
-"Hämta filer från värddatorn.  Användning:\n"
-"  get [flaggor] filer\n"
-"Flaggor:\n"
-"  -a, --append           lägg till i filen om målfilen existerar\n"
-"  -c, --chmod=PERM       ändra rättigheter på överförda filer till PERM\n"
-"      --chgrp=GROUP      ändra grupptillhörighet på överförda filer till "
-"GROUP\n"
-"  -d, --no-dereference   bevara symboliska länkar\n"
-"  -D, --delete-after     ta bort fil efter lyckad överföring\n"
-"  -f, --force            skriv över existerande målfiler, fråga aldrig\n"
-"  -H, --nohup            hämta filer i bakgrunden (nohup-läge), avslutar "
-"yafc\n"
-"  -i, --interactive      fråga före varje överföring\n"
-"  -L, --logfile=FILE     använd FILE som loggfil iställer för ~/.yafc/nohup/"
-"nohup.<pid>\n"
-"  -n, --newer            hämta filen om värddatorns fil är nyare än den "
-"lokala\n"
-"  -o, --output=DEST      spara filerna i den lokala katalogen DEST\n"
-"  -p, --preserve         försök att behålla filattribut och tidstämpling\n"
-"  -P, --parents          lägg till hela sökvägen till målfil\n"
-"  -q, --quiet            motsatsen till --verbose\n"
-"  -r, --recursive        hämta katalogen rekursivt\n"
-"  -R, --resume           fortsätt en avbruten överföring\n"
-"  -s, --skip-existing    hoppa över om målfilen redan finns\n"
-"  -t, --tagged           hämta taggade filer\n"
-"  -T, --target=HOST      överför filer till annan värddator HOST\n"
-"      --type=TYPE        ändra överföringstyp, \"ascii\" eller \"binary\"\n"
-"  -u, --unique           spara alltid målfil med unikt filnamn\n"
-"  -v, --verbose          förklara vad som händer\n"
-"      --help             visa den här hjälptexten\n"
 
 #: ../src/fxp.c:149 ../src/put.c:119
 #, c-format
@@ -835,9 +797,9 @@ msgid "FxP target not set, use --target=NAME (as first option)\n"
 msgstr ""
 
 #: ../src/fxp.c:723
-#, fuzzy, c-format
+#, c-format
 msgid "No target specified, try '%s --help' for more information\n"
-msgstr "Ej inloggad. Pröva \"user --help\" för mer information.\n"
+msgstr ""
 
 #: ../src/fxp.c:749 ../src/get.c:833 ../src/put.c:653 ../src/rm.c:188
 #, c-format
@@ -845,7 +807,7 @@ msgid "no tagged files\n"
 msgstr "inga filer är taggade\n"
 
 #: ../src/get.c:49
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Receives files from remote.  Usage:\n"
 "  get [options] files\n"
@@ -881,36 +843,6 @@ msgid ""
 "  -v, --verbose        explain what is being done\n"
 "      --help           display this help\n"
 msgstr ""
-"Hämta filer från värddatorn.  Användning:\n"
-"  get [flaggor] filer\n"
-"Flaggor:\n"
-"  -a, --append           lägg till i filen om målfilen existerar\n"
-"  -c, --chmod=PERM       ändra rättigheter på överförda filer till PERM\n"
-"      --chgrp=GROUP      ändra grupptillhörighet på överförda filer till "
-"GROUP\n"
-"  -d, --no-dereference   bevara symboliska länkar\n"
-"  -D, --delete-after     ta bort fil efter lyckad överföring\n"
-"  -f, --force            skriv över existerande målfiler, fråga aldrig\n"
-"  -H, --nohup            hämta filer i bakgrunden (nohup-läge), avslutar "
-"yafc\n"
-"  -i, --interactive      fråga före varje överföring\n"
-"  -L, --logfile=FILE     använd FILE som loggfil iställer för ~/.yafc/nohup/"
-"nohup.<pid>\n"
-"  -n, --newer            hämta filen om värddatorns fil är nyare än den "
-"lokala\n"
-"  -o, --output=DEST      spara filerna i den lokala katalogen DEST\n"
-"  -p, --preserve         försök att behålla filattribut och tidstämpling\n"
-"  -P, --parents          lägg till hela sökvägen till målfil\n"
-"  -q, --quiet            motsatsen till --verbose\n"
-"  -r, --recursive        hämta katalogen rekursivt\n"
-"  -R, --resume           fortsätt en avbruten överföring\n"
-"  -s, --skip-existing    hoppa över om målfilen redan finns\n"
-"  -t, --tagged           hämta taggade filer\n"
-"  -T, --target=HOST      överför filer till annan värddator HOST\n"
-"      --type=TYPE        ändra överföringstyp, \"ascii\" eller \"binary\"\n"
-"  -u, --unique           spara alltid målfil med unikt filnamn\n"
-"  -v, --verbose          förklara vad som händer\n"
-"      --help             visa den här hjälptexten\n"
 
 #: ../src/get.c:132
 #, c-format
@@ -965,11 +897,13 @@ msgid "you are not a member of group %s\n"
 msgstr "du tillhör inte gruppen %s\n"
 
 #: ../src/help.c:40
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "No such command '%s'!\n"
 "\n"
-msgstr "Det finns inget kommando \"%s\", pröva med \"help\"\n"
+msgstr ""
+"Det finns inget kommando '%s'!\n"
+"\n"
 
 #: ../src/help.c:44
 #, c-format
@@ -982,14 +916,14 @@ msgid "Compiled "
 msgstr ""
 
 #: ../src/help.c:70
-#, fuzzy, c-format
+#, c-format
 msgid "Using Readline version %s.\n"
-msgstr "Använder Readline version %s\n"
+msgstr "Använder Readline version %s.\n"
 
 #: ../src/help.c:73
-#, fuzzy, c-format
+#, c-format
 msgid "Using libssh version %d.%d.%d.\n"
-msgstr "Använder Readline version %s\n"
+msgstr "Använder libssh version %d.%d.%d.\n"
 
 #: ../src/list.c:45
 #, c-format
@@ -1068,9 +1002,8 @@ msgid ""
 msgstr ""
 
 #: ../src/login.c:57 ../src/login.c:293
-#, fuzzy
 msgid "Yafc was not compiled with security extensions.\n"
-msgstr "Yafc kompilerades inte med stöd för Kerberos4\n"
+msgstr ""
 
 #: ../src/login.c:105
 #, c-format
@@ -1148,9 +1081,9 @@ msgid "Saved local taglist to %s\n"
 msgstr "Sparade lokal taglista i %s\n"
 
 #: ../src/ltag.c:84
-#, fuzzy, c-format
+#, c-format
 msgid "No saved local taglist\n"
-msgstr "Ingen sparad lokal taglista för %s\n"
+msgstr "Ingen sparad lokal taglista\n"
 
 #: ../src/ltag.c:92
 msgid "Found saved local taglist, load it now?"
@@ -1167,7 +1100,7 @@ msgid "%u files tagged\n"
 msgstr "%u filer är taggade\n"
 
 #: ../src/main.c:40
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "This is yet another FTP client.  Usage:\n"
 " %s [options] [[proto://][user[:password]@]hostname[:port][/directory] ...]\n"
@@ -1206,11 +1139,7 @@ msgstr ""
 "  -d, --debug            visa alla kommandon som skickas till/från "
 "värddatorn\n"
 "  -D, --dump-rc          visar standardinställningsfilen\n"
-"  -k, --nokrb        (*) använda inte Kerberos för att logga in\n"
-"  -K, --krb          (*) använd Kerberos (oavsett vad som finns i "
-"bokmärken)\n"
 "  -n, --norc             läs inte inställningsfilen\n"
-"  -N, --nonetrc          läs inte ~/.netrc\n"
 "  -p, --noproxy      (*) anslut inte via proxy\n"
 "  -q, --quiet            visa inte yafcs välkomstmeddelande\n"
 "  -r, --rcfile=FILE      använd inställningsfilen FILE istället för ~/.yafc/"
@@ -1229,7 +1158,7 @@ msgstr ""
 "\n"
 "(*) gäller bara om ett värddatornamn givits på kommandoraden\n"
 "\n"
-"Rapportera fel till <mhe@home.se>\n"
+"Rapportera fel till"
 
 #. printf(_("This seems to be the first time you run Yafc...\n"));
 #: ../src/main.c:213
@@ -1270,7 +1199,7 @@ msgid "Couldn't open tracefile '%s': %s\n"
 msgstr ""
 
 #: ../src/put.c:47
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Send files to remote.  Usage:\n"
 "  put [options] file(s) (can include wildcards)\n"
@@ -1303,36 +1232,6 @@ msgid ""
 "  -u, --unique         store in unique filename (if server supports STOU)\n"
 "      --help           display this help\n"
 msgstr ""
-"Hämta filer från värddatorn.  Användning:\n"
-"  get [flaggor] filer\n"
-"Flaggor:\n"
-"  -a, --append           lägg till i filen om målfilen existerar\n"
-"  -c, --chmod=PERM       ändra rättigheter på överförda filer till PERM\n"
-"      --chgrp=GROUP      ändra grupptillhörighet på överförda filer till "
-"GROUP\n"
-"  -d, --no-dereference   bevara symboliska länkar\n"
-"  -D, --delete-after     ta bort fil efter lyckad överföring\n"
-"  -f, --force            skriv över existerande målfiler, fråga aldrig\n"
-"  -H, --nohup            hämta filer i bakgrunden (nohup-läge), avslutar "
-"yafc\n"
-"  -i, --interactive      fråga före varje överföring\n"
-"  -L, --logfile=FILE     använd FILE som loggfil iställer för ~/.yafc/nohup/"
-"nohup.<pid>\n"
-"  -n, --newer            hämta filen om värddatorns fil är nyare än den "
-"lokala\n"
-"  -o, --output=DEST      spara filerna i den lokala katalogen DEST\n"
-"  -p, --preserve         försök att behålla filattribut och tidstämpling\n"
-"  -P, --parents          lägg till hela sökvägen till målfil\n"
-"  -q, --quiet            motsatsen till --verbose\n"
-"  -r, --recursive        hämta katalogen rekursivt\n"
-"  -R, --resume           fortsätt en avbruten överföring\n"
-"  -s, --skip-existing    hoppa över om målfilen redan finns\n"
-"  -t, --tagged           hämta taggade filer\n"
-"  -T, --target=HOST      överför filer till annan värddator HOST\n"
-"      --type=TYPE        ändra överföringstyp, \"ascii\" eller \"binary\"\n"
-"  -u, --unique           spara alltid målfil med unikt filnamn\n"
-"  -v, --verbose          förklara vad som händer\n"
-"      --help             visa den här hjälptexten\n"
 
 #: ../src/put.c:225
 #, c-format
@@ -1427,9 +1326,9 @@ msgid "Invalid value for connect_wait_time: %d\n"
 msgstr "Felaktigt värde på connect_wait_time: %d\n"
 
 #: ../src/rc.c:384
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid value for cache_timeout: %d\n"
-msgstr "Felaktigt värde på connect_wait_time: %d\n"
+msgstr ""
 
 #: ../src/rc.c:405
 #, c-format
@@ -1442,9 +1341,9 @@ msgid "Invalid value for history_max: %d\n"
 msgstr "Felaktigt värde på history_max: %d\n"
 
 #: ../src/rc.c:491
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid value for stats_threshold: %i\n"
-msgstr "Felaktigt värde på connect_wait_time: %d\n"
+msgstr ""
 
 #: ../src/rc.c:522
 #, c-format
@@ -1549,9 +1448,9 @@ msgid "Unknown type '%s'? Use 'ascii' or 'binary'\n"
 msgstr "Okäng överföringstyp \"%s\"? Använd \"ascii\" eller \"binary\"\n"
 
 #: ../src/set.c:99
-#, fuzzy, c-format
+#, c-format
 msgid "default type is '%s'\n"
-msgstr "överföringstyp är \"%s\"\n"
+msgstr "överföringstyp är '%s'\n"
 
 #: ../src/set.c:110
 #, c-format
@@ -1569,9 +1468,9 @@ msgid "Ambiguous variable '%s'\n"
 msgstr "tvetydig variabel \"%s\"\n"
 
 #: ../src/stats.c:55
-#, fuzzy, c-format
+#, c-format
 msgid "Transferred %u files, "
-msgstr "Överföringen avbröts %s"
+msgstr ""
 
 #: ../src/stats.c:57
 #, c-format
@@ -1579,16 +1478,16 @@ msgid "Skipped %u files, "
 msgstr ""
 
 #: ../src/stats.c:59
-#, fuzzy, c-format
+#, c-format
 msgid "%u failures, "
-msgstr "%u filer är taggade\n"
+msgstr ""
 
 #: ../src/stats.c:61
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "total size %u bytes.\n"
 "\n"
-msgstr "%s: %lu bytes\n"
+msgstr ""
 
 #: ../src/tag.c:23
 #, c-format
@@ -1643,9 +1542,9 @@ msgid "%lu bytes (%s) in %u files tagged\n"
 msgstr "%lu bytes (%s) i %u filer är taggade\n"
 
 #: ../src/tag.c:168
-#, fuzzy, c-format
+#, c-format
 msgid "%llu directories tagged\n"
-msgstr "%lu kataloger taggade\n"
+msgstr "%llu kataloger taggade\n"
 
 #: ../src/tag.c:244
 msgid "nothing tagged -- use 'tag' to tag files"

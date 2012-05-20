@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-20 01:18+0200\n"
+"POT-Creation-Date: 2012-05-20 15:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -234,7 +234,7 @@ msgstr ""
 msgid "no such alias '%s'\n"
 msgstr ""
 
-#: ../src/alias.c:158 ../src/cmd.c:288 ../src/commands.c:275
+#: ../src/alias.c:158 ../src/cmd.c:289 ../src/commands.c:275
 #, c-format
 msgid "ambiguous alias '%s'\n"
 msgstr ""
@@ -319,31 +319,31 @@ msgstr ""
 msgid "no"
 msgstr ""
 
-#: ../src/cmd.c:79
+#: ../src/cmd.c:80
 #, c-format
 msgid "restarted command loop, connection closed\n"
 msgstr ""
 
-#: ../src/cmd.c:81
+#: ../src/cmd.c:82
 #, c-format
 msgid "restarted command loop, command aborted\n"
 msgstr ""
 
-#: ../src/cmd.c:99 ../src/commands.c:695
+#: ../src/cmd.c:100 ../src/commands.c:695
 msgid "not connected"
 msgstr ""
 
-#: ../src/cmd.c:160
+#: ../src/cmd.c:161
 #, c-format
 msgid "Not connected. Try 'open --help' for more information.\n"
 msgstr ""
 
-#: ../src/cmd.c:163
+#: ../src/cmd.c:164
 #, c-format
 msgid "Not logged in. Try 'user --help' for more information.\n"
 msgstr ""
 
-#: ../src/cmd.c:179
+#: ../src/cmd.c:180
 #, c-format
 msgid "input redirection not supported\n"
 msgstr ""
@@ -564,64 +564,70 @@ msgstr ""
 msgid "Server doesn't support SITE IDLE\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:31
+#: ../src/ftp/ftpsend.c:80
 msgid "Host doesn't support passive mode\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:43
+#: ../src/ftp/ftpsend.c:92
 msgid "Unable to enter passive mode\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:55
+#: ../src/ftp/ftpsend.c:104
 #, c-format
 msgid "Error parsing PASV reply: '%s'\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:173
+#. Invalid address returned by PASV. Replace with address from control
+#. socket.
+#: ../src/ftp/ftpsend.c:154
+msgid "Address returned by PASV seemds to be incorrect."
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:239
 msgid "Waiting for remote to finish abort...\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:298
+#: ../src/ftp/ftpsend.c:364
 #, c-format
 msgid "read error: %s\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:302
+#: ../src/ftp/ftpsend.c:368
 #, c-format
 msgid "write error: %s\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:623 ../src/ftp/ftpsend.c:758
+#: ../src/ftp/ftpsend.c:689 ../src/ftp/ftpsend.c:824
 msgid "data connection not accepted\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:802
+#: ../src/ftp/ftpsend.c:868
 msgid "FxP between same hosts\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:846 ../src/ftp/ftpsend.c:1055
+#: ../src/ftp/ftpsend.c:912 ../src/ftp/ftpsend.c:1121
 #, c-format
 msgid "unable to get remote filesize of '%s', unable to resume\n"
 msgstr ""
 
 #. can't overwrite a directory
-#: ../src/ftp/ftpsend.c:935 ../src/ftp/ftpsend.c:1030 ../src/fxp.c:217
+#: ../src/ftp/ftpsend.c:1001 ../src/ftp/ftpsend.c:1096 ../src/fxp.c:217
 #: ../src/put.c:182
 #, c-format
 msgid "%s: is a directory\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:939
+#: ../src/ftp/ftpsend.c:1005
 #, c-format
 msgid "%s: permission denied\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:963
+#: ../src/ftp/ftpsend.c:1029
 #, c-format
 msgid "Unable to stat file '%s': %s\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:992 ../src/ftp/ftpsend.c:1067
+#: ../src/ftp/ftpsend.c:1058 ../src/ftp/ftpsend.c:1133
 #, c-format
 msgid "%s: %s, transfer cancelled\n"
 msgstr ""
