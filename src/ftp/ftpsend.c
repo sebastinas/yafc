@@ -63,7 +63,7 @@ static bool is_reserved(struct sockaddr* sa)
   {
     struct sockaddr_in* in = (struct sockaddr_in*) sa;
     unsigned char* addr = (unsigned char*) &in->sin_addr.s_addr;
-    return (addr[0] >= 0 ||
+    return (addr[0] == 0 ||
         (addr[0] == 127 && !is_loopback(sa)) ||
         addr[0] >= 240);
   }
