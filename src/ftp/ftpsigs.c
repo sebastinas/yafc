@@ -70,7 +70,7 @@ void ftp_set_signal(int signum, sighandler_t handler)
 
 static unsigned int sigints = 0;
 
-RETSIGTYPE sigint_close_handler(int signum)
+void sigint_close_handler(int signum)
 {
 	if(gvSighupReceived)
 		return;
@@ -119,7 +119,7 @@ RETSIGTYPE sigint_close_handler(int signum)
 /*	ftp_set_signal(SIGINT, sigint_close_handler);*/
 }
 
-RETSIGTYPE sigint_abort_handler(int signum)
+void sigint_abort_handler(int signum)
 {
 	if(gvSighupReceived)
 		return;
@@ -149,7 +149,7 @@ RETSIGTYPE sigint_abort_handler(int signum)
 /*	ftp_set_signal(SIGINT, sigint_abort_handler);*/
 }
 
-RETSIGTYPE sigint_jmp_handler(int signum)
+void sigint_jmp_handler(int signum)
 {
 	if(gvSighupReceived)
 		return;
@@ -170,7 +170,7 @@ RETSIGTYPE sigint_jmp_handler(int signum)
 }
 
 #if 0
-static RETSIGTYPE sighup_term_handler(int signum)
+static void sighup_term_handler(int signum)
 {
 	printf(_("SIGTERM (terminate) received, exiting...\n"));
 	ftp_close();
@@ -180,7 +180,7 @@ static RETSIGTYPE sighup_term_handler(int signum)
 }
 #endif
 
-RETSIGTYPE sighup_handler(int signum)
+void sighup_handler(int signum)
 {
 	ftp_set_signal(SIGINT, SIG_IGN);
 	ftp_set_signal(SIGHUP, sighup_handler);

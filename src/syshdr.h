@@ -206,7 +206,7 @@ size_t strlcpy (char *dst, const char *src, size_t dst_sz);
 # endif
 #endif
 
-typedef RETSIGTYPE (*sighandler_t)(int);
+typedef void (*sighandler_t)(int);
 
 #ifndef HAVE_STDBOOL_H
 #include <stdbool.h>

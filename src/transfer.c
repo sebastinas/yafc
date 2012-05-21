@@ -328,7 +328,7 @@ int transfer_init_nohup(const char *str)
 	return 0;
 }
 
-static RETSIGTYPE term_handler(int signum)
+static void term_handler(int signum)
 {
 	time_t now = time(0);
 

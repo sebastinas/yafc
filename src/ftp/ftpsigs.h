@@ -31,9 +31,9 @@ int ftp_longjmp(
 #endif
 				, int arg);
 
-RETSIGTYPE sigint_jmp_handler(int signum);
-RETSIGTYPE sigint_close_handler(int signum);
-RETSIGTYPE sigint_abort_handler(int signum);
+void sigint_jmp_handler(int signum);
+void sigint_close_handler(int signum);
+void sigint_abort_handler(int signum);
 
 void ftp_set_close_handler(void);
 void ftp_set_abort_handler(void);

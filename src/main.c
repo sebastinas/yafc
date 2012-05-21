@@ -66,7 +66,7 @@ void print_syntax_and_exit(char *argv0)
 	exit(0);
 }
 
-RETSIGTYPE tstp_sighandler(int signum)
+void tstp_sighandler(int signum)
 {
 	if(signum == SIGTSTP) {
 		reset_xterm_title();

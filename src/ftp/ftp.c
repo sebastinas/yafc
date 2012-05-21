@@ -258,7 +258,7 @@ static sigjmp_buf open_timeout_jmp;
 static jmp_buf open_timeout_jmp;
 #endif
 
-static RETSIGTYPE ftp_open_handler(int signum)
+static void ftp_open_handler(int signum)
 {
     ftp_longjmp(open_timeout_jmp, 1);
 }
@@ -552,7 +552,7 @@ static void ftp_print_reply(void)
     }
 }
 
-static RETSIGTYPE reply_ALRM_handler(int signum)
+static void reply_ALRM_handler(int signum)
 {
     ftp_err(_("Tired of waiting for reply, timeout after %u seconds\n"),
             ftp->reply_timeout);
