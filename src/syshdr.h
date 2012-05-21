@@ -95,9 +95,16 @@ char *strchr (), *strrchr ();
 # include <pwd.h>
 #endif
 
-#ifdef HAVE_SYS_WAIT_H
+#if HAVE_SYS_WAIT_H
 # include <sys/wait.h>
 #endif
+#ifndef WEXITSTATUS
+# define WEXITSTATUS(stat_val) ((unsigned)(stat_val) >> 8)
+#endif
+#ifndef WIFEXITED
+# define WIFEXITED(stat_val) (((stat_val) & 255) == 0)
+#endif
+
 #ifdef HAVE_SYS_STAT_H
 # include <sys/stat.h>
 #endif
@@ -201,8 +208,20 @@ size_t strlcpy (char *dst, const char *src, size_t dst_sz);
 
 typedef RETSIGTYPE (*sighandler_t)(int);
 
-#ifndef bool
-typedef enum {false, true} bool;
+#ifndef HAVE_STDBOOL_H
+#include <stdbool.h>
+#else
+#if !HAVE__BOOL
+#ifdef __cplusplus
+typedef bool _Bool;
+#else
+typedef unsigned char _Bool;
+#endif
+#endif
+#define bool _Bool
+#define false 0
+#define true 1
+#define __bool_true_false_are_defined 1
 #endif
 
 #define test(a, b)   (((a) & (b)) == (b))

@@ -16,22 +16,22 @@
 #include "lglob.h"
 #include "gvars.h"
 
-#if defined (HAVE_DIRENT_H)
-#  include <dirent.h>
-#else /* !HAVE_DIRENT_H */
-#  if defined (HAVE_SYS_NDIR_H)
-#    include <sys/ndir.h>
-#  endif
-#  if defined (HAVE_SYS_DIR_H)
-#    include <sys/dir.h>
-#  endif /* HAVE_SYS_DIR_H */
-#  if defined (HAVE_NDIR_H)
-#    include <ndir.h>
-#  endif
-#  if !defined (dirent)
-#    define dirent direct
-#  endif
-#endif /* !HAVE_DIRENT_H */
+#if HAVE_DIRENT_H
+# include <dirent.h>
+# define NAMLEN(dirent) strlen((dirent)->d_name)
+#else
+# define dirent direct
+# define NAMLEN(dirent) (dirent)->d_namlen
+# if HAVE_SYS_NDIR_H
+#  include <sys/ndir.h>
+# endif
+# if HAVE_SYS_DIR_H
+#  include <sys/dir.h>
+# endif
+# if HAVE_NDIR_H
+#  include <ndir.h>
+# endif
+#endif
 
 list *lglob_create(void)
 {

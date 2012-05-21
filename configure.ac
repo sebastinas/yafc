@@ -52,11 +52,11 @@ AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_HEADER_STAT
 AC_HEADER_TIME
+AC_HEADER_STDBOOL
+AC_HEADER_DIRENT
 AX_CREATE_STDINT_H
 AC_CHECK_HEADERS(unistd.h \
-                 stdlib.h \
                  pwd.h \
-                 sys/stat.h \
                  sys/socket.h \
                  sys/types.h \
                  netdb.h \
@@ -71,9 +71,6 @@ AC_CHECK_HEADERS(unistd.h \
                  fcntl.h
 )
 
-AC_CHECK_HEADERS(dirent.h, [], [
-  AC_CHECK_HEADERS(ndir.h sys/ndir.h sys/dir.h)
-])
 
 dnl
 dnl Checks for typedefs, structures, and compiler characteristics.
