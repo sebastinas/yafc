@@ -8,7 +8,7 @@ AC_DEFUN([YAFC_ARG_WITH],
   yafc_with_$1=$2
 
   AC_ARG_WITH($1,
-    AC_HELP_STRING([--with-$1=DIR], [use $3 in DIR]),
+    AS_HELP_STRING([--with-$1=DIR], [use $3 in DIR]),
     [ # action-if-given
       yafc_with_$1="yes"
       if test -d "$withval"; then
@@ -24,7 +24,7 @@ AC_DEFUN([YAFC_ARG_WITH],
     ])
 
   AC_ARG_WITH($1-lib,
-    AC_HELP_STRING([--with-$1-lib=DIR], [use $3 libraries in DIR]),
+    AS_HELP_STRING([--with-$1-lib=DIR], [use $3 libraries in DIR]),
     [ # action-if-given
       yafc_with_$1="yes"
       if test -d "$withval"; then
@@ -38,7 +38,7 @@ AC_DEFUN([YAFC_ARG_WITH],
     ])
 
   AC_ARG_WITH($1-include,
-    AC_HELP_STRING([--with-$1-include=DIR], [use $3 header files in DIR]),
+    AS_HELP_STRING([--with-$1-include=DIR], [use $3 header files in DIR]),
     [ # action-if-given
       yafc_with_$1="yes"
       if test -d "$withval"; then

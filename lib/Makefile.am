@@ -23,8 +23,10 @@ noinst_HEADERS = xmalloc.h \
 libfoo_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfoo_a_DEPENDENCIES = $(libfoo_a_LIBADD)
 
-INCLUDES = -I.. -I$(srcdir) -I$(top_srcdir)/src -I$(top_srcdir)/src/ftp \
--I$(top_srcdir)/src/libmhe
+AM_CPPFLAGS = -I$(srcdir) \
+							-I$(top_srcdir)/src \
+							-I$(top_srcdir)/src/ftp \
+							-I$(top_srcdir)/src/libmhe
 
 CLEANFILES=*~ \#*\#
 DISTCLEANFILES=.deps/*

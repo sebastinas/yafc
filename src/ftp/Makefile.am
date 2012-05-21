@@ -32,13 +32,12 @@ noinst_HEADERS = ftp.h \
 								 ssh_cmd.h \
 								 lscolors.h
 
-AM_CPPFLAGS = $(SSH_CFLAGS)
-
-INCLUDES = -I$(srcdir) \
-					 -I$(top_builddir) \
-					 -I$(top_srcdir)/lib \
-					 -I$(top_srcdir)/src \
-					 -I$(top_srcdir)/src/libmhe
+AM_CPPFLAGS = $(SSH_CFLAGS) \
+							-I$(srcdir) \
+							-I$(top_builddir) \
+							-I$(top_srcdir)/lib \
+							-I$(top_srcdir)/src \
+							-I$(top_srcdir)/src/libmhe
 
 DEFS=@DEFS@
 

@@ -23,14 +23,12 @@ yafc_LDADD = ftp/libftp.a \
 
 yafc_DEPENDENCIES = $(yafc_LDADD) yafcrc.h
 
-INCLUDES = -I$(srcdir) \
-					 -I$(top_srcdir)/lib \
-					 -I$(top_srcdir)/src/ftp \
-					 -I$(top_srcdir)/src/libmhe
+DEFS = -DLOCALEDIR=\"${YAFC_LOCALEDIR}\" -DSYSCONFDIR=\"@sysconfdir@\" @DEFS@
 
-DEFS = -DSYSCONFDIR=\"@sysconfdir@\" @DEFS@
-
-AM_CPPFLAGS = -DLOCALEDIR=\"${YAFC_LOCALEDIR}\"
+AM_CPPFLAGS = -I$(srcdir) \
+							-I$(top_srcdir)/lib \
+							-I$(top_srcdir)/src/ftp \
+							-I$(top_srcdir)/src/libmhe
 
 CLEANFILES=*~ \#*\#
 DISTCLEANFILES=.deps/* yafcrc.h

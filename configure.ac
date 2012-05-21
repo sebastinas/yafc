@@ -2,11 +2,11 @@ dnl Process this file with autoconf to produce an m4 configure script.
 
 dnl init
 
-AC_PREREQ(2.60)
-AC_INIT(yafc,
-        1.1.3,
+AC_PREREQ([2.69])
+AC_INIT([yafc],
+        [1.1.3],
         [https://github.com/sebastinas/yafc/issues/],
-        yafc,
+        [yafc],
         [http://yafc-ftp.com])
 AC_CONFIG_SRCDIR(src/main.c)
 AC_CONFIG_LIBOBJ_DIR([lib])
@@ -16,20 +16,14 @@ AC_SYS_LARGEFILE
 AC_CONFIG_MACRO_DIR([cf])
 AC_CONFIG_AUX_DIR(support)
 AM_INIT_AUTOMAKE
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h])
 
 CDPATH=""
 
 AC_CANONICAL_HOST
 AC_DEFINE_UNQUOTED(HOSTTYPE, "${host_cpu}-${host_vendor}-${host_os}", [the hosttype])
 
-dnl checks for different unix variants
-AC_ISC_POSIX
-AC_AIX
-AC_MINIX
-
 AC_PROG_INSTALL
-AC_PROG_LIBTOOL
 LT_INIT
 
 dnl gettext et al
@@ -95,12 +89,12 @@ BASH_FUNC_POSIX_SETJMP
 
 AC_SEARCH_LIBS(socket, socket, [],
 [
-  AC_WARN(cannot find socket function)
+  AC_MSG_WARN(cannot find socket function)
 ])
 
 AC_SEARCH_LIBS(gethostbyname, resolv nsl, [],
 [
-  AC_WARN(cannot find resolver functions)
+  AC_MSG_WARN(cannot find resolver functions)
 ])
 
 AC_REPLACE_FUNCS(vasprintf)
@@ -137,6 +131,8 @@ if test "$yafc_with_readline" = "yes"; then
     yafc_got_readline="yes"
   fi
 fi
+
+AC_SEARCH_LIBS([strerror],[cposix])
 
 AC_SEARCH_LIBS(inet_aton, resolv nsl)
 AC_SEARCH_LIBS(herror, resolv nsl)
