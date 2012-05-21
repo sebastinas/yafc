@@ -72,6 +72,7 @@ static void print_get_syntax(void)
              "  -r, --recursive      get directories recursively\n"
              "  -R, --resume         resume broken download (restart at eof)\n"
              "  -s, --skip-existing  skip file if destination exists\n"
+             "  -S, --stats[=NUM]    set stats transfer threshold; default is always\n"
              "  -t, --tagged         transfer tagged file(s)\n"
              "      --type=TYPE      specify transfer type, 'ascii' or 'binary'\n"
              "  -u, --unique         always store as unique local file\n"
@@ -253,6 +254,7 @@ static int getfile(const rfile *fi, unsigned int opt,
 							char* sp = shortpath(dest, 42, gvLocalHomeDir);
               fprintf(stderr, _("Local file '%s' exists, skipping...\n"),
                       sp);
+							stats_file(STATS_SKIP, 0);
 							free(sp);
 						}
             return 0;
@@ -275,6 +277,7 @@ static int getfile(const rfile *fi, unsigned int opt,
                     ftp_err(_(
                         "Local file '%s' is newer than remote, skipping...\n"),
                             sp);
+									stats_file(STATS_SKIP, 0);
 									free(sp);
 								}
                 return 0;
@@ -336,6 +339,7 @@ static int getfile(const rfile *fi, unsigned int opt,
         r = do_the_get(fi->path, dest, how, opt);
 
         if(r == 0) {
+			stats_file(STATS_SUCCESS, ftp->ti.total_size);
             ret = 0;
             if(test(opt, GET_PRESERVE))
                 get_preserve_attribs(fi, dest);
@@ -378,8 +382,10 @@ static int getfile(const rfile *fi, unsigned int opt,
                 }
 								free(sp);
             }
-        } else
-            ret = -1;
+        } else {
+			stats_file(STATS_FAIL, 0);
+			ret = -1;
+		}
     }
 
     if(free_dest)
@@ -582,6 +588,7 @@ void cmd_get(int argc, char **argv)
     pid_t pid;
     struct group *grp;
     char *get_output = 0;
+    int stat_thresh = gvStatsThreshold;
 #ifdef HAVE_REGEX
     int ret;
     char get_rx_errbuf[129];
@@ -613,6 +620,7 @@ void cmd_get(int argc, char **argv)
         {"recursive", no_argument, 0, 'r'},
         {"resume", no_argument, 0, 'R'},
         {"skip-existing", no_argument, 0, 's'},
+        {"stats", optional_argument, 0, 'S'},
         {"tagged", no_argument, 0, 't'},
         {"type", required_argument, 0, '1'},
         {"unique", no_argument, 0, 'u'},
@@ -774,6 +782,9 @@ void cmd_get(int argc, char **argv)
           case 's':
             opt |= GET_SKIP_EXISTING;
             break;
+          case 'S':
+            stat_thresh = optarg ? atoi(optarg) : 0;
+            break;
           case 'R':
             opt |= GET_RESUME;
             break;
@@ -853,6 +864,8 @@ void cmd_get(int argc, char **argv)
                 opt |= GET_OUTPUT_FILE;
         }
 
+    stats_reset(gvStatsTransfer);
+
     gvInTransfer = true;
     gvInterrupted = false;
 
@@ -907,4 +920,6 @@ void cmd_get(int argc, char **argv)
     mode_free(cmod);
     cmod = 0;
     gvInTransfer = false;
+
+    stats_display(gvStatsTransfer, stat_thresh);
 }
