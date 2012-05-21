@@ -132,8 +132,7 @@ static int ftp_init_transfer(void)
 	}
 	sock_copy(ftp->data, ftp->ctrl);
 
-	if (ftp_is_passive())
-  {
+	if (ftp_is_passive()) {
 		if (ftp_pasv(pac) != 0) {
 			goto err1;
 		}
@@ -142,24 +141,23 @@ static int ftp_init_transfer(void)
 		memcpy(&sa.sin_addr, pac, (size_t)4);
 		memcpy(&sa.sin_port, pac+4, (size_t)2);
 
-    struct sockaddr_in tmp;
-    sock_getsockname(ftp->ctrl, &tmp);
-    if (is_reserved((struct sockaddr*) &sa) ||
-        is_multicast((struct sockaddr*) &sa)  ||
-        (is_private((struct sockaddr*) &sa) != is_private((struct sockaddr*) &tmp)) ||
-        (is_loopback((struct sockaddr*) &sa) != is_loopback((struct sockaddr*) &tmp)))
-    {
-      // Invalid address returned by PASV. Replace with address from control
-      // socket.
-      ftp_err(_("Address returned by PASV seemds to be incorrect."));
-      sa.sin_addr = tmp.sin_addr;
-    }
+		struct sockaddr_in tmp;
+		sock_getsockname(ftp->ctrl, &tmp);
+		if (is_reserved((struct sockaddr*) &sa) ||
+			is_multicast((struct sockaddr*) &sa)  ||
+			(is_private((struct sockaddr*) &sa) != is_private((struct sockaddr*) &tmp)) ||
+			(is_loopback((struct sockaddr*) &sa) != is_loopback((struct sockaddr*) &tmp)))
+		{
+			// Invalid address returned by PASV. Replace with address from control
+			// socket.
+			ftp_err(_("Address returned by PASV seems to be incorrect."));
+			sa.sin_addr = tmp.sin_addr;
+		}
 
-    if (sock_connect_addr(ftp->data, &sa) == -1)
+		if (sock_connect_addr(ftp->data, &sa) == -1)
 			goto err1;
-  }
-  else
-  {
+
+	} else {
 		sock_listen(ftp->data);
 
 		a = (unsigned char *)&ftp->data->local_addr.sin_addr;
