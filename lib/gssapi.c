@@ -162,7 +162,7 @@ sockaddr_to_gss_address (const struct sockaddr *sa,
 			 gss_buffer_desc *gss_addr)
 {
     switch (sa->sa_family) {
-#ifdef HAVE_IPV6
+#if defined(HAVE_IPV6) && defined(HAVE_KRB5_HEIMDAL)
     case AF_INET6 : {
 	struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *)sa;
 
