@@ -44,40 +44,107 @@ void host_destroy(Host *hostp)
 	}
 }
 
+static int inet_pton_(const char* hostname, struct sockaddr_storage* in)
+{
+  if (in->ss_family == AF_INET)
+    return inet_pton(in->ss_family, hostname,
+        &((struct sockaddr_in*)in)->sin_addr);
+#ifdef HAVE_IPV6
+  else if (in->ss_family == AF_INET6)
+    return inet_pton(in->ss_family, hostname,
+        &((struct sockaddr_in6*)in)->sin6_addr);
+#endif
+  return 0;
+}
+
+static struct hostent* gethostbyaddr_(struct sockaddr_storage* in)
+{
+  if (in->ss_family == AF_INET)
+    return gethostbyaddr(&((struct sockaddr_in*)in)->sin_addr,
+        sizeof(struct in_addr), in->ss_family);
+#ifdef HAVE_IPV6
+  else if (in->ss_family == AF_INET6)
+    return gethostbyaddr(&((struct sockaddr_in6*)in)->sin6_addr,
+        sizeof(struct in6_addr), in->ss_family);
+#endif
+  return NULL;
+}
+
+
 /* returns 0 on success, -1 on failure, (sets h_errno)
  */
 int host_lookup(Host *hostp)
 {
-	struct in_addr ia;
-
-	if(!hostp->hostname) {
-/*		h_errno = HOST_NOT_FOUND;*/
+  if (!hostp->hostname)
 		return -1;
-	}
 
-	/* check if host is given in numbers-and-dots notation */
-	/* FIXME: should check if inet_aton is not present -> use inet_addr() */
-	if(inet_aton(hostp->hostname, &ia)) {
-		if(gvReverseDNS)
-			hostp->hep = gethostbyaddr((char *)&ia, sizeof(ia), AF_INET);
-		if(hostp->hep == 0) {
-			hostp->alt_h_length = sizeof(ia);
-			memcpy((void *)&hostp->alt_h_addr, &ia, hostp->alt_h_length);
+	struct sockaddr_storage ia;
+  int family = AF_INET;
+#ifdef HAVE_IPV6
+  if (strchr(hostp->hostname, ':'))
+    family = AF_INET6;
+#endif
+  ia.ss_family = family;
+
+	/* Check if host is given in dotted-decimal format (IPv4) or a valid IPv6
+   * address. */
+	if (inet_pton_(hostp->hostname, &ia))
+  {
+		if (gvReverseDNS)
+			hostp->hep = gethostbyaddr_(&ia);
+		if (!hostp->hep)
+    {
+      if (ia.ss_family == AF_INET)
+      {
+			  hostp->alt_h_length = sizeof(struct in_addr);
+        memcpy(&hostp->alt_h_addr.in4, &((struct sockaddr_in*)&ia)->sin_addr,
+              hostp->alt_h_length);
+      }
+#ifdef HAVE_IPV6
+      else if (ia.ss_family == AF_INET6)
+      {
+        hostp->alt_h_length = sizeof(struct in6_addr);
+        memcpy(&hostp->alt_h_addr.in6, &((struct sockaddr_in6*)&ia)->sin6_addr,
+              hostp->alt_h_length);
+      }
+#endif
+      else
+        return -1;
+			
 			hostp->ipnum = xstrdup(hostp->hostname);
 			hostp->ohostname = xstrdup(hostp->ipnum);
 		}
 	}
-	else {
+	else
+  {
 		hostp->hep = gethostbyname(hostp->hostname);
-		if(hostp->hep == 0)
+		if (!hostp->hep)
 			return -1;
 	}
 
-	if(hostp->hep) {
-		struct in_addr tmp;
-		memcpy(&tmp, hostp->hep->h_addr, hostp->hep->h_length);
-		hostp->ipnum = xstrdup(inet_ntoa(tmp));
-		hostp->ohostname = xstrdup(hostp->hep->h_name); /* official name of host */
+	if (hostp->hep)
+  {
+    if (hostp->hep->h_addrtype == AF_INET)
+    {
+		  struct in_addr tmp;
+		  memcpy(&tmp, hostp->hep->h_addr, hostp->hep->h_length);
+		  hostp->ipnum = xstrdup(inet_ntoa(tmp));
+    }
+#ifdef HAVE_IPV6
+    else if (hostp->hep->h_addrtype == AF_INET6)
+    {
+      struct in6_addr addr;
+      memcpy(&addr, hostp->hep->h_addr, hostp->hep->h_length);
+
+      char straddr[INET6_ADDRSTRLEN];
+      inet_ntop(AF_INET6, &addr, straddr, sizeof(straddr));
+      hostp->ipnum = xstrdup(straddr);
+    }
+#endif
+    else
+      return -1;
+
+    hostp->ohostname = xstrdup(hostp->hep->h_name); /* official name of host */
 	}
 
 	/* let system pick port */

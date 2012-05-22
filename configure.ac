@@ -137,7 +137,7 @@ fi
 # misc functions
 AC_SEARCH_LIBS([strerror],[cposix])
 
-AC_SEARCH_LIBS(inet_aton, resolv nsl)
+AC_SEARCH_LIBS(inet_pton, resolv nsl)
 AC_SEARCH_LIBS(herror, resolv nsl)
 
 AC_CHECK_FUNCS(gettimeofday uname setsockopt)

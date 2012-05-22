@@ -24,7 +24,13 @@ typedef struct Host
 	int port; /* ftp port number in network byte order */
 
 	/* alternative address if we got an IPnumber and we couldn't resolv it */
-	struct in_addr alt_h_addr;
+  union
+  {
+	  struct in_addr in4;
+#ifdef HAVE_IPV6
+    struct in6_addr in6;
+#endif
+  } alt_h_addr;
 	int alt_h_length;
 
 	struct hostent *hep;
