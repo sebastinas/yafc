@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce an m4 configure script.
 
 dnl init
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.68])
 AC_INIT([yafc],
         [1.1.3],
         [https://github.com/sebastinas/yafc/issues/],
@@ -300,8 +300,8 @@ AM_CONDITIONAL(USE_BASH_COMPLETION, test "${BASH_COMPLETION_DIR}" != "")
 # IPv6
 AC_MSG_CHECKING(for IPv6 support)
 AC_CACHE_VAL(ac_cv_ipv6,
-  AC_TRY_RUN(
-    [
+  AC_RUN_IFELSE(
+    [AC_LANG_SOURCE([[
       #include <sys/types.h>
       #include <sys/socket.h>
       #include <netinet/in.h>
@@ -314,10 +314,11 @@ AC_CACHE_VAL(ac_cv_ipv6,
               struct sockaddr_in6 foo;
               fd = socket(AF_INET6, SOCK_STREAM, 0);
               return (fd >= 0 ? 0 : 1);
-      }],
-    ac_cv_ipv6=yes,
-    ac_cv_ipv6=no,
-    ac_cv_ipv6=no))
+      }
+    ]])],
+    [ac_cv_ipv6=yes],
+    [ac_cv_ipv6=no],
+    [ac_cv_ipv6=no]))
 AC_MSG_RESULT($ac_cv_ipv6)
 if test "x$ac_cv_ipv6" = "xyes" ; then
   AC_DEFINE([HAVE_IPV6],[],
