@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce an m4 configure script.
 
 dnl init
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.65])
 AC_INIT([yafc],
         [1.1.3],
         [https://github.com/sebastinas/yafc/issues/],
