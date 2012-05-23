@@ -2,7 +2,7 @@ AC_DEFUN([BASH_FUNC_POSIX_SETJMP],
 [
 AC_MSG_CHECKING(for presence of POSIX-style sigsetjmp/siglongjmp)
 AC_CACHE_VAL(bash_cv_func_sigsetjmp,
-[AC_TRY_RUN([
+[AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -39,10 +39,9 @@ sigprocmask(SIG_BLOCK, &set, (sigset_t *)NULL);
 siglongjmp(xx, 10);
 exit(1);
 #endif
-}], bash_cv_func_sigsetjmp=present, bash_cv_func_sigsetjmp=missing,
-    [AC_MSG_ERROR(cannot check for sigsetjmp/siglongjmp if cross-compiling -- defaulting to missing)
-     bash_cv_func_sigsetjmp=missing]
-)])
+}]])],[bash_cv_func_sigsetjmp=present],[bash_cv_func_sigsetjmp=missing],[AC_MSG_ERROR(cannot check for sigsetjmp/siglongjmp if cross-compiling -- defaulting to missing)
+     bash_cv_func_sigsetjmp=missing
+])])
 AC_MSG_RESULT($bash_cv_func_sigsetjmp)
 if test $bash_cv_func_sigsetjmp = present; then
 AC_DEFINE([HAVE_POSIX_SIGSETJMP], [], [define if you have POSIX sigsetjmp function])
