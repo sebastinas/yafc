@@ -3,6 +3,7 @@
  *
  * Yet Another FTP Client
  * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ * Copyright (C) 2012, Sebastian Ramacher <sebastian+dev@ramacher.at>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,11 +61,11 @@ static int inet_pton_(const char* hostname, struct sockaddr_storage* in)
 static struct hostent* gethostbyaddr_(struct sockaddr_storage* in)
 {
   if (in->ss_family == AF_INET)
-    return gethostbyaddr(&((struct sockaddr_in*)in)->sin_addr,
+    return gethostbyaddr(&SOCK_IN4(IN),
         sizeof(struct in_addr), in->ss_family);
 #ifdef HAVE_IPV6
   else if (in->ss_family == AF_INET6)
-    return gethostbyaddr(&((struct sockaddr_in6*)in)->sin6_addr,
+    return gethostbyaddr(&SOCK_IN6(in),
         sizeof(struct in6_addr), in->ss_family);
 #endif
   return NULL;
@@ -97,14 +98,14 @@ int host_lookup(Host *hostp)
       if (ia.ss_family == AF_INET)
       {
 			  hostp->alt_h_length = sizeof(struct in_addr);
-        memcpy(&hostp->alt_h_addr.in4, &((struct sockaddr_in*)&ia)->sin_addr,
+        memcpy(&hostp->alt_h_addr.in4, &SOCK_IN4(&ia),
               hostp->alt_h_length);
       }
 #ifdef HAVE_IPV6
       else if (ia.ss_family == AF_INET6)
       {
         hostp->alt_h_length = sizeof(struct in6_addr);
-        memcpy(&hostp->alt_h_addr.in6, &((struct sockaddr_in6*)&ia)->sin6_addr,
+        memcpy(&hostp->alt_h_addr.in6, &SOCK_IN6(&ia),
               hostp->alt_h_length);
       }
 #endif

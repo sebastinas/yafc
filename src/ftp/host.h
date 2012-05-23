@@ -3,6 +3,7 @@
  *
  * Yet Another FTP Client
  * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ * Copyright (C) 2012, Sebastian Ramacher <sebastian+dev@ramacher.at>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +17,7 @@
 #include "syshdr.h"
 #include "url.h"
 
-typedef struct Host
+typedef struct
 {
 	char *ipnum; /* aaa.bbb.ccc.ddd */
 	char *hostname;
@@ -45,5 +46,16 @@ unsigned short int host_gethport(const Host *hostp); /* returns port in host byt
 const char *host_getip(const Host *hostp); /* returns IP number */
 const char *host_getname(const Host *hostp); /* returns name as passed to host_set() */
 const char *host_getoname(const Host *hostp); /* returns official name (as returned from gethostbyname()) */
+
+/** Access IPv4 address in sockaddr_storage
+ * @param ss pointer to sockaddr_stoarge
+ */
+#define SOCK_IN4(ss) \
+  ((struct sockaddr_in*)(ss))->sin_addr
+/** Access IPv6 address in sockaddr_storage
+ * @param ss pointer to sockaddr_stoarge
+ */
+#define SOCK_IN6(ss) \
+  ((struct sockaddr_in6*)(ss))->sin6_addr
 
 #endif
