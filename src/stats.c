@@ -58,6 +58,17 @@ void stats_display(Stats *s, unsigned int threshold)
 	if (s->fail > 0)
 		printf(_("%u failures, "), s->fail);
 
-	printf(_("total size %lu bytes.\n\n"), s->size);
+	if (s->size < 1024) {
+		printf(_("total size %lu bytes.\n\n"), s->size);
+	} else {
+		int i = 0;
+		uint64_t size = s->size / 1024;
+		while (size > 1024) {
+			size /= 1024;
+			i++;
+		}
+		char *pf = "KMGTPEZY";
+		printf(_("total size %lu %ciB.\n\n"), size, pf[i]);
+	}
 }
 

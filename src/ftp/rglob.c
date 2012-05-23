@@ -31,12 +31,6 @@ bool rglob_exclude_dotdirs(rfile *f)
 	return risdotdir(f);
 }
 
-static bool contains_wildcards(char *str)
-{
-	return (strqchr(str, '*') != 0 || strqchr(str, '?') != 0
-			|| strqchr(str, '[') != 0 || strqchr(str, ']') != 0);
-}
-
 /* appends rglob items in list LP matching MASK
  * EXCLUDE_FUNC (if not 0) is called for each fileinfo item found
  * and that file is excluded if EXCLUDE_FUNC returns true
@@ -114,7 +108,7 @@ int rglob_glob(list *gl, const char *mask, bool cpifnomatch,
 		char *p;
 		bool ignore_item;
 
-		if(!cpifnomatch || mp == 0 || *mp == 0 || contains_wildcards(mp)) {
+		if(!cpifnomatch || mp == 0 || *mp == 0) {
 			free(mp);
 			return -1;
 		}
