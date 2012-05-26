@@ -19,6 +19,7 @@ struct Host_
   uint16_t port;
 
   struct addrinfo* addr;
+  const struct addrinfo* connected_addr;
 };
 
 Host* host_create(const url_t* urlp)
@@ -31,6 +32,7 @@ Host* host_create(const url_t* urlp)
   else
     hostp->port = htons(hostp->port); /* to network byte order */
   hostp->addr = NULL;
+  hostp->connected_addr = NULL;
 
   return hostp;
 }
@@ -131,10 +133,10 @@ const struct addrinfo* host_getaddrinfo(const Host* hostp)
 
 const char* host_getip(const Host* hostp)
 {
-  if (!hostp)
+  if (!hostp || !hostp->connected_addr)
     return NULL;
 
-  return "NOT IMPLEMENTED!";
+  return printable_address(hostp->connected_addr->ai_addr);
 }
 
 char* printable_address(const struct sockaddr* sockaddr)
@@ -143,3 +145,12 @@ char* printable_address(const struct sockaddr* sockaddr)
   inet_ntop(sockaddr->sa_family, sockaddr, res, INET6_ADDRSTRLEN);
   return res;
 }
+
+void host_connect_addr(Host* hostp, const struct addrinfo* info)
+{
+  if (!hostp)
+    return;
+
+  hostp->connected_addr = info;
+}
+

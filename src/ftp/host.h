@@ -34,6 +34,7 @@ const char* host_getip(const Host* hostp);
 const char* host_getoname(const Host *hostp);
 
 const struct addrinfo* host_getaddrinfo(const Host* hostp);
+void host_connect_addr(Host* hostp, const struct addrinfo* info);
 
 char* printable_address(const struct sockaddr* sockaddr);
 

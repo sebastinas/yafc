@@ -36,6 +36,7 @@ static bool create_streams(Socket* sock, const char* inmode, const char* outmode
   if (!sock->sin)
     return false;
 
+  tfd = dup(sock->handle);
   if (tfd == -1)
   {
     fclose(sock->sin);
@@ -44,7 +45,7 @@ static bool create_streams(Socket* sock, const char* inmode, const char* outmode
   }
 
   sock->sout = fdopen(tfd, outmode);
-  if (!sock->sin)
+  if (!sock->sout)
   {
     fclose(sock->sin);
     sock->sin = NULL;
@@ -103,7 +104,7 @@ bool sock_connect_addr(Socket *sockp, const struct sockaddr* sa, socklen_t salen
   }
   memcpy(&sockp->remote_addr, sa, salen);
  
-  if (!create_streams(sockp, "r", "r"))
+  if (!create_streams(sockp, "r", "w"))
   {
     close(sockp->handle);
     sockp->handle = -1;
@@ -126,7 +127,10 @@ bool sock_connect_host(Socket *sockp, Host *hp)
   for (; addr != NULL; addr = addr->ai_next)
   {
     if (sock_connect_addr(sockp, addr->ai_addr, addr->ai_addrlen))
+    {
+      host_connect_addr(hp, addr);
       return true;
+    }
   }
 
   return false;
