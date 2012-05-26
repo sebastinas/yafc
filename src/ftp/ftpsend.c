@@ -70,45 +70,61 @@ static bool is_reserved(struct sockaddr* sa)
   return false;
 }
 
-static int ftp_pasv(unsigned char result[6])
+static bool ftp_pasv(bool ipv6, unsigned char* result, unsigned short* ipv6_port)
 {
-	int pa[6];
-	char *e;
-	int i;
-
 	if(!ftp->has_pasv_command) {
 		ftp_err(_("Host doesn't support passive mode\n"));
-		return -1;
+		return false;
 	}
 	ftp_set_tmp_verbosity(vbNone);
 
 	/* request passive mode */
-	ftp_cmd("PASV");
+  if (!ipv6)
+  	ftp_cmd("PASV");
+#ifdef HAVE_IPV6
+  else if (ipv6)
+    ftp_cmd("EPASV");
+#endif
+  else
+    return false;
 
 	if(!ftp_connected())
-		return -1;
+		return false;
 
 	if(ftp->code != ctComplete) {
 		ftp_err(_("Unable to enter passive mode\n"));
 		if(ftp->code == ctError) /* no use try it again */
 			ftp->has_pasv_command = false;
-		return -1;
+		return false;
 	}
 
-	e = ftp->reply + 4;
+	char* e = ftp->reply + 4;
 	while(!isdigit((int)*e))
 		e++;
 
-	if(sscanf(e, "%d,%d,%d,%d,%d,%d",
-			  &pa[0], &pa[1], &pa[2], &pa[3], &pa[4], &pa[5]) != 6) {
-		ftp_err(_("Error parsing PASV reply: '%s'\n"),
-				ftp_getreply(false));
-		return -1;
+  if (!ipv6)
+  {
+    int pa[6];
+	  if (sscanf(e, "%d,%d,%d,%d,%d,%d", &pa[0], &pa[1], &pa[2], &pa[3], &pa[4], &pa[5]) != 6)
+    {
+  		ftp_err(_("Error parsing PASV reply: '%s'\n"), ftp_getreply(false));
+	  	return false;
+    }
+    for (int i = 0; i < 6; ++i)
+		  result[i] = (unsigned char)(pa[i] & 0xFF);
 	}
-	for(i=0; i<6; i++)
-		result[i] = (unsigned char)(pa[i] & 0xFF);
-
-	return 0;
+#ifdef HAVE_IPV6
+  else
+  {
+    if (sscanf(e, "%hd", ipv6_port) != 1)
+    {
+      ftp_err(_("Error parsing EPSV reply: '%s'\n"), ftp_getreply(false));
+      return false;
+    }
+  }
+#endif
+	
+	return true;
 }
 
 static bool ftp_is_passive(void)
@@ -120,52 +136,84 @@ static bool ftp_is_passive(void)
 
 static int ftp_init_transfer(void)
 {
-	struct sockaddr_in sa;
+	struct sockaddr_storage sa;
 	unsigned char *a, *p;
-	unsigned char pac[6];
-
+	
 	if(!ftp_connected())
-		goto err0;
+		return -1;
 
 	if (!(ftp->data = sock_create())) {
-		goto err0;
+		return -1;
 	}
 	sock_copy(ftp->data, ftp->ctrl);
 
-	if (ftp_is_passive()) {
-		if (ftp_pasv(pac) != 0) {
+	if (ftp_is_passive())
+  {
+    socklen_t len = sizeof(sa);
+		sock_getsockname(ftp->ctrl, (struct sockaddr*) &sa, &len);
+
+    unsigned char pac[6];
+    unsigned short ipv6_port;
+		if (!ftp_pasv(sa.ss_family != AF_INET, pac, &ipv6_port))
 			goto err1;
-		}
 
-		sock_getsockname(ftp->ctrl, &sa);
-		memcpy(&sa.sin_addr, pac, (size_t)4);
-		memcpy(&sa.sin_port, pac+4, (size_t)2);
+    if (sa.ss_family == AF_INET)
+    {
+      memcpy(&((struct sockaddr_in*)&sa)->sin_addr, pac, (size_t)4);
+		  memcpy(&((struct sockaddr_in*)&sa)->sin_port, pac+4, (size_t)2);
+    }
+#ifdef HAVE_IPV6
+    else if (sa.ss_family == AF_INET6)
+      ((struct sockaddr_in6*)&sa)->sin6_port = ipv6_port;
+#endif
+    else
+      return -1;
 
-		struct sockaddr_in tmp;
-		sock_getsockname(ftp->ctrl, &tmp);
-		if (is_reserved((struct sockaddr*) &sa) ||
-			is_multicast((struct sockaddr*) &sa)  ||
-			(is_private((struct sockaddr*) &sa) != is_private((struct sockaddr*) &tmp)) ||
-			(is_loopback((struct sockaddr*) &sa) != is_loopback((struct sockaddr*) &tmp)))
+		struct sockaddr_storage tmp;
+    len = sizeof(tmp);
+		sock_getsockname(ftp->ctrl, (struct sockaddr*) &tmp, &len);
+		if (sa.ss_family == AF_INET &&
+        (is_reserved((struct sockaddr*) &sa) ||
+			   is_multicast((struct sockaddr*) &sa)  ||
+			   (is_private((struct sockaddr*) &sa) != is_private((struct sockaddr*) &tmp)) ||
+			   (is_loopback((struct sockaddr*) &sa) != is_loopback((struct sockaddr*) &tmp))))
 		{
 			// Invalid address returned by PASV. Replace with address from control
 			// socket.
 			ftp_err(_("Address returned by PASV seems to be incorrect."));
-			sa.sin_addr = tmp.sin_addr;
+			((struct sockaddr_in*)&sa)->sin_addr = ((struct sockaddr_in*)&tmp)->sin_addr;
 		}
 
-		if (sock_connect_addr(ftp->data, &sa) == -1)
+		if (!sock_connect_addr(ftp->data, (struct sockaddr*) &sa, sizeof(struct sockaddr_storage)))
 			goto err1;
 
 	} else {
-		sock_listen(ftp->data);
+    const struct sockaddr* local = sock_local_addr(ftp->data);
+		sock_listen(ftp->data, local->sa_family);
 
-		a = (unsigned char *)&ftp->data->local_addr.sin_addr;
-		p = (unsigned char *)&ftp->data->local_addr.sin_port;
+    if (local->sa_family == AF_INET)
+    {
+      struct sockaddr_in* tmp = (struct sockaddr_in*)local;
+  		a = (unsigned char *)&tmp->sin_addr;
+	  	p = (unsigned char *)&tmp->sin_port;
 
-		ftp_set_tmp_verbosity(vbError);
-		ftp_cmd("PORT %d,%d,%d,%d,%d,%d",
-				a[0], a[1], a[2], a[3], p[0], p[1]);
+		  ftp_set_tmp_verbosity(vbError);
+		  ftp_cmd("PORT %d,%d,%d,%d,%d,%d",
+				  a[0], a[1], a[2], a[3], p[0], p[1]);
+    }
+#ifdef HAVE_IPV6
+    else if (local->sa_family == AF_INET6)
+    {
+      char* addr = printable_address(local);
+
+      ftp_set_tmp_verbosity(vbError);
+		  ftp_cmd("EPRT |2|%s|%u", addr, ((struct sockaddr_in6*)local)->sin6_port);
+      free(addr);
+    }
+#endif
+    else
+      goto err1;
+
 		if(ftp->code != ctComplete)
 			goto err1;
 	}
@@ -177,7 +225,6 @@ static int ftp_init_transfer(void)
  err1:
 	sock_destroy(ftp->data);
 	ftp->data = 0;
- err0:
 	return -1;
 }
 
@@ -224,8 +271,9 @@ int ftp_abort(FILE *fp)
 
 	poll.tv_sec = poll.tv_usec = 0;
 	FD_ZERO(&ready);
-	FD_SET(ftp->ctrl->handle, &ready);
-	if(select(ftp->ctrl->handle+1, &ready, 0, 0, &poll) == 1) {
+  int handle = sock_handle(ftp->ctrl);
+	FD_SET(handle, &ready);
+	if(select(handle+1, &ready, 0, 0, &poll) == 1) {
 		ftp_trace("There is data on the control channel, won't send ABOR\n");
 		/* read remaining bytes from connection */
 		while(fp && fread(buf, 1, 4096, fp) > 0)
@@ -318,7 +366,7 @@ static int wait_for_input(void)
 {
 	int r;
 	do {
-		r = wait_for_data(ftp->data->sin, true);
+		r = wait_for_data(sock_sin(ftp->data), true);
 		if(r == -1) {
 			if(errno == EINTR)
 				ftp->ti.interrupted = true;
@@ -335,7 +383,7 @@ static int wait_for_output(void)
 {
 	int r;
 	do {
-		r = wait_for_data(ftp->data->sout, false);
+		r = wait_for_data(sock_sout(ftp->data), false);
 		if(r == -1)
 			return -1;
 		if(r == 0 && foo_hookf)
@@ -631,12 +679,12 @@ int ftp_list(const char *cmd, const char *param, FILE *fp)
 	if(ftp->code != ctPrelim)
 		return -1;
 
-	if(sock_accept(ftp->data, "r", ftp_is_passive()) != 0) {
+	if(!sock_accept(ftp->data, "r", ftp_is_passive())) {
 		perror("accept()");
 		return -1;
 	}
 
-	if(FILE_recv_ascii(ftp->data->sin, fp) != 0)
+	if(FILE_recv_ascii(sock_sin(ftp->data), fp) != 0)
 		return -1;
 
 	sock_destroy(ftp->data);
@@ -683,7 +731,7 @@ static int ftp_init_receive(const char *path, transfer_mode_t mode,
 	if(ftp->code != ctPrelim)
 		return -1;
 
-	if(sock_accept(ftp->data, "r", ftp_is_passive()) != 0) {
+	if(!sock_accept(ftp->data, "r", ftp_is_passive())) {
 		ftp_err(_("data connection not accepted\n"));
 		return -1;
 	}
@@ -718,9 +766,9 @@ static int ftp_do_receive(FILE *fp,
 	int r;
 
 	if(mode == tmBinary)
-		r = FILE_recv_binary(ftp->data->sin, fp);
+		r = FILE_recv_binary(sock_sin(ftp->data), fp);
 	else
-		r = FILE_recv_ascii(ftp->data->sin, fp);
+		r = FILE_recv_ascii(sock_sin(ftp->data), fp);
 
 	sock_destroy(ftp->data);
 	ftp->data = 0;
@@ -818,7 +866,7 @@ static int ftp_send(const char *path, FILE *fp, putmode_t how,
 		}
 	}
 
-	if(sock_accept(ftp->data, "w", ftp_is_passive()) != 0) {
+	if(!sock_accept(ftp->data, "w", ftp_is_passive())) {
 		ftp_err(_("data connection not accepted\n"));
 		return -1;
 	}
@@ -826,9 +874,9 @@ static int ftp_send(const char *path, FILE *fp, putmode_t how,
 	ftp_cache_flush_mark_for(path);
 
 	if(mode == tmBinary)
-		r = FILE_send_binary(fp, ftp->data->sin);
+		r = FILE_send_binary(fp, sock_sin(ftp->data));
 	else
-		r = FILE_send_ascii(fp, ftp->data->sin);
+		r = FILE_send_ascii(fp, sock_sin(ftp->data));
 	sock_flush(ftp->data);
 	sock_destroy(ftp->data);
 	ftp->data = 0;
@@ -879,7 +927,8 @@ int ftp_fxpfile(Ftp *srcftp, const char *srcfile,
 	/* setup source side */
 	ftp_use(srcftp);
 	ftp_type(mode);
-	if(ftp_pasv(addr) != 0) {
+  // TODO: IPv6 support
+	if(!ftp_pasv(false, addr, NULL)) {
 		ftp_use(thisftp);
 		return -1;
 	}

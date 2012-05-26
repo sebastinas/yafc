@@ -30,8 +30,8 @@ bool sock_accept(Socket *sockp, const char *mode, bool pasvmode);
 bool sock_listen(Socket *sockp, int family);
 void sock_throughput(Socket *sockp);
 void sock_lowdelay(Socket *sockp);
-const struct sockaddr_storage* sock_local_addr(Socket *sockp);
-const struct sockaddr_storage* sock_remote_addr(Socket *sockp);
+const struct sockaddr* sock_local_addr(Socket *sockp);
+const struct sockaddr* sock_remote_addr(Socket *sockp);
 ssize_t sock_read(Socket *sockp, void *buf, size_t num);
 ssize_t sock_write(Socket *sockp, void *buf, size_t num);
 int sock_get(Socket *sockp); /* get one character */
@@ -41,12 +41,16 @@ int sock_vprintf(Socket *sockp, const char *str, va_list ap);
 int sock_printf(Socket *sockp, const char *str, ...) YAFC_PRINTF(2, 3);
 int sock_flush(Socket *sockp);
 int sock_telnet_interrupt(Socket *sockp);
-int sock_getsockname(Socket *sockp, struct sockaddr* sa, socklen_t* salnegh);
+int sock_getsockname(Socket *sockp, struct sockaddr* sa, socklen_t* salength);
 
 int sock_krb_vprintf(Socket *sockp, const char *str, va_list ap);
 int sock_krb_printf(Socket *sockp, const char *str, ...) YAFC_PRINTF(2, 3);
 ssize_t sock_krb_read(Socket *sockp, void *buf, size_t num);
 ssize_t sock_krb_write(Socket *sockp, void *buf, size_t num);
 int sock_krb_flush(Socket *sockp);
+
+FILE* sock_sin(Socket* sockp);
+FILE* sock_sout(Socket* sockp);
+int sock_handle(Socket* sockp);
 
 #endif

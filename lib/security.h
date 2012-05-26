@@ -89,7 +89,7 @@ int sec_vfprintf2(FILE *, const char *, va_list);
 int sec_write (int, char *, int);
 
 void sec_end (void);
-int sec_login(char *host, const char *mech_to_try);
+int sec_login(const char *host, const char *mech_to_try);
 void sec_prot (int, char **);
 int sec_request_prot (char *);
 void sec_set_protection_level (void);

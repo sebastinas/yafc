@@ -28,11 +28,13 @@ void host_destroy(Host *hostp);
 bool host_lookup(Host *hostp);
 uint16_t host_getport(const Host *hostp); /* returns port in network byte order */
 uint16_t host_gethport(const Host *hostp); /* returns port in host byte order */
-const char *host_getname(const Host *hostp); /* returns name as passed to host_set() */
-
+const char* host_getname(const Host *hostp); /* returns name as passed to host_set() */
+const char* host_getip(const Host* hostp);
 /* returns official name (as returned from gethostbyname()) */
 const char* host_getoname(const Host *hostp);
 
 const struct addrinfo* host_getaddrinfo(const Host* hostp);
+
+char* printable_address(const struct sockaddr* sockaddr);
 
 #endif

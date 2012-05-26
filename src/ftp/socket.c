@@ -238,14 +238,14 @@ void sock_lowdelay(Socket *sockp)
 #endif
 }
 
-const struct sockaddr_storage* sock_local_addr(Socket *sockp)
+const struct sockaddr* sock_local_addr(Socket *sockp)
 {
-  return &sockp->local_addr;
+  return (struct sockaddr*) &sockp->local_addr;
 }
 
-const struct sockaddr_storage* sock_remote_addr(Socket *sockp)
+const struct sockaddr* sock_remote_addr(Socket *sockp)
 {
-  return &sockp->remote_addr;
+  return (struct sockaddr*) &sockp->remote_addr;
 }
 
 ssize_t sock_read(Socket *sockp, void *buf, size_t num)
@@ -332,4 +332,28 @@ int sock_getsockname(Socket *sockp, struct sockaddr* sa, socklen_t* salength)
   if(getsockname(sockp->handle, sa, salength) == -1)
     return -1;
   return 0;
+}
+
+FILE* sock_sin(Socket* sockp)
+{
+  if (!sockp)
+    return NULL;
+
+  return sockp->sin;
+}
+
+FILE* sock_sout(Socket* sockp)
+{
+  if (!sockp)
+    return NULL;
+
+  return sockp->sout;
+}
+
+int sock_handle(Socket* sockp)
+{
+  if (!sockp)
+    return -1;
+
+  return sockp->handle;
 }

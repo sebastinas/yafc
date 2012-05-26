@@ -305,8 +305,8 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
 
     ftp->host = host_create(use_proxy ? gvProxyUrl : urlp);
 
-    if(host_lookup(ftp->host) != 0) {
-        herror(ftp->host->hostname);
+    if(!host_lookup(ftp->host)) {
+        herror(host_getname(ftp->host));
         alarm(0);
         ftp_set_signal(SIGALRM, SIG_IGN);
         return -1;
@@ -343,11 +343,11 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
 
     if(use_proxy) {
         ftp_err(_("Connecting to proxy %s (%s) at port %d...\n"),
-                ftp->host->ohostname, ftp->host->ipnum,
+                host_getoname(ftp->host), host_getip(ftp->host),
                 urlp->port);
     } else {
         ftp_err(_("Connecting to %s (%s) at port %d...\n"),
-                ftp->host->ohostname, ftp->host->ipnum,
+                host_getoname(ftp->host), host_getip(ftp->host),
                 urlp->port);
     }
 
@@ -359,7 +359,7 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
         return -1;
     }
     
-    if(sock_connect_host(ftp->ctrl, ftp->host) == -1) {
+    if(!sock_connect_host(ftp->ctrl, ftp->host)) {
         alarm(0);
         ftp_set_signal(SIGALRM, SIG_IGN);
         return -1;
@@ -383,17 +383,19 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
 
     if(ftp->connected) {
         void (*tracefunq)(const char *fmt, ...);
-        unsigned char *a;
 
         url_destroy(ftp->url);
         ftp->url = url_clone(urlp);
 
         tracefunq = (ftp->verbosity == vbDebug ? ftp_err : ftp_trace);
 
-        a = (unsigned char *)&ftp->ctrl->remote_addr.sin_addr;
-        tracefunq("remote address: %d.%d.%d.%d\n", a[0], a[1], a[2], a[3]);
-        a = (unsigned char *)&ftp->ctrl->local_addr.sin_addr;
-        tracefunq("local address: %d.%d.%d.%d\n", a[0], a[1], a[2], a[3]);
+        char* remote_addr = printable_address(sock_remote_addr(ftp->ctrl)),
+            *local_addr = printable_address(sock_local_addr(ftp->ctrl));
+        tracefunq("remote address: %s\n", remote_addr);
+        tracefunq("local address: %s\n", local_addr);
+        free(remote_addr);
+        free(local_addr);
+
         return 0;
     } else {
         ftp_close();
@@ -539,13 +541,13 @@ static void ftp_print_reply(void)
     verbose_t v = ftp_get_verbosity();
 
     ftp_trace("<-- [%s] %s\n",
-              ftp->url ? ftp->url->hostname : ftp->host->hostname,
+              ftp->url ? ftp->url->hostname : host_getname(ftp->host),
               ftp_getreply(true));
 
     if(v >= vbCommand || (ftp->code >= ctTransient && v == vbError)) {
         if(v == vbDebug)
             fprintf(stderr, "<-- [%s] %s\n",
-                    ftp->url ? ftp->url->hostname : ftp->host->hostname,
+                    ftp->url ? ftp->url->hostname : host_getname(ftp->host),
                     ftp_getreply(true));
         else
             fprintf(stderr, "%s\n", ftp_getreply(false));
@@ -576,7 +578,7 @@ int ftp_read_reply(void)
     if(ftp->reply_timeout)
         alarm(ftp->reply_timeout);
 
-    clearerr(ftp->ctrl->sin);
+    clearerr(sock_sin(ftp->ctrl));
     r = ftp_gets();
     if(!sock_connected(ftp->ctrl)) {
         alarm(0);
@@ -654,7 +656,7 @@ int ftp_cmd(const char *cmd, ...)
     sock_flush(ftp->ctrl);
     va_end(ap);
 
-    if(ferror(ftp->ctrl->sout)) {
+    if(ferror(sock_sout(ftp->ctrl))) {
         ftp_err(_("error writing command"));
         ftp_err(" (");
         va_start(ap, cmd);
@@ -919,7 +921,7 @@ int ftp_login(const char *guessed_username, const char *anonpass)
                             mech_name);
                     continue;
                 }
-                ret = sec_login(ftp->host->hostname, mech_name);
+                ret = sec_login(host_getname(ftp->host), mech_name);
                 if(ret == -1) {
                     if(ftp->code == ctError
                        && ftp->fullcode != 504 && ftp->fullcode != 534)
@@ -1602,8 +1604,9 @@ void ftp_flush_reply(void)
         poll.tv_sec = 1;
         poll.tv_usec = 0;
         FD_ZERO(&ready);
-        FD_SET(ftp->ctrl->handle, &ready);
-        if(select(ftp->ctrl->handle+1, &ready, 0, 0, &poll) == 1)
+        int handle = sock_handle(ftp->ctrl);
+        FD_SET(handle, &ready);
+        if(select(handle+1, &ready, 0, 0, &poll) == 1)
             ftp_read_reply();
         else
             break;

@@ -108,23 +108,25 @@ char *expand_prompt(const char *fmt)
 				break;
 			  case 'm':
 				/* remote machine name (as returned from gethostbynmame) */
-				ins = ftp_connected() ? ftp->host->ohostname : "?";
+				ins = xstrdup(ftp_connected() ? host_getoname(ftp->host) : "?");
+        freeins = true;
 				break;
 			  case 'M': /* %m up to first '.' */
 				if(!ftp_connected()) {
 					ins = "?";
 					break;
 				}
-				e = strchr(ftp->host->ohostname, '.');
+				e = strchr(host_getoname(ftp->host), '.');
 				if(e) {
-					ins = xstrndup(ftp->host->ohostname,
-								   e - ftp->host->ohostname);
-					freeins = true;
+					ins = xstrndup(host_getoname(ftp->host),
+								   e - host_getoname(ftp->host));
 				} else
-					ins = ftp->host->ohostname;
+					ins = xstrdup(host_getoname(ftp->host));
+        freeins = true;
 				break;
 			case 'n': /* remote ip number */
-				ins = ftp_connected() ? ftp->host->ipnum : "?";
+				ins = xstrdup(ftp_connected() ? host_getoname(ftp->host) : "?");
+        freeins = true;
 				break;
 			case 'w': /* current remote directory */
 				if(!ftp_loggedin()) {

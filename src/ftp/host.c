@@ -60,7 +60,7 @@ bool host_lookup(Host* hostp)
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_protocol = IPPROTO_TCP;
   hints.ai_flags = AI_ADDRCONFIG | AI_CANONNAME;
-#ifdef HAVE_IPv6
+#ifdef HAVE_IPV6
   hints.ai_flags |= AI_V4MAPPED;
 #endif
 
@@ -129,3 +129,17 @@ const struct addrinfo* host_getaddrinfo(const Host* hostp)
   return hostp->addr;
 }
 
+const char* host_getip(const Host* hostp)
+{
+  if (!hostp)
+    return NULL;
+
+  return "NOT IMPLEMENTED!";
+}
+
+char* printable_address(const struct sockaddr* sockaddr)
+{
+  char* res = xmalloc(INET6_ADDRSTRLEN);
+  inet_ntop(sockaddr->sa_family, sockaddr, res, INET6_ADDRSTRLEN);
+  return res;
+}

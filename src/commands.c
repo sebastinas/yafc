@@ -690,7 +690,7 @@ void cmd_status(int argc, char **argv)
 	maxargs(optind - 1);
 
 	if(ftp_connected())
-		printf(_("connected to '%s'\n"), ftp->host->ohostname);
+		printf(_("connected to '%s'\n"), host_getoname(ftp->host));
 	else
 		puts(_("not connected"));
 	if(ftp_loggedin())
