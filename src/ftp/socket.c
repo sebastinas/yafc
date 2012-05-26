@@ -27,6 +27,12 @@ struct Socket_
 
 static bool create_streams(Socket* sock, const char* inmode, const char* outmode)
 {
+  if (!sock || sock->handle == -1)
+    return false;
+
+  if (sock->sin || sock->sout)
+    return true;
+
   /* create streams */
   int tfd = dup(sock->handle);
   if (tfd == -1)
@@ -34,7 +40,10 @@ static bool create_streams(Socket* sock, const char* inmode, const char* outmode
 
   sock->sin = fdopen(tfd, inmode);
   if (!sock->sin)
+  {
+    close(tfd);
     return false;
+  }
 
   tfd = dup(sock->handle);
   if (tfd == -1)
@@ -47,12 +56,25 @@ static bool create_streams(Socket* sock, const char* inmode, const char* outmode
   sock->sout = fdopen(tfd, outmode);
   if (!sock->sout)
   {
+    close(tfd);
     fclose(sock->sin);
     sock->sin = NULL;
     return false;
   }
 
   return true;
+}
+
+static void destroy_streams(Socket* sockp)
+{
+  printf("sin\n");
+  if (sockp->sin)
+    fclose(sockp->sin);
+  printf("out\n");
+  if (sockp->sin != sockp->sout && sockp->sout)
+    fclose(sockp->sout);
+
+  sockp->sin = sockp->sout = NULL;
 }
 
 Socket* sock_create(void)
@@ -62,17 +84,16 @@ Socket* sock_create(void)
   return sock;
 }
 
-void sock_destroy(Socket *sockp)
+void sock_destroy(Socket* sockp)
 {
   if (!sockp)
     return;
 
-  if (sockp->sin)
-    fclose(sockp->sin);
-  if (sockp->sin != sockp->sout && sockp->sout)
-    fclose(sockp->sout);
+  destroy_streams(sockp);
+  printf("handle\n");
   if (sockp->handle != -1)
     close(sockp->handle);
+  printf("done\n");
   free(sockp);
 }
 
@@ -102,7 +123,7 @@ bool sock_connect_addr(Socket *sockp, const struct sockaddr* sa, socklen_t salen
     return false;
   }
   memcpy(&sockp->remote_addr, sa, salen);
- 
+
   if (!create_streams(sockp, "r", "w"))
   {
     close(sockp->handle);
@@ -149,6 +170,9 @@ bool sock_connected(const Socket *sockp)
 /* accept an incoming connection */
 bool sock_accept(Socket *sockp, const char *mode, bool pasvmode)
 {
+  if (!sockp)
+    return false;
+
   if (!pasvmode)
   {
     struct sockaddr_storage sa;
@@ -156,14 +180,14 @@ bool sock_accept(Socket *sockp, const char *mode, bool pasvmode)
 
     int s = accept(sockp->handle, (struct sockaddr*)&sa, &l);
     close(sockp->handle);
-    if(s == -1)
+    if (s == -1)
     {
       perror("accept()");
       sockp->handle = -1;
       return false;
     }
     sockp->handle = s;
-    memcpy(&sockp->local_addr, &sa, sizeof(sockp->local_addr));
+    memcpy(&sockp->local_addr, &sa, l);
   }
 
   if (!create_streams(sockp, mode, mode))

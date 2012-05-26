@@ -182,8 +182,10 @@ static int ftp_init_transfer(void)
 		}
 
 		if (!sock_connect_addr(ftp->data, (struct sockaddr*) &sa, sizeof(struct sockaddr_storage)))
+    {
+      perror("connect()");
 			goto err1;
-
+    }
 	} else {
     const struct sockaddr* local = sock_local_addr(ftp->data);
 		sock_listen(ftp->data, local->sa_family);
@@ -685,7 +687,7 @@ int ftp_list(const char *cmd, const char *param, FILE *fp)
 		return -1;
 
 	sock_destroy(ftp->data);
-	ftp->data = 0;
+	ftp->data = NULL;
 
 	ftp_read_reply();
 

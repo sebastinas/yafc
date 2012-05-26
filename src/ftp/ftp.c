@@ -120,10 +120,10 @@ void ftp_destroy(Ftp *ftp)
     host_destroy(ftp->host);
     sock_destroy(ftp->data);
     sock_destroy(ftp->ctrl);
-    ftp->host = 0;
-    ftp->data = ftp->ctrl = 0;
+    ftp->host = NULL;
+    ftp->data = ftp->ctrl = NULL;
     url_destroy(ftp->url);
-    ftp->url = 0;
+    ftp->url = NULL;
     free(ftp->homedir);
     free(ftp->curdir);
     free(ftp->prevdir);
@@ -170,13 +170,13 @@ static int proxy_type(url_t *url)
 void ftp_reset_vars(void)
 {
     sock_destroy(ftp->data);
-    ftp->data = 0;
+    ftp->data = NULL;
 
     sock_destroy(ftp->ctrl);
-    ftp->ctrl = 0;
+    ftp->ctrl = NULL;
 
     host_destroy(ftp->host);
-    ftp->host = 0;
+    ftp->host = NULL;
 
 #ifdef HAVE_LIBSSH
 		if (ftp->session)
