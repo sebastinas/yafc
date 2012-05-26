@@ -83,7 +83,7 @@ static bool ftp_pasv(bool ipv6, unsigned char* result, unsigned short* ipv6_port
   	ftp_cmd("PASV");
 #ifdef HAVE_IPV6
   else if (ipv6)
-    ftp_cmd("EPASV");
+    ftp_cmd("EPSV");
 #endif
   else
     return false;
@@ -149,8 +149,7 @@ static int ftp_init_transfer(void)
 
 	if (ftp_is_passive())
   {
-    socklen_t len = sizeof(sa);
-		sock_getsockname(ftp->ctrl, (struct sockaddr*) &sa, &len);
+    memcpy(&sa, sock_remote_addr(ftp->ctrl), sizeof(struct sockaddr_storage));
 
     unsigned char pac[6];
     unsigned short ipv6_port;
@@ -169,18 +168,16 @@ static int ftp_init_transfer(void)
     else
       return -1;
 
-		struct sockaddr_storage tmp;
-    len = sizeof(tmp);
-		sock_getsockname(ftp->ctrl, (struct sockaddr*) &tmp, &len);
-		if (sa.ss_family == AF_INET &&
-        (is_reserved((struct sockaddr*) &sa) ||
+    struct sockaddr_storage tmp;
+    memcpy(&tmp, sock_remote_addr(ftp->ctrl), sizeof(struct sockaddr_storage));
+		if (is_reserved((struct sockaddr*) &sa) ||
 			   is_multicast((struct sockaddr*) &sa)  ||
 			   (is_private((struct sockaddr*) &sa) != is_private((struct sockaddr*) &tmp)) ||
-			   (is_loopback((struct sockaddr*) &sa) != is_loopback((struct sockaddr*) &tmp))))
+			   (is_loopback((struct sockaddr*) &sa) != is_loopback((struct sockaddr*) &tmp)))
 		{
 			// Invalid address returned by PASV. Replace with address from control
 			// socket.
-			ftp_err(_("Address returned by PASV seems to be incorrect."));
+			ftp_err(_("Address returned by PASV seems to be incorrect.\n"));
 			((struct sockaddr_in*)&sa)->sin_addr = ((struct sockaddr_in*)&tmp)->sin_addr;
 		}
 

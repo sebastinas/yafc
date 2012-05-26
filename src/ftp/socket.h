@@ -41,7 +41,7 @@ int sock_vprintf(Socket *sockp, const char *str, va_list ap);
 int sock_printf(Socket *sockp, const char *str, ...) YAFC_PRINTF(2, 3);
 int sock_flush(Socket *sockp);
 int sock_telnet_interrupt(Socket *sockp);
-int sock_getsockname(Socket *sockp, struct sockaddr* sa, socklen_t* salength);
+int sock_getsockname(Socket *sockp, struct sockaddr_storage* sa);
 
 int sock_krb_vprintf(Socket *sockp, const char *str, va_list ap);
 int sock_krb_printf(Socket *sockp, const char *str, ...) YAFC_PRINTF(2, 3);

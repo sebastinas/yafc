@@ -94,8 +94,7 @@ bool sock_connect_addr(Socket *sockp, const struct sockaddr* sa, socklen_t salen
     return false;
   }
 
-  socklen_t len = sizeof(struct sockaddr_storage);
-  if (sock_getsockname(sockp, (struct sockaddr*)&sockp->local_addr, &len) == -1)
+  if (sock_getsockname(sockp, &sockp->local_addr) == -1)
   {
     perror("getsockname()");
     close(sockp->handle);
@@ -121,9 +120,6 @@ bool sock_connect_host(Socket *sockp, Host *hp)
     return false;
 
   const struct addrinfo* addr = host_getaddrinfo(hp);
-  if (!addr)
-    return false;
-
   for (; addr != NULL; addr = addr->ai_next)
   {
     if (sock_connect_addr(sockp, addr->ai_addr, addr->ai_addrlen))
@@ -211,8 +207,7 @@ bool sock_listen(Socket* sockp, int family)
     return false;
   }
 
-  len = sizeof(struct sockaddr_storage);
-  if (sock_getsockname(sockp, (struct sockaddr*)&sockp->local_addr, &len) == -1)
+  if (sock_getsockname(sockp, &sockp->local_addr) == -1)
   {
     close(sockp->handle);
     sockp->handle = -1;
@@ -331,9 +326,10 @@ int sock_telnet_interrupt(Socket *sockp)
   return 0;
 }
 
-int sock_getsockname(Socket *sockp, struct sockaddr* sa, socklen_t* salength)
+int sock_getsockname(Socket *sockp, struct sockaddr_storage* sa)
 {
-  if(getsockname(sockp->handle, sa, salength) == -1)
+  socklen_t len = sizeof(struct sockaddr_storage);
+  if(getsockname(sockp->handle, (struct sockaddr*)sa, &len) == -1)
     return -1;
   return 0;
 }
