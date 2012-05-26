@@ -54,7 +54,7 @@ bool host_lookup(Host* hostp)
   char* service = NULL;
   if (hostp->port)
   {
-    if (asprintf(&service, "%d", hostp->port) == -1)
+    if (asprintf(&service, "%d", ntohs(hostp->port)) == -1)
       return false;
   }
   else
