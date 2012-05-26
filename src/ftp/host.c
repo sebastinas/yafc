@@ -51,7 +51,15 @@ bool host_lookup(Host* hostp)
   if (!hostp || !hostp->hostname)
     return false;
 
-  const char* service = hostp->port == -1 ? "ftp" : NULL;
+  char* service = NULL;
+  if (hostp->port)
+  {
+    if (asprintf(&service, "%d", hostp->port) == -1)
+      return false;
+  }
+  else
+    service = xstrdup("ftp");
+
   struct addrinfo hints;
   memset(&hints, 0, sizeof(hints));
 #ifdef HAVE_IPV6
@@ -65,9 +73,15 @@ bool host_lookup(Host* hostp)
 #ifdef HAVE_IPV6
   hints.ai_flags |= AI_V4MAPPED;
 #endif
+  if (hostp->port)
+    hints.ai_flags |= AI_NUMERICSERV;
 
   if (getaddrinfo(hostp->hostname, service, &hints, &hostp->addr) < 0)
+  {
+    free(service);
     return false;
+  }
+  free(service);
 
   if (hostp->port == 0)
   {
@@ -77,18 +91,6 @@ bool host_lookup(Host* hostp)
     else if (hostp->addr->ai_family == AF_INET6)
       hostp->port = ((struct sockaddr_in6*)hostp->addr->ai_addr)->sin6_port;
 #endif
-  }
-  else
-  {
-    for (struct addrinfo* addr = hostp->addr; addr != NULL; addr = addr->ai_next)
-    {
-      if (addr->ai_family == AF_INET)
-        ((struct sockaddr_in*)hostp->addr->ai_addr)->sin_port = hostp->port;
-#ifdef HAVE_IPV6
-      else if (hostp->addr->ai_family == AF_INET6)
-        ((struct sockaddr_in6*)hostp->addr->ai_addr)->sin6_port = hostp->port; 
-#endif
-    }
   }
 
   return true;

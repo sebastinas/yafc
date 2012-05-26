@@ -364,7 +364,7 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
     }
     sock_lowdelay(ftp->ctrl);
     char* ip = host_getip(ftp->host);
-    ftp_err(_("Connected to proxy %s (%s) at port %d.\n"),
+    ftp_err(_("Connected to %s ([%s]:%d).\n"),
         host_getoname(ftp->host), ip, urlp->port);
     free(ip);
 

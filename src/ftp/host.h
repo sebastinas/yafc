@@ -29,6 +29,12 @@ bool host_lookup(Host *hostp);
 uint16_t host_getport(const Host *hostp); /* returns port in network byte order */
 uint16_t host_gethport(const Host *hostp); /* returns port in host byte order */
 const char* host_getname(const Host *hostp); /* returns name as passed to host_set() */
+/** Returns the IP address we're connected to.
+ *
+ * A value different from NULL is returned if and only if host_connect_addr has
+ * been called before. The value returned from host_getip has to be passed to
+ * free after use.
+ */
 char* host_getip(const Host* hostp);
 /* returns official name (as returned from gethostbyname()) */
 const char* host_getoname(const Host *hostp);
