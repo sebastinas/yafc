@@ -163,7 +163,7 @@ static int ftp_init_transfer(void)
     }
 #ifdef HAVE_IPV6
     else if (sa.ss_family == AF_INET6)
-      ((struct sockaddr_in6*)&sa)->sin6_port = ipv6_port;
+      ((struct sockaddr_in6*)&sa)->sin6_port = htons(ipv6_port);
 #endif
     else
       return -1;
@@ -204,7 +204,7 @@ static int ftp_init_transfer(void)
       char* addr = printable_address(local);
 
       ftp_set_tmp_verbosity(vbError);
-		  ftp_cmd("EPRT |2|%s|%u", addr, ((struct sockaddr_in6*)local)->sin6_port);
+		  ftp_cmd("EPRT |2|%s|%u", addr, ntohs(((struct sockaddr_in6*)local)->sin6_port));
       free(addr);
     }
 #endif
