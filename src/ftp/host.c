@@ -139,11 +139,19 @@ const char* host_getip(const Host* hostp)
   return printable_address(hostp->connected_addr->ai_addr);
 }
 
-char* printable_address(const struct sockaddr* sockaddr)
+char* printable_address(const struct sockaddr* sa)
 {
-  char* res = xmalloc(INET6_ADDRSTRLEN);
-  inet_ntop(sockaddr->sa_family, sockaddr, res, INET6_ADDRSTRLEN);
-  return res;
+  char res[INET6_ADDRSTRLEN];
+  if (sa->sa_family == AF_INET)
+    inet_ntop(sa->sa_family, &((const struct sockaddr_in*)sa)->sin_addr, res, INET6_ADDRSTRLEN);
+#ifdef HAVE_IPV6
+  else if (sa->sa_family == AF_INET6)
+    inet_ntop(sa->sa_family, &((const struct sockaddr_in6*)sa)->sin6_addr, res, INET6_ADDRSTRLEN);
+#endif
+  else
+    return NULL;
+
+  return xstrdup(res);
 }
 
 void host_connect_addr(Host* hostp, const struct addrinfo* info)
