@@ -342,13 +342,11 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
     }
 
     if(use_proxy) {
-        ftp_err(_("Connecting to proxy %s (%s) at port %d...\n"),
-                host_getoname(ftp->host), host_getip(ftp->host),
-                urlp->port);
+        ftp_err(_("Connecting to proxy %s at port %d...\n"),
+                host_getoname(ftp->host), urlp->port);
     } else {
-        ftp_err(_("Connecting to %s (%s) at port %d...\n"),
-                host_getoname(ftp->host), host_getip(ftp->host),
-                urlp->port);
+        ftp_err(_("Connecting to %s at port %d...\n"),
+                host_getoname(ftp->host), urlp->port);
     }
 
     ftp->ctrl = sock_create();
@@ -365,6 +363,10 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
         return -1;
     }
     sock_lowdelay(ftp->ctrl);
+    char* ip = host_getip(ftp->host);
+    ftp_err(_("Connected to proxy %s (%s) at port %d.\n"),
+        host_getoname(ftp->host), ip, urlp->port);
+    free(ip);
 
     /* read startup message from server */
     ftp_set_tmp_verbosity(vbCommand);

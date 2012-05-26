@@ -131,7 +131,7 @@ const struct addrinfo* host_getaddrinfo(const Host* hostp)
   return hostp->addr;
 }
 
-const char* host_getip(const Host* hostp)
+char* host_getip(const Host* hostp)
 {
   if (!hostp || !hostp->connected_addr)
     return NULL;
