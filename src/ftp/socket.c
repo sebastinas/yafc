@@ -67,10 +67,8 @@ static bool create_streams(Socket* sock, const char* inmode, const char* outmode
 
 static void destroy_streams(Socket* sockp)
 {
-  printf("sin\n");
   if (sockp->sin)
     fclose(sockp->sin);
-  printf("out\n");
   if (sockp->sin != sockp->sout && sockp->sout)
     fclose(sockp->sout);
 
@@ -90,10 +88,8 @@ void sock_destroy(Socket* sockp)
     return;
 
   destroy_streams(sockp);
-  printf("handle\n");
   if (sockp->handle != -1)
     close(sockp->handle);
-  printf("done\n");
   free(sockp);
 }
 
