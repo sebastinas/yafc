@@ -120,11 +120,32 @@ void url_parse(url_t *urlp, const char *str)
 		url_setdirectory(urlp, p+1);
 		*p = '\0';
 	}
-	p = strqchr(adr, ':');
-	if(p) {
-		*p = '\0';
-		url_setport(urlp, (int)strtol(p+1, NULL, 0));
-	}
+
+  int cnt = strqnchr(adr, ':');
+  if (cnt == 1)
+  {
+    // host:port
+    p = strqchr(adr, ':');
+    *p = '\0';
+		url_setport(urlp, (int)strtol(p + 1, NULL, 0));
+  }
+  else if (cnt > 1)
+  {
+    if (strqnchr(adr, '[') == 1 || strqnchr(adr, ']') == 1)
+    {
+      // [host] or [host]:port
+      adr = strqchr(adr, '[') + 1;
+      p = strqchr(adr, ']');
+      *p = '\0';
+      ++p;
+      if (*p == ':')
+      {
+        *p = '\0';
+        url_setport(urlp, (int)strtol(p + 1, NULL, 0));
+      }
+    }
+  }
+
 	unquote(adr);
 	url_sethostname(urlp, adr);
 
