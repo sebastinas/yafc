@@ -16,7 +16,7 @@
 struct Host_
 {
   char* hostname;
-  uint16_t port;
+  int port;
 
   struct addrinfo* addr;
   const struct addrinfo* connected_addr;
@@ -28,7 +28,7 @@ Host* host_create(const url_t* urlp)
   hostp->hostname = xstrdup(urlp->hostname);
   hostp->port = urlp->port; /* host byte order */
   if(hostp->port <= 0)
-    hostp->port = 0;
+    hostp->port = -1;
   else
     hostp->port = htons(hostp->port); /* to network byte order */
   hostp->addr = NULL;
@@ -52,7 +52,7 @@ bool host_lookup(Host* hostp)
     return false;
 
   char* service = NULL;
-  if (hostp->port)
+  if (hostp->port != -1)
   {
     if (asprintf(&service, "%d", ntohs(hostp->port)) == -1)
       return false;
@@ -88,7 +88,7 @@ bool host_lookup(Host* hostp)
       return false;
   }
 
-  if (hostp->port == 0)
+  if (hostp->port == -1)
   {
     if (hostp->addr->ai_family == AF_INET)
       hostp->port = ((struct sockaddr_in*)hostp->addr->ai_addr)->sin_port;
