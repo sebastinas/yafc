@@ -111,6 +111,7 @@ AC_CHECK_FUNC(regcomp,
   AC_DEFINE([HAVE_REGEX], [], [define if you have regex])
 ])
 
+# socks
 YAFC_ARG_WITH(socks, no, [Socks])
 if test "$yafc_with_socks" = "yes"; then
   AC_CHECK_LIB(socks, Rconnect)
@@ -121,6 +122,7 @@ if test "$yafc_with_socks5" = "yes"; then
   AC_CHECK_LIB(socks5, SOCKSconnect)
 fi
 
+# readline
 yafc_got_readline="no, disabled"
 YAFC_ARG_WITH(readline, yes, [Readline])
 if test "$yafc_with_readline" = "yes"; then
@@ -132,9 +134,10 @@ if test "$yafc_with_readline" = "yes"; then
   fi
 fi
 
+# misc functions
 AC_SEARCH_LIBS([strerror],[cposix])
 
-AC_SEARCH_LIBS(inet_aton, resolv nsl)
+AC_SEARCH_LIBS(inet_pton, resolv nsl)
 AC_SEARCH_LIBS(herror, resolv nsl)
 
 AC_CHECK_FUNCS(gettimeofday uname setsockopt)
@@ -142,6 +145,7 @@ AC_CHECK_FUNCS(gettimeofday uname setsockopt)
 AC_CHECK_DECLS([asprintf, vasprintf])
 AC_CHECK_DECLS([herror],,,[#include <netdb.h>])
 
+# kerberos
 YAFC_KERBEROS
 if test "$yafc_found_krb4" = "yes"; then
   AC_LIBOBJ(krb4)
@@ -176,6 +180,7 @@ if test "x$yafc_krb5_vendor" != "xHeimdal" ; then
   ])
 fi
 
+# read_pw_string
 old_CFLAGS="$CFLAGS $OPENSSL_INCLUDES"
 yafc_have_read_pw_string="no"
 AC_CHECK_DECLS(des_read_pw_string, [yafc_have_read_pw_string="yes"],,
@@ -244,6 +249,7 @@ else
     ])
 fi
 
+# libssh
 AC_ARG_WITH([ssh],
   AS_HELP_STRING([--with-ssh], [Build with SSH support]))
 if test "x$with_ssh" != "xno"; then
@@ -271,6 +277,7 @@ else
   yafc_got_ssh="no, disabled"
 fi
 
+# bash completion
 AC_ARG_WITH([bash-completion],
   AS_HELP_STRING([--with-bash-completion@<:@=DIR@:>@],
                  [install bash_completion conf file in DIR (default is yes)]),
@@ -290,6 +297,35 @@ AC_SUBST(BASH_COMPLETION_DIR)
 AC_SUBST(bash_completiondir)
 AM_CONDITIONAL(USE_BASH_COMPLETION, test "${BASH_COMPLETION_DIR}" != "")
 
+# IPv6
+AC_MSG_CHECKING(for IPv6 support)
+AC_CACHE_VAL(ac_cv_ipv6,
+  AC_RUN_IFELSE(
+    [AC_LANG_SOURCE([[
+      #include <sys/types.h>
+      #include <sys/socket.h>
+      #include <netinet/in.h>
+      /* Make sure the definitions for AF_INET6 and struct sockaddr_in6
+       * are defined, and that we can actually create an IPv6 TCP socket.
+       */
+      int main()
+      {
+              int fd;
+              struct sockaddr_in6 foo;
+              fd = socket(AF_INET6, SOCK_STREAM, 0);
+              return (fd >= 0 ? 0 : 1);
+      }
+    ]])],
+    [ac_cv_ipv6=yes],
+    [ac_cv_ipv6=no],
+    [ac_cv_ipv6=no]))
+AC_MSG_RESULT($ac_cv_ipv6)
+if test "x$ac_cv_ipv6" = "xyes" ; then
+  AC_DEFINE([HAVE_IPV6],[],
+            [Define is IPv6 support is available.])
+fi
+
+# finish
 AC_CONFIG_FILES([Makefile \
                  doc/Makefile \
                  lib/Makefile \
@@ -309,4 +345,5 @@ echo "using Kerberos 4 ............... $yafc_found_krb4"
 echo "using Kerberos 5 ............... $yafc_found_krb5"
 echo "using readline ................. $yafc_got_readline"
 echo "using ssh ...................... $yafc_got_ssh"
+echo "IPv6 ........................... $ac_cv_ipv6"
 echo

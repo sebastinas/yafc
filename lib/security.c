@@ -517,7 +517,7 @@ static struct sec_client_mech **find_mech(const char *name)
  * 1 - failed, try another mechanism
  * -1 - failed, security extensions not supported
  */
-int sec_login(char *host, const char *mech_to_try)
+int sec_login(const char *host, const char *mech_to_try)
 {
 	int ret;
 	struct sec_client_mech **m;

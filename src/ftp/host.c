@@ -3,6 +3,7 @@
  *
  * Yet Another FTP Client
  * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ * Copyright (C) 2012, Sebastian Ramacher <sebastian+dev@ramacher.at>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -10,120 +11,161 @@
  * (at your option) any later version. See COPYING for more details.
  */
 
-#include "syshdr.h"
 #include "host.h"
-#include "gvars.h"
 
-/* saved reply from getservent */
-static int ftp_servent_port = -1; /* -1 == not initialized */
-
-Host *host_create(const url_t *urlp)
+struct Host_
 {
-	Host *hostp;
+  char* hostname;
+  int port;
 
-	hostp = (Host *)xmalloc(sizeof(Host));
+  struct addrinfo* addr;
+  const struct addrinfo* connected_addr;
+};
 
-	hostp->hep = 0;
-	hostp->hostname = xstrdup(urlp->hostname);
-	hostp->port = urlp->port; /* host byte order */
-	if(hostp->port <= 0)
-		hostp->port = -1;
-	else
-		hostp->port = htons(hostp->port); /* to network byte order */
+Host* host_create(const url_t* urlp)
+{
+  Host* hostp = xmalloc(sizeof(Host));
+  hostp->hostname = xstrdup(urlp->hostname);
+  hostp->port = urlp->port; /* host byte order */
+  if(hostp->port <= 0)
+    hostp->port = -1;
+  else
+    hostp->port = htons(hostp->port); /* to network byte order */
+  hostp->addr = NULL;
+  hostp->connected_addr = NULL;
 
-	return hostp;
+  return hostp;
 }
 
 void host_destroy(Host *hostp)
 {
-	if(hostp) {
-		free(hostp->ipnum);
-		free(hostp->hostname);
-		free(hostp->ohostname);
-		free(hostp);
-	}
+  if (!hostp)
+    return;
+  
+  free(hostp->hostname);
+  freeaddrinfo(hostp->addr);
 }
 
-/* returns 0 on success, -1 on failure, (sets h_errno)
- */
-int host_lookup(Host *hostp)
+bool host_lookup(Host* hostp)
 {
-	struct in_addr ia;
+  if (!hostp || !hostp->hostname)
+    return false;
 
-	if(!hostp->hostname) {
-/*		h_errno = HOST_NOT_FOUND;*/
-		return -1;
-	}
+  char* service = NULL;
+  if (hostp->port != -1)
+  {
+    if (asprintf(&service, "%d", ntohs(hostp->port)) == -1)
+      return false;
+  }
+  else
+    service = xstrdup("ftp");
 
-	/* check if host is given in numbers-and-dots notation */
-	/* FIXME: should check if inet_aton is not present -> use inet_addr() */
-	if(inet_aton(hostp->hostname, &ia)) {
-		if(gvReverseDNS)
-			hostp->hep = gethostbyaddr((char *)&ia, sizeof(ia), AF_INET);
-		if(hostp->hep == 0) {
-			hostp->alt_h_length = sizeof(ia);
-			memcpy((void *)&hostp->alt_h_addr, &ia, hostp->alt_h_length);
-			hostp->ipnum = xstrdup(hostp->hostname);
-			hostp->ohostname = xstrdup(hostp->ipnum);
-		}
-	}
-	else {
-		hostp->hep = gethostbyname(hostp->hostname);
-		if(hostp->hep == 0)
-			return -1;
-	}
+  struct addrinfo hints;
+  memset(&hints, 0, sizeof(hints));
+#ifdef HAVE_IPV6
+  hints.ai_family = AF_UNSPEC;
+#else
+  hints.ai_family = AF_INET;
+#endif
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_protocol = IPPROTO_TCP;
+  hints.ai_flags = AI_ADDRCONFIG | AI_CANONNAME;
+#ifdef HAVE_IPV6
+  hints.ai_flags |= AI_V4MAPPED;
+#endif
+  if (hostp->port)
+    hints.ai_flags |= AI_NUMERICSERV;
 
-	if(hostp->hep) {
-		struct in_addr tmp;
-		memcpy(&tmp, hostp->hep->h_addr, hostp->hep->h_length);
-		hostp->ipnum = xstrdup(inet_ntoa(tmp));
-		hostp->ohostname = xstrdup(hostp->hep->h_name); /* official name of host */
-	}
+  int ret = getaddrinfo(hostp->hostname, service, &hints, &hostp->addr);
+  free(service);
+  if (ret < 0)
+  {
+    /* Lookup with "ftp" as service. Try again with 21. */
+    if (hostp->port == -1)
+      ret = getaddrinfo(hostp->hostname, "21", &hints, &hostp->addr);
 
-	/* let system pick port */
-	if(hostp->port == -1) {
-		if(ftp_servent_port == -1) {
-			struct servent *sep;
+    if (ret < 0)
+      return false;
+  }
 
-			sep = getservbyname("ftp", "tcp");
-			if(sep == 0)
-				ftp_servent_port = 21;
-			else
-				ftp_servent_port = sep->s_port;
-		}
-		hostp->port = ftp_servent_port;
-	}
+  if (hostp->port == -1)
+  {
+    if (hostp->addr->ai_family == AF_INET)
+      hostp->port = ((struct sockaddr_in*)hostp->addr->ai_addr)->sin_port;
+#ifdef HAVE_IPV6
+    else if (hostp->addr->ai_family == AF_INET6)
+      hostp->port = ((struct sockaddr_in6*)hostp->addr->ai_addr)->sin6_port;
+#endif
+  }
 
-	return 0;
+  return true;
 }
 
 /* returns port in network byte order */
-unsigned short int host_getport(const Host *hostp)
+uint16_t host_getport(const Host *hostp)
 {
-	return hostp->port;
+  return hostp->port;
 }
 
 /* returns port in host byte order */
-unsigned short int host_gethport(const Host *hostp)
+uint16_t host_gethport(const Host *hostp)
 {
-	return ntohs(hostp->port);
-}
-
-/* returns IP number */
-const char *host_getip(const Host *hostp)
-{
-	return hostp->ipnum;
+  return ntohs(hostp->port);
 }
 
 /* returns name as passed to host_set() */
 const char *host_getname(const Host *hostp)
 {
-	return hostp->hostname;
+  if (!hostp)
+    return NULL;
+
+  return hostp->hostname;
 }
 
-/* returns official name (as returned from gethostbyname()) */
 const char *host_getoname(const Host *hostp)
 {
-	return hostp->ohostname;
+  if (!hostp || !hostp->addr)
+    return NULL;
+
+  return hostp->addr->ai_canonname;
+}
+
+const struct addrinfo* host_getaddrinfo(const Host* hostp)
+{
+  if (!hostp)
+    return NULL;
+
+  return hostp->addr;
+}
+
+char* host_getip(const Host* hostp)
+{
+  if (!hostp || !hostp->connected_addr)
+    return NULL;
+
+  return printable_address(hostp->connected_addr->ai_addr);
+}
+
+char* printable_address(const struct sockaddr* sa)
+{
+  char res[INET6_ADDRSTRLEN];
+  if (sa->sa_family == AF_INET)
+    inet_ntop(sa->sa_family, &((const struct sockaddr_in*)sa)->sin_addr, res, INET6_ADDRSTRLEN);
+#ifdef HAVE_IPV6
+  else if (sa->sa_family == AF_INET6)
+    inet_ntop(sa->sa_family, &((const struct sockaddr_in6*)sa)->sin6_addr, res, INET6_ADDRSTRLEN);
+#endif
+  else
+    return NULL;
+
+  return xstrdup(res);
+}
+
+void host_connect_addr(Host* hostp, const struct addrinfo* info)
+{
+  if (!hostp)
+    return;
+
+  hostp->connected_addr = info;
 }
 

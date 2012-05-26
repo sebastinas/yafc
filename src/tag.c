@@ -45,7 +45,7 @@ void save_taglist(const char *alt_filename)
 
 	if(alt_filename == 0)
 		asprintf(&e, "%s/taglist.%s",
-				 gvWorkingDirectory, ftp->host->ohostname);
+				 gvWorkingDirectory, host_getoname(ftp->host));
 	f = tilde_expand_home(alt_filename ? alt_filename : e, gvLocalHomeDir);
 	fp = fopen(f, "w");
 	if(!fp) {
@@ -81,7 +81,7 @@ void load_taglist(bool showerr, bool always_autoload,
 
 	if(alt_filename == 0)
 		asprintf(&e, "%s/taglist.%s",
-				 gvWorkingDirectory, ftp->host->ohostname);
+				 gvWorkingDirectory, host_getoname(ftp->host));
 	f = tilde_expand_home(alt_filename ? alt_filename : e, gvLocalHomeDir);
 	fp = fopen(f, "r");
 	if(!fp) {
@@ -90,7 +90,7 @@ void load_taglist(bool showerr, bool always_autoload,
 				perror(alt_filename);
 			else
 				fprintf(stderr, _("No saved taglist for %s\n"),
-						ftp->host->ohostname);
+						host_getoname(ftp->host));
 		}
 		free(e);
 		free(f);

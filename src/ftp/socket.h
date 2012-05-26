@@ -3,6 +3,7 @@
  *
  * Yet Another FTP Client
  * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ * Copyright (C) 2012, Sebastian Ramacher <sebastian+dev@ramacher.at>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,29 +17,21 @@
 #include "syshdr.h"
 #include "host.h"
 
-typedef struct Socket
-{
-	int handle;
-	FILE *sin, *sout;
-	struct sockaddr_in local_addr;
-	struct sockaddr_in remote_addr;
-	bool connected;
-} Socket;
+typedef struct Socket_ Socket;
 
 Socket *sock_create(void);
 void sock_destroy(Socket *sockp);
 
-int sock_connect_host(Socket *sockp, Host *hp);
-int sock_connect(Socket *sockp);
-int sock_connect_addr(Socket *sockp, struct sockaddr_in *sa);
+bool sock_connect_host(Socket *sockp, Host *hp);
+bool sock_connect_addr(Socket *sockp, const struct sockaddr* sa, socklen_t salen);
 void sock_copy(Socket *tosock, const Socket *fromsock);
 bool sock_connected(const Socket *sockp);
-int sock_accept(Socket *sockp, const char *mode, bool pasvmode);
-int sock_listen(Socket *sockp);
+bool sock_accept(Socket *sockp, const char *mode, bool pasvmode);
+bool sock_listen(Socket *sockp, int family);
 void sock_throughput(Socket *sockp);
 void sock_lowdelay(Socket *sockp);
-const struct sockaddr_in *sock_local_addr(Socket *sockp);
-const struct sockaddr_in *sock_remote_addr(Socket *sockp);
+const struct sockaddr* sock_local_addr(Socket *sockp);
+const struct sockaddr* sock_remote_addr(Socket *sockp);
 ssize_t sock_read(Socket *sockp, void *buf, size_t num);
 ssize_t sock_write(Socket *sockp, void *buf, size_t num);
 int sock_get(Socket *sockp); /* get one character */
@@ -48,12 +41,16 @@ int sock_vprintf(Socket *sockp, const char *str, va_list ap);
 int sock_printf(Socket *sockp, const char *str, ...) YAFC_PRINTF(2, 3);
 int sock_flush(Socket *sockp);
 int sock_telnet_interrupt(Socket *sockp);
-int sock_getsockname(Socket *sockp, struct sockaddr_in *sa);
+int sock_getsockname(Socket *sockp, struct sockaddr_storage* sa);
 
 int sock_krb_vprintf(Socket *sockp, const char *str, va_list ap);
 int sock_krb_printf(Socket *sockp, const char *str, ...) YAFC_PRINTF(2, 3);
 ssize_t sock_krb_read(Socket *sockp, void *buf, size_t num);
 ssize_t sock_krb_write(Socket *sockp, void *buf, size_t num);
 int sock_krb_flush(Socket *sockp);
+
+FILE* sock_sin(Socket* sockp);
+FILE* sock_sout(Socket* sockp);
+int sock_handle(Socket* sockp);
 
 #endif
