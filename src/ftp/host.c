@@ -76,12 +76,17 @@ bool host_lookup(Host* hostp)
   if (hostp->port)
     hints.ai_flags |= AI_NUMERICSERV;
 
-  if (getaddrinfo(hostp->hostname, service, &hints, &hostp->addr) < 0)
-  {
-    free(service);
-    return false;
-  }
+  int ret = getaddrinfo(hostp->hostname, service, &hints, &hostp->addr);
   free(service);
+  if (ret < 0)
+  {
+    /* Lookup with "ftp" as service. Try again with 21. */
+    if (hostp->port == -1)
+      ret = getaddrinfo(hostp->hostname, "21", &hints, &hostp->addr);
+
+    if (ret < 0)
+      return false;
+  }
 
   if (hostp->port == 0)
   {
