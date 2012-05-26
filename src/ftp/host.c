@@ -44,6 +44,7 @@ void host_destroy(Host *hostp)
   
   free(hostp->hostname);
   freeaddrinfo(hostp->addr);
+  free(hostp);
 }
 
 bool host_lookup(Host* hostp)
