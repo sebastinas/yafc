@@ -137,7 +137,8 @@ fi
 # misc functions
 AC_SEARCH_LIBS([strerror],[cposix])
 
-AC_SEARCH_LIBS(inet_pton, resolv nsl)
+AC_SEARCH_LIBS([inet_ntop, getaddrinfo], resolv nsl,,
+               [AC_MSG_ERROR([inet_ntop or getaddrinfo is missing])])
 AC_SEARCH_LIBS(herror, resolv nsl)
 
 AC_CHECK_FUNCS(gettimeofday uname setsockopt)
