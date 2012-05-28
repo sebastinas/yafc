@@ -9,6 +9,7 @@ New in git
 * Try to fix invalid addresses returned by PASV. (Debian bug: #365108)
 * Add support for usernames with white spaces. (#18)
 * IPv6 support.
+* Add stats for large transfers (default 20 files).
 
 New in 1.1.3
 ------------
