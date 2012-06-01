@@ -27,13 +27,20 @@ AC_PROG_INSTALL
 LT_INIT
 
 dnl gettext et al
-IT_PROG_INTLTOOL
+AC_ARG_ENABLE([nls],
+              [AS_HELP_STRING([--enable-nls],[enable native language support])],,
+              [enable_nls=yes])
+use_nls=no
+if test "x$enable_nls" = "xyes"; then
+  use_nls=yes
 
-GETTEXT_PACKAGE=yafc
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"],
-                   [The domain to use with gettext])
-AM_GLIB_GNU_GETTEXT
+  IT_PROG_INTLTOOL
+  GETTEXT_PACKAGE=yafc
+  AC_SUBST(GETTEXT_PACKAGE)
+  AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"],
+                     [The domain to use with gettext])
+fi
+AM_CONDITIONAL([USE_NLS],[test "x$use_nls" = "xyes"])
 
 YAFC_LOCALEDIR=[${datadir}/locale]
 AC_SUBST(YAFC_LOCALEDIR)
