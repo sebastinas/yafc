@@ -354,4 +354,5 @@ echo "using Kerberos 5 ............... $yafc_found_krb5"
 echo "using readline ................. $yafc_got_readline"
 echo "using ssh ...................... $yafc_got_ssh"
 echo "IPv6 ........................... $ac_cv_ipv6"
+echo "NLS ............................ $use_nls"
 echo
