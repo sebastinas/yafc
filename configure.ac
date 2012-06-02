@@ -39,6 +39,7 @@ if test "x$enable_nls" = "xyes"; then
   AC_SUBST(GETTEXT_PACKAGE)
   AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"],
                      [The domain to use with gettext])
+  AC_DEFINE([ENABLE_NLS], [], [Define is you have gettext support.])
 fi
 AM_CONDITIONAL([USE_NLS],[test "x$use_nls" = "xyes"])
 

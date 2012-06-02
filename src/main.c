@@ -306,11 +306,10 @@ int main(int argc, char **argv, char **envp)
 #endif
 
 #ifdef ENABLE_NLS
-# ifdef HAVE_SETLOCALE
 	setlocale(LC_ALL, "");
-# endif
-	bindtextdomain(PACKAGE, LOCALEDIR);
-	textdomain(PACKAGE);
+	bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+  bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+	textdomain(GETTEXT_PACKAGE);
 #endif
 #if 0 && (!defined(HAVE_SETPROCTITLE) && defined(linux))
 	initsetproctitle(argc, argv, envp);
