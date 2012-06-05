@@ -1,5 +1,5 @@
-New in git
-----------
+New in 1.2.0
+------------
 
 * Fixed several memory leaks.
 * Fixed segfault if connection to the server got lost. (#19)
