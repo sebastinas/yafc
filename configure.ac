@@ -56,7 +56,10 @@ AC_HEADER_STAT
 AC_HEADER_TIME
 AC_HEADER_STDBOOL
 AC_HEADER_DIRENT
-AX_CREATE_STDINT_H
+
+AC_CHECK_HEADER([stdint.h],[],
+                [AC_MSG_ERROR([stdint.h is required by C99 but is not present.])])
+
 AC_CHECK_HEADERS(unistd.h \
                  pwd.h \
                  sys/socket.h \
@@ -354,6 +357,6 @@ echo "using Kerberos 4 ............... $yafc_found_krb4"
 echo "using Kerberos 5 ............... $yafc_found_krb5"
 echo "using readline ................. $yafc_got_readline"
 echo "using ssh ...................... $yafc_got_ssh"
-echo "IPv6 ........................... $ac_cv_ipv6"
-echo "NLS ............................ $use_nls"
+echo "using IPv6 ..................... $ac_cv_ipv6"
+echo "using NLS ...................... $use_nls"
 echo

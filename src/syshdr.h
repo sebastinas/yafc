@@ -30,7 +30,7 @@
 # include <sys/types.h>
 #endif
 
-#include "_stdint.h"
+#include <stdint.h>
 
 #include <stdio.h>
 #include <ctype.h>
