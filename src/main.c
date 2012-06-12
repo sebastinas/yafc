@@ -34,35 +34,34 @@
 
 #include "yafcrc.h"
 
-void print_syntax_and_exit(char *argv0)
+void print_syntax_and_exit(const char* argv0)
 {
 	printf(COPYLINE "\n");
-	printf(_("This is yet another FTP client.  Usage:\n"
-			 " %s [options] [[proto://][user[:password]@]hostname[:port][/directory] ...]\n"
-			 " proto can be either 'ftp' or 'ssh'\n"
-			 "Options:\n"
-			 "  -a, --anon        (*) anonymous login\n"
-			 "  -d, --debug           print all commands sent to/from server\n"
-			 "  -D, --dump-rc         prints the default config file to stdout\n"
-			 "  -m, --mechanism=MECH\n"
-			 "                    (*) try MECH as security mechanism(s)\n"
-			 "  -n, --norc            don't parse config file\n"
-			 "  -p, --noproxy     (*) don't connect via proxy\n"
-			 "  -q, --quiet           don't print the yafc welcome message\n"
-			 "  -r, --rcfile=FILE     use other config file instead of ~/.yafc/yafcrc\n"
-			 "  -t, --trace[=FILE]    use a trace file (mainly for debugging)\n"
-			 "               if FILE specified, use it instead of ~/.yafc/trace/trace.<pid>\n"
-			 "  -u, --noauto      (*) disable autologin\n"
-			 "  -U, --noalias     (*) disable bookmark alias lookup and abbreviation\n"
-			 "  -v, --verbose         print all replies from server\n"
-			 "  -w, --wait=TIME       use a different wait time for reconnecting\n"
-			 "  -W, --workdir=DIR     use a different working directory (instead of ~/.yafc)\n"
-			 "  -V, --version         print version information and quit\n"
-			 "  -h, --help            print this help and quit\n"
-			 "\n"
-			 "(*) only applies for login to host specified on the command line\n"
-			 "\n"
-			 "Report bugs to " PACKAGE_BUGREPORT "\n\n"), argv0);
+	printf(_("This is yet another FTP client.\n"));
+  printf(_("Usage: %s [options] [[proto://][user[:password]@]hostname[:port][/directory] ...]\n"), argv0);
+  printf(_("Options:\n"));
+  printf(_("  -a, --anon        (*) anonymous login\n"));
+	printf(_("  -d, --debug           print all commands sent to/from server\n"));
+	printf(_("  -D, --dump-rc         prints the default config file to stdout\n"));
+	printf(_("  -m, --mechanism=MECH\n"
+	         "                    (*) try MECH as security mechanism(s)\n"));
+	printf(_("  -n, --norc            don't parse config file\n"));
+	printf(_("  -p, --noproxy     (*) don't connect via proxy\n"));
+	printf(_("  -q, --quiet           don't print the yafc welcome message\n"));
+	printf(_("  -r, --rcfile=FILE     use other config file instead of ~/.yafc/yafcrc\n"));
+	printf(_("  -t, --trace[=FILE]    use a trace file (mainly for debugging)\n"
+	         "               if FILE specified, use it instead of ~/.yafc/trace/trace.<pid>\n"));
+	printf(_("  -u, --noauto      (*) disable autologin\n"));
+	printf(_("  -U, --noalias     (*) disable bookmark alias lookup and abbreviation\n"));
+	printf(_("  -v, --verbose         print all replies from server\n"));
+	printf(_("  -w, --wait=TIME       use a different wait time for reconnecting\n"));
+	printf(_("  -W, --workdir=DIR     use a different working directory (instead of ~/.yafc)\n"));
+	printf(_("  -V, --version         print version information and quit\n"));
+	printf(_("  -h, --help            print this help and quit\n"));
+	printf("\n");
+	printf(_("(*) only applies for login to host specified on the command line\n"));
+	printf("\n");
+	printf(_("Report bugs to %s\n\n"), PACKAGE_BUGREPORT);
 	exit(0);
 }
 

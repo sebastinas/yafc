@@ -175,10 +175,17 @@ DEFCMD(luntag);
 DEFCMD(ltaglist);
 DEFCMD(ltaginfo);
 
-#define OPT_HELP(help) { opt_help(argc, argv, _(help)); \
+#define OPT_HELP(help) { opt_help(argc, argv, _(help), NULL, NULL); \
  if(optind == -1) return; }
 
-void opt_help(int argc, char **argv, char *help);
+#define OPT_HELP_NEW(descr, usage, help) \
+  { \
+    opt_help(argc, argv, descr, usage, help); \
+    if (optind == -1) return; \
+  }
+
+void show_help(const char* descr, const char* usage, const char* help);
+void opt_help(int argc, char **argv, const char* descr, const char* usage, const char* help);
 void expand_alias_parameters(args_t **args, args_t *alias_args);
 
 #endif

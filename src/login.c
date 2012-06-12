@@ -25,12 +25,8 @@ void init_ftp(void);
 
 static void print_user_syntax(void)
 {
-	printf(_("Send new user information.  Usage:\n"
-			 "  user [options] [username]\n"
-			 "Options:\n"
-			 "  -m, --mechanism=MECH       try MECH as security mechanism(s)"
-			 " when logging in\n"
-			 "      --help             display this help\n"));
+	show_help(_("Send new user information."), "user [options] [username]",
+	  _("  -m, --mechanism=MECH       try MECH as security mechanism(s) when logging in\n"));
 }
 
 void cmd_user(int argc, char **argv)
@@ -235,20 +231,17 @@ void yafc_open(const char *host, unsigned int opt,
 
 static void print_open_syntax(void)
 {
-	printf(_("Connect and login to remote host.  Usage:\n"
-			 "  open [options] [proto://][user[:password]@]hostname[:port]"
-			 "[/directory] ...\n"
-			 " proto can be either 'ftp' or 'ssh'\n"
-			 "Options:\n"
-			 "  -a, --anon                 try to login anonymously\n"
-			 "  -u, --noauto               disable autologin\n"
-			 "  -U, --noalias              disable bookmark alias lookup"
-			 " and abbreviation\n"
-			 "  -m, --mechanism=MECH       try MECH as security mechanism(s)"
-			 " when logging in\n"
-			 "  -p, --noproxy              don't connect via proxy\n"
-			 "  -s, --sftp=PATH            specify path to remote sftp_server\n"
-			 "      --help                 display this help and exit\n"));
+  show_help(_("Connect and login to remote host."),
+	  "open [options] [proto://][user[:password]@]hostname[:port][/directory] ...",
+    _("  -a, --anon                 try to login anonymously\n"
+			"  -u, --noauto               disable autologin\n"
+			"  -U, --noalias              disable bookmark alias lookup"
+			" and abbreviation\n"
+			"  -m, --mechanism=MECH       try MECH as security mechanism(s)"
+			" when logging in\n"
+			"  -p, --noproxy              don't connect via proxy\n"
+			"  -s, --sftp=PATH            specify path to remote sftp_server\n"
+			" proto can be either 'ftp' or 'ssh'\n"));
 }
 
 void cmd_open(int argc, char **argv)
@@ -316,10 +309,7 @@ void cmd_open(int argc, char **argv)
 
 void cmd_reopen(int argc, char **argv)
 {
-	OPT_HELP("Reopen closed connection.  Usage:\n"
-			 "  reopen [options]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
+	OPT_HELP_NEW(_("Reopen closed connection."), "reopen [options]", NULL);
 	need_connected();
 	need_loggedin();
 

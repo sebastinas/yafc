@@ -120,13 +120,10 @@ void cmd_alias(int argc, char **argv)
 	alias *ap;
 	listitem *li = 0;
 
-	OPT_HELP("Define an alias.  Usage:\n"
-			 "  alias [options]  [name [value]]\n"
-			 "Options:\n"
-			 "  -h, --help\n"
-			 "without arguments, prints all defined aliases\n"
-			 "with only [name] argument, prints that alias' value\n"
-			 "with [name] and [value] arguments, define [name] to be [value]\n");
+	OPT_HELP_NEW(_("Define an alias."), "alias [options]  [name [value]]",
+    _("without arguments, prints all defined aliases\n"
+    "with only [name] argument, prints that alias' value\n"
+    "with [name] and [value] arguments, define [name] to be [value]\n"));
 
 	maxargs(optind + 1);
 
@@ -136,7 +133,7 @@ void cmd_alias(int argc, char **argv)
 
 	if(argc < optind + 1) {  /* print all alias bindings */
 		if(!li)
-			fprintf(stderr, _("no aliases defined\n"));
+			fprintf(stderr, _("No aliases defined.\n"));
 		else {
 			while(li) {
 				char *f;
@@ -153,9 +150,9 @@ void cmd_alias(int argc, char **argv)
 
 	if(argc == optind + 1) {  /* print one alias binding */
 		if(!ap)
-			fprintf(stderr, _("no such alias '%s'\n"), argv[optind]);
+			fprintf(stderr, _("No such alias '%s'.\n"), argv[optind]);
 		else if(ap == ALIAS_AMBIGUOUS)
-			fprintf(stderr, _("ambiguous alias '%s'\n"), argv[optind]);
+			fprintf(stderr, _("Ambiguous alias '%s'.\n"), argv[optind]);
 		else {
 			char *f;
 			f = args_cat2(ap->value, 0);
@@ -182,15 +179,12 @@ void cmd_unalias(int argc, char **argv)
 	int i;
 	listitem *lip;
 
-	OPT_HELP("Undefine an alias.  Usage:\n"
-			 "  unalias [options] <alias>\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
+  OPT_HELP_NEW(_("Undefine an alias."), "unalias [options] <alias>", "");
 
 	minargs(optind);
 
 	if(list_numitem(gvAliases) == 0) {
-		fprintf(stderr, _("no aliases defined\n"));
+		fprintf(stderr, _("No aliases defined.\n"));
 		return;
 	}
 
@@ -201,7 +195,7 @@ void cmd_unalias(int argc, char **argv)
 			lip = list_search(gvAliases, (listsearchfunc)alias_searchfunc,
 							  argv[i]);
 			if(!lip) {
-				fprintf(stderr, _("no such alias '%s'\n"), argv[i]);
+				fprintf(stderr, _("No such alias '%s'.\n"), argv[i]);
 				continue;
 			}
 			list_delitem(gvAliases, lip);

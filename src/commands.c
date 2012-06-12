@@ -331,10 +331,7 @@ cmd_t *find_func(const char *cmd, bool print_error)
 
 void cmd_list(int argc, char **argv)
 {
-	OPT_HELP("List files.  Usage:\n"
-			 "  list [options] [file]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
+	OPT_HELP_NEW(_("List files."), "list [options] [file]", NULL);
 	need_connected();
 	need_loggedin();
 
@@ -351,10 +348,7 @@ void cmd_list(int argc, char **argv)
 
 void cmd_nlist(int argc, char **argv)
 {
-	OPT_HELP("Simple file list.  Usage:\n"
-			 "  nlist [options] [file]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
+	OPT_HELP_NEW(_("Simple file list."), "nlist [options] [file]", NULL);
 	need_connected();
 	need_loggedin();
 
@@ -395,12 +389,8 @@ void cmd_cat(int argc, char **argv)
 			}
 			break;
 		case 'h':
-			fprintf(stderr, "Print file(s) on standard output.  Usage:\n"
-					"  cat [options] <file>...\n"
-					"Options:\n"
-					"  -t, --type=TYPE    set transfer TYPE to ascii"
-					" or binary\n"
-					"  -h, --help         show this help\n");
+      show_help(_("Print file(s) on standard output."), "cat [options] <file>...",
+					_("  -t, --type=TYPE    set transfer TYPE to ascii or binary\n"));
 			return;
 		case '?':
 			optind = -1;
@@ -433,17 +423,6 @@ void cmd_cat(int argc, char **argv)
 void cmd_cd(int argc, char **argv)
 {
 	char *e;
-#if 0
-	OPT_HELP("Change working directory.  Usage:\n"
-			 "  cd [options] [directory]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n"
-			 "if [directory] is '-', cd changes to the previous working"
-			 " directory\n"
-			 "if omitted, changes to home directory\n");
-
-	maxargs(optind);
-#endif
 
 	maxargs_nohelp(1);
 	need_connected();
@@ -464,17 +443,24 @@ void cmd_cd(int argc, char **argv)
 
 void cmd_cdup(int argc, char **argv)
 {
-	OPT_HELP("Change to parent working directory.  Usage:\n"
-			 "  cdup [options]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
-	maxargs(optind - 1);
+	OPT_HELP_NEW(_("Change to parent working directory."), "cdup [options]", NULL);
+
+  maxargs(optind - 1);
 	need_connected();
 	need_loggedin();
 	ftp_cdup();
 }
 
-void opt_help(int argc, char **argv, char *help)
+void show_help(const char* descr, const char* usage, const char* help)
+{
+  printf("%s\n", descr);
+  printf(_("Usage: %s\n"), usage);
+  printf(_("Options:\n  -h, --help   show this help\n"));
+  if (help)
+    printf(help);
+}
+
+void opt_help(int argc, char **argv, const char* descr, const char* usage, const char* help)
 {
 	struct option longopts[] = {
 		{"help", no_argument, 0, 'h'},
@@ -486,7 +472,7 @@ void opt_help(int argc, char **argv, char *help)
 	while((c = getopt_long(argc, argv, "h", longopts, 0)) != EOF) {
 		switch(c) {
 		  case 'h':
-			fprintf(stderr, "%s", help);
+        show_help(descr, usage, help);
 		  case '?':
 			optind = -1;
 			return;
@@ -496,10 +482,7 @@ void opt_help(int argc, char **argv, char *help)
 
 void cmd_pwd(int argc, char **argv)
 {
-	OPT_HELP("Print the current working directory.  Usage:\n"
-			 "  pwd [options]\n"
-			 "Options:\n"
-			 "  -h, --help     show this help\n");
+  OPT_HELP_NEW(_("Print the current working directory."), "pwd [options]", NULL);
 
 	maxargs(optind - 1);
 	need_connected();
@@ -522,12 +505,8 @@ void cmd_url(int argc, char **argv)
 	while((c = getopt_long(argc, argv, "eh", longopts, 0)) != EOF) {
 		switch(c) {
 		  case 'h':
-			printf(_("Print the current URL.  Usage:\n"
-					 "  url [options]\n"
-					 "Options:\n"
-					 "  -e, --no-encoding    don't encode URL as"
-					 " rfc1738 says\n"
-					 "  -h, --help           show this help\n"));
+        show_help(_("Print the current URL."), "url [options]",
+            _("  -e, --no-encoding    don't encode URL as RFC1738 says\n"));
 			return;
 		  case 'e':
 			no_encoding = true;
@@ -576,10 +555,7 @@ void cmd_url(int argc, char **argv)
 void cmd_close(int argc, char **argv)
 {
 	if(argv) {
-		OPT_HELP("Close open connection.  Usage:\n"
-				 "  close [options]\n"
-				 "Options:\n"
-				 "  -h, --help     show this help\n");
+		OPT_HELP_NEW(_("Close open connection"), "close [options]", NULL);
 		maxargs(optind - 1);
 	}
 
@@ -603,10 +579,7 @@ void cmd_rhelp(int argc, char **argv)
 void cmd_mkdir(int argc, char **argv)
 {
 	int i;
-	OPT_HELP("Create directory.  Usage:\n"
-			 "  mkdir [options]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
+	OPT_HELP_NEW(_("Create directory."), "mkdir [options]", NULL);
 	minargs(optind);
 	need_connected();
 	need_loggedin();
@@ -618,10 +591,7 @@ void cmd_mkdir(int argc, char **argv)
 void cmd_rmdir(int argc, char **argv)
 {
 	int i;
-	OPT_HELP("Remove directory.  Usage:\n"
-			 "  rmdir [options]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
+	OPT_HELP_NEW(_("Remove directory."), "rmdir [options]", NULL);
 	minargs(optind);
 	need_connected();
 	need_loggedin();
@@ -632,11 +602,8 @@ void cmd_rmdir(int argc, char **argv)
 
 void cmd_idle(int argc, char **argv)
 {
-	OPT_HELP("Get or set idle timeout.  Usage:\n"
-			 "  idle [options] [timeout]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n"
-			 "Without the timeout option, print the current idle timeout\n");
+	OPT_HELP_NEW(_("Get or set idle timeout."), "idle [options] [timeout]",
+	  _("Without the timeout option, print the current idle timeout\n"));
 	maxargs(optind);
 	need_connected();
 	need_loggedin();
@@ -649,10 +616,7 @@ void cmd_idle(int argc, char **argv)
 
 void cmd_nop(int argc, char **argv)
 {
-	OPT_HELP("Do nothing (send a NOOP command).  Usage:\n"
-			 "  nop [options]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
+	OPT_HELP_NEW(_("Do nothing (send a NOOP command)."), "nop [options]", NULL);
 	maxargs(optind - 1);
 	need_connected();
 
@@ -661,11 +625,7 @@ void cmd_nop(int argc, char **argv)
 
 void cmd_rstatus(int argc, char **argv)
 {
-	OPT_HELP("Show status of remote host.  Usage:\n"
-			 "  rstatus [options]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
-
+	OPT_HELP_NEW(_("Show status of remote host."), "rstatus [options]", NULL);
 	maxargs(optind - 1);
 	need_connected();
 
@@ -682,10 +642,7 @@ void cmd_rstatus(int argc, char **argv)
 
 void cmd_status(int argc, char **argv)
 {
-	OPT_HELP("Show status.  Usage:\n"
-			 "  status [options]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
+	OPT_HELP_NEW(_("Show status."), "status [options]", NULL);
 
 	maxargs(optind - 1);
 
@@ -730,11 +687,8 @@ void cmd_chmod(int argc, char **argv)
 	list *gl;
 	listitem *li;
 
-	OPT_HELP("Change permissions on remote file.  Usage:\n"
-			 "  chmod [options] <mode> <file>\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n"
-			 "<mode> is the permission mode, in octal (ex 644)\n");
+	OPT_HELP_NEW(_("Change permissions on remote file."), "chmod [options] <mode> <file>",
+	  _("<mode> is the permission mode, in octal (ex 644)\n"));
 
 	minargs(optind + 1);
 	need_connected();
@@ -755,10 +709,7 @@ void cmd_chmod(int argc, char **argv)
 
 void cmd_mv(int argc, char **argv)
 {
-	OPT_HELP("Rename or move a file.  Usage:\n"
-			 "  mv [options] <src> <dest>\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
+	OPT_HELP_NEW(_("Rename or move a file."), "mv [options] <src> <dest>", NULL);
 
 	minargs(optind + 1);
 	maxargs(optind + 1);
@@ -795,15 +746,11 @@ void cmd_cache(int argc, char **argv)
 			  touch = true;
 			  break;
 		  case 'h':
-			printf(_("Control the directory cache.  Usage:\n"
-					 "  cache [option] [directories]\n"
-					 "Options:\n"
-					 "  -c, --clear        clear whole directory cache\n"
-					 "  -l, --list         list contents of cache\n"
-					 "  -t, --touch        remove directories from cache\n"
-					 "                     if none given, remove current"
-					 " directory\n"
-					 "  -h, --help         show this help\n"));
+        show_help(_("Control the directory cache."), "cache [option] [directories]",
+          _("  -c, --clear        clear whole directory cache\n"
+					  "  -l, --list         list contents of cache\n"
+					  "  -t, --touch        remove directories from cache\n"
+					  "                     if none given, remove current directory\n"));
 			return;
 		  case '?':
 			return;
@@ -830,10 +777,7 @@ void cmd_quote(int argc, char **argv)
 {
 	char *e;
 
-	OPT_HELP("Send arbitrary FTP command.  Usage:\n"
-			 "  quote [options] <commands>\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
+	OPT_HELP_NEW(_("Send arbitrary FTP command."), "quote [options] <commands>", NULL);
 
 	minargs(optind);
 	need_connected();
@@ -855,11 +799,7 @@ void cmd_filetime(int argc, char **argv)
 {
 	int i;
 
-	OPT_HELP("Show modification time of remote file.  Usage:\n"
-			 "  filetime [options] <file>...\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
-
+	OPT_HELP_NEW(_("Show modification time of remote file."), "filetime [options] <file>...", NULL);
 	minargs(optind);
 	need_connected();
 	need_loggedin();
@@ -883,11 +823,7 @@ void cmd_source(int argc, char **argv)
 {
 	int i;
 
-	OPT_HELP("Read (source) a configuration file.  Usage:\n"
-			 "  source [options] <file>...\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
-
+	OPT_HELP_NEW(_("Read (source) a configuration file."), "source [options] <file>...", NULL);
 	minargs(optind);
 
 	for(i = optind; i < argc; i++)
@@ -898,10 +834,7 @@ void cmd_source(int argc, char **argv)
 void cmd_system(int argc, char **argv)
 {
 	if(argv) {
-		OPT_HELP("Show type of remote system.  Usage:\n"
-				 "  system [options]\n"
-				 "Options:\n"
-				 "  -h, --help    show this help\n");
+		OPT_HELP_NEW(_("Show type of remote system."), "system [options]\n", NULL);
 
 		maxargs(optind - 1);
 	}
@@ -923,13 +856,9 @@ void cmd_system(int argc, char **argv)
 
 void cmd_switch(int argc, char **argv)
 {
-	OPT_HELP("Switch between active connections.  Usage:\n"
-			 "  switch [options] [number | name]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n"
-			 "The argument can either be the connection number, host name"
-			 " or its alias\n"
-			 "Without argument, switch to the next active connection\n");
+	OPT_HELP_NEW(_("Switch between active connections."), "switch [options] [number | name]",
+	  _("The argument can either be the connection number, host name or its alias.\n"
+			"Without argument, switch to the next active connection\n"));
 
 	maxargs(optind);
 

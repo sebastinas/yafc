@@ -20,15 +20,12 @@
 
 static void print_ltag_syntax(void)
 {
-	printf(_("Tag local file(s) for later transferring.  Usage:\n"
-			 "  ltag [option(s)] file(s)\n"
-			 "Options:\n"
-			 "  -c, --clear             clear the local taglist\n"
-			 "  -i, --info              show info of tagged files\n"
-			 "  -l, --list              list tagged files\n"
-			 "  -L, --load[=FILE]       load saved local taglist file\n"
-			 "  -s, --save[=FILE]       save local taglist\n"
-			 "  -h, --help              show this help\n"));
+	show_help(_("Tag local file(s) for later transferring."), "ltag [option(s)] file(s)",
+	  _("  -c, --clear             clear the local taglist\n"
+			"  -i, --info              show info of tagged files\n"
+			"  -l, --list              list tagged files\n"
+			"  -L, --load[=FILE]       load saved local taglist file\n"
+			"  -s, --save[=FILE]       save local taglist\n"));
 }
 
 void save_ltaglist(const char *alt_filename)
@@ -202,12 +199,7 @@ void cmd_luntag(int argc, char **argv)
 {
 	int i;
 
-	OPT_HELP("Remove files from the local tag list.  Usage:\n"
-			 "  luntag [options] <filemask>...\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
-
-
+	OPT_HELP_NEW(_("Remove files from the local tag list."), "luntag [options] <filemask>...", NULL);
 	minargs(1);
 
 	if(list_numitem(gvLocalTagList) == 0) {

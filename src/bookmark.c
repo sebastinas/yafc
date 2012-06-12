@@ -409,16 +409,13 @@ void auto_create_bookmark(void)
 
 static void print_bookmark_syntax(void)
 {
-	printf(_("Handle bookmarks.  Usage:\n"
-			 "  bookmark [options] [bookmark alias ...]\n"
-			 "Options:\n"
-			 "  -s, --save[=FILE]      save bookmarks to bookmarks FILE\n"
-			 "  -e, --edit             edit bookmarks file with your $EDITOR\n"
-			 "  -r, --read[=FILE]      re-read bookmarks FILE\n"
-			 "  -d, --delete           delete specified bookmarks from file\n"
-			 "  -l, --list             list bookmarks in memory\n"
-			 "  -u, --noupdate         toggle noupdate flag\n"
-			 "  -h, --help             show this help\n"));
+	show_help(_("Handle bookmarks."), "bookmark [options] [bookmark alias ...]",
+	  _("  -s, --save[=FILE]      save bookmarks to bookmarks FILE\n"
+			"  -e, --edit             edit bookmarks file with your $EDITOR\n"
+			"  -r, --read[=FILE]      re-read bookmarks FILE\n"
+			"  -d, --delete           delete specified bookmarks from file\n"
+			"  -l, --list             list bookmarks in memory\n"
+			"  -u, --noupdate         toggle noupdate flag\n"));
 }
 
 void cmd_bookmark(int argc, char **argv)

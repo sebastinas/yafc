@@ -23,11 +23,7 @@ void cmd_lpwd(int argc, char **argv)
 	char *tmp;
 
 	if(argv) {
-		OPT_HELP("Print local working directory.  Usage:\n"
-				 "  lpwd [options]\n"
-				 "Options:\n"
-				 "  -h, --help    show this help\n");
-
+		OPT_HELP_NEW(_("Print local working directory."), "lpwd [options]", NULL);
 		maxargs(optind - 1);
 	}
 
@@ -45,12 +41,9 @@ void cmd_lcd(int argc, char **argv)
 	char *e = 0, *tmp;
 	char *te;
 
-	OPT_HELP("Change local working directory.  Usage:\n"
-			 "  lcd [options] [directory]\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n"
-			 "if [directory] is '-', lcd changes to the previous working directory\n"
-			 "if omitted, changes to home directory\n");
+	OPT_HELP_NEW(_("Change local working directory."), "lcd [options] [directory]",
+	  _("if [directory] is '-', lcd changes to the previous working directory\n"
+			"if omitted, changes to home directory\n"));
 
 	maxargs(optind);
 

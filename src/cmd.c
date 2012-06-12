@@ -51,11 +51,7 @@ void cmd_exit(int argc, char **argv)
 void cmd_quit(int argc, char **argv)
 {
 	if(argv != 0) {
-		OPT_HELP("Close all connections and quit.  Usage:\n"
-				 "  quit [options]\n"
-				 "Options:\n"
-				 "  -h, --help    show this help\n");
-
+		OPT_HELP_NEW(_("Close all connections and quit."), "quit [options]", NULL);
 		maxargs(optind - 1);
 	}
 	exit_yafc();

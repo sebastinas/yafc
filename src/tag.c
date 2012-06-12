@@ -20,15 +20,13 @@
 
 static void print_tag_syntax(void)
 {
-	printf(_("Tag file(s) for later transferring.  Usage:\n"
-			 "  tag [option(s)] [file(s)]\n"
-			 "Options:\n"
-			 "  -c, --clear             clear the taglist\n"
-			 "  -i, --info              show info of tagged files\n"
-			 "  -l, --list              list tagged files\n"
-			 "  -L, --load[=FILE]       load saved taglist file for this host\n"
-			 "  -s, --save[=FILE]       save taglist\n"
-			 "  -h, --help              show this help\n"));
+	show_help(_("Tag file(s) for later transferring."), "tag [option(s)] [file(s)]",
+	  _("Options:\n"
+			"  -c, --clear             clear the taglist\n"
+			"  -i, --info              show info of tagged files\n"
+			"  -l, --list              list tagged files\n"
+			"  -L, --load[=FILE]       load saved taglist file for this host\n"
+			"  -s, --save[=FILE]       save taglist\n"));
 }
 
 void save_taglist(const char *alt_filename)
@@ -231,10 +229,7 @@ void cmd_untag(int argc, char **argv)
 	listitem *li, *pli;
 	rfile *f;
 
-	OPT_HELP("Remove files from the tag list.  Usage:\n"
-			 "  untag [options] <filemask>...\n"
-			 "Options:\n"
-			 "  -h, --help    show this help\n");
+	OPT_HELP_NEW(_("Remove files from the tag list."), "untag [options] <filemask>...", NULL);
 
 	minargs(optind);
 	need_connected();

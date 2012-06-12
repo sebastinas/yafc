@@ -27,17 +27,14 @@
 
 static void print_rm_syntax(void)
 {
-	printf(_("Remove file(s).  Usage:\n"
-			 "  rm [options] file ...\n"
-			 "Options:\n"
-			 "  -f, --force           never prompt\n"
-			 "  -i, --interactive     prompt before any removal\n"
-			 "  -r, --recursive       remove the contents of"
-			 " directories recursively\n"
-			 "                          CAREFUL!\n"
-			 "  -t, --tagged          remove tagged files\n"
-			 "  -v, --verbose         explain what is being done\n"
-			 "      --help            display this help\n"));
+	show_help(_("Remove file(s)."), "rm [options] file ...",
+	  _("  -f, --force           never prompt\n"
+			"  -i, --interactive     prompt before any removal\n"
+			"  -r, --recursive       remove the contents of"
+			" directories recursively\n"
+			"                          CAREFUL!\n"
+			"  -t, --tagged          remove tagged files\n"
+			"  -v, --verbose         explain what is being done\n"));
 }
 
 static bool rm_quit = false;
