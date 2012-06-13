@@ -4,16 +4,14 @@ doc/stamp-vti
 doc/version.texi
 doc/yafc.info
 .deps
-lib/libfoo.a
-src/yafc
-src/yafcrc.h
-src/ftp/libftp.a
-src/libmhe/libmhe.a
+yafc
+yafcrc.h
 contrib/*.spec
 src/*.o
 src/ftp/*.o
 src/libmhe/*.o
 lib/*.o
+.dirstamp
 
 # from make dist
 yafc-*.tar.*
@@ -34,6 +32,3 @@ cf/ltoptions.m4
 cf/ltsugar.m4
 cf/ltversion.m4
 cf/lt~obsolete.m4
-
-# from configure
-_stdint.h

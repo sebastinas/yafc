@@ -15,7 +15,7 @@ AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE
 AC_CONFIG_MACRO_DIR([cf])
 AC_CONFIG_AUX_DIR(support)
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_HEADERS([config.h])
 
 CDPATH=""
@@ -24,7 +24,6 @@ AC_CANONICAL_HOST
 AC_DEFINE_UNQUOTED(HOSTTYPE, "${host_cpu}-${host_vendor}-${host_os}", [the hosttype])
 
 AC_PROG_INSTALL
-LT_INIT
 
 dnl gettext et al
 AC_ARG_ENABLE([nls],
@@ -340,10 +339,6 @@ fi
 # finish
 AC_CONFIG_FILES([Makefile \
                  doc/Makefile \
-                 lib/Makefile \
-                 src/Makefile \
-                 src/ftp/Makefile \
-                 src/libmhe/Makefile \
                  po/Makefile.in])
 AC_OUTPUT
 
