@@ -457,7 +457,7 @@ void show_help(const char* descr, const char* usage, const char* help)
   printf(_("Usage: %s\n"), usage);
   printf(_("Options:\n  -h, --help   show this help\n"));
   if (help)
-    printf(help);
+    printf("%s", help);
 }
 
 void opt_help(int argc, char **argv, const char* descr, const char* usage, const char* help)
