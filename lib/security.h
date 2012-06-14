@@ -56,7 +56,7 @@ struct sec_client_mech {
     char *name;
     size_t size;
     int (*init)(void *);
-    int (*auth)(void *, char*);
+    int (*auth)(void *, const char*);
     void (*end)(void *);
     int (*check_prot)(void *, int);
     int (*overhead)(void *, int, int);

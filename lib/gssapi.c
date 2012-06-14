@@ -232,9 +232,8 @@ import_name(const char *kname, const char *host, gss_name_t *target_name)
 }
 
 static int
-gss_auth(void *app_data, char *host)
+gss_auth(void *app_data, const char *host)
 {
-    
     OM_uint32 maj_stat, min_stat;
     gss_name_t target_name;
     gss_buffer_desc input, output_token;
@@ -245,8 +244,7 @@ gss_auth(void *app_data, char *host)
     struct gss_data *d = app_data;
 
     const char *knames[] = { "ftp", "host", NULL }, **kname = knames;
-	    
-    
+
     if(import_name(*kname++, host, &target_name))
 	return AUTH_ERROR;
 
