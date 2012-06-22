@@ -223,7 +223,7 @@ static int getfile(const rfile *fi, unsigned int opt,
         if(destdir) {
             r = make_path(destdir, S_IRWXU, S_IRWXU, -1, -1, 1, 0);
             if(r != 0) {
-                transfer_mail_msg(_("failed to create directory %s\n"),
+                transfer_mail_msg(_("Couldn't create directory: %s\n"),
                                   destdir);
                 free(destdir);
                 return -1;

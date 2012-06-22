@@ -1,21 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
+# Translators:
+# Sebastian Ramacher <sebastian+dev@ramacher.at>, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: yafc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-06-23 01:32+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-06-22 23:27+0000\n"
+"Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: ../lib/getopt.c:515
 #, c-format
@@ -72,7 +73,7 @@ msgstr ""
 #: ../lib/kauth.c:114
 #, c-format
 msgid "Password for %s:"
-msgstr ""
+msgstr "Passwort für %s:"
 
 #: ../lib/kauth.c:141 ../lib/krb4.c:196
 msgid "Out of memory base64-encoding\n"
@@ -111,7 +112,7 @@ msgstr ""
 
 #: ../lib/security.c:65
 msgid "unknown"
-msgstr ""
+msgstr "unbekannt"
 
 #: ../lib/security.c:349
 #, c-format
@@ -182,17 +183,17 @@ msgstr ""
 #: ../lib/security.c:539
 #, c-format
 msgid "realloc %zu failed"
-msgstr ""
+msgstr "realloc %zu ist fehlgeschlagen"
 
 #: ../lib/security.c:545
 #, c-format
 msgid "Skipping %s...\n"
-msgstr ""
+msgstr "Überspringe %s...\n"
 
 #: ../lib/security.c:548
 #, c-format
 msgid "Trying %s...\n"
-msgstr ""
+msgstr "Versuche %s...\n"
 
 #: ../lib/security.c:552
 #, c-format
@@ -207,7 +208,7 @@ msgstr ""
 #: ../lib/security.c:556
 #, c-format
 msgid "The server doesn't support the FTP security extensions.\n"
-msgstr ""
+msgstr "Der Server unterstützt keine FTP Sicherheitserweiterungen.\n"
 
 #: ../src/alias.c:103
 #, c-format
@@ -327,15 +328,15 @@ msgstr ""
 
 #: ../src/bookmark.c:567 ../src/bookmark.c:575 ../src/bookmark.c:589
 msgid "yes"
-msgstr ""
+msgstr "ja"
 
 #: ../src/bookmark.c:567 ../src/bookmark.c:575 ../src/bookmark.c:589
 msgid "no"
-msgstr ""
+msgstr "nein"
 
 #: ../src/cmd.c:54
 msgid "Close all connections and quit."
-msgstr ""
+msgstr "Trenne alle Verbindungen und beende."
 
 #: ../src/cmd.c:76
 #, c-format
@@ -349,7 +350,7 @@ msgstr ""
 
 #: ../src/cmd.c:96 ../src/commands.c:652
 msgid "not connected"
-msgstr ""
+msgstr "nicht verbunden"
 
 #: ../src/cmd.c:157
 #, c-format
@@ -430,7 +431,7 @@ msgstr ""
 #: ../src/commands.c:457
 #, c-format
 msgid "Usage: %s\n"
-msgstr ""
+msgstr "Verwendung: %s\n"
 
 #: ../src/commands.c:458
 #, c-format
@@ -453,15 +454,15 @@ msgstr ""
 
 #: ../src/commands.c:558
 msgid "Close open connection"
-msgstr ""
+msgstr "Trenne offene Verbindung"
 
 #: ../src/commands.c:582
 msgid "Create directory."
-msgstr ""
+msgstr "Erstelle Verzeichnis."
 
 #: ../src/commands.c:594
 msgid "Remove directory."
-msgstr ""
+msgstr "Lösche Verzeichnis."
 
 #: ../src/commands.c:605
 msgid "Get or set idle timeout."
@@ -486,7 +487,7 @@ msgstr ""
 #: ../src/commands.c:650
 #, c-format
 msgid "connected to '%s'\n"
-msgstr ""
+msgstr "zu '%s' verbunden\n"
 
 #: ../src/commands.c:654
 #, c-format
@@ -582,12 +583,12 @@ msgstr ""
 
 #: ../src/ftp/ftp.c:354
 msgid "Unable to create socket.\n"
-msgstr ""
+msgstr "Konnte Socket nicht erstellen.\n"
 
 #: ../src/ftp/ftp.c:367
 #, c-format
 msgid "Connected to %s ([%s]:%d).\n"
-msgstr ""
+msgstr "Verbindung mit %s ([%s]:%d) hergestellt.\n"
 
 #: ../src/ftp/ftp.c:438 ../src/ftp/ftp.c:645
 msgid "No control connection\n"
@@ -644,11 +645,11 @@ msgstr ""
 #: ../src/ftp/ftp.c:786
 #, c-format
 msgid "password (%s): "
-msgstr ""
+msgstr "Passwort (%s): "
 
 #: ../src/ftp/ftp.c:788 ../src/ftp/ftp.c:800
 msgid "password: "
-msgstr ""
+msgstr "Passwort: "
 
 #: ../src/ftp/ftp.c:799
 msgid "Proxy password: "
@@ -860,7 +861,7 @@ msgstr ""
 #: ../src/ftp/ssh_cmd.c:88 ../src/ftp/ssh_cmd.c:95
 #, c-format
 msgid "Error %s\n"
-msgstr ""
+msgstr "Fehler %s\n"
 
 #: ../src/ftp/ssh_cmd.c:232
 #, c-format
@@ -870,7 +871,7 @@ msgstr ""
 #: ../src/ftp/ssh_cmd.c:250
 #, c-format
 msgid "Failed to parse ssh config: %s\n"
-msgstr ""
+msgstr "Konnte ssh Konfiguration nicht verarbeiten: %s\n"
 
 #: ../src/ftp/ssh_cmd.c:264
 #, c-format
@@ -880,7 +881,7 @@ msgstr ""
 #: ../src/ftp/ssh_cmd.c:283
 #, c-format
 msgid "Authentication failed: %s\n"
-msgstr ""
+msgstr "Authentifizierung fehlgeschlagen: %s\n"
 
 #: ../src/ftp/ssh_cmd.c:292
 msgid "Couldn't initialise connection to server\n"
@@ -899,22 +900,22 @@ msgstr ""
 #: ../src/ftp/ssh_cmd.c:372
 #, c-format
 msgid "%s: not a directory\n"
-msgstr ""
+msgstr "%s:kein Verzeichnis\n"
 
 #: ../src/ftp/ssh_cmd.c:398 ../src/fxp.c:200 ../src/get.c:226 ../src/put.c:166
 #, c-format
 msgid "Couldn't create directory: %s\n"
-msgstr ""
+msgstr "Konnte Verzeichnis nicht erstellen: %s\n"
 
 #: ../src/ftp/ssh_cmd.c:416
 #, c-format
 msgid "Couldn't remove directory: %s\n"
-msgstr ""
+msgstr "Konnte Verzeichnis nicht löschen: %s\n"
 
 #: ../src/ftp/ssh_cmd.c:432
 #, c-format
 msgid "Couldn't delete file: %s\n"
-msgstr ""
+msgstr "Konnte Datei nicht löschen: %s\n"
 
 #: ../src/ftp/ssh_cmd.c:451
 #, c-format
@@ -929,16 +930,16 @@ msgstr ""
 #: ../src/ftp/ssh_cmd.c:554
 #, c-format
 msgid "Couldn't rename file '%s' to '%s': %s\n"
-msgstr ""
+msgstr "Konnte Datei '%s' nicht in '%s' umbenennen: %s\n"
 
 #: ../src/ftp/ssh_cmd.c:581
 msgid "ssh_list() not implemented yet\n"
-msgstr ""
+msgstr "ssh_list() ist noch nicht implementiert\n"
 
 #: ../src/ftp/ssh_cmd.c:608
 #, c-format
 msgid "Cannot download a directory: %s\n"
-msgstr ""
+msgstr "Kann kein Verzeichnis herunterladen: %s\n"
 
 #: ../src/ftp/ssh_cmd.c:618
 #, c-format
@@ -968,12 +969,12 @@ msgstr ""
 #: ../src/ftp/ssh_cmd.c:715
 #, c-format
 msgid "Cannot open file for writing: %s\n"
-msgstr ""
+msgstr "Konnte Datei nicht zum Schreiben öffnen: %s\n"
 
 #: ../src/ftp/ssh_cmd.c:763
 #, c-format
 msgid "Failed to read from file: %s\n"
-msgstr ""
+msgstr "Konnte nicht aus Datei lesen: %s\n"
 
 #: ../src/ftp/ssh_cmd.c:784
 msgid "Unique put with SSH not implemented yet\n"
@@ -1018,12 +1019,12 @@ msgstr ""
 #: ../src/fxp.c:146 ../src/put.c:116
 #, c-format
 msgid "sent %s\n"
-msgstr ""
+msgstr "%s gesendet\n"
 
 #: ../src/fxp.c:148 ../src/put.c:118
 #, c-format
 msgid "failed to send %s: %s\n"
-msgstr ""
+msgstr "Konnte %s nicht senden: %s\n"
 
 #: ../src/fxp.c:225 ../src/put.c:190
 #, c-format
@@ -1216,12 +1217,12 @@ msgstr ""
 #: ../src/help.c:69
 #, c-format
 msgid "Using Readline version %s.\n"
-msgstr ""
+msgstr "Verwende Readline Version %s.\n"
 
 #: ../src/help.c:72
 #, c-format
 msgid "Using libssh version %d.%d.%d.\n"
-msgstr ""
+msgstr "Verwende libssh Version %d.%d.%d.\n"
 
 #: ../src/list.c:45
 msgid "List information about FILE (the current directory by default)."
@@ -1274,7 +1275,7 @@ msgstr ""
 
 #: ../src/local.c:26
 msgid "Print local working directory."
-msgstr ""
+msgstr "Gib lokales Arbeitsverzeichnis aus."
 
 #: ../src/local.c:32
 #, c-format
@@ -1284,7 +1285,7 @@ msgstr ""
 #: ../src/local.c:35
 #, c-format
 msgid "local working directory is '%s'\n"
-msgstr ""
+msgstr "Lokales Arbeitsverzeichnis ist '%s'\n"
 
 #: ../src/local.c:44
 msgid "Change local working directory."
@@ -1299,7 +1300,7 @@ msgstr ""
 #: ../src/local.c:61
 #, c-format
 msgid "Couldn't change local working directory...\n"
-msgstr ""
+msgstr "Konnte lokales Arbeitsverzeichnis nicht wechseln...\n"
 
 #: ../src/login.c:28
 msgid "Send new user information."
@@ -1417,7 +1418,7 @@ msgstr ""
 #: ../src/main.c:42
 #, c-format
 msgid "Options:\n"
-msgstr ""
+msgstr "Optionen:\n"
 
 #: ../src/main.c:43
 #, c-format
@@ -1534,7 +1535,7 @@ msgstr ""
 #: ../src/main.c:222 ../src/main.c:234
 #, c-format
 msgid "creating directory %s: "
-msgstr ""
+msgstr "Erstelle Verzeichnis %s: "
 
 #: ../src/main.c:247
 #, c-format
@@ -1617,7 +1618,7 @@ msgstr ""
 #: ../src/rc.c:32
 #, c-format
 msgid "Error(s) while parsing '%s':\n"
-msgstr ""
+msgstr "Fehler während der Verarbeitung von '%s':\n"
 
 #: ../src/rc.c:92
 msgid "unmatched quote\n"
@@ -1725,7 +1726,7 @@ msgstr ""
 
 #: ../src/rm.c:30
 msgid "Remove file(s)."
-msgstr ""
+msgstr "Lösche Datei(en)."
 
 #: ../src/rm.c:31
 msgid ""
@@ -1970,7 +1971,7 @@ msgstr ""
 #: ../src/transfer.c:436
 #, c-format
 msgid "Unable to send mail (using %s)\n"
-msgstr ""
+msgstr "Konnte Mail nicht senden (mit %s)\n"
 
 #: ../src/utils.c:172
 #, c-format
