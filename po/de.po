@@ -595,7 +595,7 @@ msgstr ""
 #: ../src/ftp/ftp.c:345
 #, c-format
 msgid "Connecting to proxy %s at port %d...\n"
-msgstr "Verbinde zu Proxy %s auf Port %s...\n"
+msgstr "Verbinde zu Proxy %s auf Port %d...\n"
 
 #: ../src/ftp/ftp.c:348
 #, c-format
