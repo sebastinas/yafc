@@ -86,7 +86,6 @@ AC_TYPE_SIZE_T
 AC_TYPE_MODE_T
 dnl AC_STRUCT_TM
 
-AC_FUNC_ALLOCA
 AC_FUNC_FNMATCH_GNU
 if test "$ac_cv_func_fnmatch_gnu" = "yes"; then
   AC_DEFINE([HAVE_FNMATCH_GNU], [],

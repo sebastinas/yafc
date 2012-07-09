@@ -197,7 +197,7 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 	free(q_dest_dir);
 	free(dest_dir);
 	if(r == -1) {
-		transfer_mail_msg(_("failed to create directory %s\n"), dest_dir);
+		transfer_mail_msg(_("Couldn't create directory: %s\n"), dest_dir);
 		free(dpath);
 		free(dest);
 		ftp_use(thisftp);
