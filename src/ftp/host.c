@@ -74,7 +74,7 @@ bool host_lookup(Host* hostp)
 #ifdef HAVE_IPV6
   hints.ai_flags |= AI_V4MAPPED;
 #endif
-  if (hostp->port)
+  if (hostp->port != -1)
     hints.ai_flags |= AI_NUMERICSERV;
 
   int ret = getaddrinfo(hostp->hostname, service, &hints, &hostp->addr);
