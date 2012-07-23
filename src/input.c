@@ -57,7 +57,6 @@ char *input_read_string(const char *prompt)
 	char tmp[257];
 	size_t l;
 
-	fflush(stdin);
 	fprintf(stderr, "%s", prompt);
 	if(fgets(tmp, 256, stdin) == 0)
 		return 0;
@@ -334,7 +333,10 @@ int ask(int opt, int def, const char *prompt, ...)
 	chstr = choice_str(opt, def);
 	while(true) {
 		if(gvSighupReceived)
+    {
+      free(e);
 			return def;
+    }
 
 		fprintf(stderr, "%s [%s] ", e, chstr);
 		if(fgets(tmp, 80, stdin) == 0) {
@@ -342,12 +344,16 @@ int ask(int opt, int def, const char *prompt, ...)
 			fputc('\n', stderr);
 			continue; /* skip EOF chars */
 #else
+      free(e);
 			return def;
 #endif
 		}
 
 		if(tmp[0] == '\n')
+    {
+      free(e);
 			return def;
+    }
 
 		ch = tolower((int)tmp[0]);
 
@@ -359,8 +365,12 @@ int ask(int opt, int def, const char *prompt, ...)
 		for(i=0; question[i].str; i++) {
 			if(ch == ask_shortcut(&question[i])
 				&& test(opt, question[i].opt))
+      {
+        free(e);
 		    return question[i].opt;
+      }
 		}
 	}
+  free(e);
 	return def;  /* should never happen */
 }
