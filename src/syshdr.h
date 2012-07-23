@@ -226,6 +226,5 @@ typedef unsigned char _Bool;
 
 #define test(a, b)   (((a) & (b)) == (b))
 #define STD_SHELL "/bin/sh"
-#define DEFAULT_PAGER "more"
 
 #endif
