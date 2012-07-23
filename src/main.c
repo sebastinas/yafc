@@ -95,10 +95,6 @@ void init_ftp(void)
 
 void init_yafc(void)
 {
-#ifdef HAVE_UNAME
-	struct utsname unbuf;
-#endif
-
 	gvFtpList = list_new((listfunc)ftp_destroy);
 	list_additem(gvFtpList, ftp_create());
 	gvCurrentFtp = gvFtpList->first;
@@ -114,6 +110,7 @@ void init_yafc(void)
 		gvEditor = xstrdup("vi");
 
 #ifdef HAVE_UNAME
+  struct utsname unbuf;
 	if(uname(&unbuf) == 0)
 		gvLocalHost = xstrdup(unbuf.nodename);
 #endif
@@ -241,26 +238,6 @@ void check_if_first_time(void)
 		chmod(dir, S_IRUSR|S_IWUSR|S_IXUSR);
 		printf(_("done\n"));
 		free(dir);
-
-#if 0
-		else {
-			printf(_("creating default config file /yafcrc: "),
-				   gvWorkingDirectory);
-			fflush(stdout);
-			{
-				FILE *fp;
-				fp = fopen(, "w");
-				if(!fp) {
-					perror("");
-					free(rcdir);
-					return;
-				}
-				fprintf(fp, "%s", default_yafcrc);
-				fclose(fp);
-				printf(_("done\n"));
-			}
-		}
-#endif
 	} else
 		perror(gvWorkingDirectory);
 }
