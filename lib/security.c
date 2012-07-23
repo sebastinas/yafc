@@ -344,7 +344,6 @@ int sec_vfprintf(FILE * f, const char *fmt, va_list ap)
 	len =
 		(*ftp->mech->encode) (ftp->app_data, buf, strlen(buf),
 							  ftp->command_prot, &enc);
-	free(buf);
 	if (len < 0) {
 		printf(_("Failed to encode command.\n"));
 		return -1;
