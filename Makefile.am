@@ -61,6 +61,7 @@ yafc_SOURCES = src/main.c \
 							 src/libmhe/strq.c \
 							 src/libmhe/shortpath.c \
 							 src/libmhe/args.c \
+							 src/libmhe/xmalloc.c \
 							 src/ftp/ftp.c \
 							 src/ftp/socket.c \
 							 src/ftp/host.c \
@@ -73,7 +74,6 @@ yafc_SOURCES = src/main.c \
 							 src/ftp/ftpsend.c \
 							 src/ftp/ftpsigs.c \
 							 $(SSHSRCS) \
-							 lib/xmalloc.c \
 							 lib/makepath.c \
 							 lib/base64.c \
 							 lib/modechange.c \
@@ -116,7 +116,7 @@ noinst_HEADERS = src/alias.h \
 								 src/libmhe/strq.h \
 								 src/libmhe/shortpath.h \
 								 src/libmhe/args.h \
-								 lib/xmalloc.h \
+								 src/libmhe/xmalloc.h \
 								 lib/getopt.h \
 								 lib/strcasecmp.h \
 								 lib/krb4.h \
