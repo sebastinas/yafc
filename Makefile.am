@@ -118,7 +118,6 @@ noinst_HEADERS = src/alias.h \
 								 src/libmhe/args.h \
 								 src/libmhe/xmalloc.h \
 								 lib/getopt.h \
-								 lib/strcasecmp.h \
 								 lib/krb4.h \
 								 lib/base64.h \
 								 lib/makepath.h \

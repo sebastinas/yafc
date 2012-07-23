@@ -72,6 +72,7 @@ AC_CHECK_HEADERS(unistd.h \
                  memory.h \
                  setjmp.h \
                  errno.h \
+                 strcasecmp.h \
                  fcntl.h
 )
 
@@ -154,6 +155,13 @@ AC_CHECK_FUNCS(gettimeofday uname setsockopt)
 
 AC_CHECK_DECLS([asprintf, vasprintf])
 AC_CHECK_DECLS([herror],,,[#include <netdb.h>])
+AC_CHECK_DECLS([strcasecmp],,
+               [AC_MSG_ERROR([strcasecmp is not available.])],
+               [
+                #ifdef HAVE_STRINGS_H
+                #include <strings.h>
+                #endif
+               ])
 
 # kerberos
 YAFC_KERBEROS

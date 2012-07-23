@@ -76,6 +76,10 @@ char *strchr (), *strrchr ();
 # include <unistd.h>
 #endif
 
+#ifdef HAVE_STRINGS_H
+# include <strings.h>
+#endif
+
 #ifdef HAVE_UNAME
 # include <sys/utsname.h>
 #endif
@@ -166,10 +170,6 @@ extern int read_history ();
 # include <getopt.h>
 #else
 # include "getopt.h"  /* our own, in lib/ */
-#endif
-
-#ifndef HAVE_STRCASECMP
-# include "strcasecmp.h"  /* our own, in lib/ */
 #endif
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
