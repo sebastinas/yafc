@@ -33,7 +33,7 @@ void listify_string(const char *str, list *lp)
 char *stringify_list(list *lp)
 {
 	listitem *li;
-	char *str;
+	char *str = NULL;
 
 	if(!lp)
 		return 0;
@@ -45,7 +45,9 @@ char *stringify_list(list *lp)
 		return 0;
 
 	for(li = li->next; li; li = li->next) {
-		asprintf(&str, "%s:%s",  str, (char *)li->data);
+    char* tmp = str;
+		asprintf(&str, "%s:%s",  tmp, (char *)li->data);
+    free(tmp);
 	}
 	return str;
 }
