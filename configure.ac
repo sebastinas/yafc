@@ -102,11 +102,6 @@ AC_SEARCH_LIBS(socket, socket, [],
   AC_MSG_WARN(cannot find socket function)
 ])
 
-AC_SEARCH_LIBS(gethostbyname, resolv nsl, [],
-[
-  AC_MSG_WARN(cannot find resolver functions)
-])
-
 AC_REPLACE_FUNCS(vasprintf)
 
 AC_CHECK_FUNCS(getopt_long, [],
