@@ -805,9 +805,96 @@ int ssh_do_receive(const char *infile, FILE *fp, getmode_t mode,
   return (r == 0 && !ftp->ti.ioerror && !ftp->ti.interrupted) ? 0 : -1;
 }
 
+static int do_scp_write(ssh_scp scp, const char* path, FILE* fp,
+                        ftp_transfer_func hookf)
+{
+  time_t then = time(NULL) - 1;
+  ftp_set_close_handler();
+
+  if (hookf)
+    hookf(&ftp->ti);
+  ftp->ti.begin = false;
+
+  struct stat sb;
+  errno = 0;
+  if (fstat(fileno(fp), &sb) == -1)
+  {
+    ftp_err(_("Couldn't fstat local file: %s\n"), strerror(errno));
+    ssh_scp_free(scp);
+    return -1;
+  }
+
+  int rc = ssh_scp_push_file(scp, path, sb.st_size, sb.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO));
+  if (rc != SSH_OK)
+  {
+    ftp_err(_("Failed to start scp upload: %s\n"),
+            ssh_get_error(ftp->session));
+    ssh_scp_close(scp);
+    ssh_scp_free(scp);
+    return -1;
+  }
+
+  /* read file */
+  char buffer[SSH_BUFSIZ];
+  ssize_t nbytes = 0;
+  errno = 0;
+  while ((nbytes = fread(buffer, sizeof(char), sizeof(buffer), fp)) > 0)
+  {
+    if (ftp_sigints() > 0)
+    {
+      ftp_trace("break due to sigint\n");
+      break;
+    }
+
+    rc = ssh_scp_write(scp, buffer, nbytes);
+    if (rc != SSH_OK)
+    {
+      ftp_err(_("Error while writing to file: %s\n"), ssh_get_error(ftp->session));
+      ssh_scp_close(scp);
+      ssh_scp_free(scp);
+      return -1;
+    }
+
+    ftp->ti.size += nbytes;
+    if (hookf)
+    {
+      time_t now = time(NULL);
+      if (now > then)
+      {
+        hookf(&ftp->ti);
+        then = now;
+      }
+    }
+    errno = 0;
+  }
+
+  if (ferror(fp))
+  {
+    ftp_err(_("Failed to read from file: %s\n"), strerror(errno));
+    rc = -1;
+  }
+
+  ssh_scp_close(scp);
+  ssh_scp_free(scp);
+  return rc;
+}
+
 static int do_write(const char* path, FILE* fp, ftp_transfer_func hookf,
                     uint64_t offset)
 {
+  /* try to set up a scp connection */
+  if (!offset)
+  {
+    ssh_scp scp = ssh_scp_new(ftp->session, SSH_SCP_WRITE, path);
+    if (scp != NULL)
+    {
+      int rc = ssh_scp_init(scp);
+      if (rc == SSH_OK)
+        return do_scp_write(scp, path, fp, hookf);
+      ssh_scp_free(scp);
+    }
+  }
+
   time_t then = time(NULL) - 1;
   ftp_set_close_handler();
 
