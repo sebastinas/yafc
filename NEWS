@@ -1,3 +1,9 @@
+New in git
+----------
+
+* sftp: Use scp if available to speed up file transfers. (#16)
+* Fixed several memory leaks and other programming errors.
+
 New in 1.2.0
 ------------
 
