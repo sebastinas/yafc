@@ -424,6 +424,8 @@ int parse_rc(const char *file, bool warn)
 			NEXTSTR;
 			free(gvSSHOptions);
 			gvSSHOptions = xstrdup(e);
+    } else if (strcasecmp(e, "ssh_try_scp") == 0) {
+      gvSSHTrySCP = nextbool(fp);
 		} else if(strcasecmp(e, "xterm_title_terms") == 0) {
 			NEXTSTR;
 			free(gvXtermTitleTerms);

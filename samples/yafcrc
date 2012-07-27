@@ -49,6 +49,9 @@ waiting_dots on
 #   -l USER; -p PORT; -v; -r; -d; -c CIPHER; -i IDENTITY; -C; -1; -2
 #ssh_options "-c blowfish"
 
+# Try to use scp if connect via ssh.
+ssh_try_scp yes
+
 # set to true to skip query of remote system on connect
 inhibit_startup_syst no
 
