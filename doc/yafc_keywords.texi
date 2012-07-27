@@ -82,22 +82,16 @@ type: string
 
 Create trace files in @file{~/.yafc/trace/trace.<pid>}.
 
-@item ssh_program
-type: string
-
-Path to local ssh program which will be used in SSH2 connections. Note
-that only SSH version 2 is supported.
-
 @item ssh_options
 type: string
 
 Custom options that will be passed to the SSH program.
 
-@item sftp_server_program
-type: string
+@item ssh_try_scp
+type: boolean
 
-Path to remote sftp-server program. Leave commented to use the sftp
-subsystem. See also @ref{open}.
+Try to use SCP to copy files before falling back to SFTP. SCP might give you
+higher transfer rates than SFTP.
 
 @item inhibit_startup_syst
 type: boolean
