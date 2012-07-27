@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-23 01:32+0200\n"
+"POT-Creation-Date: 2012-07-27 20:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -113,98 +113,98 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: ../lib/security.c:349
+#: ../lib/security.c:348
 #, c-format
 msgid "Failed to encode command.\n"
 msgstr ""
 
-#: ../lib/security.c:353
+#: ../lib/security.c:352
 #, c-format
 msgid "Out of memory base64-encoding.\n"
 msgstr ""
 
-#: ../lib/security.c:382
+#: ../lib/security.c:381
 #, c-format
 msgid "Using %s for authentication.\n"
 msgstr ""
 
-#: ../lib/security.c:383
+#: ../lib/security.c:382
 #, c-format
 msgid "Using %s command channel.\n"
 msgstr ""
 
-#: ../lib/security.c:385
+#: ../lib/security.c:384
 #, c-format
 msgid "Using %s data channel.\n"
 msgstr ""
 
-#: ../lib/security.c:387
+#: ../lib/security.c:386
 #, c-format
 msgid "Protection buffer size: %lu.\n"
 msgstr ""
 
-#: ../lib/security.c:390
+#: ../lib/security.c:389
 #, c-format
 msgid "Not using any security mechanism.\n"
 msgstr ""
 
-#: ../lib/security.c:403
+#: ../lib/security.c:402
 msgid "No security data exchange has taken place.\n"
 msgstr ""
 
-#: ../lib/security.c:410
+#: ../lib/security.c:409
 msgid "Failed to set protection buffer size.\n"
 msgstr ""
 
-#: ../lib/security.c:423
+#: ../lib/security.c:422
 msgid "Failed to set protection level.\n"
 msgstr ""
 
-#: ../lib/security.c:455
+#: ../lib/security.c:454
 msgid "No security data exchange has taken place\n"
 msgstr ""
 
-#: ../lib/security.c:461
+#: ../lib/security.c:460
 #, c-format
 msgid "Unrecognized protection level %s\n"
 msgstr ""
 
-#: ../lib/security.c:466
+#: ../lib/security.c:465
 #, c-format
 msgid "%s does not implement %s protection\n"
 msgstr ""
 
-#: ../lib/security.c:479
+#: ../lib/security.c:478
 #, c-format
 msgid "Syntax error, try %s --help for more information\n"
 msgstr ""
 
-#: ../lib/security.c:539
+#: ../lib/security.c:538
 #, c-format
 msgid "realloc %zu failed"
 msgstr ""
 
-#: ../lib/security.c:545
+#: ../lib/security.c:544
 #, c-format
 msgid "Skipping %s...\n"
 msgstr ""
 
-#: ../lib/security.c:548
+#: ../lib/security.c:547
 #, c-format
 msgid "Trying %s...\n"
 msgstr ""
 
-#: ../lib/security.c:552
+#: ../lib/security.c:551
 #, c-format
 msgid "%s is not supported by the server.\n"
 msgstr ""
 
-#: ../lib/security.c:554
+#: ../lib/security.c:553
 #, c-format
 msgid "%s rejected as security mechanism.\n"
 msgstr ""
 
-#: ../lib/security.c:556
+#: ../lib/security.c:555
 #, c-format
 msgid "The server doesn't support the FTP security extensions.\n"
 msgstr ""
@@ -809,173 +809,190 @@ msgstr ""
 msgid "setsockopt(LOWDELAY)... ignored"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:51
+#: ../src/ftp/ssh_cmd.c:53
 #, c-format
 msgid "Host key for server changed. It is now:\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:52
+#: ../src/ftp/ssh_cmd.c:54
 msgid "Public key hash"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:53
+#: ../src/ftp/ssh_cmd.c:55
 #, c-format
 msgid "For security reasons, connection will be stopped.\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:58
+#: ../src/ftp/ssh_cmd.c:60
 #, c-format
 msgid ""
 "The host key for this server was not found but an othertype of key exists.\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:60
+#: ../src/ftp/ssh_cmd.c:62
 #, c-format
 msgid ""
 "An attacker might change the default server key toconfuse your client into "
 "thinking the key does not exist\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:66
+#: ../src/ftp/ssh_cmd.c:68
 #, c-format
 msgid "Could not find known host file.\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:67
+#: ../src/ftp/ssh_cmd.c:69
 #, c-format
 msgid ""
 "If you accept the host key here, the file will beautomatically created.\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:73
+#: ../src/ftp/ssh_cmd.c:75
 #, c-format
 msgid "The server is unknown. Do you trust the host key?\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:74
+#: ../src/ftp/ssh_cmd.c:76
 #, c-format
 msgid "Public key hash: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:88 ../src/ftp/ssh_cmd.c:95
+#: ../src/ftp/ssh_cmd.c:90 ../src/ftp/ssh_cmd.c:97
 #, c-format
 msgid "Error %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:232
+#: ../src/ftp/ssh_cmd.c:234
 #, c-format
 msgid "Failed to load SSH options from yafcrc config (ssh_options = '%s')\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:250
+#: ../src/ftp/ssh_cmd.c:252
 #, c-format
 msgid "Failed to parse ssh config: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:264
+#: ../src/ftp/ssh_cmd.c:266
 #, c-format
 msgid "Couldn't initialise connection to server: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:283
+#: ../src/ftp/ssh_cmd.c:285
 #, c-format
 msgid "Authentication failed: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:292
+#: ../src/ftp/ssh_cmd.c:294
 msgid "Couldn't initialise connection to server\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:299 ../src/ftp/ssh_cmd.c:309
+#: ../src/ftp/ssh_cmd.c:301 ../src/ftp/ssh_cmd.c:311
 #, c-format
 msgid "Couldn't initialise ftp subsystem: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:367
+#: ../src/ftp/ssh_cmd.c:369
 #, c-format
 msgid "Couldn't stat directory: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:372
+#: ../src/ftp/ssh_cmd.c:374
 #, c-format
 msgid "%s: not a directory\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:398 ../src/fxp.c:200 ../src/get.c:226 ../src/put.c:166
+#: ../src/ftp/ssh_cmd.c:400 ../src/fxp.c:200 ../src/get.c:226 ../src/put.c:166
 #, c-format
 msgid "Couldn't create directory: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:416
+#: ../src/ftp/ssh_cmd.c:418
 #, c-format
 msgid "Couldn't remove directory: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:432
+#: ../src/ftp/ssh_cmd.c:434
 #, c-format
 msgid "Couldn't delete file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:451
+#: ../src/ftp/ssh_cmd.c:453
 #, c-format
 msgid "Couldn't chmod file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:529
+#: ../src/ftp/ssh_cmd.c:531
 #, c-format
 msgid "Couldn't list directory: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:554
+#: ../src/ftp/ssh_cmd.c:556
 #, c-format
 msgid "Couldn't rename file '%s' to '%s': %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:581
+#: ../src/ftp/ssh_cmd.c:583
 msgid "ssh_list() not implemented yet\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:608
+#: ../src/ftp/ssh_cmd.c:607
 #, c-format
-msgid "Cannot download a directory: %s\n"
+msgid "Failed to start scp download: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:618
-#, c-format
-msgid "Cannot open file for reading: %s\n"
-msgstr ""
-
-#: ../src/ftp/ssh_cmd.c:626 ../src/ftp/ssh_cmd.c:723
-#, c-format
-msgid "Failed to seek: %s\n"
-msgstr ""
-
-#: ../src/ftp/ssh_cmd.c:645 ../src/ftp/ssh_cmd.c:743
-#, c-format
-msgid "Error while writing to file: %s\n"
-msgstr ""
-
-#: ../src/ftp/ssh_cmd.c:665
+#: ../src/ftp/ssh_cmd.c:626 ../src/ftp/ssh_cmd.c:636 ../src/ftp/ssh_cmd.c:680
+#: ../src/ftp/ssh_cmd.c:781
 #, c-format
 msgid "Error while reading from file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:706
+#: ../src/ftp/ssh_cmd.c:659 ../src/ftp/ssh_cmd.c:761 ../src/ftp/ssh_cmd.c:852
+#: ../src/ftp/ssh_cmd.c:946
+#, c-format
+msgid "Error while writing to file: %s\n"
+msgstr ""
+
+#: ../src/ftp/ssh_cmd.c:687
+#, c-format
+msgid "Unexpected request: %s %lu\n"
+msgstr ""
+
+#: ../src/ftp/ssh_cmd.c:724
+#, c-format
+msgid "Cannot download a directory: %s\n"
+msgstr ""
+
+#: ../src/ftp/ssh_cmd.c:734
+#, c-format
+msgid "Cannot open file for reading: %s\n"
+msgstr ""
+
+#: ../src/ftp/ssh_cmd.c:742 ../src/ftp/ssh_cmd.c:926
+#, c-format
+msgid "Failed to seek: %s\n"
+msgstr ""
+
+#: ../src/ftp/ssh_cmd.c:822 ../src/ftp/ssh_cmd.c:909
 #, c-format
 msgid "Couldn't fstat local file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:715
+#: ../src/ftp/ssh_cmd.c:830
 #, c-format
-msgid "Cannot open file for writing: %s\n"
+msgid "Failed to start scp upload: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:763
+#: ../src/ftp/ssh_cmd.c:873 ../src/ftp/ssh_cmd.c:966
 #, c-format
 msgid "Failed to read from file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:784
+#: ../src/ftp/ssh_cmd.c:918
+#, c-format
+msgid "Cannot open file for writing: %s\n"
+msgstr ""
+
+#: ../src/ftp/ssh_cmd.c:987
 msgid "Unique put with SSH not implemented yet\n"
 msgstr ""
 
@@ -1521,39 +1538,34 @@ msgid ""
 msgstr ""
 
 #. printf(_("This seems to be the first time you run Yafc...\n"));
-#: ../src/main.c:212
+#: ../src/main.c:209
 #, c-format
 msgid "creating working directory %s: "
 msgstr ""
 
-#: ../src/main.c:219 ../src/main.c:230 ../src/main.c:242 ../src/main.c:260
+#: ../src/main.c:216 ../src/main.c:227 ../src/main.c:239
 #, c-format
 msgid "done\n"
 msgstr ""
 
-#: ../src/main.c:222 ../src/main.c:234
+#: ../src/main.c:219 ../src/main.c:231
 #, c-format
 msgid "creating directory %s: "
 msgstr ""
 
-#: ../src/main.c:247
-#, c-format
-msgid "creating default config file /yafcrc: "
-msgstr ""
-
-#: ../src/main.c:400
+#: ../src/main.c:377
 #, c-format
 msgid ""
 "No proxy host defined!\n"
 "\n"
 msgstr ""
 
-#: ../src/main.c:410
+#: ../src/main.c:387
 #, c-format
 msgid "Invalid value for --wait: %d\n"
 msgstr ""
 
-#: ../src/main.c:422
+#: ../src/main.c:399
 #, c-format
 msgid "Couldn't open tracefile '%s': %s\n"
 msgstr ""
@@ -1972,17 +1984,17 @@ msgstr ""
 msgid "Unable to send mail (using %s)\n"
 msgstr ""
 
-#: ../src/utils.c:172
+#: ../src/utils.c:174
 #, c-format
 msgid "invalid connection number: '%d'\n"
 msgstr ""
 
-#: ../src/utils.c:185
+#: ../src/utils.c:187
 #, c-format
 msgid "no such connection open: '%s'\n"
 msgstr ""
 
-#: ../src/utils.c:215
+#: ../src/utils.c:217
 #, c-format
 msgid "Executing '%s', use 'exit' to exit from shell...\n"
 msgstr ""
