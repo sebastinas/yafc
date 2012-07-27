@@ -43,6 +43,9 @@ extern bool gvWaitingDots;
 /* custom user options like -C */
 extern char *gvSSHOptions;
 
+/* try to use scp */
+extern bool gvSSHTrySCP;
+
 /* automatically reconnect on connection timeout */
 extern bool gvAutoReconnect;
 

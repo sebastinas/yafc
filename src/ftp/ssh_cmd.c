@@ -666,9 +666,9 @@ static int do_scp_read(ssh_scp scp, const char* infile, FILE* fp,
 }
 
 static int do_read(const char* infile, FILE* fp, getmode_t mode,
-                   ftp_transfer_func hookf)
+                   ftp_transfer_func hookf, uint64_t offset)
 {
-  if (!offset)
+  if (gvSSHTrySCP && !offset)
   {
     /* try to set up a scp connection */
     ssh_scp scp = ssh_scp_new(ftp->session, SSH_SCP_READ, infile);
@@ -676,7 +676,7 @@ static int do_read(const char* infile, FILE* fp, getmode_t mode,
     {
       int rc = ssh_scp_init(scp);
       if (rc == SSH_OK)
-        return do_scp_read(scp, infile, fp, mode, hookf, offset);
+        return do_scp_read(scp, infile, fp, mode, hookf);
       ssh_scp_free(scp);
     }
   }
@@ -857,7 +857,7 @@ static int do_write(const char* path, FILE* fp, ftp_transfer_func hookf,
                     uint64_t offset)
 {
   /* try to set up a scp connection */
-  if (!offset)
+  if (gvSSHTrySCP && !offset)
   {
     ssh_scp scp = ssh_scp_new(ftp->session, SSH_SCP_WRITE, path);
     if (scp != NULL)

@@ -40,6 +40,9 @@ bool gvWaitingDots = true;
 /* various ssh options like -C */
 char *gvSSHOptions = 0;
 
+/* try to use scp */
+bool gvSSHTrySCP = true;
+
 /* automatically reconnect on connection timeout */
 bool gvAutoReconnect = true;
 
