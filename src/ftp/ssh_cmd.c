@@ -591,8 +591,7 @@ void ssh_pwd(void)
 }
 
 static int do_scp_read(ssh_scp scp, const char* infile, FILE* fp,
-                       getmode_t mode, ftp_transfer_func hookf,
-                       uint64_t offset)
+                       getmode_t mode, ftp_transfer_func hookf)
 {
   time_t then = time(NULL) - 1;
   ftp_set_close_handler();
@@ -613,34 +612,6 @@ static int do_scp_read(ssh_scp scp, const char* infile, FILE* fp,
 
   size_t size = ssh_scp_request_get_size(scp);
   ssh_scp_accept_request(scp);
-  if (offset)
-  {
-    /* seek to offset */
-    char buffer[SSH_BUFSIZ];
-    uint64_t d = offset / SSH_BUFSIZ,
-             m = offset % SSH_BUFSIZ;
-    for (; d; --d)
-    {
-      if (ssh_scp_read(scp, buffer, SSH_BUFSIZ) == SSH_ERROR)
-      {
-        ftp_err(_("Error while reading from file: %s\n"), ssh_get_error(ftp->session));
-        ssh_scp_close(scp);
-        ssh_scp_free(scp);
-        return -1;
-      }
-    }
-    if (m)
-    {
-      if (ssh_scp_read(scp, buffer, m) == SSH_ERROR)
-      {
-        ftp_err(_("Error while reading from file: %s\n"), ssh_get_error(ftp->session));
-        ssh_scp_close(scp);
-        ssh_scp_free(scp);
-        return -1;
-      }
-    }
-  }
-  size -= offset;
 
   /* read file */
   char buffer[SSH_BUFSIZ];
@@ -695,16 +666,19 @@ static int do_scp_read(ssh_scp scp, const char* infile, FILE* fp,
 }
 
 static int do_read(const char* infile, FILE* fp, getmode_t mode,
-                   ftp_transfer_func hookf, uint64_t offset)
+                   ftp_transfer_func hookf)
 {
-  /* try to set up a scp connection */
-  ssh_scp scp = ssh_scp_new(ftp->session, SSH_SCP_READ, infile);
-  if (scp != NULL)
+  if (!offset)
   {
-    int rc = ssh_scp_init(scp);
-    if (rc == SSH_OK)
-      return do_scp_read(scp, infile, fp, mode, hookf, offset);
-    ssh_scp_free(scp);
+    /* try to set up a scp connection */
+    ssh_scp scp = ssh_scp_new(ftp->session, SSH_SCP_READ, infile);
+    if (scp != NULL)
+    {
+      int rc = ssh_scp_init(scp);
+      if (rc == SSH_OK)
+        return do_scp_read(scp, infile, fp, mode, hookf, offset);
+      ssh_scp_free(scp);
+    }
   }
 
   time_t then = time(NULL) - 1;
