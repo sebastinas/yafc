@@ -30,6 +30,8 @@
 #define SSH_BUFSIZ 131072
 #endif
 
+#define MIN(a,b) (a) < (b) ? (a) : (b)
+
 /* from libssh examples */
 static int verify_knownhost(ssh_session session)
 {
@@ -588,9 +590,123 @@ void ssh_pwd(void)
   printf("%s\n", ftp->curdir);
 }
 
+static int do_scp_read(ssh_scp scp, const char* infile, FILE* fp,
+                       getmode_t mode, ftp_transfer_func hookf,
+                       uint64_t offset)
+{
+  time_t then = time(NULL) - 1;
+  ftp_set_close_handler();
+
+  if (hookf)
+    hookf(&ftp->ti);
+  ftp->ti.begin = false;
+
+  int rc = ssh_scp_pull_request(scp);
+  if (rc != SSH_SCP_REQUEST_NEWFILE)
+  {
+    ftp_err(_("Failed to start scp download: %s\n"),
+            ssh_get_error(ftp->session));
+    ssh_scp_close(scp);
+    ssh_scp_free(scp);
+    return -1;
+  }
+
+  size_t size = ssh_scp_request_get_size(scp);
+  ssh_scp_accept_request(scp);
+  if (offset)
+  {
+    /* seek to offset */
+    char buffer[SSH_BUFSIZ];
+    uint64_t d = offset / SSH_BUFSIZ,
+             m = offset % SSH_BUFSIZ;
+    for (; d; --d)
+    {
+      if (ssh_scp_read(scp, buffer, SSH_BUFSIZ) == SSH_ERROR)
+      {
+        ftp_err(_("Error while reading from file: %s\n"), ssh_get_error(ftp->session));
+        ssh_scp_close(scp);
+        ssh_scp_free(scp);
+        return -1;
+      }
+    }
+    if (m)
+    {
+      if (ssh_scp_read(scp, buffer, m) == SSH_ERROR)
+      {
+        ftp_err(_("Error while reading from file: %s\n"), ssh_get_error(ftp->session));
+        ssh_scp_close(scp);
+        ssh_scp_free(scp);
+        return -1;
+      }
+    }
+  }
+  size -= offset;
+
+  /* read file */
+  char buffer[SSH_BUFSIZ];
+  int r = 0;
+  while (size && (r = ssh_scp_read(scp, buffer, MIN(SSH_BUFSIZ, size))) != SSH_ERROR)
+  {
+    if (ftp_sigints() > 0)
+    {
+      ftp_trace("break due to sigint\n");
+      break;
+    }
+
+    errno = 0;
+    if (fwrite(buffer, r, 1, fp) != 1)
+    {
+      ftp_err(_("Error while writing to file: %s\n"), strerror(errno));
+      ssh_scp_close(scp);
+      ssh_scp_free(scp);
+      return -1;
+    }
+
+    ftp->ti.size += r;
+    if (hookf)
+    {
+      time_t now = time(NULL);
+      if (now > then)
+      {
+        hookf(&ftp->ti);
+        then = now;
+      }
+    }
+    size -= r;
+  }
+
+  if (r == SSH_ERROR)
+  {
+    ftp_err(_("Error while reading from file: %s\n"), ssh_get_error(ftp->session));
+    r = -1;
+  }
+  else
+  {
+    r = ssh_scp_pull_request(scp);
+    if (r != SSH_SCP_REQUEST_EOF)
+      ftp_err(_("Unexpected request: %s %lu\n"), ssh_get_error(ftp->session), size);
+    else
+      r = 0;
+  }
+
+  ssh_scp_close(scp);
+  ssh_scp_free(scp);
+  return r;
+}
+
 static int do_read(const char* infile, FILE* fp, getmode_t mode,
                    ftp_transfer_func hookf, uint64_t offset)
 {
+  /* try to set up a scp connection */
+  ssh_scp scp = ssh_scp_new(ftp->session, SSH_SCP_READ, infile);
+  if (scp != NULL)
+  {
+    int rc = ssh_scp_init(scp);
+    if (rc == SSH_OK)
+      return do_scp_read(scp, infile, fp, mode, hookf, offset);
+    ssh_scp_free(scp);
+  }
+
   time_t then = time(NULL) - 1;
   ftp_set_close_handler();
 
