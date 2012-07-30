@@ -315,7 +315,6 @@ int ask(int opt, int def, const char *prompt, ...)
 	char *chstr;
 	char ch;
 	int i;
-	char *defstr = 0;
 	char *e;
 	char tmp[81];
 
@@ -325,7 +324,6 @@ int ask(int opt, int def, const char *prompt, ...)
 
 	for(i=0; question[i].str; i++) {
 		if(def == question[i].opt) {
-			defstr = question[i].str;
 			break;
 		}
 	}
