@@ -138,7 +138,7 @@ static int ftp_init_transfer(void)
 {
 	struct sockaddr_storage sa;
 	unsigned char *a, *p;
-	
+
 	if(!ftp_connected())
 		return -1;
 
@@ -394,9 +394,7 @@ static int wait_for_output(void)
 
 static int maybe_abort(FILE *in, FILE *out)
 {
-	unsigned i;
-
-	i = ftp_sigints();
+	unsigned int i = ftp_sigints();
 	ftp_set_close_handler();
 
 	ftp->ti.finished = true;
@@ -873,9 +871,9 @@ static int ftp_send(const char *path, FILE *fp, putmode_t how,
 	ftp_cache_flush_mark_for(path);
 
 	if(mode == tmBinary)
-		r = FILE_send_binary(fp, sock_sin(ftp->data));
+		r = FILE_send_binary(fp, sock_sout(ftp->data));
 	else
-		r = FILE_send_ascii(fp, sock_sin(ftp->data));
+		r = FILE_send_ascii(fp, sock_sout(ftp->data));
 	sock_flush(ftp->data);
 	sock_destroy(ftp->data);
 	ftp->data = 0;
