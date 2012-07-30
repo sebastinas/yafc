@@ -100,7 +100,7 @@ int sec_getc(FILE * F)
 		return getc(F);
 }
 
-static int block_read(int fd, void *buf, size_t len)
+static ssize_t block_read(int fd, void *buf, size_t len)
 {
 	unsigned char *p = buf;
 	int b;
@@ -117,7 +117,7 @@ static int block_read(int fd, void *buf, size_t len)
 	return p - (unsigned char *)buf;
 }
 
-static int block_write(int fd, void *buf, size_t len)
+static ssize_t block_write(int fd, void *buf, size_t len)
 {
 	unsigned char *p = buf;
 	int b;
@@ -135,7 +135,7 @@ static int block_write(int fd, void *buf, size_t len)
 static int sec_get_data(int fd, struct buffer *buf, int level)
 {
 	int len;
-	int b;
+	ssize_t b;
 
 	b = block_read(fd, &len, sizeof(len));
 	if (b == 0)
