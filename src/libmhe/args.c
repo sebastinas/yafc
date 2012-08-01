@@ -16,12 +16,15 @@
 
 args_t *args_create(void)
 {
-	args_t *args = (args_t *)xmalloc(sizeof(args_t));
+	args_t *args = xmalloc(sizeof(args_t));
 	return args;
 }
 
 void args_destroy(args_t *args)
 {
+  if (!args)
+    return;
+
 	args_clear(args);
 	free(args);
 }
@@ -39,7 +42,7 @@ void args_clear(args_t *args)
 
 static char **alloc_argv(unsigned n)
 {
-	return (char **)xmalloc(n * sizeof(char *));
+	return xmalloc(n * sizeof(char *));
 }
 
 void args_init3(args_t *args, int argc, char **argv, unsigned int first,
@@ -101,7 +104,7 @@ char *args_cat(int argc, char **argv, unsigned int first)
 
 	for(i=first; i<argc; i++)
 		s += strlen(argv[i]) + 1;
-	e = (char *)xmalloc(s);
+	e = xmalloc(s);
 	for(i=first; i<argc; i++) {
 		strcat(e, argv[i]);
 		if(i+1 < argc)

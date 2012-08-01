@@ -1,8 +1,10 @@
 New in 1.2.1
 ------------
 
-* Fixed a regression from 1.2.0: put in ASCII mode works as expected again.
-* sftp: Use scp if available to speed up file transfers. (#16)
+* Fixed regressions from 1.2.0:
+  - FTP: "put" in ASCII mode works as expected again. (#20)
+  - SFTP: "cd .." works as expected again. (#21)
+* SFTP: Use scp if available to speed up file transfers. (#16)
 * Fixed several memory leaks and other programming errors.
 
 New in 1.2.0

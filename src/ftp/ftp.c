@@ -34,9 +34,7 @@ Ftp *ftp = 0;
 
 Ftp *ftp_create(void)
 {
-    Ftp *ftp;
-
-    ftp = (Ftp *)xmalloc(sizeof(Ftp));
+    Ftp* ftp = xmalloc(sizeof(Ftp));
 
     ftp->verbosity = vbCommand;
     ftp->tmp_verbosity = vbUnset;
@@ -356,7 +354,7 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
         ftp_set_signal(SIGALRM, SIG_IGN);
         return -1;
     }
-    
+
     if(!sock_connect_host(ftp->ctrl, ftp->host)) {
         alarm(0);
         ftp_set_signal(SIGALRM, SIG_IGN);
@@ -744,10 +742,17 @@ int get_username(url_t *url, const char *guessed_username, bool isproxy)
             return -1;
         }
 
-        if(isproxy)
-            asprintf(&prompt, _("Proxy login: "));
-        else if(guessed_username)
-            asprintf(&prompt, _("login (%s): "), guessed_username);
+        if (isproxy)
+            prompt = xstrdup(_("Proxy login: "));
+        else if (guessed_username)
+        {
+            if (asprintf(&prompt, _("login (%s): "), guessed_username) == -1)
+            {
+              fprintf(stderr, _("Failed to allocate memory.\n"));
+              ftp->loggedin = false;
+              return -1;
+            }
+        }
         else
             prompt = xstrdup(_("login (anonymous): "));
         e = ftp->getuser_hook(prompt);
@@ -783,7 +788,13 @@ int get_password(url_t *url, const char *anonpass, bool isproxy)
             e = 0;
             if(ftp->getuser_hook) {
                 if(anonpass && isproxy == false)
-                    asprintf(&prompt, _("password (%s): "), anonpass);
+                {
+                  if (asprintf(&prompt, _("password (%s): "), anonpass) == -1)
+                  {
+                    fprintf(stderr, _("Failed to allocate memory.\n"));
+                    return -1;
+                  }
+                }
                 else
                     prompt = xstrdup(_("password: "));
                 e = ftp->getuser_hook(prompt);
@@ -1538,7 +1549,7 @@ int ftp_mkpath(const char *path)
     unquote(p);
 
     if(*p == '/') {
-        e = (char *)xmalloc(1);
+        e = xmalloc(1);
         *e = 0;
     }
 
@@ -1548,8 +1559,16 @@ int ftp_mkpath(const char *path)
         if(!tmp)
             break;
 
-        if(e)
-            asprintf(&foo, "%s/%s", e, tmp);
+        if (e)
+        {
+            if (asprintf(&foo, "%s/%s", e, tmp) == -1)
+            {
+              fprintf(stderr, _("Failed to allocate memory.\n"));
+              free(e);
+              free(orgp);
+              return -1;
+            }
+        }
         else
             foo = xstrdup(tmp);
 
@@ -1685,7 +1704,7 @@ time_t gmt_mktime(const struct tm *ts)
     const int daysPerMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30,
         31, 30, 31 };
     const int leapDaysPerMonth[] = { 31, 29, 31, 30, 31,
-        30, 31, 31, 30, 31, 30, 31 }; 
+        30, 31, 31, 30, 31, 30, 31 };
     const int *maxDaysInMonth = daysPerMonth;
 
     time_t gmt = -1;
