@@ -167,7 +167,7 @@ static char *remote_completion_function(const char *text, int state)
 			rl_insert_text("..."); /* show dots while waiting, like ncftp */
 			rl_redisplay();
 		}
-		
+
 		ap = ftp_path_absolute(dir);
 		rdir = ftp_cache_get_directory(ap);
 		dir_is_cached = (rdir != 0);
@@ -212,7 +212,15 @@ static char *remote_completion_function(const char *text, int state)
 		if(strncmp(name, unquoted, len) == 0) {
 			char *ret;
 			if(dir)
-				asprintf(&ret, merge_fmt, dir, name);
+      {
+				if (asprintf(&ret, merge_fmt, dir, name) == -1)
+        {
+          fprintf(stderr, _("Failed to allocate memory.\n"));
+          free(unquoted);
+          free(dir);
+          return NULL;
+        }
+      }
 			else
 				ret = xstrdup(name);
 			if(isdir == 1) {
@@ -225,7 +233,7 @@ static char *remote_completion_function(const char *text, int state)
     }
 	free(unquoted);
 	free(dir);
-	return 0;
+	return NULL;
 }
 
 static char *variable_completion_function(const char *text, int state)

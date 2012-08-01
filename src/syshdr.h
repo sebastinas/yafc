@@ -22,6 +22,15 @@
 # endif
 #endif
 
+#ifndef YAFC_NORETURN
+# if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4)
+#  define YAFC_NORETURN \
+    __attribute__((noreturn))
+# else
+#  define YAFC_NORETURN
+# endif
+#endif
+
 #ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif

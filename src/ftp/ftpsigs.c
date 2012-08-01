@@ -15,9 +15,7 @@
 #include "ftpsigs.h"
 #include "gvars.h"
 #include "transfer.h"
-
-/* in cmd.c */
-void exit_yafc(void);
+#include "cmd.h"
 
 void ftp_set_signal_with_mask(int signum, sighandler_t handler, int onesig)
 {

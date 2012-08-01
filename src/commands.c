@@ -227,9 +227,13 @@ void expand_alias_parameters(args_t **args, args_t *alias_args)
 				ins = 0;
 
 			/* insert the parameter in this argument */
-			asprintf(&tmp, "%s%s%s", new_args->argv[i], ins ? ins : "", ep);
-			free(new_args->argv[i]);
-			new_args->argv[i] = tmp;
+			if (asprintf(&tmp, "%s%s%s", new_args->argv[i], ins ? ins : "", ep) == -1)
+        fprintf(stderr, _("Failed to allocate memory.\n"));
+      else
+      {
+			  free(new_args->argv[i]);
+			  new_args->argv[i] = tmp;
+      }
 		}
 
 	}

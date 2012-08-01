@@ -178,7 +178,11 @@ void init_yafc(void)
 	gvLocalTagList = list_new((listfunc)free);
 	gvProxyExclude = list_new((listfunc)free);
 
-	asprintf(&gvHistoryFile, "%s/history", gvWorkingDirectory);
+	if (asprintf(&gvHistoryFile, "%s/history", gvWorkingDirectory) == -1)
+  {
+    fprintf(stderr, _("Failed to allocate memory.\n"));
+    exit_yafc();
+  }
 
 	gvSendmailPath = xstrdup("/usr/sbin/sendmail");
 
@@ -215,7 +219,11 @@ void check_if_first_time(void)
 		chmod(gvWorkingDirectory, S_IRUSR|S_IWUSR|S_IXUSR);
 		printf(_("done\n"));
 
-		asprintf(&dir, "%s/trace", gvWorkingDirectory);
+		if (asprintf(&dir, "%s/trace", gvWorkingDirectory) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      exit_yafc();
+    }
 		printf(_("creating directory %s: "), dir);
 		fflush(stdout);
 		if(mkdir(dir, S_IRUSR|S_IWUSR|S_IXUSR) != 0) {
@@ -226,8 +234,13 @@ void check_if_first_time(void)
 		chmod(dir, S_IRUSR|S_IWUSR|S_IXUSR);
 		printf(_("done\n"));
 		free(dir);
+    dir = NULL;
 
-		asprintf(&dir, "%s/nohup", gvWorkingDirectory);
+		if (asprintf(&dir, "%s/nohup", gvWorkingDirectory) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      exit_yafc();
+    }
 		printf(_("creating directory %s: "), dir);
 		fflush(stdout);
 		if(mkdir(dir, S_IRUSR|S_IWUSR|S_IXUSR) != 0) {
@@ -357,7 +370,11 @@ int main(int argc, char **argv, char **envp)
 	init_yafc();
 
 	if(!configfile)
-		asprintf(&configfile, "%s/yafcrc", gvWorkingDirectory);
+		if (asprintf(&configfile, "%s/yafcrc", gvWorkingDirectory) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      exit_yafc();
+    }
 
 	check_if_first_time();
 
@@ -365,7 +382,11 @@ int main(int argc, char **argv, char **envp)
 		char *tmp;
 		parse_rc(SYSCONFDIR "/yafcrc", false);
 		parse_rc(configfile, false);
-		asprintf(&tmp, "%s/bookmarks", gvWorkingDirectory);
+		if (asprintf(&tmp, "%s/bookmarks", gvWorkingDirectory) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      exit_yafc();
+    }
 		parse_rc(tmp, false);
 		free(tmp);
 	}
@@ -393,8 +414,12 @@ int main(int argc, char **argv, char **envp)
 
 	if(dotrace || gvTrace) {
 		if(!tracefile)
-			asprintf(&tracefile, "%s/trace/trace.%u",
-					 gvWorkingDirectory, getpid());
+			if (asprintf(&tracefile, "%s/trace/trace.%u",
+					 gvWorkingDirectory, getpid()) == -1)
+      {
+        fprintf(stderr, _("Failed to allocate memory.\n"));
+        exit_yafc();
+      }
 		if(ftp_set_trace(tracefile) != 0)
 			fprintf(stderr, _("Couldn't open tracefile '%s': %s\n"),
 					tracefile, strerror(errno));
@@ -423,8 +448,12 @@ int main(int argc, char **argv, char **envp)
 				fputc('\007', stderr);
 #endif
 #ifdef HAVE_LIBREADLINE /* add appropriate 'open' command to history */
-			asprintf(&s, "open %s%s",
-					 argv[i], test(open_opt, OP_ANON) ? " --anon" : "");
+			if (asprintf(&s, "open %s%s",
+					 argv[i], test(open_opt, OP_ANON) ? " --anon" : "") == -1)
+      {
+        fprintf(stderr, _("Failed to allocate memory.\n"));
+        exit_yafc();
+      }
 			add_history(s);
 			free(s);
 #endif
