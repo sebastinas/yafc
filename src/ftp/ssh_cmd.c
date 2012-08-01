@@ -348,7 +348,9 @@ char *ssh_getcurdir(void)
 
 int ssh_chdir(const char *path)
 {
-  char *p = sftp_canonicalize_path(ftp->sftp_session, ftp_path_absolute(path));
+  char* tmp = ftp_path_absolute(path);
+  char *p = sftp_canonicalize_path(ftp->sftp_session, tmp);
+  free(tmp);
   bool isdir = false;
 
   /* First check if this file is cached and is a directory, else we
