@@ -161,6 +161,10 @@ void cmd_shell(int argc, char **argv)
 		}
 	}
 
-	invoke_shell(e);
+  if (e)
+    invoke_shell("%s", e);
+  else
+  	invoke_shell(NULL);
+
 	free(e);
 }

@@ -26,24 +26,23 @@ static char *nohup_command = 0;
 static time_t nohup_start_time;
 static time_t nohup_end_time;
 
+static int max_printf(FILE *fp, int max, const char *fmt, ...) YAFC_PRINTF(3, 4);
+
 static int max_printf(FILE *fp, int max, const char *fmt, ...)
 {
-	char *e;
-	va_list ap;
-	size_t len;
-	int ret = 0;
-
 	if(!fmt)
 		return 0;
 
+  va_list ap;
 	va_start(ap, fmt);
-	vasprintf(&e, fmt, ap);
+  char* e = NULL;
+	int ret = vasprintf(&e, fmt, ap);
 	va_end(ap);
+  if (ret == -1)
+    return 0;
 
-	if(!e)
-		return 0;
-
-	len = strlen(e);
+	size_t len = strlen(e);
+  ret = 0;
 
 	if(max < 0) {
 		/* left justified */
@@ -306,8 +305,11 @@ void transfer(transfer_info *ti)
 int transfer_init_nohup(const char *str)
 {
 	if(!str)
-		asprintf(&nohup_logfile, "%s/nohup/nohup.%u",
-				 gvWorkingDirectory, getpid());
+  {
+		if (asprintf(&nohup_logfile, "%s/nohup/nohup.%u",
+				 gvWorkingDirectory, getpid()) == -1)
+      return -1;
+  }
 	else
 		nohup_logfile = tilde_expand_home(str, gvLocalHomeDir);
 
@@ -318,7 +320,8 @@ int transfer_init_nohup(const char *str)
 	if(!logfp) {
 		perror(nohup_logfile);
 		free(nohup_logfile);
-		logfp = 0;
+    nohup_logfile = NULL;
+		logfp = NULL;
 		return -1;
 	}
 
@@ -425,11 +428,14 @@ void transfer_end_nohup(void)
 	printf(_("Done\nTransfer ended %s\n"), ctime(&nohup_end_time));
 
 	if(gvNohupMailAddress) {
-		FILE *fp;
 		char *cmd;
 
-		asprintf(&cmd, "%s %s", gvSendmailPath, gvNohupMailAddress);
-		fp = popen(cmd, "w");
+		if (asprintf(&cmd, "%s %s", gvSendmailPath, gvNohupMailAddress) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      return;
+    }
+		FILE* fp = popen(cmd, "w");
 		free(cmd);
 
 		if(fp == 0)

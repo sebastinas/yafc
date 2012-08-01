@@ -46,7 +46,11 @@ char *stringify_list(list *lp)
 
 	for(li = li->next; li; li = li->next) {
     char* tmp = str;
-		asprintf(&str, "%s:%s",  tmp, (char *)li->data);
+		if (asprintf(&str, "%s:%s",  tmp, (char *)li->data) == -1)
+    {
+      free(tmp);
+      return NULL;
+    }
     free(tmp);
 	}
 	return str;
@@ -118,11 +122,12 @@ void print_xterm_title(void)
 
 void reset_xterm_title(void)
 {
-	char *e;
-
-	asprintf(&e, "\x1B]0;%s\x07", gvTerm);
-	print_xterm_title_string(e);
-	free(e);
+	char* e = NULL;
+	if (asprintf(&e, "\x1B]0;%s\x07", gvTerm) != -1)
+  {
+    print_xterm_title_string(e);
+	  free(e);
+  }
 }
 
 char* get_mode_string(mode_t m)
@@ -200,7 +205,7 @@ char *get_local_curdir(void)
 	return buf;
 }
 
-void invoke_shell(char *cmdline)
+void invoke_shell(const char* fmt, ...)
 {
 	char *shell;
 	pid_t pid;
@@ -211,8 +216,21 @@ void invoke_shell(char *cmdline)
 		shell = STD_SHELL;
 	pid = fork();
 	if(pid == 0) { /* child thread */
-		if(cmdline)
-			execl(shell, shell, "-c", cmdline, (char *)NULL);
+		if(fmt)
+    {
+      char* tmp = NULL;
+      va_list ap;
+      va_start(ap, fmt);
+      int r = vasprintf(&tmp, fmt, ap);
+      va_end(ap);
+      if (r == -1)
+      {
+        fprintf(stderr, _("Failed to allocate memory.\n"));
+        exit(1);
+      }
+
+			execl(shell, shell, "-c", tmp, (char *)NULL);
+    }
 		else {
 			printf(_("Executing '%s', use 'exit' to exit from shell...\n"),
 				   shell);

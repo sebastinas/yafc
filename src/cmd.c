@@ -106,7 +106,7 @@ void command_loop(void)
 
 		print_xterm_title();
 
-		cmdstr = input_read_string(p);
+		cmdstr = input_read_string("%s", p);
 		free(p);
 
 		if(!cmdstr) {  /* bare EOF received */

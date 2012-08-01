@@ -38,7 +38,11 @@ void save_ltaglist(const char *alt_filename)
 		return;
 
 	if(alt_filename == 0)
-		asprintf(&e, "%s/taglist.local", gvWorkingDirectory);
+		if (asprintf(&e, "%s/taglist.local", gvWorkingDirectory) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      return;
+    }
 	f = tilde_expand_home(alt_filename ? alt_filename : e, gvLocalHomeDir);
 	free(e);
 	fp = fopen(f, "w");
@@ -69,8 +73,12 @@ void load_ltaglist(bool showerr, bool always_autoload,
 		return;
 
 	if(alt_filename == 0)
-		asprintf(&e, "%s/taglist.local", gvWorkingDirectory);
-	f = tilde_expand_home(alt_filename ? alt_filename : e, gvLocalHomeDir);
+		if (asprintf(&e, "%s/taglist.local", gvWorkingDirectory) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      return;
+    }
+  f = tilde_expand_home(alt_filename ? alt_filename : e, gvLocalHomeDir);
 	free(e);
 	fp = fopen(f, "r");
 	if(!fp) {

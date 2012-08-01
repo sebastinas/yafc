@@ -88,11 +88,15 @@ static void remove_files(const list *gl, unsigned opt)
 		if(risdir(f)) {
 			if(test(opt, RM_RECURSIVE)) {
 				char *recurs_mask;
-				list *rgl;
 				char *q_recurs_mask;
 
-				rgl = rglob_create();
-				asprintf(&recurs_mask, "%s/*", f->path);
+				if (asprintf(&recurs_mask, "%s/*", f->path) == -1)
+        {
+          fprintf(stderr, _("Failed to allocate memory.\n"));
+          return;
+        }
+
+        list* rgl = rglob_create();
 				q_recurs_mask = bash_backslash_quote(recurs_mask);
 				rglob_glob(rgl, q_recurs_mask, false, true, 0);
 				free(q_recurs_mask);

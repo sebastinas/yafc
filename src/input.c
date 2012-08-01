@@ -44,32 +44,46 @@
 
 bool readline_running = false;
 
-char *input_read_string(const char *prompt)
+static char* vinput_read_string(const char* fmt, va_list ap)
 {
 #ifdef HAVE_LIBREADLINE
-	char *ret;
-	readline_running = true;
-	ret = readline((char *)prompt);
+  char* prompt = NULL;
+  if (vasprintf(&prompt, fmt, ap) == -1)
+  {
+    return NULL;
+  }
+
+  readline_running = true;
+	char* ret = readline(prompt);
+  free(prompt);
 	readline_running = false;
 	force_completion_type = cpUnset;
 	return ret;
 #else
 	char tmp[257];
-	size_t l;
 
-	fprintf(stderr, "%s", prompt);
+	vfprintf(stderr, fmt, ap);
 	if(fgets(tmp, 256, stdin) == 0)
 		return 0;
 	if(tmp[0] == '\n')
 		/* return an empty string, "" */
 		return xstrdup("");
 	tmp[256] = 0;
-	l = strlen(tmp);
+	size_t l = strlen(tmp);
 	/* strip carriage return */
 	if(tmp[l-1] == '\n')
 		tmp[l-1] = 0;
 	return xstrdup(tmp);
 #endif
+}
+
+char* input_read_string(const char* fmt, ...)
+{
+  va_list ap;
+  va_start(ap, fmt);
+	char* ret = vinput_read_string(fmt, ap);
+  va_end(ap);
+  return ret;
 }
 
 /* This is contributed, untested code from an anonymous sender from
@@ -155,26 +169,27 @@ char *getpass_hook(const char *prompt)
 char *getuser_hook(const char *prompt)
 {
 	force_completion_type = cpNone;
-	return input_read_string(prompt);
+	return input_read_string("%s", prompt);
 }
 
-int input_read_args(args_t **args, const char *prompt)
+int input_read_args(args_t **args, const char* fmt, ...)
 {
-	char *e, *s;
-
 	args_destroy(*args);
 	*args = args_create();
 
 #ifdef HAVE_LIBREADLINE
 	rl_completion_append_character = ' ';
 #endif
-	e = input_read_string(prompt);
+  va_list ap;
+  va_start(ap, fmt);
+	char* e = vinput_read_string(fmt, ap);
+  va_end(ap);
 
 	if(!e) {  /* bare EOF received */
 		fputc('\n', stderr);
 		return EOF;
 	}
-	s = strip_blanks(e);
+	char* s = strip_blanks(e);
 
 	if(!*s) {  /* blank line */
 		free(e);
@@ -319,7 +334,11 @@ int ask(int opt, int def, const char *prompt, ...)
 	char tmp[81];
 
 	va_start(ap, prompt);
-	vasprintf(&e, prompt, ap);
+	if (vasprintf(&e, prompt, ap) == -1)
+  {
+    fprintf(stderr, _("Failed to allocate memory.\n"));
+    return -1;
+  }
 	va_end(ap);
 
 	for(i=0; question[i].str; i++) {

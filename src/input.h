@@ -31,8 +31,8 @@ char *getpass_hook(const char *prompt);
 char *getuser_hook(const char *prompt);
 
 void input_init(void);
-char *input_read_string(const char *prompt);
-int input_read_args(args_t **args, const char *prompt);
+char *input_read_string(const char* fmt, ...) YAFC_PRINTF(1, 2);
+int input_read_args(args_t **args, const char* fmt, ...) YAFC_PRINTF(2, 3);
 void input_save_history(void);
 void input_redisplay_prompt(void);
 int ask(int opt, int def, const char *prompt, ...) YAFC_PRINTF(3, 4);

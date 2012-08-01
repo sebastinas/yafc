@@ -252,18 +252,23 @@ void unquote(char *str)
 
 char *path_absolute(const char *path, const char *curdir, const char *homedir)
 {
-	char *p;
-
-	if(!path)
+	if (!path)
 		return xstrdup(curdir);
 
+  char* p = NULL;
 	if(path[0] == '~' && homedir)
 		p = tilde_expand_home(path, homedir);
 	else if(strlen(path) >= 3 && path[0] != '/' && path[1] != ':' && path[2] != '\\') {
 		if(strncmp(path, "./", 2) == 0)
-			asprintf(&p, "%s%s", curdir, path+1);
+    {
+			if (asprintf(&p, "%s%s", curdir, path+1) == -1)
+        return NULL;
+    }
 		else
-			asprintf(&p, "%s/%s", curdir, path);
+    {
+      if (asprintf(&p, "%s/%s", curdir, path) == -1)
+        return NULL;
+    }
 	}
 	else
 		p = xstrdup(path);
@@ -416,20 +421,25 @@ char *tilde_expand_home(const char *str, const char *home)
 	if(home && (strcmp(str, "~") == 0))
 		full = xstrdup(home);
 	else if(home && (strncmp(str, "~/", 2) == 0))
-		asprintf(&full, "%s%s", home, str + 1);
+  {
+		if (asprintf(&full, "%s%s", home, str + 1) == -1)
+      return NULL;
+  }
 	else if ((str[0] == '~') && ((s = strchr(str, '/')) ||
 				(s = str+strlen(str)))) {
-		char *user;
 		struct passwd *pass;
 
-		user = xmalloc(s - str);
+		char* user = xmalloc(s - str);
 		memcpy(user, str+1, s-str-1);
 		user[s-str-1] = 0;
 
 		if ((pass = getpwnam(user)) || (!strlen(user) &&
 					(pass = getpwuid(getuid()))))
-			asprintf(&full, "%s%s", pass->pw_dir, s);
-		else
+    {
+			if (asprintf(&full, "%s%s", pass->pw_dir, s) == -1)
+        return NULL;
+    }
+    else
 			full = xstrdup(str);
 		free(user);
 	} else

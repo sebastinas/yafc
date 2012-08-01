@@ -55,7 +55,6 @@ static int connection_number(void)
 
 char *expand_prompt(const char *fmt)
 {
-	char *prompt, *cp;
 	unsigned maxlen;
 	char *ins, *e;
 	bool freeins;
@@ -65,8 +64,8 @@ char *expand_prompt(const char *fmt)
 	if(!fmt)
 		return 0;
 
-	prompt = (char *)xmalloc(strlen(fmt)+1);
-	cp = prompt;
+	char* prompt = (char *)xmalloc(strlen(fmt)+1);
+	char* cp = prompt;
 
 	while(fmt && *fmt) {
 		if(*fmt == '%') {
@@ -81,11 +80,21 @@ char *expand_prompt(const char *fmt)
 			}
 			switch(*fmt) {
 			  case 'c':
-				asprintf(&ins, "%u", list_numitem(gvFtpList));
+				if (asprintf(&ins, "%u", list_numitem(gvFtpList)) == -1)
+        {
+          fprintf(stderr, _("Failed to allocate memory.\n"));
+          free(prompt);
+          return NULL;
+        }
 				freeins = true;
 				break;
 			  case 'C':
-				asprintf(&ins, "%u", connection_number());
+				if (asprintf(&ins, "%u", connection_number()) == -1)
+        {
+          fprintf(stderr, _("Failed to allocate memory.\n"));
+          free(prompt);
+          return NULL;
+        }
 				freeins = true;
 				break;
 			  case 'u': /* username */
@@ -186,8 +195,7 @@ char *expand_prompt(const char *fmt)
 			}
 
 			if(ins) {
-				char *tmp;
-				tmp = (char *)xmalloc(strlen(prompt) + strlen(ins) +
+				char* tmp = xmalloc(strlen(prompt) + strlen(ins) +
 									  strlen(fmt+1) + 1);
 				strcpy(tmp, prompt);
 				strcat(tmp, ins);

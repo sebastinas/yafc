@@ -1,5 +1,5 @@
 /* -*- tab-width: 8; -*-
- * Copyright (c) 1998 - 2002 Kungliga Tekniska Högskolan
+ * Copyright (c) 1998 - 2002 Kungliga Tekniska HÃ¶gskolan
  * (Royal Institute of Technology, Stockholm, Sweden). 
  * All rights reserved. 
  *
@@ -138,14 +138,14 @@ gss_overhead(void *app_data, int level, int len)
 static int
 gss_encode(void *app_data, void *from, int length, int level, void **to)
 {
-    OM_uint32 maj_stat, min_stat;
+    OM_uint32 min_stat;
     gss_buffer_desc input, output;
     int conf_state;
     struct gss_data *d = app_data;
 
     input.length = length;
     input.value = from;
-    maj_stat = gss_wrap (&min_stat,
+    gss_wrap (&min_stat,
 			 d->context_hdl,
 			 level == prot_private,
 			 GSS_C_QOP_DEFAULT,
@@ -239,7 +239,6 @@ gss_auth(void *app_data, const char *host)
     gss_buffer_desc input, output_token;
     int context_established = 0;
     char *p;
-    int n;
     gss_channel_bindings_t bindings;
     struct gss_data *d = app_data;
 
@@ -305,7 +304,7 @@ gss_auth(void *app_data, const char *host)
 	if (output_token.length != 0) {
 	    base64_encode(output_token.value, output_token.length, &p);
 	    gss_release_buffer(&min_stat, &output_token);
-	    n = ftp_cmd("ADAT %s", p);
+	    ftp_cmd("ADAT %s", p);
 	    free(p);
 	}
 	if (GSS_ERROR(maj_stat)) {

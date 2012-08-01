@@ -107,16 +107,19 @@ static void bookmark_save_one(FILE *fp, url_t *url)
 
 static int bookmark_save(const char *other_bmfile)
 {
-	FILE *fp;
-	char *bmfile;
+	char *bmfile = NULL;
 	listitem *li;
 
 	if(other_bmfile)
 		bmfile = xstrdup(other_bmfile);
 	else
-		asprintf(&bmfile, "%s/bookmarks", gvWorkingDirectory);
-	fp = fopen(bmfile, "w");
-	if(fp == 0) {
+		if (asprintf(&bmfile, "%s/bookmarks", gvWorkingDirectory) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      return -1;
+    }
+	FILE* fp = fopen(bmfile, "w");
+	if(!fp) {
 		perror(bmfile);
 		free(bmfile);
 		return -1;
@@ -199,8 +202,12 @@ static void create_the_bookmark(url_t *url)
 
 	list_clear(gvBookmarks);
 	{
-		char *tmp;
-		asprintf(&tmp, "%s/bookmarks", gvWorkingDirectory);
+		char *tmp = NULL;
+		if (asprintf(&tmp, "%s/bookmarks", gvWorkingDirectory) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      return;
+    }
 		parse_rc(tmp, false);
 		free(tmp);
 	}
@@ -216,7 +223,6 @@ static void create_the_bookmark(url_t *url)
 static void create_bookmark(const char *guessed_alias)
 {
 	char *default_alias = 0;
-	char *prompt;
 	url_t *url;
 	listitem *li;
 	int a;
@@ -228,15 +234,13 @@ static void create_bookmark(const char *guessed_alias)
 		if(!alias) {
 			default_alias = guess_alias(ftp->url);
 
+      force_completion_type = cpBookmark;
 			if(default_alias)
-				asprintf(&prompt, "alias (%s): ", default_alias);
+				alias = input_read_string("alias (%s): ", default_alias);
 			else
-				prompt = xstrdup("alias: ");
+				alias = input_read_string("alias: ");
 
-			force_completion_type = cpBookmark;
-			alias = input_read_string(prompt);
-			free(prompt);
-			if(!alias || !*alias)
+      if(!alias || !*alias)
 				alias = default_alias;
 			else
 				free(default_alias);
@@ -345,11 +349,8 @@ void auto_create_bookmark(void)
 			return;
 		create_bookmark(0);
 	} else { /* auto autobookmark... */
-		url_t *url;
-		char *a;
-
-		url = url_clone(ftp->url);
-		a = guess_alias(ftp->url);
+		url_t* url = url_clone(ftp->url);
+		char* a = guess_alias(ftp->url);
 		url_setalias(url, a);
 		free(a);
 
@@ -366,17 +367,20 @@ void auto_create_bookmark(void)
 					 * already exists but for another host
 					 */
 
-					char *par;
 					update = false;
-					par = strrchr(url->alias, '(');
-					if(par == 0)
-						asprintf(&a, "%s(2)", url->alias);
-					else {
-						int ver;
+					char* par = strrchr(url->alias, '(');
+          int ver = 1;
+          if (par)
+					{
 						*par = 0;
 						ver = atoi(par + 1);
-						asprintf(&a, "%s(%d)", url->alias, ver + 1);
 					}
+          if (asprintf(&a, "%s(%d)", url->alias, ver + 1) == -1)
+          {
+            fprintf(stderr, _("Failed to allocate memory.\n"));
+            url_destroy(url);
+            return;
+          }
 					url_setalias(url, a);
 					free(a);
 				} else {
@@ -482,7 +486,11 @@ void cmd_bookmark(int argc, char **argv)
 		if(bmfile)
 			ret = parse_rc(bmfile, true);
 		else {
-			asprintf(&tmp, "%s/bookmarks", gvWorkingDirectory);
+			if (asprintf(&tmp, "%s/bookmarks", gvWorkingDirectory) == -1)
+      {
+        fprintf(stderr, _("Failed to allocate memory.\n"));
+        return;
+      }
 			ret = parse_rc(tmp, false);
 		}
 		if(ret != -1)
@@ -491,10 +499,7 @@ void cmd_bookmark(int argc, char **argv)
 		return;
 	}
 	if(action == BM_EDIT) {
-		char *cmdline;
-		asprintf(&cmdline, "%s %s/bookmarks", gvEditor, gvWorkingDirectory);
-		invoke_shell(cmdline);
-		free(cmdline);
+		invoke_shell("%s %s/bookmarks", gvEditor, gvWorkingDirectory);
 		return;
 	}
 	if(action == BM_LIST) {

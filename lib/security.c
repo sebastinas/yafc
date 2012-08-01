@@ -2,7 +2,7 @@
  */
 
 /*
- * Copyright (c) 1998, 1999 Kungliga Tekniska Högskolan
+ * Copyright (c) 1998, 1999 Kungliga Tekniska HÃ¶gskolan
  * (Royal Institute of Technology, Stockholm, Sweden).
  * All rights reserved.
  * 
@@ -272,7 +272,8 @@ int sec_vfprintf2(FILE * f, const char *fmt, va_list ap)
 	if (ftp->data_prot == prot_clear)
 		return vfprintf(f, fmt, ap);
 	else {
-		vasprintf(&buf, fmt, ap);
+		if (vasprintf(&buf, fmt, ap) == -1)
+      return -1;
 		ret = buffer_write(&ftp->out_buffer, buf, strlen(buf));
 		free(buf);
 		return ret;
@@ -340,7 +341,11 @@ int sec_vfprintf(FILE * f, const char *fmt, va_list ap)
 	if (!ftp->sec_complete)
 		return vfprintf(f, fmt, ap);
 
-	vasprintf(&buf, fmt, ap);
+	if (vasprintf(&buf, fmt, ap) == -1)
+  {
+    printf(_("Failed to allocate memory.\n"));
+    return -1;
+  }
 	len =
 		(*ftp->mech->encode) (ftp->app_data, buf, strlen(buf),
 							  ftp->command_prot, &enc);
@@ -392,7 +397,6 @@ void sec_status(void)
 
 static int sec_prot_internal(int level)
 {
-	int ret;
 	char *p;
 	unsigned int s = 1048576;
 
@@ -404,7 +408,7 @@ static int sec_prot_internal(int level)
 	}
 
 	if (level) {
-		ret = ftp_cmd("PBSZ %u", s);
+		ftp_cmd("PBSZ %u", s);
 		if (ftp->code != ctComplete) {
 			ftp_err(_("Failed to set protection buffer size.\n"));
 			return -1;
@@ -417,7 +421,7 @@ static int sec_prot_internal(int level)
 			ftp->buffer_size = s;
 	}
 
-	ret = ftp_cmd("PROT %c", level["CSEP"]);	/* XXX :-) */
+	ftp_cmd("PROT %c", level["CSEP"]);	/* XXX :-) */
 	if (ftp->code != ctComplete) {
 		ftp_err(_("Failed to set protection level.\n"));
 		return -1;

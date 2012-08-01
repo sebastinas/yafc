@@ -230,12 +230,14 @@ int ssh_open_url(url_t* urlp)
     args_t *args = args_create();
     args_init(args, 0, NULL);
     args_push_back(args, gvSSHOptions);
-    if (ssh_options_getopt(ftp->session, &args->argc, args->argv) != SSH_OK) {
+    int argc = 0;
+    if (ssh_options_getopt(ftp->session, &argc, args->argv) != SSH_OK) {
       ftp_err(_("Failed to load SSH options from yafcrc config (ssh_options = '%s')\n"), gvSSHOptions);
       ssh_free(ftp->session);
       ftp->session = NULL;
       return -1;
     }
+    args->argc = argc;
     args_destroy(args);
   }
 
@@ -513,7 +515,14 @@ rdirectory *ssh_read_directory(const char *path)
     if (attrib->group)
       rf->group = xstrdup(attrib->group);
 
-    asprintf(&rf->path, "%s/%s", p, attrib->name);
+    if (asprintf(&rf->path, "%s/%s", p, attrib->name) == -1)
+    {
+      ftp_err(_("Failed to allocate memory.\n"));
+      sftp_closedir(dir);
+      free(p);
+      rdir_destroy(rdir);
+      rfile_destroy(rf);
+    }
     rf->mtime = attrib->mtime;
     rf->date = time_to_string(rf->mtime);
     rf->size = attrib->size;

@@ -178,12 +178,21 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 
 	if(test(opt, FXP_PARENTS)) {
 		char *p = base_dir_xptr(fi->path);
-		asprintf(&dest, "%s/%s/%s", output, p, base_name_ptr(fi->path));
+		if (asprintf(&dest, "%s/%s/%s", output, p, base_name_ptr(fi->path)) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      free(p);
+      return -1;
+    }
 		free(p);
 	} else if(test(opt, FXP_OUTPUT_FILE))
 		dest = xstrdup(output);
 	else
-		asprintf(&dest, "%s/%s", output, base_name_ptr(fi->path));
+		if (asprintf(&dest, "%s/%s", output, base_name_ptr(fi->path)) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      return -1;
+    }
 
 	path_collapse(dest);
 
@@ -423,10 +432,6 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 
 		if(risdir(fp)) {
 			if(test(opt, FXP_RECURSIVE)) {
-				char *recurs_output;
-				char *recurs_mask, *q_recurs_mask;
-				list *rgl;
-
 				if((fxp_dir_glob_mask
 					&& fnmatch(fxp_dir_glob_mask,
 							   base_name_ptr(fp->path),
@@ -440,15 +445,32 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 					{
 						/*printf("skipping %s\n", fp->path);*/
 					} else {
+            char* recurs_output = NULL;
+            bool success = true;
 						if(!test(opt, FXP_PARENTS))
-							asprintf(&recurs_output, "%s/%s",
-									 output ? output : ".", ofile);
+							success = asprintf(&recurs_output, "%s/%s",
+									 output ? output : ".", ofile) != -1;
 						else
-							asprintf(&recurs_output, "%s",
-									 output ? output : ".");
-						rgl = rglob_create();
-						asprintf(&recurs_mask, "%s/*", opath);
-						q_recurs_mask = bash_backslash_quote(recurs_mask);
+							success = asprintf(&recurs_output, "%s",
+									 output ? output : ".") != -1;
+            if (!success)
+            {
+              fprintf(stderr, _("Failed to allocate memory.\n"));
+              transfer_nextfile(gl, &li, true);
+			        continue;
+            }
+
+            char* recurs_mask = NULL;
+            if (asprintf(&recurs_mask, "%s/*", opath) == -1)
+            {
+              free(recurs_output);
+              fprintf(stderr, _("Failed to allocate memory.\n"));
+              transfer_nextfile(gl, &li, true);
+			        continue;
+            }
+
+						char* q_recurs_mask = bash_backslash_quote(recurs_mask);
+            list* rgl = rglob_create();
 						rglob_glob(rgl, q_recurs_mask, true, true,
 								   fxp_exclude_func);
 						free(q_recurs_mask);

@@ -193,7 +193,12 @@ static int getfile(const rfile *fi, unsigned int opt,
 
     if(test(opt, GET_PARENTS)) {
         char *apath = base_dir_xptr(fi->path);
-        asprintf(&dest, "%s%s/%s", output, apath, destname);
+        if (asprintf(&dest, "%s%s/%s", output, apath, destname) == -1)
+        {
+          free(apath);
+          fprintf(stderr, _("Failed to allocate memory.\n"));
+          return -1;
+        }
         free(apath);
     } else {
         /* check if -o option is given, if GET_OUTPUT_FILE is set, we only
@@ -212,7 +217,11 @@ static int getfile(const rfile *fi, unsigned int opt,
         if(dest_is_file)
             dest = xstrdup(output);
         else
-            asprintf(&dest, "%s/%s", output, destname);
+            if (asprintf(&dest, "%s/%s", output, destname) == -1)
+            {
+              fprintf(stderr, _("Failed to allocate memory.\n"));
+              return -1;
+            }
     }
 
     /* make sure destination directory exists */
@@ -521,14 +530,27 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
                     } else {
                         char *q_recurs_mask;
 
+                        bool success = true;
                         if(!test(opt, GET_PARENTS))
-                            asprintf(&recurs_output, "%s/%s",
-                                     output ? output : ".", ofile);
+                            success = asprintf(&recurs_output, "%s/%s",
+                                     output ? output : ".", ofile) != -1;
                         else
-                            asprintf(&recurs_output, "%s",
-                                     output ? output : ".");
+                            success = asprintf(&recurs_output, "%s",
+                                     output ? output : ".") != -1;
+                        if (!success)
+                        {
+                          fprintf(stderr, _("Failed to allocate memory.\n"));
+                          transfer_nextfile(gl, &li, true);
+			                    continue;
+                        }
+                        if (asprintf(&recurs_mask, "%s/*", opath) == -1)
+                        {
+                          free(recurs_output);
+                          fprintf(stderr, _("Failed to allocate memory.\n"));
+                          transfer_nextfile(gl, &li, true);
+                          continue;
+                        }
                         rgl = rglob_create();
-                        asprintf(&recurs_mask, "%s/*", opath);
                         q_recurs_mask = bash_backslash_quote(recurs_mask);
                         rglob_glob(rgl, q_recurs_mask, true, true, get_exclude_func);
                         free(q_recurs_mask);

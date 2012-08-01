@@ -146,12 +146,21 @@ static void putfile(const char *path, struct stat *sb,
 
 	if(test(opt, PUT_PARENTS)) {
 		char *p = base_dir_xptr(path);
-		asprintf(&dest, "%s/%s/%s", output, p, base_name_ptr(path));
+		if (asprintf(&dest, "%s/%s/%s", output, p, base_name_ptr(path)) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      free(p);
+      return;
+    }
 		free(p);
 	} else if(test(opt, PUT_OUTPUT_FILE))
 		dest = xstrdup(output);
 	else
-		asprintf(&dest, "%s/%s", output, base_name_ptr(path));
+		if (asprintf(&dest, "%s/%s", output, base_name_ptr(path)) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      return;
+    }
 
 	path_collapse(dest);
 
@@ -373,13 +382,22 @@ static void putfiles(list *gl, unsigned opt, const char *output)
 					{
 						/*printf("skipping %s\n", path);*/
 					} else {
-						if(!test(opt, PUT_PARENTS)) {
-							asprintf(&recurs_output, "%s/%s",
-									 output ? output : ".", file);
+						if(!test(opt, PUT_PARENTS))
+            {
+							if (asprintf(&recurs_output, "%s/%s",
+									 output ? output : ".", file) == -1)
+              {
+                fprintf(stderr, _("Failed to allocate memory.\n"));
+                continue;
+              }
 						} else
 							recurs_output = xstrdup(output ? output : ".");
 
-						asprintf(&recurs_mask, "%s/*", path);
+						if (asprintf(&recurs_mask, "%s/*", path) == -1)
+            {
+              fprintf(stderr, _("Failed to allocate memory.\n"));
+              continue;
+            }
 						rgl = lglob_create();
 						lglob_glob(rgl, recurs_mask, true, put_exclude_func);
 						free(recurs_mask);

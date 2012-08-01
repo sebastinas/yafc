@@ -13,6 +13,8 @@
 #ifndef _utils_h_
 #define _utils_h_
 
+#include "syshdr.h"
+
 void listify_string(const char *str, list *lp);
 char *stringify_list(list *lp);
 char *make_unique_filename(const char *path);
@@ -23,6 +25,6 @@ void reset_xterm_title(void);
 char* get_mode_string(mode_t m);
 listitem *ftplist_search(const char *str);
 char *get_local_curdir(void);
-void invoke_shell(char *cmdline);
+void invoke_shell(const char* fmt, ...) YAFC_PRINTF(1, 2);
 
 #endif

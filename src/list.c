@@ -368,10 +368,15 @@ static void ls_recursive(const list *gl, unsigned opt, bool doclr)
 			continue;*/
 
 		if(ftp_maybe_isdir(f)) {
-			list *recurs_gl = rglob_create();
 			char *recurs_mask;
 
-			asprintf(&recurs_mask, "%s/*", f->path);
+			if (asprintf(&recurs_mask, "%s/*", f->path) == -1)
+      {
+        fprintf(stderr, _("Failed to allocate memory.\n"));
+        return;
+      }
+
+      list *recurs_gl = rglob_create();
 			rglob_glob(recurs_gl, recurs_mask, false, false, dontlist);
 
 			if(list_numitem(recurs_gl) > 0) {
@@ -529,7 +534,7 @@ void cmd_ls(int argc, char **argv)
 	if(contains_dotfiles(optind, argc, argv)) {
 		opt |= LS_ALL;
 	}
-	
+
 	gl = rglob_create();
 	dontlist_opt = opt;
 	if(optind >= argc) {
@@ -573,7 +578,12 @@ void cmd_ls(int argc, char **argv)
 				stripslash(e);
 
 			if(isdir) {
-				asprintf(&f, "%s/*", e);
+				if (asprintf(&f, "%s/*", e) == -1)
+        {
+          fprintf(stderr, _("Failed to allocate memory.\n"));
+          list_free(gl);
+          return;
+        }
 				rglob_glob(gl, f, false, false, dontlist);
 				free(f);
 			} else

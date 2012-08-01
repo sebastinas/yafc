@@ -331,12 +331,13 @@ static int rfile_parse_eplf(rfile *f, char *str, const char *dirpath)
             f->size = strtoull(e+1, 0, 10);
             break;
         case '\t':
-            asprintf(&f->path, "%s/%s",
-                     strcmp(dirpath, "/") ? dirpath : "", e+1);
+            if (asprintf(&f->path, "%s/%s",
+                     strcmp(dirpath, "/") ? dirpath : "", e+1) == -1)
+              f->path = NULL;
             break;
         }
     }
-    if(f->path == 0)
+    if (!f->path)
         return -1;
     rfile_parse_colors(f);
 
@@ -508,15 +509,22 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
                 f->mtime = mktime(&mt);
 
                 time(&now);
-                
+
+                bool success = true;
                 if(f->mtime != (time_t)-1 &&
                    (now > f->mtime + 6L * 30L * 24L * 60L * 60L  /* Old. */
                     || now < f->mtime - 60L * 60L))   /* In the future. */
                 {
-                    asprintf(&f->date, "%s %2d %5d", month_name[im], id, iy);
+                    success = asprintf(&f->date, "%s %2d %5d", month_name[im], id, iy) != -1;
                 } else {
-                    asprintf(&f->date, "%s %2d %02d:%02d", month_name[im], id, ih, imin);
+                    success = asprintf(&f->date, "%s %2d %02d:%02d", month_name[im], id, ih, imin) != -1;
                 }
+                if (!success)
+                {
+                  f->date = NULL;
+                  return -1;
+                }
+
                 time_parsed = true;
             }
         } else {
@@ -530,7 +538,14 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
     }
 
     if(!time_parsed) {
-        asprintf(&f->date, "%s %2s %5s", m, d, y);
+        if (asprintf(&f->date, "%s %2s %5s", m, d, y) == -1)
+        {
+          free(m);
+          free(d);
+          free(y);
+          f->date = NULL;
+          return -1;
+        }
         rfile_parse_time(f, m, d, y);
         if(f->mtime == (time_t)-1)
             ftp_trace("rfile_parse_time failed! date == '%s'\n", f->date);
@@ -548,23 +563,12 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
         f->link = xstrdup(e+4);
     }
 
-#if 0
-    /* ftp.apple.com:
-     *
-     * drwxr-xr-x   8 0        system       512 Jan  1 22:51 dts
-     * d--x--x--x   2 0        system       512 Sep 12 1997  etc
-     *                                             --------^
-     * doesn't pad year, so assume filename doesn't start with a space
-     */
-    /* I've dropped this workaround, 'cause ftp.apple.com seems to
-     * have fixed this, and this prevents a cd to directories with
-     * leading spaces
-     */
-    while(*cf == ' ')
-        cf++;
-#endif
 
-    asprintf(&f->path, "%s/%s", strcmp(dirpath, "/") ? dirpath : "", cf);
+    if (asprintf(&f->path, "%s/%s", strcmp(dirpath, "/") ? dirpath : "", cf) == -1)
+    {
+      f->path = NULL;
+      return -1;
+    }
 
     rfile_parse_colors(f);
 
@@ -612,12 +616,19 @@ static int rfile_parse_dos(rfile *f, char *str, const char *dirpath)
         time_t now;
         time(&now);
 
+        bool success = true;
         if(f->mtime != (time_t)-1 && (now > f->mtime + 6L * 30L * 24L * 60L * 60L  /* Old. */
                                       || now < f->mtime - 60L * 60L))   /* In the future. */
         {
-            asprintf(&f->date, "%s %2d %5d", month_name[m], d, y + 1900);
+            success = asprintf(&f->date, "%s %2d %5d", month_name[m], d, y + 1900) != -1;
         } else {
-            asprintf(&f->date, "%s %2d %02d:%02d", month_name[m], d, h, mm);
+            success = asprintf(&f->date, "%s %2d %02d:%02d", month_name[m], d, h, mm) != -1;
+        }
+
+        if (!success)
+        {
+          f->date = NULL;
+          return -1;
         }
     }
 
@@ -639,7 +650,11 @@ static int rfile_parse_dos(rfile *f, char *str, const char *dirpath)
     while(cf && *cf == ' ')
         ++cf;
 
-    asprintf(&f->path, "%s/%s", strcmp(dirpath, "/") ? dirpath : "", cf);
+    if (asprintf(&f->path, "%s/%s", strcmp(dirpath, "/") ? dirpath : "", cf) == -1)
+    {
+      f->path = NULL;
+      return -1;
+    }
 
     rfile_parse_colors(f);
 
@@ -659,8 +674,12 @@ static int rfile_parse_mlsd(rfile *f, char *str, const char *dirpath)
 
     e = strchr(str, ' ');
     if(e) {
-        asprintf(&f->path, "%s/%s",
-                 strcmp(dirpath, "/") ? dirpath : "", base_name_ptr(e+1));
+      if (asprintf(&f->path, "%s/%s",
+                 strcmp(dirpath, "/") ? dirpath : "", base_name_ptr(e+1)) == -1)
+      {
+        f->path = NULL;
+        return -1;
+      }
         *e = 0;
     } else
         return -1;

@@ -42,8 +42,12 @@ void save_taglist(const char *alt_filename)
 		return;
 
 	if(alt_filename == 0)
-		asprintf(&e, "%s/taglist.%s",
-				 gvWorkingDirectory, host_getoname(ftp->host));
+		if (asprintf(&e, "%s/taglist.%s",
+				 gvWorkingDirectory, host_getoname(ftp->host)) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      return;
+    }
 	f = tilde_expand_home(alt_filename ? alt_filename : e, gvLocalHomeDir);
 	fp = fopen(f, "w");
 	if(!fp) {
@@ -78,9 +82,12 @@ void load_taglist(bool showerr, bool always_autoload,
 	need_loggedin();
 
 	if(alt_filename == 0)
-		asprintf(&e, "%s/taglist.%s",
-				 gvWorkingDirectory, host_getoname(ftp->host));
-	f = tilde_expand_home(alt_filename ? alt_filename : e, gvLocalHomeDir);
+		if (asprintf(&e, "%s/taglist.%s",
+				 gvWorkingDirectory, host_getoname(ftp->host)) == -1)
+    {
+      fprintf(stderr, _("Failed to allocate memory.\n"));
+      return;
+    }	f = tilde_expand_home(alt_filename ? alt_filename : e, gvLocalHomeDir);
 	fp = fopen(f, "r");
 	if(!fp) {
 		if(showerr) {

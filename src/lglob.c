@@ -82,16 +82,17 @@ int lglob_glob(list *gl, const char *mask, bool ignore_multiples,
 	while((de = readdir(dp)) != 0) {
 		char *path;
 
-		asprintf(&path, "%s/%s", directory ? directory : ".", de->d_name);
+		if (asprintf(&path, "%s/%s", directory ? directory : ".", de->d_name) == -1)
+    {
+      ftp_err(_("Failed to allocate memory.\n"));
+      closedir(dp);
+      return -1;
+    }
 
 		if(fnmatch(base_name_ptr(mask), de->d_name, 0) == 0) {
 			if(!(exclude_func && exclude_func(path))) {
-				char *p;
-				bool ignore_item;
-
-				p = path_absolute(path, tmp, gvLocalHomeDir);
-
-				ignore_item = 
+				char* p = path_absolute(path, tmp, gvLocalHomeDir);
+        const bool ignore_item =
 					(ignore_multiples &&
 					 (list_search(gl, (listsearchfunc)strcmp, p) != 0));
 
@@ -99,6 +100,8 @@ int lglob_glob(list *gl, const char *mask, bool ignore_multiples,
 					list_additem(gl, p);
 					added = true;
 				}
+        else
+          free(p);
 			}
 			found = true;
 		}
