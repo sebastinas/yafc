@@ -28,3 +28,7 @@ src/stats.c
 src/tag.c
 src/transfer.c
 src/utils.c
+src/completion.c
+src/input.c
+src/lglob.c
+src/prompt.c
