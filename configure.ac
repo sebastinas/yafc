@@ -73,7 +73,8 @@ AC_CHECK_HEADERS(unistd.h \
                  setjmp.h \
                  errno.h \
                  strcasecmp.h \
-                 fcntl.h
+                 fcntl.h \
+                 resolv.h
 )
 
 
@@ -182,19 +183,25 @@ if test "$yafc_found_krb5" = "yes"; then
   fi
 fi
 
-if test "$yafc_found_krb" = "yes"; then
+if test "x$yafc_found_krb" = "xyes"; then
   AC_LIBOBJ(security)
 fi
 
+yafc_have_openssl="notchecked"
 if test "x$yafc_krb5_vendor" != "xHeimdal" ; then
-  AX_CHECK_OPENSSL([
+  AX_CHECK_OPENSSL(
+   [
     AC_CHECK_HEADERS(openssl/ui_compat.h \
                      openssl/ui.h)
-  ])
+    yafc_have_openssl="yes"
+   ],
+   [
+    yafc_have_openssl="no"
+   ])
 fi
 
 # read_pw_string
-old_CFLAGS="$CFLAGS $OPENSSL_INCLUDES"
+old_CPPFLAGS="$CPPFLAGS $OPENSSL_INCLUDES"
 yafc_have_read_pw_string="no"
 AC_CHECK_DECLS(des_read_pw_string, [yafc_have_read_pw_string="yes"],,
   [
@@ -218,7 +225,7 @@ AC_CHECK_DECLS(UI_UTIL_read_pw_string, [yafc_have_read_pw_string="yes"],,
     #include <openssl/ui.h>
     #endif
   ])
-CFLAGS="$old_CFLAGS"
+CPPFLAGS="$old_CPPFLAGS"
 
 if test "x$yafc_have_read_pw_string" = "xyes" ; then
   LIBS="$LIBS $OPENSSL_LIBS"
@@ -289,6 +296,56 @@ else
   AM_CONDITIONAL(HAVE_LIBSSH, [false])
   yafc_got_ssh="no, disabled"
 fi
+
+# base64
+yafc_have_base64="no"
+yafc_need_base64_impl="true"
+# use Heimdal if available
+if test "x$yafc_krb5_vendor" = "xHeimdal" ; then
+  AC_CHECK_HEADERS(
+   heimdal/base64.h,
+   [
+    yafc_have_base64="yes"
+    yafc_need_base64_impl="false"
+    AC_DEFINE(HAVE_BASE64_HEIMDAL, [], [Define if base64.h from Heimdal is available.])
+   ])
+fi
+# check OpenSSL
+if test "x$yafc_have_base64" = "xno" && test "x$yafc_have_openssl" != "xno" ; then
+  if test "x$yafc_have_openssl" = "xnotchecked" ; then
+    AX_CHECK_OPENSSL(
+     [yafc_have_openssl="yes"],
+     [yafc_have_openssl="no"])
+  fi
+  if test "x$yafc_have_openssl" = "xyes" ; then
+    old_CPPFLAGS="$CPPFLAGS"
+    CPPFLAGS="$CPPFLAGS $OPENSSL_INCLUDES"
+
+    AC_CHECK_HEADERS(openssl/evp.h)
+    AC_CHECK_DECLS(
+     BIO_f_base64,
+     [
+      yafc_have_base64="yes"
+      AC_DEFINE(HAVE_BASE64_OPENSSL, [], [Define if base64 from OpenSSL is available.])
+      LIBS="$LIBS $OPENSSL_LIBS"
+      LDFLAGS="$LDFLAGS $OPENSSL_LDFLAGS"
+     ],
+     [
+      CPPFLAGS="$old_CPPFLAGS"
+     ],
+     [
+      #ifdef HAVE_OPENSSL_EVP_H
+      #include <openssl/evp.h>
+      #endif
+     ])
+  fi
+fi
+
+if test "x$yafc_have_base64" = "xno" ; then
+  AC_MSG_ERROR([no suitable base64 implementation is available])
+fi
+
+AM_CONDITIONAL([NEED_BASE_IMPL], [${yafc_need_base64_impl}])
 
 # bash completion
 AC_ARG_WITH([bash-completion],

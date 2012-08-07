@@ -29,6 +29,12 @@ else
 SSHSRCS =
 endif
 
+if NEED_BASE_IMPL
+BASE64SRC = lib/base64.c
+else
+BASE64SRC =
+endif
+
 bin_PROGRAMS = yafc
 
 yafc_SOURCES = src/main.c \
@@ -75,7 +81,7 @@ yafc_SOURCES = src/main.c \
 							 src/ftp/ftpsigs.c \
 							 $(SSHSRCS) \
 							 lib/makepath.c \
-							 lib/base64.c \
+							 $(BASE64SRC) \
 							 lib/modechange.c \
 							 lib/bashline.c
 
