@@ -38,7 +38,6 @@ int base64_decode(const char* str, void* data)
   size_t end = b64_pton(str, data, strlen(str));
   ((char*)data)[end] = '\0';
 
-  fprintf(stderr, "%s\n", (char*)data);
   return end;
 }
 #elif defined(HAVE_BASE64_OPENSSL)
@@ -67,16 +66,15 @@ int base64_encode(const void* data, size_t size, char** str)
 
   char* tmp = NULL;
   size_t len = BIO_get_mem_data(mem, &tmp);
-  *str = malloc(len);
+  *str = malloc(len + 1);
   if (!*str)
   {
     BIO_free_all(b64);
     return -1;
   }
 
-  strncpy(*str, tmp, len);
-  if (len > 0)
-    (*str)[len - 1] = '\0';
+  strncpy(*str, tmp, len + 1);
+  (*str)[len ] = '\0';
 
   BIO_free_all(b64);
   return len;
