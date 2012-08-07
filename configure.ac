@@ -340,6 +340,22 @@ if test "x$yafc_have_base64" = "xno" && test "x$yafc_have_openssl" != "xno" ; th
      ])
   fi
 fi
+# check for b64_ntop and b64_pton
+if test "x$yafc_have_base64" = "xno" ; then
+  AC_CHECK_DECLS(
+   [b64_ntop, b64_pton],
+   [
+    yafc_have_base64="yes"
+    AC_SEARCH_LIBS([b64_ntop, b64_pton], resolv)
+    AC_SEARCH_LIBS([__b64_ntop, __b64_pton], resolv)
+    AC_DEFINE(HAVE_BASE64_B64, [], [Define if b64_* function are available.])
+   ],,
+   [
+    #ifdef HAVE_RESOLV_H
+    #include <resolv.h>
+    #endif
+   ])
+fi
 
 if test "x$yafc_have_base64" = "xno" ; then
   AC_MSG_ERROR([no suitable base64 implementation is available])

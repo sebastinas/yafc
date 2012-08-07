@@ -11,11 +11,39 @@
  */
 
 #include "base64.h"
+#include <string.h>
 
-#if defined(HAVE_BASE64_OPENSSL)
+#ifdef HAVE_BASE64_B64
+#include <resolv.h>
+
+int base64_encode(const void* data, size_t size, char** str)
+{
+  if (!str || !data)
+    return -1;
+
+  size_t len = 4*(size + 2) / 3 + 2;
+  *str = malloc(len);
+  if (!*str)
+    return -1;
+
+  b64_ntop(data, size, *str, len);
+  return len;
+}
+
+int base64_decode(const char* str, void* data)
+{
+  if (!str || !data)
+    return -1;
+
+  size_t end = b64_pton(str, data, strlen(str));
+  ((char*)data)[end] = '\0';
+
+  fprintf(stderr, "%s\n", (char*)data);
+  return end;
+}
+#elif defined(HAVE_BASE64_OPENSSL)
 #include <openssl/bio.h>
 #include <openssl/evp.h>
-#include <string.h>
 
 int base64_encode(const void* data, size_t size, char** str)
 {
