@@ -5,7 +5,9 @@ EXTRA_DIST = BUGS THANKS COPYRIGHT \
 						 samples/yafcrc \
 						 samples/inputrc \
 						 contrib/yafc-import_ncftp.pl \
-						 completion/yafc
+						 completion/yafc \
+						 src/ftp/ssh_cmd.c \
+						 lib/base64.c
 if USE_NLS
 SUBDIRS = doc po
 else
