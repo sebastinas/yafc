@@ -258,7 +258,7 @@ char *path_absolute(const char *path, const char *curdir, const char *homedir)
   char* p = NULL;
 	if(path[0] == '~' && homedir)
 		p = tilde_expand_home(path, homedir);
-	else if(strlen(path) >= 3 && path[0] != '/' && path[1] != ':' && path[2] != '\\') {
+	else if(strlen(path) < 3 || (path[0] != '/' && path[1] != ':' && path[2] != '\\')) {
 		if(strncmp(path, "./", 2) == 0)
     {
 			if (asprintf(&p, "%s%s", curdir, path+1) == -1)
