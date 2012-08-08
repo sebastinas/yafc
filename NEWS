@@ -1,3 +1,16 @@
+New in 1.2.2
+------------
+
+* Fixed a few more regressions:
+  - SFTP: "cd .." is now really fixed.
+* BSD-4-clause and GPL-2+ are incompatible and we shipped BSD-4-clause code in
+  lib/base64.[ch]. The old base64 code is now replaced by a new one that uses
+  already implemented base64 functions. If Heimdal is available its
+  base64_encode and _decode are used. The old implementation used the same
+  interface as Heimdal, so this should be the safest options. If Heimdal is not
+  available either OpenSSL or libresolv's b64_* function are used to provide
+  base64 support.
+
 New in 1.2.1
 ------------
 

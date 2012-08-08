@@ -355,7 +355,7 @@ int ssh_chdir(const char *path)
   free(tmp);
   if (!p)
   {
-    ftp_err(_("%s: %s\n"), path, ssh_get_error(ftp->session));
+    ftp_err("%s: %s\n", path, ssh_get_error(ftp->session));
     return -1;
   }
 
