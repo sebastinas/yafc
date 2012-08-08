@@ -353,6 +353,12 @@ int ssh_chdir(const char *path)
   char* tmp = ftp_path_absolute(path);
   char *p = sftp_canonicalize_path(ftp->sftp_session, tmp);
   free(tmp);
+  if (!p)
+  {
+    ftp_err(_("%s: %s\n"), path, ssh_get_error(ftp->session));
+    return -1;
+  }
+
   bool isdir = false;
 
   /* First check if this file is cached and is a directory, else we
