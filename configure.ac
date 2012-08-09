@@ -29,16 +29,19 @@ dnl gettext et al
 AC_ARG_ENABLE([nls],
               [AS_HELP_STRING([--enable-nls],[enable native language support])],,
               [enable_nls=yes])
-use_nls=no
-if test "x$enable_nls" = "xyes"; then
-  use_nls=yes
-
-  IT_PROG_INTLTOOL
+use_nls="no"
+if test "x$enable_nls" = "xyes" ; then
   GETTEXT_PACKAGE=yafc
-  AC_SUBST(GETTEXT_PACKAGE)
-  AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"],
-                     [The domain to use with gettext])
-  AC_DEFINE([ENABLE_NLS], [], [Define is you have gettext support.])
+  ALL_LINGUAS="de sv"
+  AM_GLIB_GNU_GETTEXT
+  if test "x$gt_cv_have_gettext" = "xyes" ; then
+    use_nls="yes"
+    AC_SUBST(GETTEXT_PACKAGE)
+    AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"],
+                       [The domain to use with gettext])
+  else
+    use_nls="no, not found"
+  fi
 fi
 AM_CONDITIONAL([USE_NLS],[test "x$use_nls" = "xyes"])
 
