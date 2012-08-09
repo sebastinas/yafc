@@ -86,6 +86,8 @@ int base64_decode(const char* str, void* data)
     return -1;
 
   BIO* b64 = BIO_new(BIO_f_base64());
+  BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
+
   BIO* mem = BIO_new_mem_buf((char*) str, -1);
   b64 = BIO_push(b64, mem);
 
