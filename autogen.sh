@@ -2,8 +2,8 @@
 
 [ -d support ] || mkdir support || exit
 
-echo -n "Running intltoolize..."
-intltoolize -f --automake || exit
+echo -n "Running glib-gettextize..."
+glib-gettextize -f || exit
 echo " done"
 
 echo -n "Running autoreconf..."

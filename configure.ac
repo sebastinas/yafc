@@ -25,14 +25,30 @@ AC_DEFINE_UNQUOTED(HOSTTYPE, "${host_cpu}-${host_vendor}-${host_os}", [the hostt
 
 AC_PROG_INSTALL
 
-dnl gettext et al
-AC_ARG_ENABLE([nls],
-              [AS_HELP_STRING([--enable-nls],[enable native language support])],,
-              [enable_nls=yes])
-use_nls="no"
-if test "x$enable_nls" = "xyes" ; then
+
+# gettext et al
+use_nls="no, not found"
+gettext_dir=""
+AC_ARG_WITH([gettext],
+  AS_HELP_STRING([--with-gettext@<:@=DIR@:>@],
+                 [look for gettext in DIR (default is yes)]),
+  [
+    if test "x$withval" = "xno"; then
+      use_nls="no"
+    elif test "x$withval" != "xyes"; then
+      gettext_dir="$withval"
+    fi
+  ])
+
+if test "x$use_nls" != "xno" ; then
   GETTEXT_PACKAGE=yafc
   ALL_LINGUAS="de sv"
+  if test "x$gettext_dir" != "x" ; then
+    old_CPPFLAGS="$CPPFLAGS"
+    old_LDFLAGS="$LDFLAGS"
+    CPPFLAGS="$CPPFLAGS -I$gettext_dir/include"
+    LDFLAGS="$LDFLAGS -L$gettext_dir/lib"
+  fi
   AM_GLIB_GNU_GETTEXT
   if test "x$gt_cv_have_gettext" = "xyes" ; then
     use_nls="yes"
@@ -40,18 +56,16 @@ if test "x$enable_nls" = "xyes" ; then
     AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"],
                        [The domain to use with gettext])
   else
-    use_nls="no, not found"
+    CPPFLAGS="$old_CPPFLAGS"
+    LDFLAGS="$old_LDFLAGS"
   fi
+  YAFC_LOCALEDIR=[${datadir}/locale]
+  AC_SUBST(YAFC_LOCALEDIR)
 fi
 AM_CONDITIONAL([USE_NLS],[test "x$use_nls" = "xyes"])
 
-YAFC_LOCALEDIR=[${datadir}/locale]
-AC_SUBST(YAFC_LOCALEDIR)
 
-dnl
-dnl Checks for header files.
-dnl
-
+# Checks for header files.
 AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_HEADER_STAT
