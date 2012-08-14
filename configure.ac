@@ -33,9 +33,9 @@ AC_ARG_WITH([gettext],
   AS_HELP_STRING([--with-gettext@<:@=DIR@:>@],
                  [look for gettext in DIR (default is yes)]),
   [
-    if test "x$withval" = "xno"; then
+    if test "x$withval" = "xno" ; then
       use_nls="no"
-    elif test "x$withval" != "xyes"; then
+    elif test "x$withval" != "xyes" ; then
       gettext_dir="$withval"
     fi
   ])
@@ -56,8 +56,11 @@ if test "x$use_nls" != "xno" ; then
     AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"],
                        [The domain to use with gettext])
   else
-    CPPFLAGS="$old_CPPFLAGS"
-    LDFLAGS="$old_LDFLAGS"
+    # reset CPPFLAGS and LDFLAGS only if we set it before
+    if test "x$gettext_dir" != "x" ; then
+      CPPFLAGS="$old_CPPFLAGS"
+      LDFLAGS="$old_LDFLAGS"
+    fi
   fi
   YAFC_LOCALEDIR=[${datadir}/locale]
   AC_SUBST(YAFC_LOCALEDIR)
@@ -438,7 +441,7 @@ echo
 echo "compiler ....................... $CC $CFLAGS"
 echo "preprocessor flags ............. $CPPFLAGS"
 echo "linker flags ................... $LDFLAGS"
-echo "libraries ...................... $LIBS"
+echo "libraries ...................... $LIBS $INTLLIBS"
 echo "installation prefix ............ $prefix"
 echo "using Kerberos 4 ............... $yafc_found_krb4"
 echo "using Kerberos 5 ............... $yafc_found_krb5"
