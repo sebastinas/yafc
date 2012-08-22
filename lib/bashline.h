@@ -15,7 +15,7 @@
 
 char *bash_quote_filename (char *s, int rtype, char *qcp);
 char *bash_dequote_filename (const char *text, int quote_char);
-char *bash_backslash_quote (char *string);
+char *bash_backslash_quote (const char *string);
 char *bash_single_quote (char *string);
 char *bash_double_quote (char *string);
 int char_is_quoted (char *string, int eindex);

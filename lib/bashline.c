@@ -287,10 +287,11 @@ char *bash_single_quote (char *string)
 
 /* Quote special characters in STRING using backslashes.  Return a new
    string. */
-char *bash_backslash_quote (char *string)
+char *bash_backslash_quote (const char *string)
 {
   int c;
-  char *result, *r, *s;
+  char *result, *r;
+  const char* s;
 
   result = xmalloc (2 * strlen (string) + 1);
 
