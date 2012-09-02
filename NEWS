@@ -1,5 +1,5 @@
-New in git
-----------
+New in 1.2.3
+------------
 
 * configure.ac: Check if we need to link against libintl and add --with-gettext
   to specifiy prefix of the gettext installation.
