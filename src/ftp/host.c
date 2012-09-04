@@ -13,6 +13,15 @@
 
 #include "host.h"
 
+// AI_ADDRCONFIG and AI_V4MAPPED are not defined on OpenBSD
+#ifndef AI_ADDRCONFIG
+#define AI_ADDRCONFIG 0
+#endif
+
+#ifndef AI_V4MAPPED
+#define AI_V4MAPPED 0
+#endif
+
 struct Host_
 {
   char* hostname;
@@ -41,7 +50,7 @@ void host_destroy(Host *hostp)
 {
   if (!hostp)
     return;
-  
+
   free(hostp->hostname);
   freeaddrinfo(hostp->addr);
   free(hostp);
