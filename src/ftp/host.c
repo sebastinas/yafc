@@ -52,7 +52,8 @@ void host_destroy(Host *hostp)
     return;
 
   free(hostp->hostname);
-  freeaddrinfo(hostp->addr);
+  if (hostp->addr)
+    freeaddrinfo(hostp->addr);
   free(hostp);
 }
 
