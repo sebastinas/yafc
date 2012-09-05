@@ -156,6 +156,7 @@ static int ftp_init_transfer(void)
 		if (!ftp_pasv(sa.ss_family != AF_INET, pac, &ipv6_port))
 			goto err1;
 
+    socklen_t len = sizeof(struct sockaddr_in);
     if (sa.ss_family == AF_INET)
     {
       memcpy(&((struct sockaddr_in*)&sa)->sin_addr, pac, (size_t)4);
@@ -163,7 +164,10 @@ static int ftp_init_transfer(void)
     }
 #ifdef HAVE_IPV6
     else if (sa.ss_family == AF_INET6)
+    {
       ((struct sockaddr_in6*)&sa)->sin6_port = htons(ipv6_port);
+      len = sizeof(struct sockaddr_in6);
+    }
 #endif
     else
       return -1;
@@ -181,7 +185,7 @@ static int ftp_init_transfer(void)
 			((struct sockaddr_in*)&sa)->sin_addr = ((struct sockaddr_in*)&tmp)->sin_addr;
 		}
 
-		if (!sock_connect_addr(ftp->data, (struct sockaddr*) &sa, sizeof(struct sockaddr_storage)))
+		if (!sock_connect_addr(ftp->data, (struct sockaddr*) &sa, len))
     {
       perror("connect()");
 			goto err1;
