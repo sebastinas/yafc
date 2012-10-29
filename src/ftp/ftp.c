@@ -303,11 +303,14 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
 
     ftp->host = host_create(use_proxy ? gvProxyUrl : urlp);
 
-    if(!host_lookup(ftp->host)) {
+    if (!urlp->protocol || strcmp(urlp->protocol, "ssh") != 0) {
+      // We only need to do a host lookup if we're not using sftp.
+      if(!host_lookup(ftp->host)) {
         herror(host_getname(ftp->host));
         alarm(0);
         ftp_set_signal(SIGALRM, SIG_IGN);
         return -1;
+      }
     }
     /* keep the value in urlp->port
     urlp->port = ntohs(ftp->host->port);
