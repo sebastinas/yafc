@@ -1,3 +1,9 @@
+New in git
+----------
+
+* Fix crashes on OpenBSD.
+* Fix a bug in the handling of ssh aliases if the alias cannot be resolved.
+
 New in 1.2.3
 ------------
 
