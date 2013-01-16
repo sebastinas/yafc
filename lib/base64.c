@@ -14,6 +14,7 @@
 #include <string.h>
 
 #ifdef HAVE_BASE64_B64
+#include "syshdr.h"
 #include <resolv.h>
 
 int base64_encode(const void* data, size_t size, char** str)
