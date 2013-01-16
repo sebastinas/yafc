@@ -75,6 +75,7 @@ AC_HEADER_STAT
 AC_HEADER_TIME
 AC_HEADER_STDBOOL
 AC_HEADER_DIRENT
+AC_HEADER_RESOLV
 
 AC_CHECK_HEADER([stdint.h],[],
                 [AC_MSG_ERROR([stdint.h is required by C99 but is not present.])])
@@ -82,9 +83,6 @@ AC_CHECK_HEADER([stdint.h],[],
 AC_CHECK_HEADERS(unistd.h \
                  pwd.h \
                  sys/socket.h \
-                 sys/types.h \
-                 netdb.h \
-                 netinet/in.h \
                  netinet/ip.h \
                  netinet/in_systm.h \
                  arpa/inet.h \
@@ -93,8 +91,7 @@ AC_CHECK_HEADERS(unistd.h \
                  setjmp.h \
                  errno.h \
                  strcasecmp.h \
-                 fcntl.h \
-                 resolv.h
+                 fcntl.h
 )
 
 
@@ -371,6 +368,19 @@ if test "x$yafc_have_base64" = "xno" ; then
     AC_DEFINE(HAVE_BASE64_B64, [], [Define if b64_* function are available.])
    ],,
    [
+    #ifdef HAVE_SYS_TYPES_H
+    #  include <sys/types.h>
+    #endif
+    #ifdef HAVE_NETINET_IN_H
+    #  include <netinet/in.h>   /* inet_ functions / structs */
+    #endif
+    #ifdef HAVE_ARPA_NAMESER_H
+    #  include <arpa/nameser.h> /* DNS HEADER struct */
+    #endif
+    #ifdef HAVE_NETDB_H
+    #  include <netdb.h>
+    #endif
+
     #ifdef HAVE_RESOLV_H
     #include <resolv.h>
     #endif
