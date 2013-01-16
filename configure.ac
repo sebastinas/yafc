@@ -80,10 +80,19 @@ AC_HEADER_RESOLV
 AC_CHECK_HEADER([stdint.h],[],
                 [AC_MSG_ERROR([stdint.h is required by C99 but is not present.])])
 
+AC_CHECK_HEADERS([netinet/ip.h], [], [],
+                 [
+                   #ifdef HAVE_SYS_TYPES_H
+                   #include <sys/types.h>
+                   #endif
+                   #ifdef HAVE_NETINET_IN_H
+                   #include <netinet/in.h>
+                   #endif
+                 ])
+
 AC_CHECK_HEADERS(unistd.h \
                  pwd.h \
                  sys/socket.h \
-                 netinet/ip.h \
                  netinet/in_systm.h \
                  arpa/inet.h \
                  sys/ioctl.h \
