@@ -125,7 +125,6 @@ void list_sort(list *lp, listsortfunc cmp, int reverse)
 {
 	listitem *li, *last = 0;
 	bool swapped = true;
-	int c;
 
 	while(swapped) {
 		swapped = false;
@@ -134,7 +133,7 @@ void list_sort(list *lp, listsortfunc cmp, int reverse)
 				last = li;
 				break;
 			}
-			c = cmp(li->data, li->next->data);
+			int c = cmp(li->data, li->next->data);
 			if(reverse ? c < 0  : c > 0) {
 				list_swap(lp, li, li->next);
 				swapped = true;
@@ -161,14 +160,11 @@ void list_removeitem(list *lp, listitem *lip)
 
 list *list_clone(list *lp, listclonefunc clonefunc)
 {
-	list *cloned;
-	listitem *li;
-
 	if(!lp)
-		return 0;
-	cloned = list_new(lp->freefunc);
+		return NULL;
 
-	for(li=lp->first; li; li=li->next)
+	list* cloned = list_new(lp->freefunc);
+	for(listitem* li=lp->first; li; li=li->next)
 		list_additem(cloned, clonefunc(li->data));
 
 	return cloned;

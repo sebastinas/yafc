@@ -20,9 +20,11 @@
 #include "transfer.h"
 #include "utils.h"
 
-static int nerr = 0;
+static void errp(char *str, ...) YAFC_PRINTF(1, 2);
 
-static char *current_rcfile = 0;
+static int nerr = 0;
+static char *current_rcfile = NULL;
+static char *ungetstr = 0;
 
 static void errp(char *str, ...)
 {
@@ -36,8 +38,6 @@ static void errp(char *str, ...)
 	va_end(ap);
 	nerr++;
 }
-
-static char *ungetstr = 0;
 
 static char *_nextstr(FILE *fp)
 {

@@ -20,15 +20,13 @@
 /* print local working directory */
 void cmd_lpwd(int argc, char **argv)
 {
-	char *tmp;
-
 	if(argv) {
 		OPT_HELP_NEW(_("Print local working directory."), "lpwd [options]", NULL);
 		maxargs(optind - 1);
 	}
 
-	tmp = getcwd(NULL, 0);
-	if (tmp == (char *)NULL) {
+	char* tmp = getcwd(NULL, 0);
+	if (tmp == NULL) {
 		fprintf(stderr, _("Couldn't get local working directory...\n"));
 		return;
 	}
