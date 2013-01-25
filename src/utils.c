@@ -198,7 +198,7 @@ char *get_local_curdir(void)
 {
 	static char *buf = NULL;
 
-	if (buf != (char *)NULL)
+	if (buf != NULL)
 		free(buf);
 	buf = getcwd (NULL, 0);
 

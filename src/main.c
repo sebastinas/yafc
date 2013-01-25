@@ -17,9 +17,6 @@
 #include "alias.h"
 #include "input.h"
 #include "cmd.h"
-#if 0
-# include "setproctitle.h"
-#endif
 #include "completion.h"
 #include "login.h"
 #include "strq.h"
@@ -202,7 +199,7 @@ void init_yafc(void)
 
 void check_if_first_time(void)
 {
-	if(access(gvWorkingDirectory, X_OK) == 0)
+	if (access(gvWorkingDirectory, X_OK) == 0)
 		return;
 
 	if(errno == ENOENT) {

@@ -89,8 +89,8 @@ char * shell_replace(const char arg)
 			return xstrdup(ftp->url->hostname);
 		case 'p':
 			if (!ftp->connected) return NULL;
-			char buf[5];
-			sprintf(buf, "%i", ftp->url->port);
+			char buf[6] = { 0 };
+			snprintf(buf, sizeof(buf), "%i", ftp->url->port);
 			return xstrdup(buf);
 		case 'u':
 			if (!ftp->loggedin) return NULL;
