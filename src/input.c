@@ -298,7 +298,7 @@ static char *choice_str(int opt, int def)
 		}
 	}
 	tmp[j] = '\0';
-	strcat(tmp, ", ? for help");
+	strlcat(tmp, ", ? for help", 32);
 	return tmp;
 }
 

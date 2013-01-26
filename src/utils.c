@@ -56,22 +56,22 @@ char *stringify_list(list *lp)
 	return str;
 }
 
-char *make_unique_filename(const char *path)
+char* make_unique_filename(const char* path)
 {
-	int maxistr = (sizeof(unsigned) * 8) / 3;
-
+	const size_t maxistr = (sizeof(unsigned) * 8) / 3;
 	/* one for dot, one for NULL, and three just in case :P */
-	char *f = (char *)xmalloc(strlen(path) + maxistr + 5);
-	char *ext;
-	unsigned n = 0;
+  const size_t pathlen = strlen(path);
+  const size_t len = pathlen + maxistr + 5;
 
-	strcpy(f, path);
-	ext = f + strlen(f);
+	char* f = xmalloc(len);
+	strlcpy(f, path, len);
+	char* ext = f + pathlen;
 
-	while(1) {
-		if(access(f, F_OK) != 0)
+  unsigned int n = 0;
+	while (1) {
+		if (access(f, F_OK) != 0)
 			break;
-		sprintf(ext, ".%u", ++n);
+		snprintf(ext, len - pathlen, ".%u", ++n);
 	}
 	return f;
 }
@@ -98,9 +98,9 @@ char *human_time(unsigned int secs)
 	static char buf[17];
 
 	if(secs < 60*60)
-		sprintf(buf, "%u:%02u", secs/60, secs%60);
+		snprintf(buf, 17, "%u:%02u", secs/60, secs%60);
 	else
-		sprintf(buf, "%u:%02u:%02u", secs/(60*60), (secs/60)%60, secs%60);
+		snprintf(buf, 17, "%u:%02u:%02u", secs/(60*60), (secs/60)%60, secs%60);
 	return buf;
 }
 
@@ -134,7 +134,7 @@ char* get_mode_string(mode_t m)
 {
 	static char tmp[4];
 
-	strcpy(tmp, "000");
+	strncpy(tmp, "000", 4);
 
 	if(test(m, S_IRUSR))
 		tmp[0] += 4;

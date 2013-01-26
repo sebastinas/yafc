@@ -195,10 +195,10 @@ char *expand_prompt(const char *fmt)
 			}
 
 			if(ins) {
-				char* tmp = xmalloc(strlen(prompt) + strlen(ins) +
-									  strlen(fmt+1) + 1);
-				strcpy(tmp, prompt);
-				strcat(tmp, ins);
+        const size_t len = strlen(prompt) + strlen(ins) + strlen(fmt+1) + 1;
+				char* tmp = xmalloc(len);
+				strlcpy(tmp, prompt, len);
+				strlcat(tmp, ins, len);
 				cp = tmp + strlen(prompt) + strlen(ins);
 				free(prompt);
 				prompt = tmp;

@@ -1843,9 +1843,8 @@ void ftp_pwd(void)
 
 char *perm2string(int perm)
 {
-    char *attr = (char *)xmalloc(11);
-
-    strcpy(attr, "----------");
+    char* attr = xmalloc(11);
+    strncpy(attr, "----------", 11);
 
     if(S_ISDIR(perm))
         attr[0] = 'd';

@@ -146,16 +146,16 @@ void cmd_shell(int argc, char **argv)
 			if (argv[i][0] == '%' && argv[i][1] != 0 && argv[i][2] == 0) {
 				char *repl = shell_replace(argv[i][1]);
 				if (repl != NULL) {
-					strcat(e, repl);
+					strlcat(e, repl, s);
 					free(repl);
 				} else {
-					strcat(e, argv[i]);
+					strlcat(e, argv[i], s);
 				}
 			} else {
-				strcat(e, argv[i]);
+				strlcat(e, argv[i], s);
 			}
 			if(i+1 < argc)
-				strcat(e, " ");
+				strlcat(e, " ", s);
 		}
 	}
 
