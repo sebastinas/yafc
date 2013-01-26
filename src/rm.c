@@ -202,4 +202,5 @@ void cmd_rm(int argc, char **argv)
 		remove_files(ftp->taglist, opt);
 		list_clear(ftp->taglist);
 	}
+  rglob_destroy(gl);
 }
