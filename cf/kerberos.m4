@@ -178,14 +178,16 @@ AC_DEFUN([YAFC_KRB5_CHECK],
       AC_DEFINE([HAVE_KRB5_HEIMDAL], [1], [define if you have Kerberos 5 - Heimdal])
     fi
     dnl check krb5-config for CFLAGS, LDFLAGS, LIBS if not supplied by the user
-    if test "x$yafc_found_krb5_inc_flags" = "x" ; then
-      yafc_found_krb5_inc_flags="`$KRB5CONFIG --cflags krb5 gssapi`"
-    fi
-    if test "x$yafc_found_krb5_lib_libs" = "x" ; then
-      yafc_found_krb5_lib_libs="`$KRB5CONFIG --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if ($i ~ \"^-l.*\"){ printf \"%s \", $i }}}'`"
-    fi
-    if test "x$yafc_found_krb5_lib_flags" = "x" ; then
-      yafc_found_krb5_lib_flags="`$KRB5CONFIG --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if ($i !~ \"^-l.*\"){ printf \"%s \", $i }}}'`"
+    if test "x$KRB5CONFIG" != "x" && test "x$KRB5CONFIG" != "xno" ; then
+      if test "x$yafc_found_krb5_inc_flags" = "x"; then
+        yafc_found_krb5_inc_flags="`$KRB5CONFIG --cflags krb5 gssapi`"
+      fi
+      if test "x$yafc_found_krb5_lib_libs" = "x" ; then
+        yafc_found_krb5_lib_libs="`$KRB5CONFIG --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if ($i ~ \"^-l.*\"){ printf \"%s \", $i }}}'`"
+      fi
+      if test "x$yafc_found_krb5_lib_flags" = "x" ; then
+        yafc_found_krb5_lib_flags="`$KRB5CONFIG --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if ($i !~ \"^-l.*\"){ printf \"%s \", $i }}}'`"
+      fi
     fi
 
     AC_MSG_CHECKING([for krb5 CFLAGS])
@@ -198,7 +200,9 @@ AC_DEFUN([YAFC_KRB5_CHECK],
     old_CFLAGS="$CFLAGS"
     old_LDFLAGS="$LDFLAGS"
     old_LIBS="$LIBS"
+    old_CPPFLAGS="$CPPFLAGS"
     CFLAGS="$CFLAGS $yafc_found_krb5_inc_flags"
+    CPPFLAGS="$CPPFLAGS $yafc_found_krb5_inc_flags"
     LIBS="$LIBS $yafc_found_krb5_lib_libs"
     LDFLAGS="$LDFLAGS $yafc_found_krb5_lib_flags"
     AC_CHECK_HEADERS(krb5.h)
@@ -227,6 +231,7 @@ AC_DEFUN([YAFC_KRB5_CHECK],
     CFLAGS="$old_CFLAGS"
     LIBS="$old_LIBS"
     LDFLAGS="$old_LDFLAGS"
+    CPPFLAGS="$old_CPPFLAGS"
   fi
 ])
 
