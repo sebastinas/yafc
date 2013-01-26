@@ -63,7 +63,6 @@ int lglob_glob(list *gl, const char *mask, bool ignore_multiples,
 	struct dirent *de;
 	DIR *dp;
 	char *directory;
-	char *tmp;
 	bool added = false, found = false;
 
 	directory = base_dir_xptr(mask);
@@ -73,8 +72,8 @@ int lglob_glob(list *gl, const char *mask, bool ignore_multiples,
 		return -1;
 	}
 
-	tmp = getcwd(NULL, 0);
-	if (tmp == (char *)NULL) {
+	char* tmp = getcwd(NULL, 0);
+	if (tmp == NULL) {
 		ftp_err("getcwd(): %s\n", strerror(errno));
 		return -1;
 	}
@@ -86,6 +85,7 @@ int lglob_glob(list *gl, const char *mask, bool ignore_multiples,
     {
       ftp_err(_("Failed to allocate memory.\n"));
       closedir(dp);
+      free(tmp);
       return -1;
     }
 
@@ -107,6 +107,7 @@ int lglob_glob(list *gl, const char *mask, bool ignore_multiples,
 		}
 		free(path);
 	}
+  free(tmp);
 	closedir(dp);
 
 	if(!found) {

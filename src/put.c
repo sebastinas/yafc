@@ -652,12 +652,11 @@ void cmd_put(int argc, char **argv)
 
 	gl = lglob_create();
 	while(optind < argc) {
-		char *f;
-
-		f = tilde_expand_home(argv[optind], gvLocalHomeDir);
+		char* f = tilde_expand_home(argv[optind], gvLocalHomeDir);
 		stripslash(f);
 		lglob_glob(gl, f, true, put_exclude_func);
 		optind++;
+    free(f);
 	}
 
 	if(list_numitem(gl) == 0) {
