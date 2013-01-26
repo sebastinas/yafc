@@ -171,10 +171,9 @@ static int getfile(const rfile *fi, unsigned int opt,
              const char *output, const char *destname)
 {
     struct stat sb;
-    char *dest;
+    char* dest = NULL;
     getmode_t how = getNormal;
     bool mkunique = false;
-    bool free_dest = false;
     int r, ret = -1;
 
     if((get_glob_mask && fnmatch(get_glob_mask, base_name_ptr(fi->path),
@@ -227,10 +226,8 @@ static int getfile(const rfile *fi, unsigned int opt,
     /* make sure destination directory exists */
     {
         char *destdir = base_dir_xptr(dest);
-        int r;
-
         if(destdir) {
-            r = make_path(destdir, S_IRWXU, S_IRWXU, -1, -1, 1, 0);
+            int r = make_path(destdir, S_IRWXU, S_IRWXU, -1, -1, 1, 0);
             if(r != 0) {
                 transfer_mail_msg(_("Couldn't create directory: %s\n"),
                                   destdir);
@@ -327,8 +324,9 @@ static int getfile(const rfile *fi, unsigned int opt,
     }
 
     if(mkunique) {
-        dest = make_unique_filename(dest);
-        free_dest = true;
+        char* newdest = make_unique_filename(dest);
+        free(dest);
+        dest = newdest;
     }
 
     /* the file doesn't exist or we choosed to overwrite it, or changed dest */
@@ -394,9 +392,7 @@ static int getfile(const rfile *fi, unsigned int opt,
 		}
     }
 
-    if(free_dest)
-        free(dest);
-
+    free(dest);
     return ret;
 }
 

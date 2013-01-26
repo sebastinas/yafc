@@ -35,6 +35,7 @@ Ftp *ftp = 0;
 Ftp *ftp_create(void)
 {
     Ftp* ftp = xmalloc(sizeof(Ftp));
+    memset(ftp, 0, sizeof(Ftp));
 
     ftp->verbosity = vbCommand;
     ftp->tmp_verbosity = vbUnset;
@@ -126,6 +127,8 @@ void ftp_destroy(Ftp *ftp)
     free(ftp->curdir);
     free(ftp->prevdir);
     list_free(ftp->taglist);
+    free(ftp->ti.remote_name);
+    free(ftp->ti.local_name);
 
 #ifdef SECFTP
     sec_end();

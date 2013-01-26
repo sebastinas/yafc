@@ -31,10 +31,7 @@ list *list_new(listfunc freefunc)
 
 void list_free(list *lp)
 {
-	if(!lp)
-		return;
-	while(lp->first)
-		list_delitem(lp, lp->first);
+	list_clear(lp);
 	free(lp);
 }
 
@@ -83,15 +80,14 @@ void list_delitem(list *lp, listitem *lip)
 
 void list_additem(list *lp, void *data)
 {
-	listitem *lip = new_item();
-
 	if(!lp)
 		return;
 
+  listitem *lip = new_item();
 	lip->data = data;
-	lip->next = 0;
+	lip->next = NULL;
 
-	if(lp->first == 0) {
+	if(lp->first == NULL) {
 		lp->last = lp->first = lip;
 	} else {
 		lip->prev = lp->last;

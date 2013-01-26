@@ -16,9 +16,7 @@
 
 list *rglob_create(void)
 {
-	list *gl;
-	gl = list_new((listfunc)rfile_destroy);
-	return gl;
+	return list_new((listfunc)rfile_destroy);
 }
 
 void rglob_destroy(list *gl)
