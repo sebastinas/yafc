@@ -105,7 +105,7 @@ AC_DEFUN([YAFC_KRB5_CHECK],
 	  [AS_HELP_STRING([--with-krb5=@<:@=DIR@:>@], [use Kerberos 5 in @<:@=DIR@:>@])],
 	  [],
     [with_krb5=yes])
-  
+
   yafc_found_krb5="no, disabled"
   AS_IF([test "x$with_krb5" != "xno"],
     [
@@ -139,6 +139,42 @@ AC_DEFUN([YAFC_KRB5_CHECK],
       fi
     ])
 
+  if test "x$with_krb5" != "xno" ; then
+    AC_ARG_WITH([krb5-cflags],
+      [AS_HELP_STRING([--with-krb5-cflags], [CFLAGS to use Kerberos 5 - overrides flags found with krb5-config])],
+      [
+        yafc_found_krb5_inc_flags="$with_krb5_cflags"
+        yafc_found_krb5="yes"
+      ])
+
+    AC_ARG_WITH([krb5-ldflags],
+      [AS_HELP_STRING([--with-krb5-ldflags], [LDFLAGS to use Kerberos 5 - overrides flags found with krb5-config])],
+      [
+        yafc_found_krb5_lib_flags="$with_krb5_ldflags"
+        yafc_found_krb5="yes"
+      ])
+
+    AC_ARG_WITH([krb5-libs],
+      [AS_HELP_STRING([--with-krb5-libs], [LIBS to use Kerberos 5 - overrides flags found with krb5-config])],
+      [
+        yafc_found_krb5_lib_libs="$withval"
+        yafc_found_krb5="yes"
+      ])
+
+
+    AC_ARG_WITH([krb5-vendor],
+      [AS_HELP_STRING([--with-krb5-vendor], [Kerberos 5 vendor: MIT or Heimdal - overrides flags found with krb5-config])],
+      [
+        yafc_krb5_vendor="$withval"
+        yafc_found_krb5="yes"
+      ])
+
+    echo "cflags: $with_krb5_cflags"
+    echo "cflags: $with_krb5_ldflags"
+    echo "cflags: $with_krb5_libs"
+    echo "cflags: $with_krb5_vendor"
+  fi
+
   if test "x$yafc_found_krb5" = "xyes" ; then
     AC_DEFINE([HAVE_KRB5], [1], [define if you have Kerberos 5])
     if test "x$yafc_krb5_vendor" = "xMIT" ; then
@@ -146,9 +182,16 @@ AC_DEFUN([YAFC_KRB5_CHECK],
     elif test "x$yafc_krb5_vendor" = "xHeimdal" ; then
       AC_DEFINE([HAVE_KRB5_HEIMDAL], [1], [define if you have Kerberos 5 - Heimdal])
     fi
-    yafc_found_krb5_inc_flags="`$KRB5CONFIG --cflags krb5 gssapi`"
-    yafc_found_krb5_lib_libs="`$KRB5CONFIG --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if ($i ~ \"^-l.*\"){ printf \"%s \", $i }}}'`"
-    yafc_found_krb5_lib_flags="`$KRB5CONFIG --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if ($i !~ \"^-l.*\"){ printf \"%s \", $i }}}'`"
+    dnl check krb5-config for CFLAGS, LDFLAGS, LIBS if not supplied by the user
+    if test "x$yafc_found_krb5_inc_flags" = "x" ; then
+      yafc_found_krb5_inc_flags="`$KRB5CONFIG --cflags krb5 gssapi`"
+    fi
+    if test "x$yafc_found_krb5_lib_libs" = "x" ; then
+      yafc_found_krb5_lib_libs="`$KRB5CONFIG --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if ($i ~ \"^-l.*\"){ printf \"%s \", $i }}}'`"
+    fi
+    if test "x$yafc_found_krb5_lib_flags" = "x" ; then
+      yafc_found_krb5_lib_flags="`$KRB5CONFIG --libs krb5 gssapi | $AWK '{for(i=1;i<=NF;i++){ if ($i !~ \"^-l.*\"){ printf \"%s \", $i }}}'`"
+    fi
 
     AC_MSG_CHECKING([for krb5 CFLAGS])
     AC_MSG_RESULT([$yafc_found_krb5_inc_flags])
