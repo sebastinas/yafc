@@ -168,11 +168,6 @@ AC_DEFUN([YAFC_KRB5_CHECK],
         yafc_krb5_vendor="$withval"
         yafc_found_krb5="yes"
       ])
-
-    echo "cflags: $with_krb5_cflags"
-    echo "cflags: $with_krb5_ldflags"
-    echo "cflags: $with_krb5_libs"
-    echo "cflags: $with_krb5_vendor"
   fi
 
   if test "x$yafc_found_krb5" = "xyes" ; then
