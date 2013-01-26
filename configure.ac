@@ -185,6 +185,30 @@ AC_CHECK_DECLS([strcasecmp],,
                 #endif
                ])
 
+# strlcpy, strlcat and friends
+AC_CHECK_DECLS([strlcpy, strlcat],,
+  [
+   # check if we have libbsd
+   PKG_CHECK_MODULES([BSD], [libbsd],
+    [
+     CFLAGS="$CFLAGS $BSD_CFLAGS"
+    ],
+    [
+     AC_CHECK_HEADERS(bsd/string.h)
+     AC_SEARCH_LIBS([strlcpy strlcat], [bsd],,
+      [
+        AC_MSG_ERROR([strlcpy and strlcat not found])
+      ])
+    ])
+  ],
+  [
+    #include <string.h>
+  ])
+
+AC_SEARCH_LIBS(strlcpy, [bsd], [], [AC_REPLACE_FUNCS(strlcpy)])
+AC_CHECK_HEADERS(bsd/string.h)
+
+
 # kerberos
 YAFC_KERBEROS
 if test "$yafc_found_krb4" = "yes"; then
@@ -193,9 +217,6 @@ if test "$yafc_found_krb4" = "yes"; then
   LIBS="$yafc_found_krb4_lib_libs $LIBS"
   CPPFLAGS="$yafc_found_krb4_inc_flags $CPPFLAGS"
   LDFLAGS="$yafc_found_krb4_lib_flags $LDFLAGS"
-
-  AC_SEARCH_LIBS(strlcpy, [bsd], [], [AC_REPLACE_FUNCS(strlcpy)])
-  AC_CHECK_HEADERS(bsd/string.h)
 fi
 
 if test "$yafc_found_krb5" = "yes"; then

@@ -1,3 +1,10 @@
+New in git
+----------
+
+* Make it possible to pass Kerberos 5 flags to configure if krb5-config is
+  missing.
+* Use strlcpy and strlcat in some places. This requires libbsd on Linux.
+
 New in 1.2.4
 ------------
 

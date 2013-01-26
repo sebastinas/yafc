@@ -137,7 +137,8 @@ noinst_HEADERS = src/alias.h \
 
 yafc_LDADD = $(SSH_LIBS) \
 						 @LIBOBJS@ \
-						 $(INTLLIBS)
+						 $(INTLLIBS) \
+						 $(BSD_LIBS)
 
 DEFS = -DLOCALEDIR=\"${YAFC_LOCALEDIR}\" \
 			 -DSYSCONFDIR=\"@sysconfdir@\" \
