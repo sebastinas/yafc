@@ -76,7 +76,7 @@ static char *nextstr(FILE *fp)
 	if(!e)
 		return 0;
 	if(*e=='\"' || *e=='\'') {
-		strcpy(tmp, e+1);
+		strlcpy(tmp, e+1, sizeof(tmp));
 		i = strlen(tmp);
 		if(i >= 1 && (tmp[i-1] == '\'' || tmp[i-1] == '\"')) {
 			tmp[i-1] = 0;
