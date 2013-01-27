@@ -205,10 +205,6 @@ AC_CHECK_DECLS([strlcpy, strlcat],,
     #include <string.h>
   ])
 
-AC_SEARCH_LIBS(strlcpy, [bsd], [], [AC_REPLACE_FUNCS(strlcpy)])
-AC_CHECK_HEADERS(bsd/string.h)
-
-
 # kerberos
 YAFC_KERBEROS
 if test "$yafc_found_krb4" = "yes"; then
