@@ -194,12 +194,13 @@ AC_CHECK_DECLS([strlcpy, strlcat],,
      CFLAGS="$CFLAGS $BSD_CFLAGS"
     ],
     [
-     AC_CHECK_HEADERS(bsd/string.h)
-     AC_SEARCH_LIBS([strlcpy strlcat], [bsd],,
-      [
-        AC_MSG_ERROR([strlcpy and strlcat not found])
-      ])
+     AC_SEARCH_LIBS([strlcpy, strlcat], [bsd],,
+     [
+       AC_MSG_ERROR([strlcpy and strlcat not found])
+     ])
     ])
+
+   AC_CHECK_HEADERS(bsd/string.h)
   ],
   [
     #include <string.h>
