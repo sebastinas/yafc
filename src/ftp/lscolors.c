@@ -92,8 +92,9 @@ void init_colors(void)
     number_of_colors = i;
     free(org);
     if(!ec && lc && ficlr && rc) {
-      ec = xmalloc(strlen(lc)+strlen(ficlr)+strlen(rc)+1);
-      sprintf(ec, "%s%s%s", lc, ficlr, rc);
+      const size_t len = strlen(lc)+strlen(ficlr)+strlen(rc)+1;
+      ec = xmalloc(len);
+      snprintf(ec, len, "%s%s%s", lc, ficlr, rc);
     }
   }
 

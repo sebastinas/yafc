@@ -30,12 +30,12 @@ void cmd_help(int argc, char **argv)
 
   if(argc==2) {
     if(find_func(argv[1], false)) {
-     char *tmp = (char *)xmalloc(30);
-     sprintf(tmp, "%s --help", argv[1]);
-     exe_cmdline(tmp, false);
-     return;
-    }
-    else {
+      const size_t len = strlen(arg) + 8;
+      char *tmp = xmalloc(len);
+      snprintf(tmp, len, "%s --help", argv[1]);
+      exe_cmdline(tmp, false);
+      return;
+    } else {
 			fprintf(stderr, _("No such command '%s'!\n\n"), argv[1]);
     }
   };
