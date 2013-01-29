@@ -30,7 +30,7 @@ void cmd_help(int argc, char **argv)
 
   if(argc==2) {
     if(find_func(argv[1], false)) {
-      const size_t len = strlen(arg) + 8;
+      const size_t len = strlen(argv[1]) + 8;
       char *tmp = xmalloc(len);
       snprintf(tmp, len, "%s --help", argv[1]);
       exe_cmdline(tmp, false);

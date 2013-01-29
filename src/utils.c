@@ -81,13 +81,13 @@ char *human_size(long long int size)
 	static char buf[17];
 
 	if(size < 1024)
-		sprintf(buf, "%llu", size);
+		snprintf(buf, sizeof(buf), "%llu", size);
 	else if(size < 999.5*1024) /* kilobinary */
-		sprintf(buf, "%.1fKi", (double)size/1024);
+		snprintf(buf, sizeof(buf), "%.1fKi", (double)size/1024);
 	else if(size < 999.5*1024*1024) /* megabinary */
-		sprintf(buf, "%.2fMi", (double)size/(1024*1024));
+		snprintf(buf, sizeof(buf), "%.2fMi", (double)size/(1024*1024));
 	else /* gigabinary */
-		sprintf(buf, "%.2fGi", (double)size/(1024*1024*1024));
+		snprintf(buf, sizeof(buf), "%.2fGi", (double)size/(1024*1024*1024));
 	/* they aren't transferring terabinaries with ftp, eh? */
 
 	return buf;
