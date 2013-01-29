@@ -38,6 +38,7 @@ void *xrealloc(void *ptr, size_t size)
 
     new_ptr = realloc(ptr, size);
 	if(new_ptr == 0) {
+    free(ptr);
 		fprintf(stderr,
 				"\nxrealloc(%p, %lu): %s\n",
 				ptr, (unsigned long)size, strerror(errno));
@@ -46,28 +47,25 @@ void *xrealloc(void *ptr, size_t size)
 	return new_ptr;
 }
 
-char *xstrdup(const char *s)
+char* xstrdup(const char *s)
 {
-    char *r;
+	if (!s || !*s)
+		return NULL;
 
-	if(s == 0 || *s == 0)
-		return 0;
-
-    r = (char *)xmalloc(strlen(s) + 1);
-    strcpy(r, s);
-    return r;
+  const size_t len = strlen(s) + 1;
+  char* r = xmalloc(len);
+  strlcpy(r, s, len);
+  return r;
 }
 
-char *xstrndup(const char *s, size_t n)
+char* xstrndup(const char *s, size_t n)
 {
-    char *r;
+  if (!s || !*s)
+		return NULL;
 
-	if(s == 0 || *s == 0)
-		return 0;
-
-    r = (char *)xmalloc(n + 1);
-    strncpy(r, s, n);
-    return r;
+  char* r = xmalloc(n + 1);
+  strlcpy(r, s, n + 1);
+  return r;
 }
 
 char *xstrncpy(char *dest, const char *src, size_t n)

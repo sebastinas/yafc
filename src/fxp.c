@@ -116,7 +116,6 @@ static int do_the_fxp(Ftp *srcftp, const char *src,
 					  Ftp *destftp, const char *dest,
 					  fxpmode_t how, unsigned opt)
 {
-	int r;
 	transfer_mode_t type;
 
 	if(test(opt, FXP_NOHUP))
@@ -135,7 +134,7 @@ static int do_the_fxp(Ftp *srcftp, const char *src,
 	if(test(opt, FXP_VERBOSE)) {
 		printf("%s\n", src);
 	}
-	r = ftp_fxpfile(srcftp, src, destftp, dest, how, type);
+	const int r = ftp_fxpfile(srcftp, src, destftp, dest, how, type);
 #if 0 && (defined(HAVE_SETPROCTITLE) || defined(linux))
 	if(gvUseEnvString && ftp_connected())
 		setproctitle("%s", srcftp->url->hostname);
@@ -158,7 +157,6 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 	fxpmode_t how = fxpNormal;
 	bool file_exists = false;
 	char *dest, *dpath;
-	int r;
 	bool dir_created;
 	char *dest_dir, *q_dest_dir;
 	Ftp *thisftp = ftp;
@@ -202,7 +200,7 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 	dpath = base_dir_xptr(dest);
 	dest_dir = ftp_path_absolute(dpath);
 	q_dest_dir = bash_backslash_quote(dest_dir);
-	r = ftp_mkpath(q_dest_dir);
+	int r = ftp_mkpath(q_dest_dir);
 	free(q_dest_dir);
 	free(dest_dir);
 	if(r == -1) {
@@ -347,7 +345,6 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 	rfile *fp, *lnfp;
 	const char *opath, *ofile;
 	char *link = 0;
-	int r;
 
 	list_sort(gl, get_sort_func, false);
 
@@ -391,8 +388,6 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 			/* else a==ASKYES */
 		}
 
-		r = 0;
-
 		if(rislink(fp)) {
 			link_to_link__duh:
 			{
@@ -407,7 +402,7 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 			if(lnfp == 0) {
 				/* couldn't dereference the link, try to RETR it */
 				ftp_trace("unable to dereference link\n");
-				r = fxpfile(fp, opt, output, ofile);
+				int r = fxpfile(fp, opt, output, ofile);
 				transfer_nextfile(gl, &li, r == 0);
 				continue;
 			}
@@ -498,7 +493,7 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 			transfer_nextfile(gl, &li, true);
 			continue;
 		}
-		r = fxpfile(fp, opt, output, ofile);
+		const int r = fxpfile(fp, opt, output, ofile);
 
 		transfer_nextfile(gl, &li, r == 0);
 

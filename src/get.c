@@ -93,7 +93,6 @@ static bool get_exclude_func(rfile *f)
 static int do_the_get(const char *src, const char *dest,
                       putmode_t how, unsigned opt)
 {
-    int r = 0;
     char *fulldest;
     char *tmp;
     transfer_mode_t type;
@@ -115,10 +114,10 @@ static int do_the_get(const char *src, const char *dest,
         setproctitle("%s, get %s", ftp->url->hostname, src);
 #endif
 
-    r = ftp_getfile(src, dest, how, type,
-                    test(opt, GET_VERBOSE)
-                    && !gvSighupReceived
-                    && !test(opt, GET_NOHUP) ? transfer : 0);
+    int r = ftp_getfile(src, dest, how, type,
+                        test(opt, GET_VERBOSE)
+                        && !gvSighupReceived
+                        && !test(opt, GET_NOHUP) ? transfer : 0);
 
     if(r == 0 && (test(opt, GET_NOHUP) || gvSighupReceived)) {
         fprintf(stderr, "%s [%sb of ",
@@ -416,7 +415,6 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
     rfile *fp, *lnfp;
     const char *opath, *ofile;
     char *link = 0;
-    int r;
 
     list_sort(gl, get_sort_func, false);
 
@@ -459,13 +457,12 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
             /* else a==ASKYES */
         }
 
-        r = 0;
 
         if(rislink(fp)) {
             link_to_link__duh:
             if(test(opt, GET_NO_DEREFERENCE)) {
                 /* link the file, don't copy */
-                r = getfile(fp, opt, output, ofile);
+                const int r = getfile(fp, opt, output, ofile);
                 transfer_nextfile(gl, &li, r == 0);
                 continue;
             }
@@ -482,7 +479,7 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
             if(lnfp == 0) {
                 /* couldn't dereference the link, try to RETR it */
                 ftp_trace("unable to dereference link\n");
-                r = getfile(fp, opt, output, ofile);
+                const int r = getfile(fp, opt, output, ofile);
                 transfer_nextfile(gl, &li, r == 0);
                 continue;
             }
@@ -574,7 +571,7 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
             transfer_nextfile(gl, &li, true);
             continue;
         }
-        r = getfile(fp, opt, output, ofile);
+        const int r = getfile(fp, opt, output, ofile);
 
         transfer_nextfile(gl, &li, r == 0);
 

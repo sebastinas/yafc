@@ -1537,7 +1537,7 @@ static bool ftp_path_part_of(const char *a, const char *b)
 int ftp_mkpath(const char *path)
 {
     bool one_created = false;
-    char *p, *orgp, *e = 0;
+    char *p, *orgp, *e = NULL;
 
     if(!path)
         return 0;
@@ -1560,11 +1560,11 @@ int ftp_mkpath(const char *path)
     }
 
     while(true) {
-        char *tmp, *foo;
-        tmp = strqsep(&p, '/');
+        char* tmp = strqsep(&p, '/');
         if(!tmp)
             break;
 
+        char* foo = NULL;
         if (e)
         {
             if (asprintf(&foo, "%s/%s", e, tmp) == -1)
@@ -1581,7 +1581,6 @@ int ftp_mkpath(const char *path)
         free(e);
         e = foo;
 
-
         /* check if we already has created this path */
         if(ftp_path_part_of(e, ftp->last_mkpath))
             continue;
@@ -1590,7 +1589,7 @@ int ftp_mkpath(const char *path)
         if(ftp_path_part_of(e, ftp->curdir))
             continue;
 
-        if(strcmp(e, ".") != 0) {
+        if(strncmp(e, ".", 2) != 0) {
             ftp_mkdir_verb(e, vbNone);
             one_created = (ftp->code == ctComplete);
         }
