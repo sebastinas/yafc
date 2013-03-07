@@ -3,8 +3,6 @@ known BUGS
 
 * can't parse some internationalized date/time formats (especially
   i18n'ized month names)
-* links are not recognized correctly in SSH mode
-  this is a bug in OpenSSH (<= 2.9) and has been reported
 * aliases with multiple commands may get wrong completion type
 * quote-problems if filename has a real '\' (backslash) in it
    and using single- or double-quotes (backslash-quoting works, though)
