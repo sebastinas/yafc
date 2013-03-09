@@ -99,7 +99,7 @@ This document applies to version @value{VERSION}.
 @node Kerberos, , Bookmarks, top
 @chapter Kerberos
 
-If Yafc is compiled with Kerberos, it tries to authenticate using Kerberos 4/5
+If Yafc is compiled with Kerberos, it tries to authenticate using Kerberos 5
 without sending the password in cleartext. For anonymous logins, Kerberos
 is never used. The default protection level for data connections is
 clear, ie no encryption on transfers. Use the command @code{prot}

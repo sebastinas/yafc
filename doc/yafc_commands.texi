@@ -25,10 +25,6 @@ short syntax description.
 * get::                         get files
 * help::                        don't panic
 * idle::                        modify idle time
-* kauth::                       authenticate to Kerberos
-* kdestroy::                    destroy Kerberos tickets
-* klist::                       list Kerberos tickets
-* krbtkfile::                   specify Kerberos ticket file
 * lcd::                         change local working directory
 * list::                        show raw directory listing
 * lpwd::                        print local working directory
@@ -568,26 +564,6 @@ Shows the available commands.
 @node idle
 @subsection @code{idle}
 Show or set the idle timeout.
-
-@c -----------------------------------------------------
-@node kauth
-@subsection @code{kauth}
-Authenticate to Kerberos.
-
-@c -----------------------------------------------------
-@node kdestroy
-@subsection @code{kdestroy}
-Destroy Kerberos tickets.
-
-@c -----------------------------------------------------
-@node klist
-@subsection @code{klist}
-Show Kerberos tickets.
-
-@c -----------------------------------------------------
-@node krbtkfile
-@subsection @code{krbtkfile}
-Set file used for Kerberos tickets.
 
 @c -----------------------------------------------------
 @node lcd

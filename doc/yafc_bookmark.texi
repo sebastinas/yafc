@@ -138,8 +138,4 @@ anon_password, connect on non-standard port 4711
 @item machine mayer.physto.se anonymous cwd /pub/yafc alias yafc
 Login anonymously to machine mayer.physto.se with other name yafc
 
-@item machine shell.stacken.kth.se login mhe mech krb4 passive yes alias stacken
-Login as mhe using Kerberos 4 authentication, and use passive mode for
-transfers (overrides the use_passive_mode keyword in the config file)
-
 @end table
