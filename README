@@ -18,7 +18,7 @@ FEATURES
 * aliases
 * colored ls (ie, ls --color, uses $LS_COLORS like GNU ls)
 * autologin and bookmarks
-* Kerberos support (version 4 and 5, heimdal, kth-krb or MIT)
+* Kerberos support (version 5, Heimdal or MIT)
 * SFTP support (SSH2)
 * recursive get/put/fxp/rm/ls
 * nohup mode get and put
