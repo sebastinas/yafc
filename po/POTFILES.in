@@ -1,6 +1,4 @@
 lib/getopt.c
-lib/kauth.c
-lib/krb4.c
 lib/security.c
 src/alias.c
 src/bookmark.c
