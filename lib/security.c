@@ -79,9 +79,6 @@ static struct sec_client_mech *mechs[] = {
 #ifdef HAVE_KRB5
 	&gss_client_mech,
 #endif
-#ifdef HAVE_KRB4
-	&krb4_client_mech,
-#endif
 #ifdef USE_SSL
 	&ssl_client_mech,
 #endif

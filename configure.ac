@@ -208,16 +208,9 @@ AC_CHECK_DECLS([strlcpy, strlcat],,
 
 # kerberos
 YAFC_KERBEROS
-if test "$yafc_found_krb4" = "yes"; then
-  AC_LIBOBJ(krb4)
-  AC_LIBOBJ(kauth)
-  LIBS="$yafc_found_krb4_lib_libs $LIBS"
-  CPPFLAGS="$yafc_found_krb4_inc_flags $CPPFLAGS"
-  LDFLAGS="$yafc_found_krb4_lib_flags $LDFLAGS"
-fi
-
 if test "$yafc_found_krb5" = "yes"; then
   AC_LIBOBJ(gssapi)
+  AC_LIBOBJ(security)
   LIBS="$yafc_found_krb5_lib_libs $LIBS"
   CPPFLAGS="$yafc_found_krb5_inc_flags $CPPFLAGS"
   LDFLAGS="$yafc_found_krb5_lib_flags $LDFLAGS"
@@ -225,10 +218,6 @@ if test "$yafc_found_krb5" = "yes"; then
   if test "$yafc_krb5_vendor" = "Heimdal" ; then
     AC_CHECK_HEADERS(hcrypto/ui.h)
   fi
-fi
-
-if test "x$yafc_found_krb" = "xyes"; then
-  AC_LIBOBJ(security)
 fi
 
 yafc_have_openssl="notchecked"
@@ -480,7 +469,6 @@ echo "preprocessor flags ............. $CPPFLAGS"
 echo "linker flags ................... $LDFLAGS"
 echo "libraries ...................... $LIBS $INTLLIBS"
 echo "installation prefix ............ $prefix"
-echo "using Kerberos 4 ............... $yafc_found_krb4"
 echo "using Kerberos 5 ............... $yafc_found_krb5"
 echo "using readline ................. $yafc_got_readline"
 echo "using ssh ...................... $yafc_got_ssh"

@@ -854,10 +854,8 @@ static const char *secext_name(const char *mech)
 
 static bool mech_unsupported(const char *mech)
 {
-#ifndef HAVE_KRB4
     if(strcasecmp(mech, "KERBEROS_V4") == 0)
         return true;
-#endif
 #ifndef HAVE_KRB5
     if(strcasecmp(mech, "GSSAPI") == 0)
         return true;

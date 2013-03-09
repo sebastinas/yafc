@@ -154,14 +154,6 @@ DEFCMD(shell);
 /* in ../lib/security.c */
 DEFCMD(prot);
 #endif
-#ifdef HAVE_KRB4
-/* in ../lib/kauth.c */
-DEFCMD(kauth);
-DEFCMD(kdestroy);
-DEFCMD(klist);
-DEFCMD(afslog);
-DEFCMD(krbtkfile);
-#endif
 
 /* tag.c */
 DEFCMD(tag);

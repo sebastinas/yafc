@@ -138,15 +138,7 @@ void init_yafc(void)
 
 	/* choose default security mechanism */
 	gvDefaultMechanism = list_new((listfunc)free);
-#ifdef HAVE_KRB4
-# ifdef HAVE_KRB5
-	listify_string("krb5:krb4:none", gvDefaultMechanism);
-# elif defined(USE_SSL)
-	listify_string("krb5:krb4:ssl:none", gvDefaultMechanism);
-# else
-	listify_string("krb4:none", gvDefaultMechanism);
-# endif
-#elif defined(HAVE_KRB5)
+#ifdef HAVE_KRB5
 # ifdef USE_SSL
 	listify_string("krb5:ssl:none", gvDefaultMechanism);
 # else

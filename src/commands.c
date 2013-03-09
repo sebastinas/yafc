@@ -82,16 +82,9 @@ cmd_t cmds[] = {
 #ifdef HAVE_KERBEROS
 	CMD(prot, 1,1,1, cpNone),
 #endif
-#ifdef HAVE_KRB4
-	CMD(afslog, 0,0,1, cpNone),
-	CMD(klist, 0,0,1, cpNone),
-	CMD(kauth, 0,0,1, cpNone),
-	CMD(kdestroy, 0,0,1, cpNone),
-	CMD(krbtkfile, 0,0,1, cpNone),
-#endif
 
-    /* this _must_ be the last entry, unless you like segfaults ;) */
-    {0, 0,0,1, 0, 0}
+  /* this _must_ be the last entry, unless you like segfaults ;) */
+  {0, 0,0,1, 0, 0}
 };
 
 cmd_t *find_cmd(const char *cmd)
