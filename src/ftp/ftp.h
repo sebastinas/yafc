@@ -282,9 +282,6 @@ void ftp_pwd(void);
 char *perm2string(int perm);
 void ftp_get_feat(void);
 
-void connect_to_server(char **args, int *in, int *out, pid_t *sshpid);
-char ** make_ssh_args(char ***args, char *add_arg);
-
 int get_password(url_t *url, const char *anonpass, bool isproxy);
 
 #endif
