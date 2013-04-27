@@ -623,7 +623,10 @@ static void ftp_print_cmd(const char *cmd, va_list ap)
             ftp_err("PASS ********");
         else {
             vfprintf(stderr, cmd, ap);
-            ftp_vtrace(cmd, ap);
+            va_list aq;
+            va_copy(aq, ap);
+            ftp_vtrace(cmd, aq);
+            va_end(aq);
         }
         ftp_err("\n");
     } else {
