@@ -72,7 +72,7 @@ static bool is_reserved(struct sockaddr* sa)
 
 static bool ftp_pasv(bool ipv6, unsigned char* result, unsigned short* ipv6_port)
 {
-  if(!ftp->has_pasv_command) {
+  if (!ftp->has_pasv_command) {
     ftp_err(_("Host doesn't support passive mode\n"));
     return false;
   }
@@ -88,10 +88,10 @@ static bool ftp_pasv(bool ipv6, unsigned char* result, unsigned short* ipv6_port
   else
     return false;
 
-  if(!ftp_connected())
+  if (!ftp_connected())
     return false;
 
-  if(ftp->code != ctComplete) {
+  if (ftp->code != ctComplete) {
     ftp_err(_("Unable to enter passive mode\n"));
     if(ftp->code == ctError) /* no use try it again */
       ftp->has_pasv_command = false;
@@ -140,31 +140,36 @@ static bool ftp_is_passive(void)
 
 static int ftp_init_transfer(void)
 {
-	struct sockaddr_storage sa;
-	unsigned char *a, *p;
+  if (!ftp_connected())
+    return -1;
 
-	if(!ftp_connected())
-		return -1;
+  if (!(ftp->data = sock_create())) {
+    return -1;
+  }
+  sock_copy(ftp->data, ftp->ctrl);
 
-	if (!(ftp->data = sock_create())) {
-		return -1;
-	}
-	sock_copy(ftp->data, ftp->ctrl);
-
-	if (ftp_is_passive())
+  if (ftp_is_passive())
   {
+    ftp_trace("Initializing passive connection.\n");
+
+    struct sockaddr_storage sa;
     memcpy(&sa, sock_remote_addr(ftp->ctrl), sizeof(struct sockaddr_storage));
 
-    unsigned char pac[6];
-    unsigned short ipv6_port;
-		if (!ftp_pasv(sa.ss_family != AF_INET, pac, &ipv6_port))
-			goto err1;
+    unsigned char pac[6] = { 0 };
+    unsigned short ipv6_port = { 0 };
+    if (!ftp_pasv(sa.ss_family != AF_INET, pac, &ipv6_port))
+    {
+      ftp_trace("PASV/EPSV failed.\n");
+      sock_destroy(ftp->data);
+      ftp->data = NULL;
+      return -1;
+    }
 
     socklen_t len = sizeof(struct sockaddr_in);
     if (sa.ss_family == AF_INET)
     {
       memcpy(&((struct sockaddr_in*)&sa)->sin_addr, pac, (size_t)4);
-		  memcpy(&((struct sockaddr_in*)&sa)->sin_port, pac+4, (size_t)2);
+      memcpy(&((struct sockaddr_in*)&sa)->sin_port, pac+4, (size_t)2);
     }
 #ifdef HAVE_IPV6
     else if (sa.ss_family == AF_INET6)
@@ -174,39 +179,49 @@ static int ftp_init_transfer(void)
     }
 #endif
     else
+    {
+      ftp_trace("Do not know how to handle family %d.\n", sa.ss_family);
+      sock_destroy(ftp->data);
+      ftp->data = NULL;
       return -1;
+    }
 
     struct sockaddr_storage tmp;
     memcpy(&tmp, sock_remote_addr(ftp->ctrl), sizeof(struct sockaddr_storage));
-		if (is_reserved((struct sockaddr*) &sa) ||
-			   is_multicast((struct sockaddr*) &sa)  ||
-			   (is_private((struct sockaddr*) &sa) != is_private((struct sockaddr*) &tmp)) ||
-			   (is_loopback((struct sockaddr*) &sa) != is_loopback((struct sockaddr*) &tmp)))
-		{
-			// Invalid address returned by PASV. Replace with address from control
-			// socket.
-			ftp_err(_("Address returned by PASV seems to be incorrect.\n"));
-			((struct sockaddr_in*)&sa)->sin_addr = ((struct sockaddr_in*)&tmp)->sin_addr;
-		}
-
-		if (!sock_connect_addr(ftp->data, (struct sockaddr*) &sa, len))
+    if (is_reserved((struct sockaddr*) &sa) ||
+         is_multicast((struct sockaddr*) &sa)  ||
+         (is_private((struct sockaddr*) &sa) != is_private((struct sockaddr*) &tmp)) ||
+         (is_loopback((struct sockaddr*) &sa) != is_loopback((struct sockaddr*) &tmp)))
     {
-      perror("connect()");
-			goto err1;
+      // Invalid address returned by PASV. Replace with address from control
+      // socket.
+      ftp_err(_("Address returned by PASV seems to be incorrect.\n"));
+      ((struct sockaddr_in*)&sa)->sin_addr = ((struct sockaddr_in*)&tmp)->sin_addr;
     }
-	} else {
+
+    if (!sock_connect_addr(ftp->data, (struct sockaddr*) &sa, len))
+    {
+      ftp_trace("Could not connect to address from PASV/EPSV.\n");
+      perror("connect()");
+      sock_destroy(ftp->data);
+      ftp->data = NULL;
+      return -1;
+    }
+  } else {
+    ftp_trace("Initializing active connection.\n");
+
     const struct sockaddr* local = sock_local_addr(ftp->data);
-		sock_listen(ftp->data, local->sa_family);
+    sock_listen(ftp->data, local->sa_family);
 
     if (local->sa_family == AF_INET)
     {
       struct sockaddr_in* tmp = (struct sockaddr_in*)local;
-  		a = (unsigned char *)&tmp->sin_addr;
-	  	p = (unsigned char *)&tmp->sin_port;
+      unsigned char* a = (unsigned char *)&tmp->sin_addr;
+      unsigned char* p = (unsigned char *)&tmp->sin_port;
 
-		  ftp_set_tmp_verbosity(vbError);
-		  ftp_cmd("PORT %d,%d,%d,%d,%d,%d",
-				  a[0], a[1], a[2], a[3], p[0], p[1]);
+      ftp_set_tmp_verbosity(vbError);
+      ftp_cmd("PORT %d,%d,%d,%d,%d,%d",
+          a[0], a[1], a[2], a[3], p[0], p[1]);
     }
 #ifdef HAVE_IPV6
     else if (local->sa_family == AF_INET6)
@@ -214,25 +229,29 @@ static int ftp_init_transfer(void)
       char* addr = printable_address(local);
 
       ftp_set_tmp_verbosity(vbError);
-		  ftp_cmd("EPRT |2|%s|%u", addr, ntohs(((struct sockaddr_in6*)local)->sin6_port));
+      ftp_cmd("EPRT |2|%s|%u", addr, ntohs(((struct sockaddr_in6*)local)->sin6_port));
       free(addr);
     }
 #endif
     else
-      goto err1;
+    {
+      ftp_trace("Do not know how to handle family %d.\n", local->sa_family);
+      sock_destroy(ftp->data);
+      ftp->data = NULL;
+      return -1;
+    }
 
-		if(ftp->code != ctComplete)
-			goto err1;
-	}
+    if(ftp->code != ctComplete)
+    {
+      ftp_trace("PORT/EPRT not successful\n");
+      sock_destroy(ftp->data);
+      ftp->data = NULL;
+      return -1;
+    }
+  }
 
-	sock_throughput(ftp->data);
-
-	return 0;
-
- err1:
-	sock_destroy(ftp->data);
-	ftp->data = 0;
-	return -1;
+  sock_throughput(ftp->data);
+  return 0;
 }
 
 int ftp_type(transfer_mode_t type)
@@ -658,46 +677,48 @@ void reset_transfer_info(void)
 
 int ftp_list(const char *cmd, const char *param, FILE *fp)
 {
-	if(!cmd || !fp || !ftp_connected())
-		return -1;
+  if (!cmd || !fp || !ftp_connected())
+    return -1;
 
 #ifdef HAVE_LIBSSH
-	if (ftp->session)
-		return ssh_list(cmd, param, fp);
+  if (ftp->session)
+    return ssh_list(cmd, param, fp);
 #endif
 
-	reset_transfer_info();
-	foo_hookf = 0;
+  reset_transfer_info();
+  foo_hookf = NULL;
 
 #if 0 /* don't care about transfer type, binary should work well... */
-	ftp_type(tmAscii);
+  ftp_type(tmAscii);
 #endif
 
-	if(ftp_init_transfer() != 0)
-		return -1;
+  if (ftp_init_transfer() != 0) {
+    ftp_err(_("Failed initialize transfer"));
+    return -1;
+  }
 
-	ftp_set_tmp_verbosity(vbNone);
-	if(param)
-		ftp_cmd("%s %s", cmd, param);
-	else
-		ftp_cmd("%s", cmd);
-	if(ftp->code != ctPrelim)
-		return -1;
+  ftp_set_tmp_verbosity(vbNone);
+  if (param)
+    ftp_cmd("%s %s", cmd, param);
+  else
+    ftp_cmd("%s", cmd);
+  if (ftp->code != ctPrelim)
+    return -1;
 
-	if(!sock_accept(ftp->data, "r", ftp_is_passive())) {
-		perror("accept()");
-		return -1;
-	}
+  if (!sock_accept(ftp->data, "r", ftp_is_passive())) {
+    perror("accept()");
+    return -1;
+  }
 
-	if(FILE_recv_ascii(sock_sin(ftp->data), fp) != 0)
-		return -1;
+  if (FILE_recv_ascii(sock_sin(ftp->data), fp) != 0)
+    return -1;
 
-	sock_destroy(ftp->data);
-	ftp->data = NULL;
+  sock_destroy(ftp->data);
+  ftp->data = NULL;
 
-	ftp_read_reply();
+  ftp_read_reply();
 
-	return ftp->code == ctComplete ? 0 : -1;
+  return ftp->code == ctComplete ? 0 : -1;
 }
 
 void transfer_finished(void)
