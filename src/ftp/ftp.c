@@ -589,6 +589,7 @@ int ftp_read_reply(void)
     if(!sock_connected(ftp->ctrl)) {
         alarm(0);
         ftp_set_signal(SIGALRM, SIG_DFL);
+        ftp_trace("sock is not connected\n");
         return -1;
     }
 

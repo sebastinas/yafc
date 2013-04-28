@@ -72,15 +72,15 @@ static bool is_reserved(struct sockaddr* sa)
 
 static bool ftp_pasv(bool ipv6, unsigned char* result, unsigned short* ipv6_port)
 {
-	if(!ftp->has_pasv_command) {
-		ftp_err(_("Host doesn't support passive mode\n"));
-		return false;
-	}
-	ftp_set_tmp_verbosity(vbNone);
+  if(!ftp->has_pasv_command) {
+    ftp_err(_("Host doesn't support passive mode\n"));
+    return false;
+  }
+  ftp_set_tmp_verbosity(vbNone);
 
-	/* request passive mode */
+  /* request passive mode */
   if (!ipv6)
-  	ftp_cmd("PASV");
+    ftp_cmd("PASV");
 #ifdef HAVE_IPV6
   else if (ipv6)
     ftp_cmd("EPSV");
@@ -88,43 +88,47 @@ static bool ftp_pasv(bool ipv6, unsigned char* result, unsigned short* ipv6_port
   else
     return false;
 
-	if(!ftp_connected())
-		return false;
+  if(!ftp_connected())
+    return false;
 
-	if(ftp->code != ctComplete) {
-		ftp_err(_("Unable to enter passive mode\n"));
-		if(ftp->code == ctError) /* no use try it again */
-			ftp->has_pasv_command = false;
-		return false;
-	}
+  if(ftp->code != ctComplete) {
+    ftp_err(_("Unable to enter passive mode\n"));
+    if(ftp->code == ctError) /* no use try it again */
+      ftp->has_pasv_command = false;
+    return false;
+  }
 
-	char* e = ftp->reply + 4;
-	while(!isdigit((int)*e))
-		e++;
+  const char* e = ftp_getreply(false);
+  while (e && !isdigit((int)*e))
+    e++;
+
+  if (!e)
+  {
+    ftp_err(_("Error parsing EPSV/PASV reply: '%s'\n"), ftp_getreply(false));
+    return false;
+  }
 
   if (!ipv6)
   {
-    int pa[6];
-	  if (sscanf(e, "%d,%d,%d,%d,%d,%d", &pa[0], &pa[1], &pa[2], &pa[3], &pa[4], &pa[5]) != 6)
+    if (sscanf(e, "%hhu,%hhu,%hhu,%hhu,%hhu,%hhu", &result[0], &result[1],
+          &result[2], &result[3], &result[4], &result[5]) != 6)
     {
-  		ftp_err(_("Error parsing PASV reply: '%s'\n"), ftp_getreply(false));
-	  	return false;
+      ftp_err(_("Error parsing PASV reply: '%s'\n"), ftp_getreply(false));
+      return false;
     }
-    for (int i = 0; i < 6; ++i)
-		  result[i] = (unsigned char)(pa[i] & 0xFF);
-	}
+  }
 #ifdef HAVE_IPV6
   else
   {
-    if (sscanf(e, "%hd", ipv6_port) != 1)
+    if (sscanf(e, "%hu", ipv6_port) != 1)
     {
       ftp_err(_("Error parsing EPSV reply: '%s'\n"), ftp_getreply(false));
       return false;
     }
   }
 #endif
-	
-	return true;
+
+  return true;
 }
 
 static bool ftp_is_passive(void)
