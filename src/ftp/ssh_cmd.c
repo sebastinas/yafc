@@ -60,16 +60,16 @@ static int verify_knownhost(ssh_session session)
       return -1;
 
     case SSH_SERVER_FOUND_OTHER:
-      fprintf(stderr, _("The host key for this server was not found but an other"
-        "type of key exists.\n"));
-      fprintf(stderr, _("An attacker might change the default server key to"
+      fprintf(stderr, _("The host key for this server was not found but an "
+        "other type of key exists.\n"));
+      fprintf(stderr, _("An attacker might change the default server key to "
         "confuse your client into thinking the key does not exist\n"));
       free(hash);
       return -1;
 
     case SSH_SERVER_FILE_NOT_FOUND:
       fprintf(stderr, _("Could not find known host file.\n"));
-      fprintf(stderr, _("If you accept the host key here, the file will be"
+      fprintf(stderr, _("If you accept the host key here, the file will be "
        "automatically created.\n"));
       /* fallback to SSH_SERVER_NOT_KNOWN behavior */
 

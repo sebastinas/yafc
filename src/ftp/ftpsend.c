@@ -693,7 +693,7 @@ int ftp_list(const char *cmd, const char *param, FILE *fp)
 #endif
 
   if (ftp_init_transfer() != 0) {
-    ftp_err(_("Failed initialize transfer"));
+    ftp_err(_("transfer initialization failed"));
     return -1;
   }
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://github.com/sebastinas/yafc/issues\n"
-"POT-Creation-Date: 2013-03-09 01:45+0100\n"
+"POT-Creation-Date: 2013-05-04 00:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,7 +67,7 @@ msgstr ""
 
 #: ../lib/security.c:343 ../src/bookmark.c:118 ../src/bookmark.c:208
 #: ../src/bookmark.c:380 ../src/bookmark.c:491 ../src/commands.c:224
-#: ../src/ftp/ftp.c:757 ../src/ftp/ftp.c:800 ../src/ftp/ftp.c:1570
+#: ../src/ftp/ftp.c:761 ../src/ftp/ftp.c:804 ../src/ftp/ftp.c:1574
 #: ../src/ftp/ssh_cmd.c:529 ../src/fxp.c:181 ../src/fxp.c:191 ../src/fxp.c:453
 #: ../src/fxp.c:462 ../src/get.c:197 ../src/get.c:220 ../src/get.c:535
 #: ../src/get.c:542 ../src/list.c:375 ../src/list.c:583 ../src/ltag.c:43
@@ -557,7 +557,7 @@ msgstr ""
 msgid "Connected to %s ([%s]:%d).\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:442 ../src/ftp/ftp.c:649
+#: ../src/ftp/ftp.c:442 ../src/ftp/ftp.c:653
 msgid "No control connection\n"
 msgstr ""
 
@@ -574,92 +574,92 @@ msgstr ""
 msgid "Tired of waiting for reply, timeout after %u seconds\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:666
+#: ../src/ftp/ftp.c:670
 msgid "error writing command"
 msgstr ""
 
 #. server is closing control connection!
-#: ../src/ftp/ftp.c:687
+#: ../src/ftp/ftp.c:691
 msgid "Server closed control connection\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:690
+#: ../src/ftp/ftp.c:694
 msgid "Reconnect failed\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:692
+#: ../src/ftp/ftp.c:696
 msgid "Automatic reconnect...\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:752
+#: ../src/ftp/ftp.c:756
 msgid "Proxy login: "
 msgstr ""
 
-#: ../src/ftp/ftp.c:755
+#: ../src/ftp/ftp.c:759
 #, c-format
 msgid "login (%s): "
 msgstr ""
 
-#: ../src/ftp/ftp.c:763
+#: ../src/ftp/ftp.c:767
 msgid "login (anonymous): "
 msgstr ""
 
-#: ../src/ftp/ftp.c:773 ../src/ftp/ftp.c:821
+#: ../src/ftp/ftp.c:777 ../src/ftp/ftp.c:825
 #, c-format
 msgid "You loose\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:798
+#: ../src/ftp/ftp.c:802
 #, c-format
 msgid "password (%s): "
 msgstr ""
 
-#: ../src/ftp/ftp.c:805 ../src/ftp/ftp.c:817
+#: ../src/ftp/ftp.c:809 ../src/ftp/ftp.c:821
 msgid "password: "
 msgstr ""
 
-#: ../src/ftp/ftp.c:816
+#: ../src/ftp/ftp.c:820
 msgid "Proxy password: "
 msgstr ""
 
-#: ../src/ftp/ftp.c:918
+#: ../src/ftp/ftp.c:922
 #, c-format
 msgid "Invalid protection level '%s'\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:933
+#: ../src/ftp/ftp.c:937
 #, c-format
 msgid "unknown mechanism '%s'\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:937
+#: ../src/ftp/ftp.c:941
 #, c-format
 msgid "Yafc was not compiled with support for %s\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:952
+#: ../src/ftp/ftp.c:956
 msgid "Authentication successful.\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:954 ../src/login.c:54 ../src/login.c:287
+#: ../src/ftp/ftp.c:958 ../src/login.c:54 ../src/login.c:287
 msgid "*** Using plaintext username and password ***\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:960
+#: ../src/ftp/ftp.c:964
 #, c-format
 msgid "logging in anonymously...\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:1069
+#: ../src/ftp/ftp.c:1073
 #, c-format
 msgid "Data protection is %s\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:1287
+#: ../src/ftp/ftp.c:1291
 msgid "Server doesn't support SITE CHMOD\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:1305
+#: ../src/ftp/ftp.c:1309
 msgid "Server doesn't support SITE IDLE\n"
 msgstr ""
 
@@ -671,67 +671,76 @@ msgstr ""
 msgid "Unable to enter passive mode\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:110
+#: ../src/ftp/ftpsend.c:107
+#, c-format
+msgid "Error parsing EPSV/PASV reply: '%s'\n"
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:116
 #, c-format
 msgid "Error parsing PASV reply: '%s'\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:121
+#: ../src/ftp/ftpsend.c:125
 #, c-format
 msgid "Error parsing EPSV reply: '%s'\n"
 msgstr ""
 
 #. Invalid address returned by PASV. Replace with address from control
 #. socket.
-#: ../src/ftp/ftpsend.c:184
+#: ../src/ftp/ftpsend.c:198
 msgid "Address returned by PASV seems to be incorrect.\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:288
+#: ../src/ftp/ftpsend.c:311
 msgid "Waiting for remote to finish abort...\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:411
+#: ../src/ftp/ftpsend.c:434
 #, c-format
 msgid "read error: %s\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:415
+#: ../src/ftp/ftpsend.c:438
 #, c-format
 msgid "write error: %s\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:736 ../src/ftp/ftpsend.c:871
+#: ../src/ftp/ftpsend.c:696
+msgid "transfer initialization failed"
+msgstr ""
+
+#: ../src/ftp/ftpsend.c:761 ../src/ftp/ftpsend.c:896
 msgid "data connection not accepted\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:915
+#: ../src/ftp/ftpsend.c:940
 msgid "FxP between same hosts\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:960 ../src/ftp/ftpsend.c:1169
+#: ../src/ftp/ftpsend.c:985 ../src/ftp/ftpsend.c:1194
 #, c-format
 msgid "unable to get remote filesize of '%s', unable to resume\n"
 msgstr ""
 
 #. can't overwrite a directory
-#: ../src/ftp/ftpsend.c:1049 ../src/ftp/ftpsend.c:1144 ../src/fxp.c:221
+#: ../src/ftp/ftpsend.c:1074 ../src/ftp/ftpsend.c:1169 ../src/fxp.c:221
 #: ../src/put.c:188
 #, c-format
 msgid "%s: is a directory\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:1053
+#: ../src/ftp/ftpsend.c:1078
 #, c-format
 msgid "%s: permission denied\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:1077
+#: ../src/ftp/ftpsend.c:1102
 #, c-format
 msgid "Unable to stat file '%s': %s\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:1106 ../src/ftp/ftpsend.c:1181
+#: ../src/ftp/ftpsend.c:1131 ../src/ftp/ftpsend.c:1206
 #, c-format
 msgid "%s: %s, transfer cancelled\n"
 msgstr ""
@@ -794,13 +803,13 @@ msgstr ""
 #: ../src/ftp/ssh_cmd.c:63
 #, c-format
 msgid ""
-"The host key for this server was not found but an othertype of key exists.\n"
+"The host key for this server was not found but an other type of key exists.\n"
 msgstr ""
 
 #: ../src/ftp/ssh_cmd.c:65
 #, c-format
 msgid ""
-"An attacker might change the default server key toconfuse your client into "
+"An attacker might change the default server key to confuse your client into "
 "thinking the key does not exist\n"
 msgstr ""
 
@@ -812,7 +821,7 @@ msgstr ""
 #: ../src/ftp/ssh_cmd.c:72
 #, c-format
 msgid ""
-"If you accept the host key here, the file will beautomatically created.\n"
+"If you accept the host key here, the file will be automatically created.\n"
 msgstr ""
 
 #: ../src/ftp/ssh_cmd.c:78
