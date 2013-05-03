@@ -102,28 +102,3 @@ char *shortpath(const char *path, size_t maxlen, const char *home)
 	free(tmp);
 	return res;
 }
-
-#ifdef TEST
-
-bool gvTilde = true;
-char *gvLocalHomeDir = 0;
-
-int main(int argc, char **argv)
-{
-	char *e;
-
-	if(argc<2) {
-		puts("gruff");
-		return 1;
-	}
-	printf("before: %s\n", argv[1]);
-	e = shortpath(argv[1], 30, getenv("HOME"));
-	printf("shortened to max 30 chars: %s\n", e);
-
-	if(strlen(e) > 30)
-		printf("FAILED!\n");
-	free(e);
-	return 0;
-}
-
-#endif
