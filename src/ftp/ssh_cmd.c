@@ -611,7 +611,7 @@ void ssh_pwd(void)
 }
 
 static int do_scp_read(ssh_scp scp, const char* infile, FILE* fp,
-                       getmode_t mode, ftp_transfer_func hookf)
+                       transfer_mode_t mode, ftp_transfer_func hookf)
 {
   time_t then = time(NULL) - 1;
   ftp_set_close_handler();
@@ -685,7 +685,7 @@ static int do_scp_read(ssh_scp scp, const char* infile, FILE* fp,
   return r;
 }
 
-static int do_read(const char* infile, FILE* fp, getmode_t mode,
+static int do_read(const char* infile, FILE* fp, transfer_mode_t mode,
                    ftp_transfer_func hookf, uint64_t offset)
 {
   if (gvSSHTrySCP && !offset)
@@ -782,7 +782,7 @@ static int do_read(const char* infile, FILE* fp, getmode_t mode,
   return r;
 }
 
-int ssh_do_receive(const char *infile, FILE *fp, getmode_t mode,
+int ssh_do_receive(const char *infile, FILE *fp, transfer_mode_t mode,
                    ftp_transfer_func hookf)
 {
   uint64_t offset = ftp->restart_offset;
