@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: yafc\n"
 "Report-Msgid-Bugs-To: https://github.com/sebastinas/yafc/issues\n"
 "POT-Creation-Date: 2013-05-04 00:40+0200\n"
-"PO-Revision-Date: 2013-05-04 00:44+0100\n"
+"PO-Revision-Date: 2013-05-09 21:14+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: de\n"
@@ -91,12 +91,12 @@ msgstr "Konnte Kommando nicht enkodieren.\n"
 #: ../lib/security.c:354
 #, c-format
 msgid "Out of memory base64-encoding.\n"
-msgstr ""
+msgstr "Kein Speicher verfügbar.\n"
 
 #: ../lib/security.c:383
 #, c-format
 msgid "Using %s for authentication.\n"
-msgstr ""
+msgstr "Verwende %s zur Authentifizierung.\n"
 
 #: ../lib/security.c:384
 #, c-format
@@ -116,7 +116,7 @@ msgstr ""
 #: ../lib/security.c:391
 #, c-format
 msgid "Not using any security mechanism.\n"
-msgstr ""
+msgstr "Verwende keine Sicherheitsmechanismen.\n"
 
 #: ../lib/security.c:403
 msgid "No security data exchange has taken place.\n"
@@ -147,7 +147,7 @@ msgstr ""
 #: ../lib/security.c:479
 #, c-format
 msgid "Syntax error, try %s --help for more information\n"
-msgstr ""
+msgstr "Syntaxfehler, versuche %s --help für mehr Information\n"
 
 #: ../lib/security.c:539
 #, c-format
@@ -415,7 +415,7 @@ msgstr "Zeige das aktuale Arbeitsverzeichnis an."
 
 #: ../src/commands.c:505
 msgid "Print the current URL."
-msgstr ""
+msgstr "Zeige aktuelle URL an."
 
 #: ../src/commands.c:506
 msgid "  -e, --no-encoding    don't encode URL as RFC1738 says\n"
@@ -447,11 +447,11 @@ msgstr ""
 
 #: ../src/commands.c:625
 msgid "Show status of remote host."
-msgstr ""
+msgstr "Zeige Status des Servers an."
 
 #: ../src/commands.c:642
 msgid "Show status."
-msgstr ""
+msgstr "Zeige Status an."
 
 #: ../src/commands.c:647
 #, c-format
@@ -461,12 +461,12 @@ msgstr "zu '%s' verbunden\n"
 #: ../src/commands.c:651
 #, c-format
 msgid "logged in as '%s'\n"
-msgstr ""
+msgstr "Angemeldet als '%s'\n"
 
 #: ../src/commands.c:657
 #, c-format
 msgid "There are totally %u connections open\n"
-msgstr ""
+msgstr "Es sind insgesamt %u Verbindungen offen\n"
 
 #: ../src/commands.c:687
 msgid "Change permissions on remote file."
@@ -583,7 +583,7 @@ msgstr ""
 #. server is closing control connection!
 #: ../src/ftp/ftp.c:691
 msgid "Server closed control connection\n"
-msgstr ""
+msgstr "Gegenüber hat die Kontrolverbindung getrennt\n"
 
 #: ../src/ftp/ftp.c:694
 msgid "Reconnect failed\n"
@@ -591,7 +591,7 @@ msgstr "Neuverbinden ist fehlgeschlagen\n"
 
 #: ../src/ftp/ftp.c:696
 msgid "Automatic reconnect...\n"
-msgstr ""
+msgstr "Automatische Neuverbindung ...\n"
 
 #: ../src/ftp/ftp.c:756
 msgid "Proxy login: "
@@ -641,7 +641,7 @@ msgstr "yafc wurde nicht mit Unterstützung für %s kompiliert.\n"
 
 #: ../src/ftp/ftp.c:956
 msgid "Authentication successful.\n"
-msgstr ""
+msgstr "Authentifizierung erfolgreich.\n"
 
 #: ../src/ftp/ftp.c:958 ../src/login.c:54 ../src/login.c:287
 msgid "*** Using plaintext username and password ***\n"
@@ -671,7 +671,7 @@ msgstr ""
 
 #: ../src/ftp/ftpsend.c:95
 msgid "Unable to enter passive mode\n"
-msgstr ""
+msgstr "Kann nicht in passiven Modus wechseln\n"
 
 #: ../src/ftp/ftpsend.c:107
 #, c-format
@@ -1045,12 +1045,12 @@ msgstr ""
 #: ../src/fxp.c:330 ../src/get.c:381 ../src/put.c:297
 #, c-format
 msgid "%s: deleted\n"
-msgstr ""
+msgstr "%s: gelöscht\n"
 
 #: ../src/fxp.c:332 ../src/get.c:383 ../src/put.c:299
 #, c-format
 msgid "error deleting '%s': %s\n"
-msgstr ""
+msgstr "Fehler beim Löschen von '%s': %s\n"
 
 #: ../src/fxp.c:375 ../src/get.c:445
 #, c-format
@@ -1074,7 +1074,7 @@ msgstr ""
 
 #: ../src/fxp.c:505 ../src/get.c:583 ../src/put.c:429
 msgid "Continue transfer?"
-msgstr ""
+msgstr "Setze Transfer fort?"
 
 #. else a == ASKYES
 #: ../src/fxp.c:511 ../src/get.c:589 ../src/put.c:435
