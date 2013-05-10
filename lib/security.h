@@ -60,7 +60,7 @@ struct sec_client_mech {
     void (*end)(void *);
     int (*check_prot)(void *, int);
     int (*overhead)(void *, int, int);
-    int (*encode)(void *, void*, int, int, void**);
+    int (*encode)(void *, const void*, int, int, void**);
     int (*decode)(void *, void*, int, int);
 };
 
@@ -68,7 +68,6 @@ struct sec_client_mech {
 #define AUTH_CONTINUE	1
 #define AUTH_ERROR	2
 
-extern struct sec_client_mech krb4_client_mech;
 extern struct sec_client_mech gss_client_mech;
 extern struct sec_client_mech ssl_client_mech;
 
@@ -86,7 +85,7 @@ int sec_read_msg (char *, int);
 int sec_vfprintf (FILE *, const char *, va_list);
 int sec_fprintf2(FILE *f, const char *fmt, ...);
 int sec_vfprintf2(FILE *, const char *, va_list);
-int sec_write (int, char *, int);
+int sec_write (int, const char *, int);
 
 void sec_end (void);
 int sec_login(const char *host, const char *mech_to_try);

@@ -279,7 +279,7 @@ ssize_t sock_read(Socket *sockp, void *buf, size_t num)
 #endif
 }
 
-ssize_t sock_write(Socket *sockp, void *buf, size_t num)
+ssize_t sock_write(Socket *sockp, const void* buf, size_t num)
 {
 #ifdef SECFTP
   return sec_write(sockp->handle, buf, num);

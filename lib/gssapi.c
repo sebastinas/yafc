@@ -136,7 +136,7 @@ gss_overhead(void *app_data, int level, int len)
 
 
 static int
-gss_encode(void *app_data, void *from, int length, int level, void **to)
+gss_encode(void *app_data, const void *from, int length, int level, void **to)
 {
     OM_uint32 min_stat;
     gss_buffer_desc input, output;
@@ -144,7 +144,7 @@ gss_encode(void *app_data, void *from, int length, int level, void **to)
     struct gss_data *d = app_data;
 
     input.length = length;
-    input.value = from;
+    input.value = (void*) from;
     gss_wrap (&min_stat,
 			 d->context_hdl,
 			 level == prot_private,

@@ -213,7 +213,7 @@ int sec_read(int fd, void *data, int length)
 	return rx;
 }
 
-static int sec_send(int fd, char *from, int length)
+static int sec_send(int fd, const char *from, int length)
 {
 	int bytes;
 	void *buf;
@@ -241,7 +241,7 @@ int sec_fflush(FILE * F)
 	return 0;
 }
 
-int sec_write(int fd, char *data, int length)
+int sec_write(int fd, const char* data, int length)
 {
 	int len = ftp->buffer_size;
 	int tx = 0;
