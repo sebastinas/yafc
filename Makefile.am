@@ -72,6 +72,7 @@ yafc_SOURCES = src/main.c \
 							 src/libmhe/xmalloc.c \
 							 src/ftp/ftp.c \
 							 src/ftp/socket.c \
+							 src/ftp/plain-socket.c \
 							 src/ftp/host.c \
 							 src/ftp/rglob.c \
 							 src/ftp/rfile.c \
@@ -112,6 +113,7 @@ noinst_HEADERS = src/alias.h \
 								 src/rc.h \
 								 src/ftp/ftp.h \
 								 src/ftp/socket.h \
+								 src/ftp/plain-socket.c \
 								 src/ftp/host.h \
 								 src/ftp/rglob.h \
 								 src/ftp/rfile.h \

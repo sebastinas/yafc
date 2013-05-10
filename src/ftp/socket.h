@@ -19,7 +19,7 @@
 
 typedef struct Socket_ Socket;
 
-Socket *sock_create(void);
+Socket* sock_create(void);
 void sock_destroy(Socket *sockp);
 
 bool sock_connect_host(Socket *sockp, Host *hp);
@@ -42,7 +42,6 @@ int sock_printf(Socket *sockp, const char *str, ...) YAFC_PRINTF(2, 3);
 int sock_flush(Socket *sockp);
 int sock_eof(Socket* sockp);
 int sock_telnet_interrupt(Socket *sockp);
-int sock_getsockname(Socket *sockp, struct sockaddr_storage* sa);
 
 void sock_fd_set(Socket* sockp, fd_set* fdset);
 int sock_select(Socket* sockp, fd_set* readfds, fd_set* writefds,

@@ -182,7 +182,7 @@ sockaddr_to_gss_address (const struct sockaddr *sa,
     }
     default :
 	ftp_err("unknown address family %d", sa->sa_family);
-	
+
     }
 }
 
@@ -210,14 +210,14 @@ import_name(const char *kname, const char *host, gss_name_t *target_name)
 	OM_uint32 new_stat;
 	OM_uint32 msg_ctx = 0;
 	gss_buffer_desc status_string;
-	    
+
 	gss_display_status(&new_stat,
 			   min_stat,
 			   GSS_C_MECH_CODE,
 			   GSS_C_NO_OID,
 			   &msg_ctx,
 			   &status_string);
-	printf("Error importing name %s: %s\n", 
+	printf("Error importing name %s: %s\n",
 	       (char *)name.value,
 	       (char *)status_string.value);
 	gss_release_buffer(&new_stat, &status_string);
@@ -287,7 +287,7 @@ gss_auth(void *app_data, const char *host)
 		    return AUTH_ERROR;
 		continue;
 	    }
-	    
+
 	    gss_display_status(&new_stat,
 			       min_stat,
 			       GSS_C_MECH_CODE,
