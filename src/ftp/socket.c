@@ -3,6 +3,7 @@
  *
  * Yet Another FTP Client
  * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ * Copyright (C) 2012-2013, Sebastian Ramacher <sebastian+dev@ramacher.at>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +26,8 @@ struct Socket_
   bool connected;
 };
 
-static bool create_streams(Socket* sock, const char* inmode, const char* outmode)
+static bool create_streams(Socket* sock, const char* inmode,
+                           const char* outmode)
 {
   if (!sock || sock->handle == -1)
     return false;
@@ -93,7 +95,8 @@ void sock_destroy(Socket* sockp)
   free(sockp);
 }
 
-bool sock_connect_addr(Socket *sockp, const struct sockaddr* sa, socklen_t salen)
+bool sock_connect_addr(Socket *sockp, const struct sockaddr* sa,
+                       socklen_t salen)
 {
   if (!sockp || sockp->handle != -1)
     return false;
@@ -269,22 +272,34 @@ const struct sockaddr* sock_remote_addr(Socket *sockp)
 
 ssize_t sock_read(Socket *sockp, void *buf, size_t num)
 {
+#ifdef SECFTP
+  return sec_read(sockp->handle, buf, num);
+#else
   return read(sockp->handle, buf, num);
+#endif
 }
 
 ssize_t sock_write(Socket *sockp, void *buf, size_t num)
 {
+#ifdef SECFTP
+  return sec_write(sockp->handle, buf, num);
+#else
   return write(sockp->handle, buf, num);
+#endif
 }
 
 int sock_get(Socket *sockp)
 {
-  return fgetc(sockp->sin);
+#ifdef SECFTP
+	return sec_getc(sockp->sin);
+#else
+	return fgetc(sockp->sin);
+#endif
 }
 
 int sock_put(Socket *sockp, int c)
 {
-  if(fputc(c, sockp->sout) == EOF)
+  if (fputc(c, sockp->sout) == EOF)
     return EOF;
   return 0;
 }
@@ -302,7 +317,7 @@ int sock_vprintf(Socket *sockp, const char *str, va_list ap)
 int sock_krb_vprintf(Socket *sockp, const char *str, va_list ap)
 {
 #ifdef SECFTP
-  if(ftp->sec_complete)
+  if (ftp->sec_complete)
     return sec_vfprintf(sockp->sout, str, ap);
   else
 #endif
@@ -312,10 +327,8 @@ int sock_krb_vprintf(Socket *sockp, const char *str, va_list ap)
 int sock_printf(Socket *sockp, const char *str, ...)
 {
   va_list ap;
-  int r;
-
   va_start(ap, str);
-  r = sock_vprintf(sockp, str, ap);
+  const int r = sock_vprintf(sockp, str, ap);
   va_end(ap);
   return r;
 }
@@ -323,10 +336,8 @@ int sock_printf(Socket *sockp, const char *str, ...)
 int sock_krb_printf(Socket *sockp, const char *str, ...)
 {
   va_list ap;
-  int r;
-
   va_start(ap, str);
-  r = sock_krb_vprintf(sockp, str, ap);
+  const int r = sock_krb_vprintf(sockp, str, ap);
   va_end(ap);
   return r;
 }
@@ -334,14 +345,18 @@ int sock_krb_printf(Socket *sockp, const char *str, ...)
 /* flushes output */
 int sock_flush(Socket *sockp)
 {
+#ifdef SECFTP
+  return sec_fflush(sockp->sout);
+#else
   return fflush(sockp->sout);
+#endif
 }
 
 int sock_telnet_interrupt(Socket *sockp)
 {
-  if(send(sockp->handle, "\xFF\xF4\xFF" /* IAC,IP,IAC */, 3, MSG_OOB) != 3)
+  if (send(sockp->handle, "\xFF\xF4\xFF" /* IAC,IP,IAC */, 3, MSG_OOB) != 3)
     return -1;
-  if(fputc(242/*DM*/, sockp->sout) == EOF)
+  if (fputc(242 /*DM*/, sockp->sout) == EOF)
     return -1;
   return 0;
 }
@@ -349,25 +364,9 @@ int sock_telnet_interrupt(Socket *sockp)
 int sock_getsockname(Socket *sockp, struct sockaddr_storage* sa)
 {
   socklen_t len = sizeof(struct sockaddr_storage);
-  if(getsockname(sockp->handle, (struct sockaddr*)sa, &len) == -1)
+  if (getsockname(sockp->handle, (struct sockaddr*)sa, &len) == -1)
     return -1;
   return 0;
-}
-
-FILE* sock_sin(Socket* sockp)
-{
-  if (!sockp)
-    return NULL;
-
-  return sockp->sin;
-}
-
-FILE* sock_sout(Socket* sockp)
-{
-  if (!sockp)
-    return NULL;
-
-  return sockp->sout;
 }
 
 int sock_handle(Socket* sockp)
@@ -376,4 +375,54 @@ int sock_handle(Socket* sockp)
     return -1;
 
   return sockp->handle;
+}
+
+void sock_clearerr_in(Socket* sockp)
+{
+  if (!sockp)
+    return;
+
+  clearerr(sockp->sin);
+}
+
+void sock_clearerr_out(Socket* sockp)
+{
+  if (!sockp)
+    return;
+
+  clearerr(sockp->sout);
+}
+
+int sock_error_in(Socket* sockp)
+{
+  if (!sockp)
+    return -1;
+
+  return ferror(sockp->sin);
+}
+
+int sock_error_out(Socket* sockp)
+{
+  if (!sockp)
+    return -1;
+
+  return ferror(sockp->sout);
+}
+
+void sock_fd_set(Socket* sockp, fd_set* fdset)
+{
+  FD_SET(sockp->handle, fdset);
+}
+
+int sock_select(Socket* sockp, fd_set* readfds, fd_set* writefds,
+                fd_set* errorfds, struct timeval* timeout)
+{
+  return select(sockp->handle + 1, readfds, writefds, errorfds, timeout);
+}
+
+int sock_eof(Socket* sockp) {
+  if (!sockp)
+    return -1;
+
+  return feof(sockp->sin);
 }

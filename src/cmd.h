@@ -33,7 +33,7 @@ cmd_t *find_func(const char *cmd, bool print_error);
 int rearrange_redirections(args_t *args);
 
 void command_loop(void);
-void exit_yafc() YAFC_NORETURN;
+void exit_yafc(void) YAFC_NORETURN;
 extern void exe_cmdline(char *str, bool aliases_are_expanded);
 
 extern cmd_t cmds[];

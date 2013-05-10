@@ -278,7 +278,7 @@ static ftp_transfer_func foo_hookf = 0;
 
 /* abort routine originally from Cftp by Dieter Baron
  */
-int ftp_abort(FILE *fp)
+int ftp_abort(Socket* fp)
 {
 	char buf[4096];
 	fd_set ready;
@@ -297,12 +297,11 @@ int ftp_abort(FILE *fp)
 
 	poll.tv_sec = poll.tv_usec = 0;
 	FD_ZERO(&ready);
-  int handle = sock_handle(ftp->ctrl);
-	FD_SET(handle, &ready);
-	if(select(handle+1, &ready, 0, 0, &poll) == 1) {
+	sock_fd_set(ftp->ctrl, &ready);
+	if (sock_select(fp, &ready, 0, 0, &poll) == 1) {
 		ftp_trace("There is data on the control channel, won't send ABOR\n");
 		/* read remaining bytes from connection */
-		while(fp && fread(buf, 1, 4096, fp) > 0)
+		while(fp && sock_read(fp, buf, sizeof(buf)) > 0)
 			/* LOOP */ ;
 		return 0;
 	}
@@ -326,7 +325,7 @@ int ftp_abort(FILE *fp)
 		ftp_trace("--> [%s] ABOR\n", ftp->url->hostname);
 
     /* read remaining bytes from connection */
-	while(fp && fread(buf, 1, 4096, fp) > 0)
+	while(fp && sock_read(fp, buf, sizeof(buf)) > 0)
 		/* LOOP */ ;
 
 	/* we expect a 426 or 226 reply here... */
@@ -343,7 +342,7 @@ int ftp_abort(FILE *fp)
 	return -1;
 }
 
-static int wait_for_data(FILE *fd, bool wait_for_read)
+static int wait_for_data(Socket* fp, bool wait_for_read)
 {
 	fd_set fds;
 	struct timeval tv;
@@ -351,15 +350,15 @@ static int wait_for_data(FILE *fd, bool wait_for_read)
 
 	/* watch fd to see if it has input */
 	FD_ZERO(&fds);
-	FD_SET(fileno(fd), &fds);
+  sock_fd_set(fp, &fds);
 	/* wait max 1 second */
 	tv.tv_sec = 10;
 	tv.tv_usec = 0;
 
 	if(wait_for_read)
-		r = select(fileno(fd)+1, &fds, 0, 0, &tv);
+		r = sock_select(fp, &fds, 0, 0, &tv);
 	else /* wait for write */
-		r = select(fileno(fd)+1, 0, &fds, 0, &tv);
+		r = sock_select(fp, 0, &fds, 0, &tv);
 #if 0
 	if(r < 0 && errno == EINTR && gvSigStopReceived && ftp_sigints() == 0) {
 		gvSigStopReceived = false;
@@ -392,7 +391,7 @@ static int wait_for_input(void)
 {
 	int r;
 	do {
-		r = wait_for_data(sock_sin(ftp->data), true);
+		r = wait_for_data(ftp->data, true);
 		if(r == -1) {
 			if(errno == EINTR)
 				ftp->ti.interrupted = true;
@@ -409,7 +408,7 @@ static int wait_for_output(void)
 {
 	int r;
 	do {
-		r = wait_for_data(sock_sout(ftp->data), false);
+		r = wait_for_data(ftp->data, false);
 		if(r == -1)
 			return -1;
 		if(r == 0 && foo_hookf)
@@ -419,7 +418,7 @@ static int wait_for_output(void)
 	return 0;
 }
 
-static int maybe_abort(FILE *in, FILE *out)
+static int maybe_abort_in(Socket* in, FILE *out)
 {
 	unsigned int i = ftp_sigints();
 	ftp_set_close_handler();
@@ -429,8 +428,8 @@ static int maybe_abort(FILE *in, FILE *out)
 	if(ftp->ti.interrupted)
 		i++;
 
-	if(i > 0 || ferror(in) || ferror(out)) {
-		if(ferror(in)) {
+	if(i > 0 || sock_error_in(in) || ferror(out)) {
+		if(sock_error_in(in)) {
 			ftp_err(_("read error: %s\n"), strerror(errno));
 			ftp->ti.ioerror = true;
 		}
@@ -438,15 +437,37 @@ static int maybe_abort(FILE *in, FILE *out)
 			ftp_err(_("write error: %s\n"), strerror(errno));
 			ftp->ti.ioerror = true;
 		}
-		return ftp_abort(ftp->ti.transfer_is_put ? out : in);
+		return ftp_abort(in);
 	}
 	return 0;
 }
 
-static int FILE_recv_binary(FILE *in, FILE *out)
+static int maybe_abort_out(FILE *in, Socket *out)
 {
-	size_t n;
-	char *buf;
+	unsigned int i = ftp_sigints();
+	ftp_set_close_handler();
+
+	ftp->ti.finished = true;
+
+	if(ftp->ti.interrupted)
+		i++;
+
+	if(i > 0 || ferror(in) || sock_error_out(out)) {
+		if(ferror(in)) {
+			ftp_err(_("read error: %s\n"), strerror(errno));
+			ftp->ti.ioerror = true;
+		}
+		else if (sock_error_out(out)) {
+			ftp_err(_("write error: %s\n"), strerror(errno));
+			ftp->ti.ioerror = true;
+		}
+		return ftp_abort(out);
+	}
+	return 0;
+}
+
+static int FILE_recv_binary(Socket* in, FILE *out)
+{
 	time_t then = time(0) - 1;
 	time_t now;
 
@@ -456,22 +477,18 @@ static int FILE_recv_binary(FILE *in, FILE *out)
 		foo_hookf(&ftp->ti);
 	ftp->ti.begin = false;
 
-	clearerr(in);
+	sock_clearerr_in(in);
 	clearerr(out);
 
-	buf = (char *)xmalloc(FTP_BUFSIZ);
-	while(!feof(in)) {
-
+	char* buf = xmalloc(FTP_BUFSIZ);
+	while (!sock_eof(in)) {
 		if(wait_for_input() != 0) {
 			ftp_trace("wait_for_input() returned non-zero\n");
 			break;
 		}
-#ifdef SECFTP
-		n = sec_read(fileno(in), buf, FTP_BUFSIZ);
-#else
-		n = fread(buf, sizeof(char), FTP_BUFSIZ, in);
-#endif
-		if(n <= 0)
+
+    const ssize_t n = sock_read(in, buf, FTP_BUFSIZ);
+		if (n <= 0)
 			break;
 
 		if(ftp_sigints() > 0) {
@@ -496,13 +513,11 @@ static int FILE_recv_binary(FILE *in, FILE *out)
 	free(buf);
 	ftp_set_close_handler();
 
-	return maybe_abort(in, out);
+	return maybe_abort_in(in, out);
 }
 
-static int FILE_send_binary(FILE *in, FILE *out)
+static int FILE_send_binary(FILE *in, Socket *out)
 {
-	size_t n;
-	char *buf;
 	time_t then = time(0) - 1;
 	time_t now;
 
@@ -513,11 +528,11 @@ static int FILE_send_binary(FILE *in, FILE *out)
 	ftp->ti.begin = false;
 
 	clearerr(in);
-	clearerr(out);
+	sock_clearerr_out(out);
 
-	buf = (char *)xmalloc(FTP_BUFSIZ);
+	char* buf = xmalloc(FTP_BUFSIZ);
 	while(!feof(in)) {
-		n = fread(buf, sizeof(char), FTP_BUFSIZ, in);
+		ssize_t n = fread(buf, sizeof(char), FTP_BUFSIZ, in);
 		if(n <= 0)
 			break;
 
@@ -526,13 +541,9 @@ static int FILE_send_binary(FILE *in, FILE *out)
 
 		if(wait_for_output() != 0)
 			break;
-#ifdef SECFTP
-		if(sec_write(fileno(out), buf, n) != n)
-			break;
-#else
-		if(fwrite(buf, sizeof(char), n, out) != n)
-			break;
-#endif
+
+    if (sock_write(out, buf, n) != n)
+      break;
 		ftp->ti.size += n;
 		if(foo_hookf) {
 			now = time(0);
@@ -542,28 +553,14 @@ static int FILE_send_binary(FILE *in, FILE *out)
 			}
 		}
 	}
-#ifdef SECFTP
-	sec_fflush(out);
-#endif
-
+	sock_flush(out);
 	free(buf);
 
-	return maybe_abort(in, out);
+	return maybe_abort_out(in, out);
 }
 
-static int krb_getc(FILE *fp)
+static int FILE_recv_ascii(Socket* in, FILE *out)
 {
-#ifdef SECFTP
-	return sec_getc(fp);
-#else
-	return fgetc(fp);
-#endif
-}
-
-static int FILE_recv_ascii(FILE *in, FILE *out)
-{
-	char *buf = (char *)xmalloc(FTP_BUFSIZ);
-	int c;
 	time_t then = time(0) - 1;
 	time_t now;
 
@@ -573,10 +570,11 @@ static int FILE_recv_ascii(FILE *in, FILE *out)
 		foo_hookf(&ftp->ti);
 	ftp->ti.begin = false;
 
-	clearerr(in);
+	sock_clearerr_in(in);
 	clearerr(out);
 
-	while((c = krb_getc(in)) != EOF) {
+  int c = 0;
+	while((c = sock_get(in)) != EOF) {
 		if(ftp_sigints() > 0)
 			break;
 
@@ -586,11 +584,11 @@ static int FILE_recv_ascii(FILE *in, FILE *out)
 		if(c == '\n')
 			ftp->ti.barelfs++;
 		else if(c == '\r') {
-			c = krb_getc(in);
+			c = sock_get(in);
 			if(c == EOF)
 				break;
 			if(c != '\n') {
-				ungetc(c, in);
+				sock_unget(in, c);
 				c = '\r';
 			}
 		}
@@ -607,15 +605,11 @@ static int FILE_recv_ascii(FILE *in, FILE *out)
 		}
 	}
 
-	free(buf);
-
-	return maybe_abort(in, out);
+	return maybe_abort_in(in, out);
 }
 
-static int FILE_send_ascii(FILE *in, FILE *out)
+static int FILE_send_ascii(FILE* in, Socket* out)
 {
-	char *buf = (char *)xmalloc(FTP_BUFSIZ);
-	int c;
 	time_t then = time(0) - 1;
 	time_t now;
 
@@ -626,8 +620,9 @@ static int FILE_send_ascii(FILE *in, FILE *out)
 	ftp->ti.begin = false;
 
 	clearerr(in);
-	clearerr(out);
+	sock_clearerr_out(out);
 
+  int c;
 	while((c = fgetc(in)) != EOF) {
 		if(ftp_sigints() > 0)
 			break;
@@ -636,11 +631,11 @@ static int FILE_send_ascii(FILE *in, FILE *out)
 			break;
 
 		if(c == '\n') {
-			if(fputc('\r', out) == EOF)
+			if(sock_put(out, '\r') == EOF)
 				break;
 			ftp->ti.size++;
 		}
-		if(fputc(c, out) == EOF)
+		if(sock_put(out, c) == EOF)
 			break;
 		ftp->ti.size++;
 		if(foo_hookf) {
@@ -652,9 +647,7 @@ static int FILE_send_ascii(FILE *in, FILE *out)
 		}
 	}
 
-	free(buf);
-
-	return maybe_abort(in, out);
+	return maybe_abort_out(in, out);
 }
 
 void reset_transfer_info(void)
@@ -710,7 +703,7 @@ int ftp_list(const char *cmd, const char *param, FILE *fp)
     return -1;
   }
 
-  if (FILE_recv_ascii(sock_sin(ftp->data), fp) != 0)
+  if (FILE_recv_ascii(ftp->data, fp) != 0)
     return -1;
 
   sock_destroy(ftp->data);
@@ -792,9 +785,9 @@ static int ftp_do_receive(FILE *fp,
 	int r;
 
 	if(mode == tmBinary)
-		r = FILE_recv_binary(sock_sin(ftp->data), fp);
+		r = FILE_recv_binary(ftp->data, fp);
 	else
-		r = FILE_recv_ascii(sock_sin(ftp->data), fp);
+		r = FILE_recv_ascii(ftp->data, fp);
 
 	sock_destroy(ftp->data);
 	ftp->data = 0;
@@ -900,9 +893,9 @@ static int ftp_send(const char *path, FILE *fp, putmode_t how,
 	ftp_cache_flush_mark_for(path);
 
 	if(mode == tmBinary)
-		r = FILE_send_binary(fp, sock_sout(ftp->data));
+		r = FILE_send_binary(fp, ftp->data);
 	else
-		r = FILE_send_ascii(fp, sock_sout(ftp->data));
+		r = FILE_send_ascii(fp, ftp->data);
 	sock_flush(ftp->data);
 	sock_destroy(ftp->data);
 	ftp->data = 0;
@@ -1036,7 +1029,7 @@ int ftp_fxpfile(Ftp *srcftp, const char *srcfile,
 	ftp_cmd("RETR %s", srcfile);
 	if(ftp->code != ctPrelim) {
 		ftp_use(destftp);
-		ftp_abort(0);
+		ftp_abort(NULL);
 		ftp_use(thisftp);
 		return -1;
 	}

@@ -3,6 +3,7 @@
  *
  * Yet Another FTP Client
  * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
+ * Copyright (C) 2012, Sebastian Ramacher <sebastian+dev@ramacher.at>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -209,11 +210,11 @@ int ftp_open_host(Host *hostp);
 int ftp_open_url(url_t *urlp, bool reset_vars);
 int ftp_login(const char *guessed_username, const char *anonpass);
 
-void ftp_close();
-void ftp_quit();
+void ftp_close(void);
+void ftp_quit(void);
 void ftp_quit_all(void);
 
-int ftp_read_reply();
+int ftp_read_reply(void);
 const char *ftp_getreply(bool withcode);
 
 int ftp_list(const char *cmd, const char *param, FILE *fp);
@@ -227,7 +228,7 @@ int ftp_fxpfile(Ftp *srcftp, const char *srcfile,
 				Ftp *destftp, const char *destfile,
 				fxpmode_t how, transfer_mode_t mode);
 
-int ftp_reset();
+int ftp_reset(void);
 void reset_transfer_info(void);
 void transfer_finished(void);
 

@@ -584,7 +584,7 @@ int ftp_read_reply(void)
     if(ftp->reply_timeout)
         alarm(ftp->reply_timeout);
 
-    clearerr(sock_sin(ftp->ctrl));
+    sock_clearerr_in(ftp->ctrl);
     r = ftp_gets();
     if(!sock_connected(ftp->ctrl)) {
         alarm(0);
@@ -666,7 +666,7 @@ int ftp_cmd(const char *cmd, ...)
     sock_flush(ftp->ctrl);
     va_end(ap);
 
-    if(ferror(sock_sout(ftp->ctrl))) {
+    if (sock_error_out(ftp->ctrl)) {
         ftp_err(_("error writing command"));
         ftp_err(" (");
         va_start(ap, cmd);
@@ -1632,9 +1632,8 @@ void ftp_flush_reply(void)
         poll.tv_sec = 1;
         poll.tv_usec = 0;
         FD_ZERO(&ready);
-        int handle = sock_handle(ftp->ctrl);
-        FD_SET(handle, &ready);
-        if(select(handle+1, &ready, 0, 0, &poll) == 1)
+        sock_fd_set(ftp->ctrl, &ready);
+        if (sock_select(ftp->ctrl, &ready, 0, 0, &poll) == 1)
             ftp_read_reply();
         else
             break;
