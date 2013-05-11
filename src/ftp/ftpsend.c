@@ -573,26 +573,39 @@ static int FILE_recv_ascii(Socket* in, FILE *out)
 	sock_clearerr_in(in);
 	clearerr(out);
 
-  int c = 0;
-	while((c = sock_get(in)) != EOF) {
-		if(ftp_sigints() > 0)
+  bool next = true;
+  int nc = 0;
+	while (true)
+  {
+    int c = 0;
+    if (next)
+    {
+      c = sock_get(in);
+      if (c == EOF)
+        break;
+    }
+    else
+    {
+      c = nc;
+      next = true;
+    }
+
+		if (ftp_sigints() > 0 || wait_for_input() != 0)
 			break;
 
-		if(wait_for_input() != 0)
-			break;
-
-		if(c == '\n')
+		if (c == '\n')
 			ftp->ti.barelfs++;
-		else if(c == '\r') {
-			c = sock_get(in);
-			if(c == EOF)
+		else if (c == '\r')
+    {
+			nc = sock_get(in);
+			if (nc == EOF)
 				break;
-			if(c != '\n') {
-				sock_unget(in, c);
-				c = '\r';
-			}
+			if (nc != '\n')
+        next = false;
+      else
+        c = nc;
 		}
-		if(fputc(c, out) == EOF)
+		if (fputc(c, out) == EOF)
 			break;
 
 		ftp->ti.size++;

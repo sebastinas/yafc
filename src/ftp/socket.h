@@ -40,7 +40,6 @@ ssize_t sock_read(Socket *sockp, void *buf, size_t num);
 ssize_t sock_write(Socket *sockp, const void *buf, size_t num);
 int sock_get(Socket *sockp); /* get one character */
 int sock_put(Socket *sockp, int c); /* put one character */
-int sock_unget(Socket *sockp, int c);
 int sock_vprintf(Socket *sockp, const char *str, va_list ap);
 int sock_printf(Socket *sockp, const char *str, ...) YAFC_PRINTF(2, 3);
 int sock_flush(Socket *sockp);

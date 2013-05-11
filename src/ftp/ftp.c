@@ -443,8 +443,6 @@ int ftp_reopen(void)
  */
 static int ftp_gets(void)
 {
-    int c, i=0;
-
     ftp->reply[0] = 0;
 
     if(!sock_connected(ftp->ctrl)) {
@@ -452,14 +450,29 @@ static int ftp_gets(void)
         return -1;
     }
 
-    while(true) {
-        c = sock_get(ftp->ctrl);
-        if(c == EOF) {
+    size_t i = 0;
+    bool next = true;
+    int nc = 0;
+    while(true)
+    {
+        int c = 0;
+        if (next)
+          c = sock_get(ftp->ctrl);
+        else
+        {
+          c = nc;
+          next = true;
+        }
+
+        if (c == EOF)
+        {
             ftp_err(_("Server has closed control connection\n"));
             ftp_close();
             return -1;
         }
-        else if(c == 255/*IAC*/) {   /* handle telnet commands */
+        else if(c == 255/*IAC*/)
+        {
+            /* handle telnet commands */
             switch(c = sock_get(ftp->ctrl)) {
               case 251/*WILL*/:
               case 252/*WONT*/:
@@ -478,21 +491,21 @@ static int ftp_gets(void)
             }
             continue;
         }
-        else if(c == '\r') {
-            c = sock_get(ftp->ctrl);
-            if(c == 0)
-                c = '\r';
-            else if(c == '\n') {
+        else if (c == '\r')
+        {
+            nc = sock_get(ftp->ctrl);
+            if (nc == 0)
+              ; // do nothing
+            else if (nc == '\n') {
                 ftp->reply[i++] = (char)c;
                 break;
-            } else if(c == EOF)
-                /* do nothing */ ;
-            else { /* telnet protocol violation, hmpf... */
-                sock_unget(ftp->ctrl, c);
-                continue;
-            }
+            } else if(nc == EOF)
+                c = EOF ;
+            else
+                /* telnet protocol violation, hmpf... */
+                next = false;
         }
-        else if(c == '\n')
+        else if (c == '\n')
             break;
         if(i < MAXREPLY)
             ftp->reply[i++] = (char)c;

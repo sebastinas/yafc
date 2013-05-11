@@ -159,10 +159,6 @@ static int ssls_put(Socket *sockp, int c)
   return ret;
 }
 
-static int ssls_unget(Socket *sockp, int c)
-{
-  return 0; // TODO
-}
 
 static int ssls_vprintf(Socket *sockp, const char *str, va_list ap)
 {
@@ -223,7 +219,6 @@ Socket* sock_ssl_create(void)
   sock->write = ssls_write;
   sock->get = ssls_get;
   sock->put = ssls_put;
-  sock->unget = ssls_unget;
   sock->vprintf = ssls_vprintf;
   sock->krb_vprintf = ssls_vprintf;
   sock->flush = ssls_flush;

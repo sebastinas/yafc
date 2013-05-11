@@ -136,14 +136,6 @@ int sock_put(Socket *sockp, int c)
   return sockp->put(sockp, c);
 }
 
-int sock_unget(Socket *sockp, int c)
-{
-  if (!sockp || !sockp->unget)
-    return -1;
-
-  return sockp->unget(sockp, c);
-}
-
 int sock_vprintf(Socket *sockp, const char *str, va_list ap)
 {
   if (!sockp || !sockp->vprintf)

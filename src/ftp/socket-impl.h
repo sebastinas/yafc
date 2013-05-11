@@ -34,7 +34,6 @@ struct Socket_
   ssize_t (*write)(Socket *sockp, const void *buf, size_t num);
   int (*get)(Socket *sockp); /* get one character */
   int (*put)(Socket *sockp, int c); /* put one character */
-  int (*unget)(Socket *sockp, int c);
   int (*vprintf)(Socket *sockp, const char *str, va_list ap);
   int (*flush)(Socket *sockp);
   int (*eof)(Socket* sockp);

@@ -263,11 +263,6 @@ static int ps_put(Socket *sockp, int c)
   return 0;
 }
 
-static int ps_unget(Socket *sockp, int c)
-{
-  return ungetc(c, sockp->data->sin);
-}
-
 static int ps_vprintf(Socket *sockp, const char *str, va_list ap)
 {
   return vfprintf(sockp->data->sout, str, ap);
@@ -348,7 +343,6 @@ Socket* sock_create(void)
   sock->write = ps_write;
   sock->get = ps_get;
   sock->put = ps_put;
-  sock->unget = ps_unget;
   sock->vprintf = ps_vprintf;
   sock->krb_vprintf = ps_krb_vprintf;
   sock->flush = ps_flush;
