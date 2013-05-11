@@ -410,24 +410,15 @@ fi
 AM_CONDITIONAL([NEED_BASE_IMPL], [${yafc_need_base64_impl}])
 
 # SSL support
-#
-# check OpenSSL again
-if test "x$yafc_have_openssl" = "xnotchecked" ; then
-  AX_CHECK_OPENSSL(
-    [yafc_have_openssl="yes"],
-    [yafc_have_openssl="no"]
-  )
-
-  if test "x$yafc_have_openssl" = "xyes" ; then
-    CPPFLAGS="$CPPFLAGS $OPENSSL_INCLUDES"
-    LIBS="$LIBS $OPENSSL_LIBS"
-    LDFLAGS="$LDFLAGS $OPENSSL_LDFLAGS"
-  fi
-fi
-if test "x$yafc_have_openssl" = "xyes" ; then
-  AC_DEFINE(HAVE_OPENSSL, [], [Define if OpenSSL is available.])
-fi
-AM_CONDITIONAL(HAVE_OPENSSL, test "x$yafc_have_openssl" = "xyes")
+PKG_CHECK_MODULES([LIBGNUTLS], [gnutls],
+  [
+    AC_DEFINE([HAVE_GNUTLS], [], [Define if GNU TLS is available])
+    AM_CONDITIONAL([HAVE_GNUTLS], [true])
+  ],
+  [
+    AM_CONDITIONAL([HAVE_GNUTLS], [false])
+  ]
+)
 
 
 # bash completion

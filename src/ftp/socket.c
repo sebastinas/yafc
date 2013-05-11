@@ -217,24 +217,18 @@ int sock_error_out(Socket* sockp)
   return sockp->error(sockp, false);
 }
 
-void sock_fd_set(Socket* sockp, fd_set* fdset)
+int sock_eof(Socket* sockp)
 {
-  if (sockp && sockp->fd_set && fdset)
-    sockp->fd_set(sockp, fdset);
-}
-
-int sock_select(Socket* sockp, fd_set* readfds, fd_set* writefds,
-                fd_set* errorfds, struct timeval* timeout)
-{
-  if (!sockp || !sockp->select)
-    return -1;
-
-  return sockp->select(sockp, readfds, writefds, errorfds, timeout);
-}
-
-int sock_eof(Socket* sockp) {
   if (!sockp || !sockp->eof)
     return -1;
 
   return sockp->eof(sockp);
+}
+
+int sock_check_pending(Socket* sockp, bool inout)
+{
+  if (!sockp || !sockp->check_pending)
+    return -1;
+
+  return sockp->check_pending(sockp, inout);
 }

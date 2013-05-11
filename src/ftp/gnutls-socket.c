@@ -15,71 +15,31 @@
 #include "socket-impl.h"
 #include "xmalloc.h"
 
-#include <openssl/ssl.h>
-#include <openssl/bio.h>
-
-typedef struct
-{
-  size_t refs;
-  SSL_CTX* ctx;
-}
-SSL_CTX_rc;
-
-static SSL_CTX_rc* SSL_CTX_rc_new(const SSL_METHOD* method)
-{
-  SSL_CTX_rc* ctx = malloc(sizeof(SSL_CTX_rc));
-  if (!ctx)
-    return NULL;
-
-  ctx->refs = 1;
-  ctx->ctx = SSL_CTX_new(method);
-  if (!ctx->ctx)
-  {
-    free(ctx);
-    return NULL;
-  }
-
-  return ctx;
-}
-
-static void SSL_CTX_rc_inc(SSL_CTX_rc* ctx)
-{
-  if (!ctx)
-    return;
-
-  ++ctx->refs;
-}
-
-static void SSL_CTX_rc_dec(SSL_CTX_rc* ctx)
-{
-  if (!ctx);
-
-  if (ctx->refs == 1)
-  {
-    SSL_CTX_free(ctx->ctx);
-    free(ctx);
-  }
-  else
-    --ctx->refs;
-}
+#include <gnutls/gnutls.h>
+#include <gnutls/x509.h>
 
 struct socket_impl_
 {
   int handle;
-  SSL_CTX_rc* ctx;
-  SSL* ssl;
-  BIO* bio;
+  gnutls_session_t session;
+  bool handshake_on_connect;
 };
-
-static Socket* sock_ssl_create_impl(bool create_ssl_ctx);
 
 static void ssls_destroy(Socket* sockp)
 {
-  if (sockp->data->ctx)
-    SSL_CTX_rc_dec(sockp->data->ctx);
   if (sockp->data->handle != -1)
+  {
+    gnutls_bye(sockp->data->session, GNUTLS_SHUT_RDWR);
+    shutdown(sockp->data->handle, SHUT_RDWR);
     close(sockp->data->handle);
+  }
+  gnutls_deinit(sockp->data->session);
   free(sockp);
+}
+
+static int verify_callback(gnutls_session_t session)
+{
+  return 0;
 }
 
 static bool ssls_getsockname(Socket *sockp, struct sockaddr_storage* sa)
@@ -118,27 +78,27 @@ static bool ssls_connect_addr(Socket *sockp, const struct sockaddr* sa,
   }
   memcpy(&sockp->remote_addr, sa, salen);
 
-  sockp->data->ssl = SSL_new(sockp->data->ctx->ctx);
-  SSL_set_fd(sockp->data->ssl, sockp->data->handle);
-  SSL_set_mode(sockp->data->ssl, SSL_MODE_AUTO_RETRY);
+  // gnutls_transport_set_int(sockp->data->session, sockp->data->handle);
+  gnutls_transport_set_ptr(sockp->data->session,(gnutls_transport_ptr_t)sockp->data->handle);
+  // gnutls_handshake_set_timeout(sockp->data->session, GNUTLS_DEFAULT_HANDSHAKE_TIMEOUT);
 
-  /* BIO* bio = BIO_new_socket(sockp->data->handle, BIO_NOCLOSE);
-  SSL_set_bio(ssl, bio, bio); */
-
-
-  // SSL handshake
-  if (SSL_connect(sockp->data->ssl) != 1)
+  if (sockp->data->handshake_on_connect)
   {
-    SSL_free(sockp->data->ssl);
-    sockp->data->ssl = NULL;
-    close(sockp->data->handle);
-    sockp->data->handle = -1;
-  }
+    // perform TLS handshake
+    int ret = 0;
+    do
+    {
+      ret = gnutls_handshake(sockp->data->session);
+    } while (ret < 0 && gnutls_error_is_fatal(ret) == 0);
 
-  sockp->data->bio = BIO_new(BIO_f_buffer());
-  BIO* ssl_bio = BIO_new(BIO_f_ssl());
-  BIO_set_ssl(ssl_bio, sockp->data->ssl, BIO_CLOSE);
-  BIO_push(sockp->data->bio, ssl_bio);
+    if (ret < 0)
+    {
+      gnutls_perror(ret);
+      close(sockp->data->handle);
+      sockp->data->handle = -1;
+      return false;
+    }
+  }
 
   sockp->connected = true;
   return true;
@@ -146,7 +106,7 @@ static bool ssls_connect_addr(Socket *sockp, const struct sockaddr* sa,
 
 static bool ssls_dup(const Socket* fromsock, Socket** tosock)
 {
-  Socket* tmp = sock_ssl_create_impl(false);
+  Socket* tmp = sock_ssl_create();
   if (!tmp)
     return false;
 
@@ -155,10 +115,32 @@ static bool ssls_dup(const Socket* fromsock, Socket** tosock)
   memcpy(&tmp->local_addr, &fromsock->local_addr,
        sizeof(fromsock->local_addr));
   // tmp->connected = fromsock->connected;
+  tmp->data->handshake_on_connect = false;
 
-  // copy SSL context
-  tmp->data->ctx = fromsock->data->ctx;
-  SSL_CTX_rc_inc(tmp->data->ctx);
+  size_t size = 0;
+  int res = gnutls_session_get_data(fromsock->data->session, NULL, &size);
+  if (res && res != GNUTLS_E_SHORT_MEMORY_BUFFER)
+  {
+    ssls_destroy(tmp);
+    return false;
+  }
+
+  char* data = xmalloc(size);
+  if (gnutls_session_get_data(fromsock->data->session, data, &size))
+  {
+    free(data);
+    ssls_destroy(tmp);
+    return false;
+  }
+
+  res = gnutls_session_set_data(tmp->data->session, data, size);
+  free(data);
+  if (res)
+  {
+    free(data);
+    ssls_destroy(tmp);
+    return false;
+  }
 
   *tosock = tmp;
   return true;
@@ -166,7 +148,28 @@ static bool ssls_dup(const Socket* fromsock, Socket** tosock)
 
 static bool ssls_accept(Socket* sockp, const char* mode, bool pasvmod)
 {
-  return pasvmod;
+  if (!pasvmod)
+    return false;
+
+  if (!sockp->data->handshake_on_connect)
+  {
+    // perform TLS handshake
+    int ret = 0;
+    do
+    {
+      ret = gnutls_handshake(sockp->data->session);
+    } while (ret < 0 && gnutls_error_is_fatal(ret) == 0);
+
+    if (ret < 0)
+    {
+      gnutls_perror(ret);
+      close(sockp->data->handle);
+      sockp->data->handle = -1;
+      return false;
+    }
+  }
+
+  return true;
 }
 
 static void ssls_throughput(Socket *sockp)
@@ -191,12 +194,14 @@ static void ssls_lowdelay(Socket *sockp)
 
 static ssize_t ssls_read(Socket *sockp, void *buf, size_t num)
 {
-  return BIO_read(sockp->data->bio, buf, num);
+  int ret = gnutls_record_recv(sockp->data->session, buf, num);
+  return ret;
 }
 
 static ssize_t ssls_write(Socket *sockp, const void* buf, size_t num)
 {
-  return BIO_write(sockp->data->bio, buf, num);
+  int ret = gnutls_record_send(sockp->data->session, buf, num);
+  return ret;
 }
 
 static int ssls_get(Socket *sockp)
@@ -219,14 +224,14 @@ static int ssls_put(Socket *sockp, int c)
   return ret;
 }
 
-
 static int ssls_vprintf(Socket *sockp, const char *str, va_list ap)
 {
   char* tmp = NULL;
-  if (vasprintf(&tmp, str, ap) == -1)
+  const int size = vasprintf(&tmp, str, ap);
+  if (size == -1)
     return -1;
 
-  int ret = BIO_puts(sockp->data->bio, tmp);
+  int ret = ssls_write(sockp, tmp, size);
   free(tmp);
   return ret;
 }
@@ -234,7 +239,7 @@ static int ssls_vprintf(Socket *sockp, const char *str, va_list ap)
 /* flushes output */
 static int ssls_flush(Socket *sockp)
 {
-  return BIO_flush(sockp->data->bio);
+  return 0; // gnutls_record_uncork(sockp->data->session, GNUTLS_RECORD_WAIT);
 }
 
 static int ssls_error(Socket* sockp, bool inout)
@@ -243,20 +248,31 @@ static int ssls_error(Socket* sockp, bool inout)
   return 0;
 }
 
-static void ssls_fd_set(Socket* sockp, fd_set* fdset)
+static int ssls_check_pending(Socket* sockp, bool inout)
 {
-  FD_SET(sockp->data->handle, fdset);
-}
+  if (inout)
+    return 1;
 
-static int ssls_select(Socket* sockp, fd_set* readfds, fd_set* writefds,
-                     fd_set* errorfds, struct timeval* timeout)
-{
-  return 1; // select(sockp->data->handle + 1, readfds, writefds, errorfds, timeout);
+  size_t r = gnutls_record_check_pending(sockp->data->session);
+  if (r > 0)
+    return 1;
+
+  struct timeval tv;
+  fd_set fds;
+
+  	/* watch fd to see if it has input */
+	FD_ZERO(&fds);
+  FD_SET(sockp->data->handle, &fds);
+	/* wait max 0.5 second */
+	tv.tv_sec = 0;
+	tv.tv_usec = 500;
+
+	return select(sockp->data->handle + 1, &fds, NULL, NULL, &tv);
 }
 
 static int ssls_eof(Socket* sockp)
 {
-  return BIO_eof(sockp->data->bio);
+  return 0; // BIO_eof(sockp->data->bio);
 }
 
 static Socket* sock_ssl_create_impl(bool create_ssl_ctx)
@@ -267,7 +283,7 @@ static Socket* sock_ssl_create_impl(bool create_ssl_ctx)
   sock->data = xmalloc(sizeof(socket_impl));
   memset(sock->data, 0, sizeof(socket_impl));
   sock->data->handle = -1;
-  sock->data->ctx = NULL;
+  sock->data->handshake_on_connect = true;
 
   sock->destroy = ssls_destroy;
   sock->connect_addr = ssls_connect_addr;
@@ -285,27 +301,18 @@ static Socket* sock_ssl_create_impl(bool create_ssl_ctx)
   sock->flush = ssls_flush;
   sock->eof = ssls_eof;
   sock->telnet_interrupt = NULL;
-  sock->fd_set = ssls_fd_set;
-  sock->select = ssls_select;
   sock->clearerr = NULL;
   sock->error = ssls_error;
+  sock->check_pending = ssls_check_pending;
 
-  if (create_ssl_ctx)
-  {
-    // init SSL context
-    sock->data->ctx = SSL_CTX_rc_new(SSLv23_client_method());
-    if (sock->data->ctx == NULL)
-    {
-      free(sock->data);
-      free(sock);
-      return NULL;
-    }
+  gnutls_init(&sock->data->session, GNUTLS_CLIENT);
+  gnutls_set_default_priority(sock->data->session);
 
-    // disable SSLv2
-    SSL_CTX_set_options(sock->data->ctx->ctx, SSL_OP_NO_SSLv2);
-    // share sessions
-    SSL_CTX_set_session_cache_mode(sock->data->ctx->ctx, SSL_SESS_CACHE_CLIENT);
-  }
+  gnutls_certificate_credentials_t cred;
+  gnutls_certificate_allocate_credentials(&cred);
+  gnutls_certificate_set_x509_trust_file(cred, "/etc/ssl/certs/ca-certificates.crt", GNUTLS_X509_FMT_PEM);
+  gnutls_certificate_set_verify_function(cred, verify_callback);
+  gnutls_credentials_set(sock->data->session, GNUTLS_CRD_CERTIFICATE, cred);
 
   return sock;
 }

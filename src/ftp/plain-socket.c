@@ -314,15 +314,22 @@ static int ps_error(Socket* sockp, bool inout)
   return ferror(inout ? sockp->data->sout : sockp->data->sin);
 }
 
-static void ps_fd_set(Socket* sockp, fd_set* fdset)
+static int ps_check_pending(Socket* sockp, bool inout)
 {
-  FD_SET(sockp->data->handle, fdset);
-}
+  struct timeval tv;
+  fd_set fds;
 
-static int ps_select(Socket* sockp, fd_set* readfds, fd_set* writefds,
-                     fd_set* errorfds, struct timeval* timeout)
-{
-  return select(sockp->data->handle + 1, readfds, writefds, errorfds, timeout);
+  	/* watch fd to see if it has input */
+	FD_ZERO(&fds);
+  FD_SET(sockp->data->handle, &fds);
+	/* wait max 0.5 second */
+	tv.tv_sec = 0;
+	tv.tv_usec = 500;
+
+	if (!inout) /* wait for read */
+		return select(sockp->data->handle + 1, &fds, NULL, NULL, &tv);
+	else /* wait for write */
+		return select(sockp->data->handle + 1, NULL, &fds, NULL, &tv);
 }
 
 static int ps_eof(Socket* sockp)
@@ -355,8 +362,7 @@ Socket* sock_create(void)
   sock->flush = ps_flush;
   sock->eof = ps_eof;
   sock->telnet_interrupt = ps_telnet_interrupt;
-  sock->fd_set = ps_fd_set;
-  sock->select = ps_select;
+  sock->check_pending = ps_check_pending;
   sock->clearerr = ps_clearerr;
   sock->error = ps_error;
 

@@ -35,15 +35,12 @@ struct Socket_
   int (*get)(Socket *sockp); /* get one character */
   int (*put)(Socket *sockp, int c); /* put one character */
   int (*vprintf)(Socket *sockp, const char *str, va_list ap);
+  int (*krb_vprintf)(Socket *sockp, const char *str, va_list ap);
   int (*flush)(Socket *sockp);
   int (*eof)(Socket* sockp);
   int (*telnet_interrupt)(Socket *sockp);
 
-  void (*fd_set)(Socket* sockp, fd_set* fdset);
-  int (*select)(Socket* sockp, fd_set* readfds, fd_set* writefds,
-      fd_set* errorfds, struct timeval* timeout);
-
-  int (*krb_vprintf)(Socket *sockp, const char *str, va_list ap);
+  int (*check_pending)(Socket* sock, bool inout);
 
   void (*clearerr)(Socket* sockp, bool inout);
   int (*error)(Socket* sockp, bool input);

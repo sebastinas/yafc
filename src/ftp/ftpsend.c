@@ -279,8 +279,6 @@ static ftp_transfer_func foo_hookf = 0;
 int ftp_abort(Socket* fp)
 {
 	char buf[4096];
-	fd_set ready;
-	struct timeval poll;
 
 #ifdef HAVE_LIBSSH
 	if(ftp->session)
@@ -293,10 +291,7 @@ int ftp_abort(Socket* fp)
 
 	ftp_set_close_handler();
 
-	poll.tv_sec = poll.tv_usec = 0;
-	FD_ZERO(&ready);
-	sock_fd_set(ftp->ctrl, &ready);
-	if (sock_select(fp, &ready, 0, 0, &poll) == 1) {
+	if (sock_check_pending(fp, false) == 1) {
 		ftp_trace("There is data on the control channel, won't send ABOR\n");
 		/* read remaining bytes from connection */
 		while(fp && sock_read(fp, buf, sizeof(buf)) > 0)
@@ -342,21 +337,8 @@ int ftp_abort(Socket* fp)
 
 static int wait_for_data(Socket* fp, bool wait_for_read)
 {
-	fd_set fds;
-	struct timeval tv;
-	int r;
-
-	/* watch fd to see if it has input */
-	FD_ZERO(&fds);
-  sock_fd_set(fp, &fds);
-	/* wait max 1 second */
-	tv.tv_sec = 10;
-	tv.tv_usec = 0;
-
-	if(wait_for_read)
-		r = sock_select(fp, &fds, 0, 0, &tv);
-	else /* wait for write */
-		r = sock_select(fp, 0, &fds, 0, &tv);
+  errno = 0;
+	const int r = sock_check_pending(fp, !wait_for_read);
 #if 0
 	if(r < 0 && errno == EINTR && gvSigStopReceived && ftp_sigints() == 0) {
 		gvSigStopReceived = false;

@@ -339,7 +339,7 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
 #endif
 
     if(urlp->protocol && strcmp(urlp->protocol, "ftp") != 0
-#ifdef HAVE_OPENSSL
+#ifdef HAVE_GNUTLS
         && strcmp(urlp->protocol, "ftps") != 0
 #endif
         ) {
@@ -357,9 +357,13 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
                 host_getoname(ftp->host), urlp->port);
     }
 
-#ifdef HAVE_OPENSSL
+#ifdef HAVE_GNUTLS
+    ftp->ssl_socket = false;
     if (urlp->protocol && strcmp(urlp->protocol, "ftps") == 0)
+    {
       ftp->ctrl = sock_ssl_create();
+      ftp->ssl_socket = true;
+    }
     else
 #endif
       ftp->ctrl = sock_create();
@@ -1096,6 +1100,26 @@ int ftp_login(const char *guessed_username, const char *anonpass)
                     level_to_name(ftp->data_prot));
         }
 #endif
+#ifdef HAVE_GNUTLS
+        if (ftp->ssl_socket)
+        {
+          ftp_cmd("PBSZ 0");
+		      if (ftp->code != ctComplete)
+          {
+			      ftp_err(_("Failed to set protection buffer size.\n"));
+            ftp->loggedin = false;
+			      return -1;
+          }
+
+	        ftp_cmd("PROT P");
+	        if (ftp->code != ctComplete)
+          {
+		        ftp_err(_("Failed to set protection level.\n"));
+		        ftp->loggedin = false;
+            return -1;
+	        }
+        }
+#endif
         ftp->homedir = ftp_getcurdir();
         ftp->curdir = xstrdup(ftp->homedir);
         ftp->prevdir = xstrdup(ftp->homedir);
@@ -1634,9 +1658,6 @@ char *ftp_path_absolute(const char *path)
 
 void ftp_flush_reply(void)
 {
-    fd_set ready;
-    struct timeval poll;
-
     if(!ftp_connected())
         return;
 
@@ -1651,11 +1672,7 @@ void ftp_flush_reply(void)
 /*  ftp_reply_timeout(10);*/
 
     while(ftp_connected()) {
-        poll.tv_sec = 1;
-        poll.tv_usec = 0;
-        FD_ZERO(&ready);
-        sock_fd_set(ftp->ctrl, &ready);
-        if (sock_select(ftp->ctrl, &ready, 0, 0, &poll) == 1)
+        if (sock_check_pending(ftp->ctrl, false) == 1)
             ftp_read_reply();
         else
             break;

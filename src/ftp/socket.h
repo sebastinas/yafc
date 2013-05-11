@@ -20,7 +20,7 @@
 typedef struct Socket_ Socket;
 
 Socket* sock_create(void);
-#ifdef HAVE_OPENSSL
+#ifdef HAVE_GNUTLS
 Socket* sock_ssl_create(void);
 #endif
 
@@ -46,10 +46,6 @@ int sock_flush(Socket *sockp);
 int sock_eof(Socket* sockp);
 int sock_telnet_interrupt(Socket *sockp);
 
-void sock_fd_set(Socket* sockp, fd_set* fdset);
-int sock_select(Socket* sockp, fd_set* readfds, fd_set* writefds,
-    fd_set* errorfds, struct timeval* timeout);
-
 int sock_krb_vprintf(Socket *sockp, const char *str, va_list ap);
 int sock_krb_printf(Socket *sockp, const char *str, ...) YAFC_PRINTF(2, 3);
 
@@ -58,5 +54,6 @@ void sock_clearerr_out(Socket* sockp);
 
 int sock_error_out(Socket* sockp);
 int sock_error_in(Socket* sockp);
+int sock_check_pending(Socket* sockp, bool inout);
 
 #endif
