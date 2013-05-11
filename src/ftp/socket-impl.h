@@ -25,7 +25,7 @@ struct Socket_
 
   void (*destroy)(Socket *sockp);
   bool (*connect_addr)(Socket *sockp, const struct sockaddr* sa, socklen_t salen);
-  void (*copy)(Socket *tosock, const Socket *fromsock);
+  bool (*dup)(const Socket *fromsock, Socket **tosock);
   bool (*accept)(Socket *sockp, const char *mode, bool pasvmode);
   bool (*listen)(Socket *sockp, int family);
   void (*throughput)(Socket *sockp);

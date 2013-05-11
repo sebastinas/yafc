@@ -143,10 +143,8 @@ static int ftp_init_transfer(void)
   if (!ftp_connected())
     return -1;
 
-  if (!(ftp->data = sock_create())) {
+  if (!sock_dup(ftp->ctrl, &ftp->data))
     return -1;
-  }
-  sock_copy(ftp->data, ftp->ctrl);
 
   if (ftp_is_passive())
   {

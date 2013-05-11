@@ -28,7 +28,7 @@ void sock_destroy(Socket *sockp);
 
 bool sock_connect_host(Socket *sockp, Host *hp);
 bool sock_connect_addr(Socket *sockp, const struct sockaddr* sa, socklen_t salen);
-void sock_copy(Socket *tosock, const Socket *fromsock);
+bool sock_dup(const Socket* fromsock, Socket** tosock);
 bool sock_connected(const Socket *sockp);
 bool sock_accept(Socket *sockp, const char *mode, bool pasvmode);
 bool sock_listen(Socket *sockp, int family);

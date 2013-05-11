@@ -49,10 +49,12 @@ bool sock_connect_host(Socket *sockp, Host *hp)
   return false;
 }
 
-void sock_copy(Socket *tosock, const Socket *fromsock)
+bool sock_dup(const Socket* fromsock, Socket** tosock)
 {
-  if (fromsock && tosock && fromsock->copy)
-    fromsock->copy(tosock, fromsock);
+  if (!fromsock || !tosock || !fromsock->dup)
+    return false;
+
+  return fromsock->dup(fromsock, tosock);
 }
 
 bool sock_connected(const Socket *sockp)

@@ -18,16 +18,65 @@
 #include <openssl/ssl.h>
 #include <openssl/bio.h>
 
+typedef struct
+{
+  size_t refs;
+  SSL_CTX* ctx;
+}
+SSL_CTX_rc;
+
+static SSL_CTX_rc* SSL_CTX_rc_new(const SSL_METHOD* method)
+{
+  SSL_CTX_rc* ctx = malloc(sizeof(SSL_CTX_rc));
+  if (!ctx)
+    return NULL;
+
+  ctx->refs = 1;
+  ctx->ctx = SSL_CTX_new(method);
+  if (!ctx->ctx)
+  {
+    free(ctx);
+    return NULL;
+  }
+
+  return ctx;
+}
+
+static void SSL_CTX_rc_inc(SSL_CTX_rc* ctx)
+{
+  if (!ctx)
+    return;
+
+  ++ctx->refs;
+}
+
+static void SSL_CTX_rc_dec(SSL_CTX_rc* ctx)
+{
+  if (!ctx);
+
+  if (ctx->refs == 1)
+  {
+    SSL_CTX_free(ctx->ctx);
+    free(ctx);
+  }
+  else
+    --ctx->refs;
+}
+
 struct socket_impl_
 {
   int handle;
-  SSL_CTX* ctx;
+  SSL_CTX_rc* ctx;
   SSL* ssl;
   BIO* bio;
 };
 
+static Socket* sock_ssl_create_impl(bool create_ssl_ctx);
+
 static void ssls_destroy(Socket* sockp)
 {
+  if (sockp->data->ctx)
+    SSL_CTX_rc_dec(sockp->data->ctx);
   if (sockp->data->handle != -1)
     close(sockp->data->handle);
   free(sockp);
@@ -69,20 +118,7 @@ static bool ssls_connect_addr(Socket *sockp, const struct sockaddr* sa,
   }
   memcpy(&sockp->remote_addr, sa, salen);
 
-  // init SSL context
-  const SSL_METHOD* method = SSLv23_client_method();
-  sockp->data->ctx = SSL_CTX_new(method);
-  if (sockp->data->ctx == NULL)
-  {
-    close(sockp->data->handle);
-    sockp->data->handle = -1;
-    return false;
-  }
-
-  // disable SSLv2
-  SSL_CTX_set_options(sockp->data->ctx, SSL_OP_NO_SSLv2);
-
-  sockp->data->ssl = SSL_new(sockp->data->ctx);
+  sockp->data->ssl = SSL_new(sockp->data->ctx->ctx);
   SSL_set_fd(sockp->data->ssl, sockp->data->handle);
   SSL_set_mode(sockp->data->ssl, SSL_MODE_AUTO_RETRY);
 
@@ -95,7 +131,6 @@ static bool ssls_connect_addr(Socket *sockp, const struct sockaddr* sa,
   {
     SSL_free(sockp->data->ssl);
     sockp->data->ssl = NULL;
-    SSL_CTX_free(sockp->data->ctx);
     close(sockp->data->handle);
     sockp->data->handle = -1;
   }
@@ -107,6 +142,31 @@ static bool ssls_connect_addr(Socket *sockp, const struct sockaddr* sa,
 
   sockp->connected = true;
   return true;
+}
+
+static bool ssls_dup(const Socket* fromsock, Socket** tosock)
+{
+  Socket* tmp = sock_ssl_create_impl(false);
+  if (!tmp)
+    return false;
+
+  memcpy(&tmp->remote_addr, &fromsock->remote_addr,
+       sizeof(fromsock->remote_addr));
+  memcpy(&tmp->local_addr, &fromsock->local_addr,
+       sizeof(fromsock->local_addr));
+  // tmp->connected = fromsock->connected;
+
+  // copy SSL context
+  tmp->data->ctx = fromsock->data->ctx;
+  SSL_CTX_rc_inc(tmp->data->ctx);
+
+  *tosock = tmp;
+  return true;
+}
+
+static bool ssls_accept(Socket* sockp, const char* mode, bool pasvmod)
+{
+  return pasvmod;
 }
 
 static void ssls_throughput(Socket *sockp)
@@ -191,7 +251,7 @@ static void ssls_fd_set(Socket* sockp, fd_set* fdset)
 static int ssls_select(Socket* sockp, fd_set* readfds, fd_set* writefds,
                      fd_set* errorfds, struct timeval* timeout)
 {
-  return select(sockp->data->handle + 1, readfds, writefds, errorfds, timeout);
+  return 1; // select(sockp->data->handle + 1, readfds, writefds, errorfds, timeout);
 }
 
 static int ssls_eof(Socket* sockp)
@@ -199,7 +259,7 @@ static int ssls_eof(Socket* sockp)
   return BIO_eof(sockp->data->bio);
 }
 
-Socket* sock_ssl_create(void)
+static Socket* sock_ssl_create_impl(bool create_ssl_ctx)
 {
   Socket* sock = xmalloc(sizeof(Socket));
   memset(sock, 0, sizeof(Socket));
@@ -207,11 +267,12 @@ Socket* sock_ssl_create(void)
   sock->data = xmalloc(sizeof(socket_impl));
   memset(sock->data, 0, sizeof(socket_impl));
   sock->data->handle = -1;
+  sock->data->ctx = NULL;
 
   sock->destroy = ssls_destroy;
   sock->connect_addr = ssls_connect_addr;
-  sock->copy = NULL;
-  sock->accept = NULL;
+  sock->dup = ssls_dup;
+  sock->accept = ssls_accept;
   sock->listen = NULL;
   sock->throughput = ssls_throughput;
   sock->lowdelay = ssls_lowdelay;
@@ -229,5 +290,28 @@ Socket* sock_ssl_create(void)
   sock->clearerr = NULL;
   sock->error = ssls_error;
 
+  if (create_ssl_ctx)
+  {
+    // init SSL context
+    sock->data->ctx = SSL_CTX_rc_new(SSLv23_client_method());
+    if (sock->data->ctx == NULL)
+    {
+      free(sock->data);
+      free(sock);
+      return NULL;
+    }
+
+    // disable SSLv2
+    SSL_CTX_set_options(sock->data->ctx->ctx, SSL_OP_NO_SSLv2);
+    // share sessions
+    SSL_CTX_set_session_cache_mode(sock->data->ctx->ctx, SSL_SESS_CACHE_CLIENT);
+  }
+
   return sock;
 }
+
+Socket* sock_ssl_create(void)
+{
+  return sock_ssl_create_impl(true);
+}
+

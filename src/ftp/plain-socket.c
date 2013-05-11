@@ -129,13 +129,20 @@ static bool ps_connect_addr(Socket *sockp, const struct sockaddr* sa,
   return true;
 }
 
-static void ps_copy(Socket *tosock, const Socket *fromsock)
+static bool ps_dup(const Socket* fromsock, Socket** tosock)
 {
-  memcpy(&tosock->remote_addr, &fromsock->remote_addr,
-       sizeof(tosock->remote_addr));
-  memcpy(&tosock->local_addr, &fromsock->local_addr,
-       sizeof(tosock->local_addr));
-  tosock->connected = fromsock->connected;
+  Socket* tmp = sock_create();
+  if (!tmp)
+    return false;
+
+  memcpy(&tmp->remote_addr, &fromsock->remote_addr,
+       sizeof(fromsock->remote_addr));
+  memcpy(&tmp->local_addr, &fromsock->local_addr,
+       sizeof(fromsock->local_addr));
+  // tmp->connected = fromsock->connected;
+
+  *tosock = tmp;
+  return true;
 }
 
 /* accept an incoming connection */
@@ -334,7 +341,7 @@ Socket* sock_create(void)
 
   sock->destroy = ps_destroy;
   sock->connect_addr = ps_connect_addr;
-  sock->copy = ps_copy;
+  sock->dup = ps_dup;
   sock->accept = ps_accept;
   sock->listen = ps_listen;
   sock->throughput = ps_throughput;
