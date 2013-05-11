@@ -24,7 +24,6 @@ struct Socket_
   struct sockaddr_storage local_addr, remote_addr;
 
   void (*destroy)(Socket *sockp);
-  bool (*connect_host)(Socket *sockp, Host *hp);
   bool (*connect_addr)(Socket *sockp, const struct sockaddr* sa, socklen_t salen);
   void (*copy)(Socket *tosock, const Socket *fromsock);
   bool (*accept)(Socket *sockp, const char *mode, bool pasvmode);

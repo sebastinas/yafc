@@ -31,6 +31,12 @@ else
 SSHSRCS =
 endif
 
+if HAVE_OPENSSL
+SSLSRCS = src/ftp/ssl-socket.c
+else
+SSLSRCS =
+endif
+
 if NEED_BASE_IMPL
 BASE64SRC = lib/base64.c
 else
@@ -73,6 +79,7 @@ yafc_SOURCES = src/main.c \
 							 src/ftp/ftp.c \
 							 src/ftp/socket.c \
 							 src/ftp/plain-socket.c \
+							 $(SSLSRCS) \
 							 src/ftp/host.c \
 							 src/ftp/rglob.c \
 							 src/ftp/rfile.c \
@@ -113,7 +120,7 @@ noinst_HEADERS = src/alias.h \
 								 src/rc.h \
 								 src/ftp/ftp.h \
 								 src/ftp/socket.h \
-								 src/ftp/plain-socket.c \
+								 src/ftp/socket-impl.h \
 								 src/ftp/host.h \
 								 src/ftp/rglob.h \
 								 src/ftp/rfile.h \

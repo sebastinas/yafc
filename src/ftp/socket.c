@@ -33,10 +33,20 @@ bool sock_connect_addr(Socket *sockp, const struct sockaddr* sa,
 
 bool sock_connect_host(Socket *sockp, Host *hp)
 {
-  if (!sockp || !hp || !sockp->connect_host)
+  if (!sockp || !hp || !sockp->connect_addr || sockp->connected)
     return false;
 
-  return sockp->connect_host(sockp, hp);
+  const struct addrinfo* addr = host_getaddrinfo(hp);
+  for (; addr != NULL; addr = addr->ai_next)
+  {
+    if (sock_connect_addr(sockp, addr->ai_addr, addr->ai_addrlen))
+    {
+      host_connect_addr(hp, addr);
+      return true;
+    }
+  }
+
+  return false;
 }
 
 void sock_copy(Socket *tosock, const Socket *fromsock)

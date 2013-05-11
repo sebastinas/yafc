@@ -1,5 +1,5 @@
 /*
- * socket.c --
+ * plain-socket.c -- plain socket implementation
  *
  * Yet Another FTP Client
  * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
@@ -82,12 +82,12 @@ static void ps_destroy(Socket* sockp)
   free(sockp);
 }
 
-static int ps_getsockname(Socket *sockp, struct sockaddr_storage* sa)
+static bool ps_getsockname(Socket *sockp, struct sockaddr_storage* sa)
 {
   socklen_t len = sizeof(struct sockaddr_storage);
   if (getsockname(sockp->data->handle, (struct sockaddr*)sa, &len) == -1)
-    return -1;
-  return 0;
+    return false;
+  return true;
 }
 
 static bool ps_connect_addr(Socket *sockp, const struct sockaddr* sa,
@@ -109,7 +109,7 @@ static bool ps_connect_addr(Socket *sockp, const struct sockaddr* sa,
     return false;
   }
 
-  if (ps_getsockname(sockp, &sockp->local_addr) == -1)
+  if (!ps_getsockname(sockp, &sockp->local_addr))
   {
     perror("getsockname()");
     close(sockp->data->handle);
@@ -127,24 +127,6 @@ static bool ps_connect_addr(Socket *sockp, const struct sockaddr* sa,
 
   sockp->connected = true;
   return true;
-}
-
-static bool ps_connect_host(Socket *sockp, Host *hp)
-{
-  if (sockp->data->handle != -1)
-    return false;
-
-  const struct addrinfo* addr = host_getaddrinfo(hp);
-  for (; addr != NULL; addr = addr->ai_next)
-  {
-    if (ps_connect_addr(sockp, addr->ai_addr, addr->ai_addrlen))
-    {
-      host_connect_addr(hp, addr);
-      return true;
-    }
-  }
-
-  return false;
 }
 
 static void ps_copy(Socket *tosock, const Socket *fromsock)
@@ -217,7 +199,7 @@ static bool ps_listen(Socket* sockp, int family)
     return false;
   }
 
-  if (ps_getsockname(sockp, &sockp->local_addr) == -1)
+  if (!ps_getsockname(sockp, &sockp->local_addr))
   {
     close(sockp->data->handle);
     sockp->data->handle = -1;
@@ -356,7 +338,6 @@ Socket* sock_create(void)
   sock->data->handle = -1;
 
   sock->destroy = ps_destroy;
-  sock->connect_host = ps_connect_host;
   sock->connect_addr = ps_connect_addr;
   sock->copy = ps_copy;
   sock->accept = ps_accept;

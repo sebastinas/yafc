@@ -338,7 +338,11 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
     }
 #endif
 
-    if(urlp->protocol && strcmp(urlp->protocol, "ftp") != 0) {
+    if(urlp->protocol && strcmp(urlp->protocol, "ftp") != 0
+#ifdef HAVE_OPENSSL
+        && strcmp(urlp->protocol, "ftps") != 0
+#endif
+        ) {
         ftp_err(_("Sorry, don't know how to handle your '%s' protocol\n"
                   "trying 'ftp' instead...\n"),
                 urlp->protocol);
@@ -353,8 +357,13 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
                 host_getoname(ftp->host), urlp->port);
     }
 
-    ftp->ctrl = sock_create();
-    if (ftp->ctrl == 0) {
+#ifdef HAVE_OPENSSL
+    if (urlp->protocol && strcmp(urlp->protocol, "ftps") == 0)
+      ftp->ctrl = sock_ssl_create();
+    else
+#endif
+      ftp->ctrl = sock_create();
+    if (!ftp->ctrl) {
         ftp_err(_("Unable to create socket.\n"));
         alarm(0);
         ftp_set_signal(SIGALRM, SIG_IGN);

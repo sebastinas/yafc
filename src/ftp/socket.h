@@ -20,6 +20,10 @@
 typedef struct Socket_ Socket;
 
 Socket* sock_create(void);
+#ifdef HAVE_OPENSSL
+Socket* sock_ssl_create(void);
+#endif
+
 void sock_destroy(Socket *sockp);
 
 bool sock_connect_host(Socket *sockp, Host *hp);
