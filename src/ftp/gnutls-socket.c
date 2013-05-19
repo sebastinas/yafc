@@ -137,7 +137,6 @@ static bool ssls_dup(const Socket* fromsock, Socket** tosock)
   free(data);
   if (res)
   {
-    free(data);
     ssls_destroy(tmp);
     return false;
   }
@@ -259,15 +258,14 @@ static int ssls_check_pending(Socket* sockp, bool inout)
 
   struct timeval tv;
   fd_set fds;
-
-  	/* watch fd to see if it has input */
-	FD_ZERO(&fds);
+  /* watch fd to see if it has input */
+  FD_ZERO(&fds);
   FD_SET(sockp->data->handle, &fds);
-	/* wait max 0.5 second */
-	tv.tv_sec = 0;
-	tv.tv_usec = 500;
+  /* wait max 0.5 second */
+  tv.tv_sec = 0;
+  tv.tv_usec = 500;
 
-	return select(sockp->data->handle + 1, &fds, NULL, NULL, &tv);
+  return select(sockp->data->handle + 1, &fds, NULL, NULL, &tv);
 }
 
 static int ssls_eof(Socket* sockp)

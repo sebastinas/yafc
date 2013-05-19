@@ -99,18 +99,6 @@ void init_ftp(void)
 
 void init_yafc(void)
 {
-#ifdef HAVE_OPENSSL
-  OpenSSL_add_all_algorithms();
-  ERR_load_BIO_strings();
-  ERR_load_crypto_strings();
-  SSL_load_error_strings();
-
-  if (SSL_library_init() < 0)
-  {
-    fprintf(stderr, _("Could not initialize OpenSSL library.\n"));
-    exit(1);
-  }
-#endif
 #ifdef HAVE_GNUTLS
   gnutls_global_init();
 #endif
