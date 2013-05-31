@@ -197,11 +197,7 @@ static void parse_host(int trig, FILE *fp)
 			NEXTSTR;
 			url_setprotlevel(up, e);
 		} else if(strcasecmp(e, "passive") == 0) {
-			bool b;
-			NEXTSTR;
-			b = str2bool(e);
-			if(b != -1)
-				url_setpassive(up, b);
+			url_setpassive(up, nextbool(fp));
 		} else if(strcasecmp(e, "sftp") == 0) {
 			NEXTSTR;
 			url_setsftp(up, e);
