@@ -1,3 +1,10 @@
+New in 1.2.5
+------------
+
+* Fix some memory leaks.
+* Fix build errors when building with texinfo 5.
+* Fix detection of some system headers.
+
 New in 1.2.4
 ------------
 
