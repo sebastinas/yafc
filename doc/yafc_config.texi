@@ -1,4 +1,4 @@
-@node Configuration, Bookmarks, The shell, top
+@node Configuration, Bookmarks, The shell, Top
 @chapter Configuration
 
 Yafc will parse a system-wide configuration file, @file{/etc/yafcrc}

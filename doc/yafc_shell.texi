@@ -1,4 +1,4 @@
-@node The shell, Configuration, Invoking Yafc, top
+@node The shell, Configuration, Invoking Yafc, Top
 @chapter The shell
 
 Yafc presents the user with an internal shell.

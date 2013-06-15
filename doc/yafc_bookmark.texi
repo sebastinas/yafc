@@ -1,4 +1,4 @@
-@node Bookmarks, Kerberos, Configuration, top
+@node Bookmarks, Kerberos, Configuration, Top
 @chapter Bookmarks 
 
 Just like creating bookmarks for web pages in a browser, you can create
@@ -32,7 +32,7 @@ keyword.
 @c ======================================================
 
 @node Bookmark keywords, Bookmark examples, , Bookmarks
-@subsection Bookmark keywords
+@section Bookmark keywords
 
 @table @samp
 
@@ -108,7 +108,7 @@ command @xref{bookmark}.
 @c ============================================================
 
 @node Bookmark examples, , Bookmark keywords, Bookmarks
-@subsection Bookmark examples
+@section Bookmark examples
 
 @table @code
 

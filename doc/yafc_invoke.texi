@@ -1,4 +1,4 @@
-@node Invoking Yafc, The shell, Overview, top
+@node Invoking Yafc, The shell, Overview, Top
 @chapter Invoking Yafc
 @cindex command line options
 
