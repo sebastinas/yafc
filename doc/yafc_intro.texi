@@ -1,4 +1,4 @@
-@node    Overview, Invoking Yafc, top, top
+@node    Overview, Invoking Yafc, Top, Top
 @chapter Overview
 
 This manual documents @sc{Yafc}. @sc{Yafc} is quite a powerful ftp client.
@@ -22,7 +22,7 @@ repository located at @uref{https://github.com/sebastinas/yafc}.
 
 @c -----------------------------------------------------
 @node Bugs, Obtaining Yafc, , Overview
-@subsection Bugs
+@section Bugs
 
 Please report bugs at @uref{https://github.com/sebastinas/yafc}.
 Before reporting a bug, please verify you're using the latest version
@@ -36,7 +36,7 @@ you have one.
 
 @c -----------------------------------------------------
 @node    Obtaining Yafc, Motivation, Bugs, Overview
-@subsection Obtaining Yafc
+@section Obtaining Yafc
 
 @table @asis
 
@@ -50,7 +50,7 @@ you have one.
 
 @c -----------------------------------------------------
 @node    Motivation, , Obtaining Yafc, Overview
-@subsection Motivation
+@section Motivation
 
 Yafc was created because I needed a good ftp client.
 The standard BSD ftp client lacks tab completion, something I've

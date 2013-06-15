@@ -96,7 +96,7 @@ This document applies to version @value{VERSION}.
 @c *****************************************************
 @include yafc_bookmark.texi
 @c *****************************************************
-@node Kerberos, , Bookmarks, top
+@node Kerberos, , Bookmarks, Top
 @chapter Kerberos
 
 If Yafc is compiled with Kerberos, it tries to authenticate using Kerberos 5

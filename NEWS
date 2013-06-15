@@ -1,11 +1,18 @@
 New in git
 ----------
 
-* Make it possible to pass Kerberos 5 flags to configure if krb5-config is
-  missing.
 * Use strlcpy and strlcat in some places. This requires libbsd on Linux.
 * Drop the code to support Kerberos 4.
 * Experimental support for implicit FTP over SSL/TLS.
+
+New in 1.2.5
+------------
+
+* Fix some memory leaks.
+* Fix build errors when building with texinfo 5.
+* Fix detection of some system headers.
+* Make it possible to pass Kerberos 5 flags to configure if krb5-config is
+  missing.
 
 New in 1.2.4
 ------------
