@@ -4,7 +4,7 @@ dnl init
 
 AC_PREREQ([2.65])
 AC_INIT([yafc],
-        [1.2.4],
+        [1.2.5],
         [https://github.com/sebastinas/yafc/issues/],
         [yafc],
         [http://yafc-ftp.com])
