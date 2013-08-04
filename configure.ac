@@ -154,15 +154,33 @@ if test "$yafc_with_socks5" = "yes"; then
   AC_CHECK_LIB(socks5, SOCKSconnect)
 fi
 
+# editline
+yafc_got_editline="no, disabled"
+YAFC_ARG_WITH(editline, yes, [editline])
+if test "$yafc_with_editline" = "yes"; then
+  PKG_CHECK_MODULES([EDITLINE], [libedit >= 3],
+    [
+      AC_DEFINE(HAVE_LIBEDIT, [], [Define if you have libedit installed.])
+      AM_CONDITIONAL(HAVE_LIBEDIT, [true])
+      yafc_got_editline="yes"
+    ],
+    [
+      AM_CONDITIONAL(HAVE_LIBEDIT, [false])
+      yafc_got_editline="no, not found"
+    ])
+fi
+
 # readline
 yafc_got_readline="no, disabled"
-YAFC_ARG_WITH(readline, yes, [Readline])
-if test "$yafc_with_readline" = "yes"; then
-  AX_LIB_READLINE
-  if test "$ax_cv_lib_readline" = "no"; then
-    yafc_got_readline="no, not found"
-  else
-    yafc_got_readline="yes"
+if test "$yafc_got_editline" != "yes"; then
+  YAFC_ARG_WITH(readline, no, [Readline])
+  if test "$yafc_with_readline" = "yes"; then
+    AX_LIB_READLINE
+    if test "$ax_cv_lib_readline" = "no"; then
+      yafc_got_readline="no, not found"
+    else
+      yafc_got_readline="yes"
+    fi
   fi
 fi
 
@@ -483,6 +501,7 @@ echo "libraries ...................... $LIBS $INTLLIBS"
 echo "installation prefix ............ $prefix"
 echo "using Kerberos 5 ............... $yafc_found_krb5"
 echo "using readline ................. $yafc_got_readline"
+echo "using editline ................. $yafc_got_editline"
 echo "using ssh ...................... $yafc_got_ssh"
 echo "using IPv6 ..................... $ac_cv_ipv6"
 echo "using NLS ...................... $use_nls"

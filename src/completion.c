@@ -143,7 +143,9 @@ static char *remote_completion_function(const char *text, int state)
 	 * readline appends a class character (ie /,@,*) in _local_ filenames
 	 */
 	rl_filename_completion_desired = 1;
+#ifndef HAVE_LIBEDIT
 	rl_filename_quoting_desired = 1;
+#endif
 
 	if(!state) {
 		bool dir_is_cached;
@@ -176,7 +178,15 @@ static char *remote_completion_function(const char *text, int state)
 		free(ap);
 
 		if(gvWaitingDots)
+    {
+#ifdef HAVE_LIBEDIT
+      const size_t len = strlen(rl_line_buffer);
+      rl_line_buffer[len - 3] = '\0';
+      rl_redisplay();
+#else
 			rl_do_undo(); /* remove the dots */
+#endif
+    }
 
 		if(!dir_is_cached && ftp_get_verbosity() >= vbCommand)
 			rl_forced_update_display();
@@ -292,7 +302,9 @@ static char *taglist_completion_function(const char *text, int state)
 	}
 
 	rl_filename_completion_desired = 1;
+#ifndef HAVE_LIBEDIT
 	rl_filename_quoting_desired = 1;
+#endif
 
 	while(lip) {
 		rfile *f = (rfile *)lip->data;
@@ -317,7 +329,9 @@ static char *local_taglist_completion_function(const char *text, int state)
 	}
 
 	rl_filename_completion_desired = 1;
+#ifndef HAVE_LIBEDIT
 	rl_filename_quoting_desired = 1;
+#endif
 
 	while(lip) {
 		char *p = (char *)lip->data;

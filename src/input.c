@@ -219,25 +219,29 @@ char *remote_completion_function(char *text, int state);
 
 void input_init(void)
 {
-	rl_outstream = stderr;
-    /* Allow conditional parsing of the ~/.inputrc file. */
-    rl_readline_name = PACKAGE;
-    rl_completion_entry_function = (rl_compentry_func_t *)no_completion_function;
-    /* Tell the completer that we want a crack first. */
-    rl_attempted_completion_function = (CPPFunction *)the_complete_function;
+  rl_outstream = stderr;
+  /* Allow conditional parsing of the ~/.inputrc file. */
+  rl_readline_name = PACKAGE;
+#ifndef HAVE_LIBEDIT
+  rl_completion_entry_function = (rl_compentry_func_t *)no_completion_function;
+#endif
+  /* Tell the completer that we want a crack first. */
+  rl_attempted_completion_function = (CPPFunction *)the_complete_function;
 
-	rl_completer_word_break_characters = " \t\n\"\';";
-	rl_completer_quote_characters = "'\"\\";
-	/* characters that need to be quoted when appearing in filenames. */
-	rl_filename_quote_characters = " \t\n\\\"'@<>=;|&()#$`?*[]!:";
-	rl_filename_quoting_function = bash_quote_filename;
-	rl_filename_dequoting_function = (rl_dequote_func_t *)bash_dequote_filename;
-	rl_char_is_quoted_p = char_is_quoted;
+  rl_completer_word_break_characters = " \t\n\"\';";
+  rl_completer_quote_characters = "'\"\\";
+#ifndef HAVE_LIBEDIT
+  /* characters that need to be quoted when appearing in filenames. */
+  rl_filename_quote_characters = " \t\n\\\"'@<>=;|&()#$`?*[]!:";
+  rl_filename_quoting_function = bash_quote_filename;
+  rl_filename_dequoting_function = (rl_dequote_func_t *)bash_dequote_filename;
+  rl_char_is_quoted_p = char_is_quoted;
+#endif
 
-	force_completion_type = cpUnset;
+  force_completion_type = cpUnset;
 
-	if(gvUseHistory)
-		read_history(gvHistoryFile);
+  if (gvUseHistory)
+    read_history(gvHistoryFile);
 }
 
 void input_redisplay_prompt(void)

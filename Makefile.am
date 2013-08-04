@@ -147,7 +147,8 @@ yafc_LDADD = $(SSH_LIBS) \
 						 $(LIBGNUTLS_LIBS) \
 						 @LIBOBJS@ \
 						 $(INTLLIBS) \
-						 $(BSD_LIBS)
+						 $(BSD_LIBS) \
+						 $(EDITLINE_LIBS)
 
 DEFS = -DLOCALEDIR=\"${YAFC_LOCALEDIR}\" \
 			 -DSYSCONFDIR=\"@sysconfdir@\" \
@@ -157,6 +158,7 @@ BUILT_SOURCES = yafcrc.h
 
 AM_CPPFLAGS = $(SSH_CFLAGS) \
 							$(LIBGNUTLS_CFLAGS) \
+							$(EDITLINE_CFLAGS) \
 							-I$(top_srcdir)/src \
 							-I$(top_srcdir)/lib \
 							-I$(top_srcdir)/src/ftp \

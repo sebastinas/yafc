@@ -41,7 +41,7 @@ void cmd_help(int argc, char **argv)
   };
 
 	fprintf(stderr, _("Available commands: (commands may be abbreviated)\n"));
-#ifdef HAVE_LIBREADLINE
+#if defined(HAVE_LIBREADLINE) && !defined(HAVE_LIBEDIT)
 	/* hack to let readline display all commands */
 	rl_point=rl_end=0;
 	func = rl_named_function("possible-completions");
@@ -53,7 +53,7 @@ void cmd_help(int argc, char **argv)
 			printf("%s\n", cmds[i].cmd);
 		for(li = gvAliases->first; li; li = li->next)
 			printf("%s\n", ((alias *)li->data)->name);
-#ifdef HAVE_LIBREADLINE
+#if defined(HAVE_LIBREADLINE) && !defined(HAVE_LIBEDIT)
 	}
 #endif
 }
@@ -65,8 +65,12 @@ void cmd_version(int argc, char **argv)
 	printf(FULLVER "\n");
 
 	printf(_("Compiled " __TIME__ " " __DATE__ " (" HOSTTYPE ")\n"));
-#if HAVE_LIBREADLINE
+#ifdef HAVE_LIBEDIT
+  printf(_("Using editline version %s.\n"), rl_library_version);
+#else
+#ifdef HAVE_LIBREADLINE
 	printf(_("Using Readline version %s.\n"), rl_library_version);
+#endif
 #endif
 #ifdef HAVE_LIBSSH
 	printf(_("Using libssh version %d.%d.%d.\n"), LIBSSH_VERSION_MAJOR,

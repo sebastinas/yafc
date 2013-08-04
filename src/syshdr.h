@@ -146,7 +146,6 @@ char *strchr (), *strrchr ();
 # include <arpa/inet.h> /* for inet_aton() or inet_addr()  */
 #endif
 
-
 #ifdef HAVE_LIBREADLINE
 #  if defined(HAVE_READLINE_READLINE_H)
 #    include <readline/readline.h>
@@ -171,6 +170,11 @@ extern int read_history ();
 #  endif /* defined(HAVE_READLINE_HISTORY_H) */
   /* no history */
 #endif /* HAVE_READLINE_HISTORY */
+
+#ifdef HAVE_LIBEDIT
+#include <editline/readline.h>
+#define HAVE_LIBREADLINE
+#endif
 
 
 #ifdef HAVE_FNMATCH_GNU
