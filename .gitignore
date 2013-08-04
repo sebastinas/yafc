@@ -32,3 +32,4 @@ cf/ltoptions.m4
 cf/ltsugar.m4
 cf/ltversion.m4
 cf/lt~obsolete.m4
+po/Makefile.in.in
