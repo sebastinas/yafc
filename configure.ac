@@ -427,18 +427,6 @@ fi
 
 AM_CONDITIONAL([NEED_BASE_IMPL], [${yafc_need_base64_impl}])
 
-# SSL support
-PKG_CHECK_MODULES([LIBGNUTLS], [gnutls],
-  [
-    AC_DEFINE([HAVE_GNUTLS], [], [Define if GNU TLS is available])
-    AM_CONDITIONAL([HAVE_GNUTLS], [true])
-  ],
-  [
-    AM_CONDITIONAL([HAVE_GNUTLS], [false])
-  ]
-)
-
-
 # bash completion
 AC_ARG_WITH([bash-completion],
   AS_HELP_STRING([--with-bash-completion@<:@=DIR@:>@],

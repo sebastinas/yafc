@@ -31,12 +31,6 @@ else
 SSHSRCS =
 endif
 
-if HAVE_GNUTLS
-SSLSRCS = src/ftp/gnutls-socket.c
-else
-SSLSRCS =
-endif
-
 if NEED_BASE_IMPL
 BASE64SRC = lib/base64.c
 else
@@ -79,7 +73,6 @@ yafc_SOURCES = src/main.c \
 							 src/ftp/ftp.c \
 							 src/ftp/socket.c \
 							 src/ftp/plain-socket.c \
-							 $(SSLSRCS) \
 							 src/ftp/host.c \
 							 src/ftp/rglob.c \
 							 src/ftp/rfile.c \
@@ -144,7 +137,6 @@ noinst_HEADERS = src/alias.h \
 								 lib/fnmatch_.h
 
 yafc_LDADD = $(SSH_LIBS) \
-						 $(LIBGNUTLS_LIBS) \
 						 @LIBOBJS@ \
 						 $(INTLLIBS) \
 						 $(BSD_LIBS) \
@@ -157,7 +149,6 @@ DEFS = -DLOCALEDIR=\"${YAFC_LOCALEDIR}\" \
 BUILT_SOURCES = yafcrc.h
 
 AM_CPPFLAGS = $(SSH_CFLAGS) \
-							$(LIBGNUTLS_CFLAGS) \
 							$(EDITLINE_CFLAGS) \
 							-I$(top_srcdir)/src \
 							-I$(top_srcdir)/lib \
