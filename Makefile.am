@@ -14,7 +14,7 @@ else
 SUBDIRS = doc
 endif
 
-ACLOCAL_AMFLAGS = -I cf
+ACLOCAL_AMFLAGS = -I m4
 
 CLEANFILES=*~ \#*\#
 DISTCLEANFILES=build yafcrc.h .deps/*
