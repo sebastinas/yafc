@@ -69,16 +69,11 @@ AM_CONDITIONAL([USE_NLS],[test "x$use_nls" = "xyes"])
 
 
 # Checks for header files.
-AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_HEADER_STAT
 AC_HEADER_TIME
-AC_HEADER_STDBOOL
 AC_HEADER_DIRENT
 AC_HEADER_RESOLV
-
-AC_CHECK_HEADER([stdint.h],[],
-                [AC_MSG_ERROR([stdint.h is required by C99 but is not present.])])
 
 AC_CHECK_HEADERS([netinet/ip.h], [], [],
                  [

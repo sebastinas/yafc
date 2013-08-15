@@ -39,9 +39,14 @@
 # include <sys/types.h>
 #endif
 
+/* C99 headers */
 #include <stdint.h>
-
+#include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+
 #include <ctype.h>
 #include <signal.h>
 #include <stdarg.h>
@@ -64,23 +69,6 @@ int asprintf(char **strp, const char *format, ...) YAFC_PRINTF(2, 3);
 int vasprintf(char **strp, const char *format, va_list ap);
 #endif
 
-#ifdef STDC_HEADERS
-# include <string.h>
-#else
-# ifndef HAVE_STRCHR
-#  define strchr index
-#  define strrchr rindex
-# endif
-char *strchr (), *strrchr ();
-# ifndef HAVE_MEMCPY
-#  define memcpy(d, s, n) bcopy ((s), (d), (n))
-#  define memmove(d, s, n) bcopy ((s), (d), (n))
-# endif
-#endif
-
-#ifdef HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif
@@ -224,22 +212,6 @@ size_t strlcpy (char *dst, const char *src, size_t dst_sz);
 #endif
 
 typedef void (*sighandler_t)(int);
-
-#ifndef HAVE_STDBOOL_H
-#include <stdbool.h>
-#else
-#if !HAVE__BOOL
-#ifdef __cplusplus
-typedef bool _Bool;
-#else
-typedef unsigned char _Bool;
-#endif
-#endif
-#define bool _Bool
-#define false 0
-#define true 1
-#define __bool_true_false_are_defined 1
-#endif
 
 #define test(a, b)   (((a) & (b)) == (b))
 #define STD_SHELL "/bin/sh"
