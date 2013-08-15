@@ -28,13 +28,6 @@
 #ifdef HAVE_LOCALE_H
 # include <locale.h>
 #endif
-#ifdef HAVE_OPENSSL
-#include <openssl/err.h>
-#include <openssl/ssl.h>
-#endif
-#ifdef HAVE_GNUTLS
-#include <gnutls/gnutls.h>
-#endif
 
 #include "yafcrc.h"
 
@@ -99,10 +92,6 @@ void init_ftp(void)
 
 void init_yafc(void)
 {
-#ifdef HAVE_GNUTLS
-  gnutls_global_init();
-#endif
-
 	gvFtpList = list_new((listfunc)ftp_destroy);
 	list_additem(gvFtpList, ftp_create());
 	gvCurrentFtp = gvFtpList->first;
