@@ -20,7 +20,7 @@
 #include "shortpath.h"
 #include "transfer.h"
 #include "commands.h"
-#include <modechange.h>  /* in ../lib/ */
+#include "utils/modechange.h"
 #include "utils.h"
 #include "bashline.h"
 
@@ -31,7 +31,7 @@
 static bool get_quit = false;
 static bool get_owbatch = false;
 static bool get_delbatch = false;
-static struct mode_change *cmod = 0;
+static mode_change *cmod = 0;
 static gid_t group_change = -1;
 static bool get_skip_empty = false;
 
@@ -48,7 +48,9 @@ static void print_get_syntax(void)
 {
   show_help(_("Receives files from remote."), "get [options] files",
     _("  -a, --append         append if destination exists\n"
-      "  -c, --chmod=PERM     change mode of transferred files to PERM\n"
+      "  -c, --chmod=PERM     change mode of transferred files to PERM;\n"
+      "                       PERM can be permissions in its octal representation\n"
+      "                       or of the form [ugoa]*[+-=][rwxXstugo]+ separated by commas\n"
       "      --chgrp=GROUP    change group of transferred files to GROUP\n"
       "  -d, --no-dereference copy symbolic links as symbolic links\n"
       "  -D, --delete-after   delete remote file after successful transfer\n"
@@ -676,15 +678,9 @@ void cmd_get(int argc, char **argv)
             opt |= GET_APPEND;
             break;
           case 'c':
-            cmod = mode_compile(optarg,
-                                (MODE_MASK_EQUALS | MODE_MASK_PLUS
-                                 | MODE_MASK_MINUS));
-            if(cmod == MODE_INVALID) {
+            cmod = mode_compile(optarg, MODE_MASK_ALL);
+            if(cmod == NULL) {
                 fprintf(stderr, _("Invalid mode for --chmod: %s\n"), optarg);
-                return;
-            }
-            else if (cmod == MODE_MEMORY_EXHAUSTED) {
-                fprintf(stderr, _("virtual memory exhausted\n"));
                 return;
             }
             opt |= GET_CHMOD;

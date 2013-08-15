@@ -82,10 +82,10 @@ yafc_SOURCES = src/main.c \
 							 src/ftp/cache.c \
 							 src/ftp/ftpsend.c \
 							 src/ftp/ftpsigs.c \
+							 src/utils/modechange.c \
 							 $(SSHSRCS) \
 							 lib/makepath.c \
 							 $(BASE64SRC) \
-							 lib/modechange.c \
 							 lib/bashline.c
 
 noinst_HEADERS = src/alias.h \
@@ -127,10 +127,10 @@ noinst_HEADERS = src/alias.h \
 								 src/libmhe/shortpath.h \
 								 src/libmhe/args.h \
 								 src/libmhe/xmalloc.h \
+								 src/utils/modechange.h \
 								 lib/getopt.h \
 								 lib/base64.h \
 								 lib/makepath.h \
-								 lib/modechange.h \
 								 lib/security.h \
 								 lib/collsyms.h \
 								 lib/bashline.h \

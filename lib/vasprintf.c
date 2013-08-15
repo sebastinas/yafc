@@ -20,9 +20,8 @@
 
 int vasprintf(char** result, const char* format, va_list args)
 {
-  if (!result) {
+  if (!result)
     return -1;
-  }
 
   va_list copy;
   va_copy(copy, args);

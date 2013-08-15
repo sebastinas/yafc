@@ -20,9 +20,6 @@
 
 void cmd_help(int argc, char **argv)
 {
-#ifdef HAVE_LIBREADLINE
-	Function *func;
-#endif
 	int i;
 	listitem *li;
 
@@ -44,8 +41,8 @@ void cmd_help(int argc, char **argv)
 #if defined(HAVE_LIBREADLINE) && !defined(HAVE_LIBEDIT)
 	/* hack to let readline display all commands */
 	rl_point=rl_end=0;
-	func = rl_named_function("possible-completions");
-	if(func)
+	Function* func = rl_named_function("possible-completions");
+	if (func)
 		func();
 	else {
 #endif
