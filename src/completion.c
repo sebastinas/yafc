@@ -124,106 +124,92 @@ static char *command_completion_function(const char *text, int state)
 
 static char *remote_completion_function(const char *text, int state)
 {
-    static int len;            /* length of unquoted */
-	static char *dir;          /* any initial directory in text */
-    const char *name;
-	static char *unquoted = 0; /* the unquoted filename (or beginning of it) */
-	rfile *fp = 0;
-	static listitem *lip = 0;
-	static rdirectory *rdir = 0; /* the cached remote directory */
-	static char *merge_fmt = "%s/%s";
+  static int len;            /* length of unquoted */
+  static char *dir = NULL;   /* any initial directory in text */
+  static char *unquoted = NULL; /* the unquoted filename (or beginning of it) */
+  static listitem *lip = NULL;
+  static rdirectory *rdir = NULL; /* the cached remote directory */
+  static char merge_fmt[] = "%s/%s";
 
-	if(!ftp_loggedin())
-		return 0;
+  if (!ftp_loggedin())
+    return 0;
 
-	/* this is not really true, this is for local filename completion,
-	 * but it works here too (sort of), and it looks nicer, since
-	 * the whole path is not printed by readline, ie
-	 * only foo is printed and not /bar/fu/foo (if cwd == /bar/fu)
-	 * readline appends a class character (ie /,@,*) in _local_ filenames
-	 */
-	rl_filename_completion_desired = 1;
+  /* this is not really true, this is for local filename completion,
+   * but it works here too (sort of), and it looks nicer, since
+   * the whole path is not printed by readline, ie
+   * only foo is printed and not /bar/fu/foo (if cwd == /bar/fu)
+   * readline appends a class character (ie /,@,*) in _local_ filenames
+   */
+  rl_filename_completion_desired = 1;
 #ifndef HAVE_LIBEDIT
-	rl_filename_quoting_desired = 1;
+  rl_filename_quoting_desired = 1;
 #endif
 
-	if(!state) {
-		bool dir_is_cached;
-		char *ap;
-
-		dir = base_dir_xptr(text);
-		if(dir) {
-			char *e;
-
-			stripslash(dir);
-			e = strchr(dir, 0);
-			if(e[-1]=='\"')
-				e[-1] = 0;
-			unquote(dir);
-			if(strcmp(dir, "/") == 0)
-				merge_fmt = "%s%s";
-			else
-				merge_fmt = "%s/%s";
-		}
-		if(gvWaitingDots) {
-			rl_insert_text("..."); /* show dots while waiting, like ncftp */
-			rl_redisplay();
-		}
-
-		ap = ftp_path_absolute(dir);
-		rdir = ftp_cache_get_directory(ap);
-		dir_is_cached = (rdir != 0);
-		if(!rdir)
-			rdir = ftp_read_directory(ap);
-		free(ap);
-
-		if(gvWaitingDots)
-    {
-#ifdef HAVE_LIBEDIT
-      const size_t len = strlen(rl_line_buffer);
-      rl_line_buffer[len - 3] = '\0';
-      rl_redisplay();
-#else
-			rl_do_undo(); /* remove the dots */
-#endif
+  if (!state) {
+    dir = base_dir_xptr(text);
+    if (dir) {
+      stripslash(dir);
+      char* e = strchr(dir, 0);
+      if (e[-1]=='\"')
+        e[-1] = '\0';
+      unquote(dir);
+      if (strcmp(dir, "/") == 0)
+        strlcpy(merge_fmt, "%s%s", sizeof(merge_fmt));
+      else
+        strlcpy(merge_fmt, "%s/%s", sizeof(merge_fmt));
     }
+#ifndef HAVE_LIBEDIT
+    if(gvWaitingDots) {
+      rl_insert_text("..."); /* show dots while waiting, like ncftp */
+      rl_redisplay();
+    }
+#endif
 
-		if(!dir_is_cached && ftp_get_verbosity() >= vbCommand)
-			rl_forced_update_display();
+    char* ap = ftp_path_absolute(dir);
+    rdir = ftp_cache_get_directory(ap);
+    const bool dir_is_cached = (rdir != 0);
+    if (!rdir)
+      rdir = ftp_read_directory(ap);
+    free(ap);
 
-		if(!rdir) {
-			free(dir);
-			return 0;
-		}
-		unquoted = bash_dequote_filename(base_name_ptr(text), 0);
-		if(!unquoted)
-			unquoted = (char *)xmalloc(1);
-		len = strlen(unquoted);
-		lip = rdir->files->first;
-	}
+#ifndef HAVE_LIBEDIT
+    if (gvWaitingDots)
+      rl_do_undo(); /* remove the dots */
+#endif
 
-	while(lip) {
-		int isdir; /* 0 = not dir, 1 = dir, 2 = link (maybe dir) */
+    if (!dir_is_cached && ftp_get_verbosity() >= vbCommand)
+      rl_forced_update_display();
 
-		fp = (rfile *)lip->data;
-		lip = lip->next;
+    if (!rdir) {
+      free(dir);
+      return 0;
+    }
+    unquoted = bash_dequote_filename(base_name_ptr(text), 0);
+    if (!unquoted)
+      unquoted = (char *)xmalloc(1);
+    len = strlen(unquoted);
+    lip = rdir->files->first;
+  }
 
-		isdir = ftp_maybe_isdir(fp);
+  while (lip) {
+    rfile* fp = (rfile *)lip->data;
+    lip = lip->next;
 
-		if(remote_dir_only && isdir == 0)
-			continue;
+    /* 0 = not dir, 1 = dir, 2 = link (maybe dir) */
+    const int isdir = ftp_maybe_isdir(fp);
+    if (remote_dir_only && isdir == 0)
+      continue;
 
-		name = base_name_ptr(fp->path);
+    const char* name = base_name_ptr(fp->path);
+    /* skip dotdirs in completion */
+    if(strcmp(name, ".") == 0 || strcmp(name, "..") == 0)
+      continue;
 
-		/* skip dotdirs in completion */
-		if(strcmp(name, ".") == 0 || strcmp(name, "..") == 0)
-			continue;
-
-		if(strncmp(name, unquoted, len) == 0) {
-			char *ret;
-			if(dir)
+    if (strncmp(name, unquoted, len) == 0) {
+      char *ret;
+      if (dir)
       {
-				if (asprintf(&ret, merge_fmt, dir, name) == -1)
+        if (asprintf(&ret, merge_fmt, dir, name) == -1)
         {
           fprintf(stderr, _("Failed to allocate memory.\n"));
           free(unquoted);
@@ -231,19 +217,19 @@ static char *remote_completion_function(const char *text, int state)
           return NULL;
         }
       }
-			else
-				ret = xstrdup(name);
-			if(isdir == 1) {
-				rl_completion_append_character =  '/';
-			} else {
-				rl_completion_append_character =  ' ';
-			}
-			return ret;
-		}
+      else
+        ret = xstrdup(name);
+      if (isdir == 1) {
+        rl_completion_append_character = '/';
+      } else {
+        rl_completion_append_character = ' ';
+      }
+      return ret;
     }
-	free(unquoted);
-	free(dir);
-	return NULL;
+  }
+  free(unquoted);
+  free(dir);
+  return NULL;
 }
 
 static char *variable_completion_function(const char *text, int state)
