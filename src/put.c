@@ -21,7 +21,7 @@
 #include "commands.h"
 #include "lglob.h"
 #include "utils.h"
-#include "bashline.h"
+#include "utils/bashline.h"
 
 #ifdef HAVE_REGEX_H
 # include <regex.h>
@@ -167,7 +167,7 @@ static void putfile(const char *path, struct stat *sb,
 	/* make sure destination directory exists */
 	dpath = base_dir_xptr(dest);
 	dest_dir = ftp_path_absolute(dpath);
-	q_dest_dir = bash_backslash_quote(dest_dir);
+	q_dest_dir = backslash_quote(dest_dir);
 	r = ftp_mkpath(q_dest_dir);
 	free(q_dest_dir);
 	free(dest_dir);

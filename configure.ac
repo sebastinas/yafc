@@ -155,19 +155,18 @@ if test "$yafc_with_editline" = "yes"; then
   PKG_CHECK_MODULES([EDITLINE], [libedit >= 3],
     [
       AC_DEFINE(HAVE_LIBEDIT, [], [Define if you have libedit installed.])
-      AM_CONDITIONAL(HAVE_LIBEDIT, [true])
       yafc_got_editline="yes"
     ],
     [
-      AM_CONDITIONAL(HAVE_LIBEDIT, [false])
       yafc_got_editline="no, not found"
     ])
 fi
+AM_CONDITIONAL(HAVE_LIBEDIT, [test "x$yafc_got_editline" = "xyes"])
 
 # readline
 yafc_got_readline="no, disabled"
-if test "$yafc_got_editline" != "yes"; then
-  YAFC_ARG_WITH(readline, no, [Readline])
+if test "x$yafc_got_editline" != "xyes"; then
+  YAFC_ARG_WITH(readline, yes, [Readline])
   if test "$yafc_with_readline" = "yes"; then
     AX_LIB_READLINE
     if test "$ax_cv_lib_readline" = "no"; then

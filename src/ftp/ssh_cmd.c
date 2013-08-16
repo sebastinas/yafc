@@ -23,7 +23,7 @@
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
-#include "bashline.h"
+#include "utils/bashline.h"
 
 #if defined(BUFSIZ) && BUFSIZ >= 131072
 #define SSH_BUFSIZ BUFSIZ
@@ -690,7 +690,7 @@ static int do_read(const char* infile, FILE* fp, transfer_mode_t mode,
 {
   if (gvSSHTrySCP && !offset)
   {
-    char* escaped = bash_backslash_quote(infile);
+    char* escaped = backslash_quote(infile);
     /* try to set up a scp connection */
     ssh_scp scp = ssh_scp_new(ftp->session, SSH_SCP_READ, escaped);
     free(escaped);

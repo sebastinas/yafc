@@ -19,7 +19,7 @@
 #include "set.h"
 #include "cmd.h"
 #include "url.h"
-#include "bashline.h"
+#include "utils/bashline.h"
 
 cpl_t force_completion_type = cpUnset;
 
@@ -184,7 +184,7 @@ static char *remote_completion_function(const char *text, int state)
       free(dir);
       return 0;
     }
-    unquoted = bash_dequote_filename(base_name_ptr(text), 0);
+    unquoted = dequote_filename(base_name_ptr(text), 0);
     if (!unquoted)
       unquoted = (char *)xmalloc(1);
     len = strlen(unquoted);
@@ -269,7 +269,7 @@ static char *ftplist_completion_function(const char *text, int state)
 			continue;
 		name = f->url->alias ? f->url->alias : f->url->hostname;
 		if(strncmp(name, text, len) == 0)
-			return bash_backslash_quote(name);
+			return backslash_quote(name);
 	}
 	return 0;
 }
@@ -323,7 +323,7 @@ static char *local_taglist_completion_function(const char *text, int state)
 		char *p = (char *)lip->data;
 		lip = lip->next;
 		if(strncmp(p, text, len) == 0)
-			return xstrdup(p); /* bash_backslash_quote(p); */
+			return xstrdup(p); /* backslash_quote(p); */
 	}
 	return 0;
 }
@@ -387,7 +387,7 @@ char **the_complete_function(char *text, int start, int end)
 	quoted = ((char_is_quoted(rl_line_buffer, start) &&
 			   strchr(rl_completer_quote_characters, rl_line_buffer[start-1]))
 			  ? rl_line_buffer[start-1] : 0);
-	text = bash_dequote_filename(text, quoted);
+	text = dequote_filename(text, quoted);
 
 	remote_dir_only = false;
 	switch(cpl) {

@@ -17,7 +17,7 @@
 #include "strq.h"
 #include "input.h"
 #include "commands.h"
-#include "bashline.h"
+#include "utils/bashline.h"
 
 #define RM_INTERACTIVE 1
 #define RM_FORCE 2
@@ -97,7 +97,7 @@ static void remove_files(const list *gl, unsigned opt)
         }
 
         list* rgl = rglob_create();
-				q_recurs_mask = bash_backslash_quote(recurs_mask);
+				q_recurs_mask = backslash_quote(recurs_mask);
 				rglob_glob(rgl, q_recurs_mask, false, true, 0);
 				free(q_recurs_mask);
 				if(list_numitem(rgl) > 0)
