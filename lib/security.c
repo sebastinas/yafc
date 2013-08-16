@@ -307,7 +307,7 @@ int sec_read_msg(char *s, int level)
 	int code;
 
 	buf = malloc(strlen(s));
-	len = base64_decode(s + 4, buf);	/* XXX */
+	len = b64_decode(s + 4, buf);	/* XXX */
 
 	len = (*ftp->mech->decode) (ftp->app_data, buf, len, level);
 	if (len < 0)
@@ -347,7 +347,7 @@ int sec_vfprintf(FILE * f, const char *fmt, va_list ap)
 		printf(_("Failed to encode command.\n"));
 		return -1;
 	}
-	if (base64_encode(enc, len, &buf) < 0) {
+	if (b64_encode(enc, len, &buf) < 0) {
 		printf(_("Out of memory base64-encoding.\n"));
 		return -1;
 	}

@@ -186,7 +186,7 @@ void url_setpassword(url_t *urlp, const char *password)
 	free(urlp->password);
 	if(password && strncmp(password, "[base64]", 8) == 0) {
 		urlp->password = (char *)xmalloc(strlen(password+8)*2+1);
-		if(base64_decode(password+8, urlp->password) < 0) {
+		if(b64_decode(password+8, urlp->password) < 0) {
 			fprintf(stderr, "failed to decode password\n");
 			free(urlp->password);
 			urlp->password = 0;

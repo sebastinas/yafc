@@ -31,12 +31,6 @@ else
 SSHSRCS =
 endif
 
-if NEED_BASE_IMPL
-BASE64SRC = lib/base64.c
-else
-BASE64SRC =
-endif
-
 bin_PROGRAMS = yafc
 
 yafc_SOURCES = src/main.c \
@@ -85,7 +79,7 @@ yafc_SOURCES = src/main.c \
 							 src/utils/modechange.c \
 							 $(SSHSRCS) \
 							 lib/makepath.c \
-							 $(BASE64SRC) \
+							 lib/base64.c \
 							 lib/bashline.c
 
 noinst_HEADERS = src/alias.h \

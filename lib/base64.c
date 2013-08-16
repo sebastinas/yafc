@@ -13,11 +13,28 @@
 #include "base64.h"
 #include <string.h>
 
-#ifdef HAVE_BASE64_B64
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
+#ifdef HAVE_BASE64_HEIMDAL
+#include <heimdal/base64.h>
+
+int b64_encode(const void* data, size_t size, char** str)
+{
+  return base64_encode(data, size, str);
+}
+
+int b64_decode(const char* str, void* data)
+{
+  return base64_decode(str, data);
+}
+
+#elif defined(HAVE_BASE64_B64)
 #include "syshdr.h"
 #include <resolv.h>
 
-int base64_encode(const void* data, size_t size, char** str)
+int b64_encode(const void* data, size_t size, char** str)
 {
   if (!str || !data)
     return -1;
@@ -31,7 +48,7 @@ int base64_encode(const void* data, size_t size, char** str)
   return len;
 }
 
-int base64_decode(const char* str, void* data)
+int b64_decode(const char* str, void* data)
 {
   if (!str || !data)
     return -1;
@@ -45,7 +62,7 @@ int base64_decode(const char* str, void* data)
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 
-int base64_encode(const void* data, size_t size, char** str)
+int b64_encode(const void* data, size_t size, char** str)
 {
   if (!str || !data)
     return -1;
@@ -81,7 +98,7 @@ int base64_encode(const void* data, size_t size, char** str)
   return len;
 }
 
-int base64_decode(const char* str, void* data)
+int b64_decode(const char* str, void* data)
 {
   if (!str || !data)
     return -1;

@@ -302,7 +302,7 @@ gss_auth(void *app_data, const char *host)
 
 	gss_release_buffer(&min_stat, &input);
 	if (output_token.length != 0) {
-	    base64_encode(output_token.value, output_token.length, &p);
+	    b64_encode(output_token.value, output_token.length, &p);
 	    gss_release_buffer(&min_stat, &output_token);
 	    ftp_cmd("ADAT %s", p);
 	    free(p);
@@ -323,7 +323,7 @@ gss_auth(void *app_data, const char *host)
 	    } else {
 		p+=5;
 		input.value = malloc(strlen(p));
-		input.length = base64_decode(p, input.value);
+		input.length = b64_decode(p, input.value);
 	    }
 	} else {
 	    if(ftp->fullcode != 235) {
