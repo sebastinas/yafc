@@ -3,11 +3,11 @@
 [ -d support ] || mkdir support || exit
 
 echo -n "Running glib-gettextize..."
-glib-gettextize -f || exit
+glib-gettextize -f -c || exit
 echo " done"
 
 echo -n "Running autoreconf..."
-autoreconf -i -s || exit
+autoreconf -f -i || exit
 echo " done"
 
 echo "Running configure $*..."
