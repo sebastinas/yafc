@@ -16,7 +16,7 @@
 #include "gvars.h"
 #include "strq.h"
 #include "input.h"
-#include "makepath.h"
+#include "utils/makepath.h"
 #include "shortpath.h"
 #include "transfer.h"
 #include "commands.h"
@@ -228,8 +228,12 @@ static int getfile(const rfile *fi, unsigned int opt,
     {
         char *destdir = base_dir_xptr(dest);
         if(destdir) {
-            int r = make_path(destdir, S_IRWXU, S_IRWXU, -1, -1, 1, 0);
-            if(r != 0) {
+            bool r = make_path(destdir);
+            if(!r) {
+                if (errno == EEXIST)
+                  ftp_err("`%s' exists but is not a directory\n", destdir);
+                else
+                  ftp_err("%s: %s\n", destdir, strerror(errno));
                 transfer_mail_msg(_("Couldn't create directory: %s\n"),
                                   destdir);
                 free(destdir);
