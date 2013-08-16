@@ -116,6 +116,7 @@ if test "$ac_cv_func_fnmatch_gnu" = "yes"; then
 fi
 
 AC_CHECK_FUNCS(strcoll memcpy sigsetjmp)
+AC_CHECK_FUNCS(vasprintf, [], [AC_LIBOBJ([vasprintf])])
 
 BASH_FUNC_POSIX_SETJMP
 
@@ -123,8 +124,6 @@ AC_SEARCH_LIBS(socket, socket, [],
 [
   AC_MSG_WARN(cannot find socket function)
 ])
-
-AC_REPLACE_FUNCS(vasprintf)
 
 AC_CHECK_FUNCS(getopt_long, [],
 [

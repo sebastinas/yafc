@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
 AUTOMAKE_OPTIONS = foreign dist-xz no-dist-gzip
-EXTRA_DIST = BUGS THANKS COPYRIGHT \
+EXTRA_DIST = BUGS THANKS COPYRIGHT README.md \
 						 samples/yafcrc \
 						 samples/inputrc \
 						 contrib/yafc-import_ncftp.pl \
