@@ -14,6 +14,8 @@
 #define _utils_h_
 
 #include "syshdr.h"
+#include "linklist.h"
+#include <stdbool.h>
 
 void listify_string(const char *str, list *lp);
 char *stringify_list(list *lp);
@@ -26,5 +28,8 @@ char* get_mode_string(mode_t m);
 listitem *ftplist_search(const char *str);
 char *get_local_curdir(void);
 void invoke_shell(const char* fmt, ...) YAFC_PRINTF(1, 2);
+
+/* Create directory recursively */
+bool make_path(const char* path);
 
 #endif

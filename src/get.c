@@ -16,7 +16,6 @@
 #include "gvars.h"
 #include "strq.h"
 #include "input.h"
-#include "utils/makepath.h"
 #include "shortpath.h"
 #include "transfer.h"
 #include "commands.h"

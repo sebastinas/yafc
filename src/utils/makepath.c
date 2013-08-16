@@ -10,7 +10,7 @@
  * (at your option) any later version. See COPYING for more details.
  */
 
-#include "makepath.h"
+#include "utils.h"
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

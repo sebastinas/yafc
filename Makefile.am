@@ -124,7 +124,6 @@ noinst_HEADERS = src/alias.h \
 								 src/utils/modechange.h \
 								 lib/getopt.h \
 								 lib/base64.h \
-								 src/utils/makepath.h \
 								 lib/security.h \
 								 lib/collsyms.h \
 								 lib/bashline.h \
