@@ -15,7 +15,6 @@
 #include "strq.h"
 #include "completion.h"
 #include "gvars.h"
-#include "utils/bashline.h"
 #include "commands.h"
 
 #ifdef HAVE_HCRYPTO_UI_H

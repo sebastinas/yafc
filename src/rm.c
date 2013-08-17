@@ -17,7 +17,6 @@
 #include "strq.h"
 #include "input.h"
 #include "commands.h"
-#include "utils/bashline.h"
 
 #define RM_INTERACTIVE 1
 #define RM_FORCE 2

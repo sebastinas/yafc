@@ -320,26 +320,23 @@ if test "x$with_ssh" != "xno"; then
   PKG_CHECK_MODULES([SSH], [libssh],
     [
       AC_DEFINE(HAVE_LIBSSH, [], [Define if you have libssh installed.])
-      AM_CONDITIONAL(HAVE_LIBSSH, [true])
       yafc_got_ssh="yes"
     ],
     [
       AC_CHECK_HEADERS([libssh/libssh.h],
       [
         AC_DEFINE(HAVE_LIBSSH, [], [Define if you have libssh installed.])
-        AM_CONDITIONAL(HAVE_LIBSSH, [true])
         LIBS="$LIBS -lssh"
         yafc_got_ssh="yes"
       ],
       [
-        AM_CONDITIONAL(HAVE_LIBSSH, [false])
         yafc_got_ssh="no, not found"
       ])
     ])
 else
-  AM_CONDITIONAL(HAVE_LIBSSH, [false])
   yafc_got_ssh="no, disabled"
 fi
+AM_CONDITIONAL(HAVE_LIBSSH, [test "x$yafc_got_ssh" = "xyes"])
 
 # base64
 yafc_have_base64="no"

@@ -21,7 +21,6 @@
 #include "commands.h"
 #include "utils/modechange.h"
 #include "utils.h"
-#include "utils/bashline.h"
 
 #ifdef HAVE_REGEX_H
 # include <regex.h>

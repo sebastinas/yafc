@@ -19,7 +19,6 @@
 #include "set.h"
 #include "cmd.h"
 #include "url.h"
-#include "utils/bashline.h"
 
 cpl_t force_completion_type = cpUnset;
 

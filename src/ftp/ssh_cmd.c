@@ -23,7 +23,6 @@
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
-#include "utils/bashline.h"
 
 #if defined(BUFSIZ) && BUFSIZ >= 131072
 #define SSH_BUFSIZ BUFSIZ

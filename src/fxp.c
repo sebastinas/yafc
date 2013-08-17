@@ -19,7 +19,6 @@
 #include "strq.h"
 #include "shortpath.h"
 #include "utils.h"
-#include "utils/bashline.h"
 
 #ifdef HAVE_REGEX_H
 # include <regex.h>

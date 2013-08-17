@@ -15,7 +15,6 @@
 #include "strq.h"
 #include "commands.h"
 #include "lglob.h"
-#include "utils/bashline.h"
 #include "input.h"
 
 static void print_ltag_syntax(void)

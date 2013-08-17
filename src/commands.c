@@ -17,7 +17,6 @@
 #include "ftp.h"
 #include "strq.h"
 #include "gvars.h"
-#include "utils/bashline.h"
 #include "utils.h"
 #include "bookmark.h"
 
