@@ -42,7 +42,7 @@ void* xrealloc(void* ptr, size_t size)
 
 char* xstrdup(const char *s)
 {
-	if (!s)
+	if (!s || !*s)
 		return NULL;
 
   const size_t len = strlen(s) + 1;

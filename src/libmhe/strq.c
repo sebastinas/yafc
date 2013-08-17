@@ -768,7 +768,7 @@ backslash_quote_impl(const char* string, const char* set)
   if (!set)
     return NULL;
   if (!string || !*string)
-    return xstrdup("");
+    return strdup("");
 
   size_t cnt = 0;
   {
