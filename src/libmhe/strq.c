@@ -403,18 +403,29 @@ char *path_dos2unix(char *path)
 	return path;
 }
 
-int str2bool(const char *e)
+int
+str2bool(const char* e)
 {
-	if(strcasecmp(e, "on")==0) return true;
-	else if(strcasecmp(e, "true")==0) return true;
-	else if(strcasecmp(e, "yes")==0) return true;
-	else if(strcmp(e, "1")==0) return true;
-	else if(strcasecmp(e, "off")==0) return false;
-	else if(strcasecmp(e, "false")==0) return false;
-	else if(strcasecmp(e, "no")==0) return false;
-	else if(strcmp(e, "0")==0) return false;
+  static const struct map {
+    const char* string_value;
+    bool boolean_value;
+  } values[] = {
+    { "on", true },
+    { "true", true },
+    { "yes", true },
+    { "1", true },
+    { "off", false },
+    { "false", false },
+    { "no", false },
+    { "0", false }
+  };
 
-	return -1;
+  for (size_t i = 0; i != sizeof(values) / sizeof(struct map); ++i)
+  {
+    if (strcasecmp(e, values[i].string_value))
+      return values[i].boolean_value;
+  }
+  return -1;
 }
 
 /* returns string with ~/foo expanded to /home/username/foo
@@ -541,6 +552,7 @@ void strip_trailing_chars(char *str, const char *chrs)
 	}
 }
 
+#if defined(HAVE_LIBREADLINE) && !defined(HAVE_LIBEDIT)
 typedef enum
 {
   COMPLETE_DQUOTE,
@@ -548,11 +560,8 @@ typedef enum
   COMPLETE_BSQUOTE
 } completion_mode;
 
-#ifdef HAVE_LIBREADLINE
-static int completion_quoting_style = COMPLETE_BSQUOTE;
-#endif
+static const completion_mode completion_quoting_style = COMPLETE_BSQUOTE;
 
-#if defined(HAVE_LIBREADLINE) && !defined(HAVE_LIBEDIT)
 /* Quote characters that the readline completion code would treat as
    word break characters with backslashes. */
 static char* quote_word_break_chars(const char* text);
@@ -562,13 +571,11 @@ static char* double_quote(const char* string);
 static char* single_quote(const char* string);
 #endif
 
-
 char*
 dequote_filename(const char* text, int quote_char)
 {
   const size_t len = strlen(text);
   char* result = xmalloc(len + 1);
-  memset(result, 0, len + 1);
 
   int next = 0;
   for (char* tmp = result; text && *text; ++text)
@@ -606,7 +613,7 @@ quote_filename(const char* string, int rtype, const char* qcp)
   if (*string == '~' && rtype == SINGLE_MATCH)
     tmp = tilde_expand_home(string, gvLocalHomeDir);
   else
-    tmp = strdup(string);
+    tmp = xstrdup(string);
 
   completion_mode cs = completion_quoting_style;
   if (*qcp == '"')
@@ -681,7 +688,7 @@ static char*
 double_quote(const char* string)
 {
   if (!string || !*string)
-    return strdup("\"\"");
+    return xstrdup("\"\"");
 
   size_t cnt = 0;
   {
@@ -695,7 +702,6 @@ double_quote(const char* string)
 
   const size_t size = 3 + strlen(string) + 2 * cnt;
   char* result = xmalloc(size);
-  memset(result, 0, size);
   result[0] = '"';
 
   char* tmp = result + 1;
@@ -721,7 +727,7 @@ static char*
 single_quote(const char* string)
 {
   if (!string || !*string)
-    return strdup("''");
+    return xstrdup("''");
 
   size_t cnt = 0;
   {
@@ -735,7 +741,6 @@ single_quote(const char* string)
 
   const size_t size = 3 + strlen(string) + 3 * cnt;
   char* result = xmalloc(size);
-  memset(result, 0, size);
   result[0] = '\'';
 
   char* tmp = result + 1;
@@ -763,7 +768,7 @@ backslash_quote_impl(const char* string, const char* set)
   if (!set)
     return NULL;
   if (!string || !*string)
-    return strdup("");
+    return xstrdup("");
 
   size_t cnt = 0;
   {
@@ -777,7 +782,6 @@ backslash_quote_impl(const char* string, const char* set)
 
   const size_t size = 1 + strlen(string) + 2 * cnt;
   char* result = xmalloc(size);
-  memset(result, 0, size);
 
   for (char* tmp = result; *string; ++string)
   {
@@ -801,7 +805,6 @@ quote_word_break_chars(const char* string)
 {
   const size_t len = strlen(rl_completer_word_break_characters) + 2;
   char* set = xmalloc(len);
-  memset(set, 0, len);
   strlcat(set, "\\", len);
   strlcat(set, rl_completer_word_break_characters, len);
 

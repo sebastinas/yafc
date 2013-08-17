@@ -12,44 +12,37 @@
 
 #include "syshdr.h"
 
-void *xmalloc(size_t size)
+void* xmalloc(size_t size)
 {
-    void *ptr;
+  if (size == 0)
+    return NULL;
 
-	if(size == 0)
-		return 0;
-
-    ptr = malloc(size);
-	if(ptr == 0) {
-		fprintf(stderr, "\nxmalloc(%lu): %s\n",
-				(unsigned long)size, strerror(errno));
-		exit(errno);
-    }
-	memset(ptr, 0, size);  /* zero allocated memory */
-    return ptr;
+  void* ptr = malloc(size);
+  if (!ptr) {
+    fprintf(stderr, "\nxmalloc(%zu): %s\n", size, strerror(errno));
+    exit(errno);
+  }
+  memset(ptr, 0, size);  /* zero allocated memory */
+  return ptr;
 }
 
-void *xrealloc(void *ptr, size_t size)
+void* xrealloc(void* ptr, size_t size)
 {
-    void *new_ptr;
+  if (!ptr)
+    return xmalloc(size);
 
-	if(ptr == 0)
-		return xmalloc(size);
-
-    new_ptr = realloc(ptr, size);
-	if(new_ptr == 0) {
+  void* new_ptr = realloc(ptr, size);
+  if (!new_ptr) {
     free(ptr);
-		fprintf(stderr,
-				"\nxrealloc(%p, %lu): %s\n",
-				ptr, (unsigned long)size, strerror(errno));
-		exit(errno);
-	}
-	return new_ptr;
+    fprintf(stderr, "\nxrealloc(%p, %zu): %s\n", ptr, size, strerror(errno));
+    exit(errno);
+  }
+  return new_ptr;
 }
 
 char* xstrdup(const char *s)
 {
-	if (!s || !*s)
+	if (!s)
 		return NULL;
 
   const size_t len = strlen(s) + 1;
