@@ -426,7 +426,9 @@ Append if destination exists.
 
 @item -c @var{PERM}
 @itemx --chmod=@var{PERM}
-Change mode of transferred files to PERM.
+Change mode of transferred files to PERM. PERM can be permissions in their octal
+representation or a list of strings of the form [ugoa]*[+-=][rwxXstugo]+
+separated by commas.
 
 @item --chgrp=@var{GROUP}
 change group of transferred files to GROUP.
