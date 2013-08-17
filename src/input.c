@@ -233,9 +233,9 @@ void input_init(void)
 #ifndef HAVE_LIBEDIT
   /* characters that need to be quoted when appearing in filenames. */
   rl_filename_quote_characters = " \t\n\\\"'@<>=;|&()#$`?*[]!:";
-  rl_filename_quoting_function = quote_filename;
-  rl_filename_dequoting_function = (rl_dequote_func_t *)dequote_filename;
-  rl_char_is_quoted_p = char_is_quoted;
+  rl_filename_quoting_function = (rl_quote_func_t*) quote_filename;
+  rl_filename_dequoting_function = (rl_dequote_func_t*) dequote_filename;
+  rl_char_is_quoted_p = (rl_linebuf_func_t*) char_is_quoted;
 #endif
 
   force_completion_type = cpUnset;
