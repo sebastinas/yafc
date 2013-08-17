@@ -632,13 +632,16 @@ quote_filename(const char* string, int rtype, const char* qcp)
       break;
     case COMPLETE_BSQUOTE:
       result = backslash_quote(tmp);
-      free(tmp);
-      tmp = quote_word_break_chars(result);
-      free(result);
-      result = tmp;
       break;
   }
   free(tmp);
+
+  if (cs == COMPLETE_BSQUOTE)
+  {
+    tmp = quote_word_break_chars(result);
+    free(result);
+    result = tmp;
+  }
 
   if (rtype == MULT_MATCH && cs != COMPLETE_BSQUOTE)
     result[strlen(result) - 1] = '\0';
