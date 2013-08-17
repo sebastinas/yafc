@@ -1,8 +1,12 @@
 New in git
 ----------
 
+* Allow editline to be used as alternative to readline.
 * Use strlcpy and strlcat in some places. This requires libbsd on Linux.
 * Drop the code to support Kerberos 4.
+* Fix segfault while writing a trace file. (#30)
+* Remove some dead code that has never been used and drop workarounds for
+  pre-C99 compilers.
 
 New in 1.2.5
 ------------

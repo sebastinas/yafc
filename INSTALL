@@ -1,13 +1,6 @@
 Installation instructions for Yafc
 ----------------------------------
 
-If you want tab completion and history (yes, you do :-),
-you will need the GNU Readline library, version 4.2 or later is required.
-Readline is available from ftp://ftp.gnu.org/pub/gnu/readline.
-
-If you want support for sftp you need the libssh library. libssh is available
-from http://www.libssh.org.
-
 To build Yafc, just follow these steps:
 
   * run './configure'
@@ -38,6 +31,17 @@ Yafc has been tested and compiled on the following platforms:
   * Sun Ultra-60 running Solaris 5.8 w/ gcc 2.95.3 (modifying LD_LIBRARY_PATH)
   * Debian 3.0 on a CerfCube SA1110 (StrongArm)
   * ... and probably more
+
+Depencenies
+-----------
+
+ * libbsd: required on platforms other than the BSDs.
+ * (optional) GNU readline >= 4.2: required for tab completion and history
+   support.
+ * (optional) editline >= 3: can be used as alternative to GNU readline, but
+   does not offer all the functionality.
+ * (optional) libssh: required for scp and sftp support.
+ * (optional) kerberos or heimdal: required for Kerberos 5 support.
 
 
 Generic installation instructions follow...
