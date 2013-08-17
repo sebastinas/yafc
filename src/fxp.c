@@ -19,7 +19,7 @@
 #include "strq.h"
 #include "shortpath.h"
 #include "utils.h"
-#include "bashline.h"
+#include "utils/bashline.h"
 
 #ifdef HAVE_REGEX_H
 # include <regex.h>
@@ -199,7 +199,7 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 	/* make sure destination directory exists */
 	dpath = base_dir_xptr(dest);
 	dest_dir = ftp_path_absolute(dpath);
-	q_dest_dir = bash_backslash_quote(dest_dir);
+	q_dest_dir = backslash_quote(dest_dir);
 	int r = ftp_mkpath(q_dest_dir);
 	free(q_dest_dir);
 	free(dest_dir);
@@ -464,7 +464,7 @@ static void fxpfiles(list *gl, unsigned int opt, const char *output)
 			        continue;
             }
 
-						char* q_recurs_mask = bash_backslash_quote(recurs_mask);
+						char* q_recurs_mask = backslash_quote(recurs_mask);
             list* rgl = rglob_create();
 						rglob_glob(rgl, q_recurs_mask, true, true,
 								   fxp_exclude_func);

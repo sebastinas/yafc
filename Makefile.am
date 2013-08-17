@@ -80,7 +80,7 @@ yafc_SOURCES = src/main.c \
 							 $(SSHSRCS) \
 							 src/utils/makepath.c \
 							 lib/base64.c \
-							 lib/bashline.c
+							 src/utils//bashline.c
 
 noinst_HEADERS = src/alias.h \
 								 src/cmd.h \
@@ -126,7 +126,7 @@ noinst_HEADERS = src/alias.h \
 								 lib/base64.h \
 								 lib/security.h \
 								 lib/collsyms.h \
-								 lib/bashline.h \
+								 src/utils/bashline.h \
 								 lib/fnmatch_.h
 
 yafc_LDADD = $(SSH_LIBS) \

@@ -12,7 +12,7 @@
 
 #include "syshdr.h"
 #include "strq.h"
-#include "bashline.h"
+#include "utils/bashline.h"
 
 /* Strip whitespace from the start and end of STRING.  Returns a pointer
  * into STRING.
@@ -245,7 +245,7 @@ void unquote_escapes(char *str)
 
 void unquote(char *str)
 {
-	char *dq = bash_dequote_filename(str, 0);
+	char *dq = dequote_filename(str, 0);
 	strcpy(str, dq);
 	free(dq);
 }

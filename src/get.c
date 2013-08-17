@@ -21,7 +21,7 @@
 #include "commands.h"
 #include "utils/modechange.h"
 #include "utils.h"
-#include "bashline.h"
+#include "utils/bashline.h"
 
 #ifdef HAVE_REGEX_H
 # include <regex.h>
@@ -549,7 +549,7 @@ static void getfiles(list *gl, unsigned int opt, const char *output)
                           continue;
                         }
                         rgl = rglob_create();
-                        q_recurs_mask = bash_backslash_quote(recurs_mask);
+                        q_recurs_mask = backslash_quote(recurs_mask);
                         rglob_glob(rgl, q_recurs_mask, true, true, get_exclude_func);
                         free(q_recurs_mask);
                         if(list_numitem(rgl) > 0)
