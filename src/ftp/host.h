@@ -29,6 +29,7 @@ bool host_lookup(Host *hostp);
 uint16_t host_getport(const Host *hostp); /* returns port in network byte order */
 uint16_t host_gethport(const Host *hostp); /* returns port in host byte order */
 const char* host_getname(const Host *hostp); /* returns name as passed to host_set() */
+const char* host_geterror(const Host* hostp); /* returns error message of command that filed */
 /** Returns the IP address we're connected to.
  *
  * A value different from NULL is returned if and only if host_connect_addr has

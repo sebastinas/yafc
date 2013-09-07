@@ -59,9 +59,6 @@
 
 #include <sys/ioctl.h>
 
-#if defined HAVE_DECL_HERROR && !HAVE_DECL_HERROR
-void herror(const char *s);
-#endif
 #if defined HAVE_DECL_ASPRINTF && !HAVE_DECL_ASPRINTF
 int asprintf(char **strp, const char *format, ...) YAFC_PRINTF(2, 3);
 #endif

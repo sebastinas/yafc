@@ -180,14 +180,12 @@ fi
 # misc functions
 AC_SEARCH_LIBS([strerror],[cposix])
 
-AC_SEARCH_LIBS([inet_ntop, getaddrinfo], resolv nsl,,
-               [AC_MSG_ERROR([inet_ntop or getaddrinfo is missing])])
-AC_SEARCH_LIBS(herror, resolv nsl)
+AC_SEARCH_LIBS([inet_ntop, getaddrinfo, gai_strerror], resolv nsl,,
+               [AC_MSG_ERROR([inet_ntop, getaddrinfo, or gai_strerror is missing])])
 
 AC_CHECK_FUNCS(gettimeofday uname setsockopt)
 
 AC_CHECK_DECLS([asprintf, vasprintf])
-AC_CHECK_DECLS([herror],,,[#include <netdb.h>])
 AC_CHECK_DECLS([strcasecmp],,
                [AC_MSG_ERROR([strcasecmp is not available.])],
                [

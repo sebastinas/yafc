@@ -26,6 +26,7 @@ struct Host_
 {
   char* hostname;
   int port;
+  int ret;
 
   struct addrinfo* addr;
   const struct addrinfo* connected_addr;
@@ -36,6 +37,7 @@ Host* host_create(const url_t* urlp)
   Host* hostp = xmalloc(sizeof(Host));
   hostp->hostname = xstrdup(urlp->hostname);
   hostp->port = urlp->port; /* host byte order */
+  hostp->ret = 0;
   if(hostp->port <= 0)
     hostp->port = -1;
   else
@@ -87,15 +89,15 @@ bool host_lookup(Host* hostp)
   if (hostp->port != -1)
     hints.ai_flags |= AI_NUMERICSERV;
 
-  int ret = getaddrinfo(hostp->hostname, service, &hints, &hostp->addr);
+  hostp->ret = getaddrinfo(hostp->hostname, service, &hints, &hostp->addr);
   free(service);
-  if (ret < 0)
+  if (hostp->ret < 0)
   {
     /* Lookup with "ftp" as service. Try again with 21. */
     if (hostp->port == -1)
-      ret = getaddrinfo(hostp->hostname, "21", &hints, &hostp->addr);
+      hostp->ret = getaddrinfo(hostp->hostname, "21", &hints, &hostp->addr);
 
-    if (ret < 0)
+    if (hostp->ret < 0)
       return false;
   }
 
@@ -131,6 +133,14 @@ const char *host_getname(const Host *hostp)
     return NULL;
 
   return hostp->hostname;
+}
+
+const char* host_geterror(const Host* hostp)
+{
+  if (!hostp)
+    return NULL;
+
+  return gai_strerror(hostp->ret);
 }
 
 const char *host_getoname(const Host *hostp)

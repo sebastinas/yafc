@@ -309,7 +309,8 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
     if (!urlp->protocol || strcmp(urlp->protocol, "ssh") != 0) {
       // We only need to do a host lookup if we're not using sftp.
       if(!host_lookup(ftp->host)) {
-        herror(host_getname(ftp->host));
+        fprintf(stderr, "Host look up for '%s' failed: %s\n",
+            host_getname(ftp->host), host_geterror(ftp->host));
         alarm(0);
         ftp_set_signal(SIGALRM, SIG_IGN);
         return -1;
