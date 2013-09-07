@@ -130,8 +130,8 @@ noinst_HEADERS = src/alias.h \
 yafc_LDADD = $(SSH_LIBS) \
 						 @LIBOBJS@ \
 						 $(INTLLIBS) \
-						 $(BSD_LIBS) \
-						 $(EDITLINE_LIBS)
+						 $(EDITLINE_LIBS) \
+						 $(BSD_LIBS)
 
 DEFS = -DLOCALEDIR=\"${YAFC_LOCALEDIR}\" \
 			 -DSYSCONFDIR=\"@sysconfdir@\" \
@@ -139,7 +139,8 @@ DEFS = -DLOCALEDIR=\"${YAFC_LOCALEDIR}\" \
 
 BUILT_SOURCES = yafcrc.h
 
-AM_CPPFLAGS = $(SSH_CFLAGS) \
+AM_CPPFLAGS = $(BSD_CFLAGS) \
+							$(SSH_CFLAGS) \
 							$(EDITLINE_CFLAGS) \
 							-I$(top_srcdir)/src \
 							-I$(top_srcdir)/lib \
@@ -148,5 +149,10 @@ AM_CPPFLAGS = $(SSH_CFLAGS) \
 
 yafcrc.h: $(top_srcdir)/samples/yafcrc
 	echo "const char *default_yafcrc = \"\"" > yafcrc.h
-	cat $(top_srcdir)/samples/yafcrc | sed 's/\\/\\\\/g' | sed 's/"/\\\"/g' | sed 's/^\(.*\)$$/\"\1\\n\"/' >> yafcrc.h
+	sed \
+		-e 's/\\/\\\\/g' \
+		-e 's/"/\\\"/g' \
+		-e 's/^\(.*\)$$/\"\1\\n\"/' \
+		< $(top_srcdir)/samples/yafcrc \
+		>> yafcrc.h
 	echo ";" >> yafcrc.h
