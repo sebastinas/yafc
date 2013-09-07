@@ -107,7 +107,30 @@ AC_C_CONST
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
 AC_TYPE_MODE_T
-dnl AC_STRUCT_TM
+
+# strlcpy, strlcat and friends
+AC_CHECK_DECLS([strlcpy, strlcat],,
+  [
+   # check if we have libbsd
+   PKG_CHECK_MODULES([BSD], [libbsd-overlay],
+    [
+     CFLAGS="$CFLAGS $BSD_CFLAGS"
+    ],
+    [
+     AC_CHECK_HEADERS(bsd/string.h,,
+     [
+       AC_MSG_ERROR([libbsd not found])
+     ])
+     AC_SEARCH_LIBS([strlcpy, strlcat], [bsd],,
+     [
+       AC_MSG_ERROR([strlcpy and strlcat not found])
+     ])
+    ])
+  ],
+  [
+    #include <string.h>
+  ])
+
 
 AC_FUNC_FNMATCH_GNU
 if test "$ac_cv_func_fnmatch_gnu" = "yes"; then
@@ -117,6 +140,7 @@ fi
 
 AC_CHECK_FUNCS(strcoll memcpy sigsetjmp)
 AC_CHECK_FUNCS(vasprintf, [], [AC_LIBOBJ([vasprintf])])
+AC_CHECK_DECLS([asprintf, vasprintf])
 
 BASH_FUNC_POSIX_SETJMP
 
@@ -185,7 +209,6 @@ AC_SEARCH_LIBS([inet_ntop, getaddrinfo, gai_strerror], resolv nsl,,
 
 AC_CHECK_FUNCS(gettimeofday uname setsockopt)
 
-AC_CHECK_DECLS([asprintf, vasprintf])
 AC_CHECK_DECLS([strcasecmp],,
                [AC_MSG_ERROR([strcasecmp is not available.])],
                [
@@ -193,27 +216,6 @@ AC_CHECK_DECLS([strcasecmp],,
                 #include <strings.h>
                 #endif
                ])
-
-# strlcpy, strlcat and friends
-AC_CHECK_DECLS([strlcpy, strlcat],,
-  [
-   # check if we have libbsd
-   PKG_CHECK_MODULES([BSD], [libbsd],
-    [
-     CFLAGS="$CFLAGS $BSD_CFLAGS"
-    ],
-    [
-     AC_SEARCH_LIBS([strlcpy, strlcat], [bsd],,
-     [
-       AC_MSG_ERROR([strlcpy and strlcat not found])
-     ])
-    ])
-
-   AC_CHECK_HEADERS(bsd/string.h)
-  ],
-  [
-    #include <string.h>
-  ])
 
 # kerberos
 YAFC_KERBEROS
