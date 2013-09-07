@@ -32,8 +32,8 @@ Yafc has been tested and compiled on the following platforms:
   * Debian 3.0 on a CerfCube SA1110 (StrongArm)
   * ... and probably more
 
-Depencenies
------------
+Dependencies
+------------
 
  * libbsd: required on platforms other than the BSDs.
  * (optional) GNU readline >= 4.2: required for tab completion and history
