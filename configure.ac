@@ -169,34 +169,34 @@ if test "$yafc_with_socks5" = "yes"; then
   AC_CHECK_LIB(socks5, SOCKSconnect)
 fi
 
-# editline
-yafc_got_editline="no, disabled"
-YAFC_ARG_WITH(editline, yes, [editline])
-if test "$yafc_with_editline" = "yes"; then
-  PKG_CHECK_MODULES([EDITLINE], [libedit >= 3],
-    [
-      AC_DEFINE(HAVE_LIBEDIT, [], [Define if you have libedit installed.])
-      yafc_got_editline="yes"
-    ],
-    [
-      yafc_got_editline="no, not found"
-    ])
-fi
-AM_CONDITIONAL(HAVE_LIBEDIT, [test "x$yafc_got_editline" = "xyes"])
-
 # readline
 yafc_got_readline="no, disabled"
-if test "x$yafc_got_editline" != "xyes"; then
-  YAFC_ARG_WITH(readline, yes, [Readline])
-  if test "$yafc_with_readline" = "yes"; then
-    AX_LIB_READLINE
-    if test "$ax_cv_lib_readline" = "no"; then
-      yafc_got_readline="no, not found"
-    else
-      yafc_got_readline="yes"
-    fi
+YAFC_ARG_WITH(readline, yes, [Readline])
+if test "$yafc_with_readline" = "yes"; then
+  AX_LIB_READLINE
+  if test "$ax_cv_lib_readline" = "no"; then
+    yafc_got_readline="no, not found"
+  else
+    yafc_got_readline="yes"
   fi
 fi
+
+# editline
+yafc_got_editline="no, disabled"
+if test "$yafc_got_readline" != "yes"; then
+  YAFC_ARG_WITH(editline, yes, [editline])
+  if test "$yafc_with_editline" = "yes"; then
+    PKG_CHECK_MODULES([EDITLINE], [libedit >= 3],
+      [
+        AC_DEFINE(HAVE_LIBEDIT, [], [Define if you have libedit installed.])
+        yafc_got_editline="yes"
+      ],
+      [
+        yafc_got_editline="no, not found"
+      ])
+  fi
+fi
+AM_CONDITIONAL(HAVE_LIBEDIT, [test "x$yafc_got_editline" = "xyes"])
 
 # misc functions
 AC_SEARCH_LIBS([strerror],[cposix])
