@@ -13,8 +13,6 @@
 #ifndef _alias_h_included
 #define _alias_h_included
 
-#include "syshdr.h"
-#include "linklist.h"
 #include "args.h"
 
 #define ALIAS_AMBIGUOUS (alias *)-1

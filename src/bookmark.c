@@ -15,7 +15,6 @@
 #include "input.h"
 #include "gvars.h"
 #include "base64.h"
-#include "completion.h"
 #include "commands.h"
 #include "shortpath.h"
 #include "strq.h"
