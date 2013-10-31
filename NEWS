@@ -1,5 +1,5 @@
-New in git
-----------
+New in 1.3.0
+------------
 
 * Allow editline to be used as alternative to readline.
 * Use strlcpy and strlcat in some places. This requires libbsd on Linux.
