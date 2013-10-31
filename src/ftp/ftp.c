@@ -339,11 +339,7 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
     }
 #endif
 
-    if(urlp->protocol && strcmp(urlp->protocol, "ftp") != 0
-#ifdef HAVE_GNUTLS
-        && strcmp(urlp->protocol, "ftps") != 0
-#endif
-        ) {
+    if(urlp->protocol && strcmp(urlp->protocol, "ftp") != 0) {
         ftp_err(_("Sorry, don't know how to handle your '%s' protocol\n"
                   "trying 'ftp' instead...\n"),
                 urlp->protocol);
@@ -358,16 +354,7 @@ int ftp_open_url(url_t *urlp, bool reset_vars)
                 host_getoname(ftp->host), urlp->port);
     }
 
-#ifdef HAVE_GNUTLS
-    ftp->ssl_socket = false;
-    if (urlp->protocol && strcmp(urlp->protocol, "ftps") == 0)
-    {
-      ftp->ctrl = sock_ssl_create();
-      ftp->ssl_socket = true;
-    }
-    else
-#endif
-      ftp->ctrl = sock_create();
+    ftp->ctrl = sock_create();
     if (!ftp->ctrl) {
         ftp_err(_("Unable to create socket.\n"));
         alarm(0);
@@ -1101,26 +1088,7 @@ int ftp_login(const char *guessed_username, const char *anonpass)
                     level_to_name(ftp->data_prot));
         }
 #endif
-#ifdef HAVE_GNUTLS
-        if (ftp->ssl_socket)
-        {
-          ftp_cmd("PBSZ 0");
-		      if (ftp->code != ctComplete)
-          {
-			      ftp_err(_("Failed to set protection buffer size.\n"));
-            ftp->loggedin = false;
-			      return -1;
-          }
 
-	        ftp_cmd("PROT P");
-	        if (ftp->code != ctComplete)
-          {
-		        ftp_err(_("Failed to set protection level.\n"));
-		        ftp->loggedin = false;
-            return -1;
-	        }
-        }
-#endif
         ftp->homedir = ftp_getcurdir();
         ftp->curdir = xstrdup(ftp->homedir);
         ftp->prevdir = xstrdup(ftp->homedir);

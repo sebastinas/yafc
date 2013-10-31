@@ -119,9 +119,6 @@ typedef void (*ftp_transfer_func)(transfer_info *ti);
 typedef struct Ftp
 {
 	Socket *ctrl, *data;
-#ifdef HAVE_GNUTLS
-  bool ssl_socket;
-#endif
 
 	Host *host;
 	url_t *url;

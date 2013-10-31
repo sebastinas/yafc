@@ -28,10 +28,6 @@
 #include "ltag.h"
 #include "lscolors.h"
 
-#ifdef HAVE_GNUTLS
-#include <gnutls/gnutls.h>
-#endif
-
 //static void exe_cmdline(char *str, bool aliases_are_expanded);
 
 void exit_yafc(void)
@@ -45,9 +41,6 @@ void exit_yafc(void)
 	reset_xterm_title();
 	free_colors();
 
-#ifdef HAVE_NGUTLS
-  gnutls_global_deinit();
-#endif
 	exit(0);
 }
 
