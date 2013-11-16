@@ -637,9 +637,9 @@ static void ftp_print_cmd(const char *cmd, va_list ap)
         if(strncmp(cmd, "PASS", 4) == 0)
             ftp_err("PASS ********");
         else {
-            vfprintf(stderr, cmd, ap);
             va_list aq;
             va_copy(aq, ap);
+            vfprintf(stderr, cmd, ap);
             ftp_vtrace(cmd, aq);
             va_end(aq);
         }
