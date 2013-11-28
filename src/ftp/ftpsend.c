@@ -227,7 +227,7 @@ static int ftp_init_transfer(void)
       char* addr = printable_address(local);
 
       ftp_set_tmp_verbosity(vbError);
-      ftp_cmd("EPRT |2|%s|%u", addr, ntohs(((struct sockaddr_in6*)local)->sin6_port));
+      ftp_cmd("EPRT |2|%s|%u|", addr, ntohs(((struct sockaddr_in6*)local)->sin6_port));
       free(addr);
     }
 #endif
