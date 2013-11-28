@@ -206,8 +206,19 @@ bool sock_listen(Socket* sockp, int family)
     return false;
 
   socklen_t len = sizeof(struct sockaddr_storage);
-  /* let system pick port TODO */
-  memset(&sockp->local_addr, 0, len);
+  /* let system pick the port */
+  if (family == AF_INET)
+    ((struct sockaddr_in*) &sockp->local_addr)->sin_port = 0;
+#ifdef HAVE_IPV6
+  else if (family == AF_INET6)
+    ((struct sockaddr_in6*) &sockp->local_addr)->sin6_port = 0;
+#endif
+  else
+  {
+    close(sockp->handle);
+    sockp->handle = -1;
+    return false;
+  }
   sockp->local_addr.ss_family = family;
 
   if (bind(sockp->handle, (struct sockaddr *)&sockp->local_addr, len) == -1)
