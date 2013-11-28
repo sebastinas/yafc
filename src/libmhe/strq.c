@@ -422,7 +422,7 @@ str2bool(const char* e)
 
   for (size_t i = 0; i != sizeof(values) / sizeof(struct map); ++i)
   {
-    if (strcasecmp(e, values[i].string_value))
+    if (strcasecmp(e, values[i].string_value) == 0)
       return values[i].boolean_value;
   }
   return -1;
