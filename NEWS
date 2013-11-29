@@ -1,3 +1,9 @@
+New in 1.2.6
+------------
+
+* Fix active connections broken by introducing IPv6 support.
+* Send correct EPRT command.
+
 New in 1.2.5
 ------------
 
