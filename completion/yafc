@@ -1,6 +1,5 @@
 # bash completion for yafc
 
-have yafc &&
 _yafc()
 {
     local cur
@@ -15,7 +14,7 @@ _yafc()
 
     return 0
 } &&
-complete -F _yafc $default yafc
+complete -F _yafc -o default yafc
 
 # Local variables:
 # mode: shell-script
