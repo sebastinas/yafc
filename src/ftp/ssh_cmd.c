@@ -59,8 +59,8 @@ static int verify_knownhost(ssh_session session)
       return -1;
 
     case SSH_SERVER_FOUND_OTHER:
-      fprintf(stderr, _("The host key for this server was not found but an "
-        "other type of key exists.\n"));
+      fprintf(stderr, _("The host key for this server was not found but "
+        "another type of key exists.\n"));
       fprintf(stderr, _("An attacker might change the default server key to "
         "confuse your client into thinking the key does not exist\n"));
       free(hash);
