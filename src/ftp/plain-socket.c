@@ -335,7 +335,7 @@ static int ps_check_pending(Socket* sockp, bool inout)
   FD_SET(sockp->data->handle, &fds);
 	/* wait max 0.5 second */
 	tv.tv_sec = 0;
-	tv.tv_usec = 500;
+	tv.tv_usec = 500000;
 
 	if (!inout) /* wait for read */
 		return select(sockp->data->handle + 1, &fds, NULL, NULL, &tv);
