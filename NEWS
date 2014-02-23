@@ -3,6 +3,7 @@ git
 
 * Fix broken stalled logic. Thanks to Matthew Gabeler-Lee for the patch. (#33)
 * Fix bash completion. Thanks to Matthew Gabeler-Lee for the patch.
+* Fix detection of strlcpy. Thanks to Tim Clem for the patch. (#35)
 
 New in 1.3.1
 ------------
