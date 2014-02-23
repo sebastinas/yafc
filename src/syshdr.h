@@ -179,7 +179,7 @@ extern int read_history ();
 #ifdef HAVE_KERBEROS
 # define SECFTP
 # include "security.h"  /* our own, in lib/ */
-# ifndef HAVE_STRLCPY
+# ifndef HAVE_DECL_STRLCPY
 size_t strlcpy (char *dst, const char *src, size_t dst_sz);
 # endif
 #endif
