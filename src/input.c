@@ -225,7 +225,7 @@ void input_init(void)
   rl_completion_entry_function = (rl_compentry_func_t *)no_completion_function;
 #endif
   /* Tell the completer that we want a crack first. */
-  rl_attempted_completion_function = (CPPFunction *)the_complete_function;
+  rl_attempted_completion_function = (rl_completion_func_t*) the_complete_function;
 
   rl_completer_word_break_characters = " \t\n\"\';";
   rl_completer_quote_characters = "'\"\\";

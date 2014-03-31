@@ -161,6 +161,9 @@ extern int read_history ();
 #define HAVE_LIBREADLINE
 #endif
 
+#if defined(HAVE_LIBEDIT) || (defined(HAVE_LIBREADLINE) && RL_READLINE_VERSION < 0x0603)
+typedef CPPFunction rl_completion_func_t;
+#endif
 
 #ifdef HAVE_FNMATCH_GNU
 #include <fnmatch.h>

@@ -39,19 +39,13 @@ void cmd_help(int argc, char **argv)
 
 	fprintf(stderr, _("Available commands: (commands may be abbreviated)\n"));
 #if defined(HAVE_LIBREADLINE) && !defined(HAVE_LIBEDIT)
-	/* hack to let readline display all commands */
-	rl_point=rl_end=0;
-	Function* func = rl_named_function("possible-completions");
-	if (func)
-		func();
-	else {
-#endif
-		for(i=0; cmds[i].cmd; i++)
-			printf("%s\n", cmds[i].cmd);
-		for(li = gvAliases->first; li; li = li->next)
-			printf("%s\n", ((alias *)li->data)->name);
-#if defined(HAVE_LIBREADLINE) && !defined(HAVE_LIBEDIT)
-	}
+  rl_point = rl_end = 0;
+  rl_possible_completions(0, 0);
+#else
+  for(i=0; cmds[i].cmd; i++)
+    printf("%s\n", cmds[i].cmd);
+  for(li = gvAliases->first; li; li = li->next)
+    printf("%s\n", ((alias *)li->data)->name);
 #endif
 }
 
