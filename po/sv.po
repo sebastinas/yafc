@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: yafc\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=glib&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-10-31 07:19+0100\n"
+"POT-Creation-Date: 2014-04-04 20:39+0200\n"
 "PO-Revision-Date: 2013-08-17 16:55+0200\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,7 +69,7 @@ msgstr ""
 
 #: ../lib/security.c:340 ../src/bookmark.c:117 ../src/bookmark.c:207
 #: ../src/bookmark.c:379 ../src/bookmark.c:490 ../src/commands.c:223
-#: ../src/ftp/ftp.c:788 ../src/ftp/ftp.c:831 ../src/ftp/ftp.c:1621
+#: ../src/ftp/ftp.c:775 ../src/ftp/ftp.c:818 ../src/ftp/ftp.c:1589
 #: ../src/ftp/ssh_cmd.c:528 ../src/fxp.c:180 ../src/fxp.c:190 ../src/fxp.c:452
 #: ../src/fxp.c:461 ../src/get.c:197 ../src/get.c:220 ../src/get.c:539
 #: ../src/get.c:546 ../src/list.c:375 ../src/list.c:583 ../src/ltag.c:42
@@ -122,11 +122,11 @@ msgstr ""
 msgid "No security data exchange has taken place.\n"
 msgstr ""
 
-#: ../lib/security.c:407 ../src/ftp/ftp.c:1110
+#: ../lib/security.c:407
 msgid "Failed to set protection buffer size.\n"
 msgstr ""
 
-#: ../lib/security.c:420 ../src/ftp/ftp.c:1118
+#: ../lib/security.c:420
 msgid "Failed to set protection level.\n"
 msgstr ""
 
@@ -303,40 +303,40 @@ msgstr "ja"
 msgid "no"
 msgstr "nej"
 
-#: ../src/cmd.c:62
+#: ../src/cmd.c:55
 msgid "Close all connections and quit."
 msgstr ""
 
-#: ../src/cmd.c:84
+#: ../src/cmd.c:77
 #, c-format
 msgid "restarted command loop, connection closed\n"
 msgstr "startade om kommando-loopen, anslutningen stängd\n"
 
-#: ../src/cmd.c:86
+#: ../src/cmd.c:79
 #, c-format
 msgid "restarted command loop, command aborted\n"
 msgstr "startade om kommando-loopen, kommandot avbrutet\n"
 
-#: ../src/cmd.c:104 ../src/commands.c:648
+#: ../src/cmd.c:97 ../src/commands.c:648
 msgid "not connected"
 msgstr "ej ansluten"
 
-#: ../src/cmd.c:165
+#: ../src/cmd.c:158
 #, c-format
 msgid "Not connected. Try 'open --help' for more information.\n"
 msgstr "Ej ansluten. Pröva \"open --help\" för mer information.\n"
 
-#: ../src/cmd.c:168
+#: ../src/cmd.c:161
 #, c-format
 msgid "Not logged in. Try 'user --help' for more information.\n"
 msgstr "Ej inloggad. Pröva \"user --help\" för mer information.\n"
 
-#: ../src/cmd.c:184
+#: ../src/cmd.c:177
 #, c-format
 msgid "input redirection not supported\n"
 msgstr "Omdirigering av indata ej tillåten\n"
 
-#: ../src/cmd.c:293 ../src/commands.c:271
+#: ../src/cmd.c:286 ../src/commands.c:271
 #, c-format
 msgid "ambiguous alias '%s'\n"
 msgstr "tvetydigt alias \"%s\"\n"
@@ -535,7 +535,7 @@ msgstr "Inget svar vid anslutning efter %u sekunder\n"
 msgid "Looking up %s... "
 msgstr "Letar efter %s... "
 
-#: ../src/ftp/ftp.c:347
+#: ../src/ftp/ftp.c:343
 #, c-format
 msgid ""
 "Sorry, don't know how to handle your '%s' protocol\n"
@@ -544,128 +544,128 @@ msgstr ""
 "Huh? vet inte vad \"%s\" är för nåt protokoll\n"
 "prövar med \"ftp\" istället...\n"
 
-#: ../src/ftp/ftp.c:354
+#: ../src/ftp/ftp.c:350
 #, c-format
 msgid "Connecting to proxy %s at port %d...\n"
 msgstr "Ansluter till proxyn %s på port %d...\n"
 
-#: ../src/ftp/ftp.c:357
+#: ../src/ftp/ftp.c:353
 #, c-format
 msgid "Connecting to %s at port %d...\n"
 msgstr "Ansluter till %s på port %d...\n"
 
-#: ../src/ftp/ftp.c:372
+#: ../src/ftp/ftp.c:359
 msgid "Unable to create socket.\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:385
+#: ../src/ftp/ftp.c:372
 #, c-format
 msgid "Connected to %s ([%s]:%d).\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:454 ../src/ftp/ftp.c:680
+#: ../src/ftp/ftp.c:441 ../src/ftp/ftp.c:667
 msgid "No control connection\n"
 msgstr "Ingen anslutning\n"
 
-#: ../src/ftp/ftp.c:474
+#: ../src/ftp/ftp.c:461
 msgid "Server has closed control connection\n"
 msgstr "Värddatorn stängde anslutningen\n"
 
-#: ../src/ftp/ftp.c:520
+#: ../src/ftp/ftp.c:507
 msgid "Reply too long (truncated)\n"
 msgstr "För långt svar (trunkerat)\n"
 
-#: ../src/ftp/ftp.c:592
+#: ../src/ftp/ftp.c:579
 #, c-format
 msgid "Tired of waiting for reply, timeout after %u seconds\n"
 msgstr "Trött på att vänta på svar, gav upp efter %u sekunder\n"
 
-#: ../src/ftp/ftp.c:697
+#: ../src/ftp/ftp.c:684
 msgid "error writing command"
 msgstr "fel vid skrivning av kommando"
 
 #. server is closing control connection!
-#: ../src/ftp/ftp.c:718
+#: ../src/ftp/ftp.c:705
 msgid "Server closed control connection\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:721
+#: ../src/ftp/ftp.c:708
 msgid "Reconnect failed\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:723
+#: ../src/ftp/ftp.c:710
 msgid "Automatic reconnect...\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:783
+#: ../src/ftp/ftp.c:770
 msgid "Proxy login: "
 msgstr "Användarnamn för proxy: "
 
-#: ../src/ftp/ftp.c:786
+#: ../src/ftp/ftp.c:773
 #, c-format
 msgid "login (%s): "
 msgstr "användarnamn (%s): "
 
-#: ../src/ftp/ftp.c:794
+#: ../src/ftp/ftp.c:781
 msgid "login (anonymous): "
 msgstr "användarnamn (anonymous): "
 
-#: ../src/ftp/ftp.c:804 ../src/ftp/ftp.c:852
+#: ../src/ftp/ftp.c:791 ../src/ftp/ftp.c:839
 #, c-format
 msgid "You loose\n"
 msgstr "Tjipp å hej...\n"
 
-#: ../src/ftp/ftp.c:829
+#: ../src/ftp/ftp.c:816
 #, c-format
 msgid "password (%s): "
 msgstr "lösenord (%s): "
 
-#: ../src/ftp/ftp.c:836 ../src/ftp/ftp.c:848
+#: ../src/ftp/ftp.c:823 ../src/ftp/ftp.c:835
 msgid "password: "
 msgstr "lösenord: "
 
-#: ../src/ftp/ftp.c:847
+#: ../src/ftp/ftp.c:834
 msgid "Proxy password: "
 msgstr "Lösenord för proxy: "
 
-#: ../src/ftp/ftp.c:949
+#: ../src/ftp/ftp.c:936
 #, c-format
 msgid "Invalid protection level '%s'\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:964
+#: ../src/ftp/ftp.c:951
 #, c-format
 msgid "unknown mechanism '%s'\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:968
+#: ../src/ftp/ftp.c:955
 #, c-format
 msgid "Yafc was not compiled with support for %s\n"
 msgstr "Yafc kompilerades inte med stöd för %s\n"
 
-#: ../src/ftp/ftp.c:983
+#: ../src/ftp/ftp.c:970
 msgid "Authentication successful.\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:985 ../src/login.c:54 ../src/login.c:287
+#: ../src/ftp/ftp.c:972 ../src/login.c:54 ../src/login.c:287
 msgid "*** Using plaintext username and password ***\n"
 msgstr "*** Använder användarnamn och lösenord i klartext ***\n"
 
-#: ../src/ftp/ftp.c:991
+#: ../src/ftp/ftp.c:978
 #, c-format
 msgid "logging in anonymously...\n"
 msgstr "loggar in anonymt...\n"
 
-#: ../src/ftp/ftp.c:1100
+#: ../src/ftp/ftp.c:1087
 #, c-format
 msgid "Data protection is %s\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:1338
+#: ../src/ftp/ftp.c:1306
 msgid "Server doesn't support SITE CHMOD\n"
 msgstr "Värddatorn stöder inte SITE CHMOD\n"
 
-#: ../src/ftp/ftp.c:1356
+#: ../src/ftp/ftp.c:1324
 msgid "Server doesn't support SITE IDLE\n"
 msgstr "Värddatorn stöder inte SITE IDLE\n"
 
@@ -801,7 +801,7 @@ msgstr ""
 #: ../src/ftp/ssh_cmd.c:62
 #, c-format
 msgid ""
-"The host key for this server was not found but an other type of key exists.\n"
+"The host key for this server was not found but another type of key exists.\n"
 msgstr ""
 
 #: ../src/ftp/ssh_cmd.c:64
@@ -1199,22 +1199,22 @@ msgstr ""
 msgid "Available commands: (commands may be abbreviated)\n"
 msgstr "Tillgängliga kommandon: (de kan förkortas)\n"
 
-#: ../src/help.c:64
+#: ../src/help.c:58
 #, c-format
 msgid "Compiled "
 msgstr ""
 
-#: ../src/help.c:66
+#: ../src/help.c:60
 #, c-format
 msgid "Using editline version %s.\n"
 msgstr "Använder editline version %s.\n"
 
-#: ../src/help.c:69
+#: ../src/help.c:63
 #, c-format
 msgid "Using Readline version %s.\n"
 msgstr "Använder Readline version %s.\n"
 
-#: ../src/help.c:73
+#: ../src/help.c:67
 #, c-format
 msgid "Using libssh version %d.%d.%d.\n"
 msgstr "Använder libssh version %d.%d.%d.\n"
