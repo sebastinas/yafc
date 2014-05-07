@@ -495,16 +495,16 @@ uint64_t ssh_filesize(const char *path)
   return res;
 }
 
-rdirectory *ssh_read_directory(const char *path)
+rdirectory* ssh_read_directory(const char *path)
 {
-  char *p = ftp_path_absolute(path);
+  char* p = ftp_path_absolute(path);
   stripslash(p);
 
   sftp_dir dir = sftp_opendir(ftp->sftp_session, p);
   if (!dir)
   {
     free(p);
-    return 0;
+    return NULL;
   }
 
   ftp_trace("*** start parsing directory listing ***\n");
@@ -556,6 +556,7 @@ rdirectory *ssh_read_directory(const char *path)
 
   sftp_closedir(dir);
   rdir->path = p;
+  rdir_sort(rdir);
   ftp_trace("added directory '%s' to cache\n", p);
   list_additem(ftp->cache, rdir);
 

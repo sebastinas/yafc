@@ -17,22 +17,22 @@
 
 typedef struct rfile
 {
-	char *perm;
-	char *owner;
-	char *group;
-	char *color;
-	char *date;         /* date and time as a string */
-	time_t mtime;       /* modification time */
-	unsigned int nhl;   /* number of hard links */
-	char *link;         /* target of link */
-	char *path;         /* filename with absolute path */
-   unsigned long long int size;
+  char *perm;
+  char *owner;
+  char *group;
+  char *color;
+  char *date;         /* date and time as a string */
+  time_t mtime;       /* modification time */
+  unsigned int nhl;   /* number of hard links */
+  char *link;         /* target of link */
+  char *path;         /* filename with absolute path */
+  unsigned long long int size;
 } rfile;
 
-rfile *rfile_create(void);
+rfile* rfile_create(void);
 void rfile_clear(rfile *f);
 void rfile_destroy(rfile *f);
-rfile *rfile_clone(const rfile *f);
+rfile* rfile_clone(const rfile *f);
 
 bool risdir(const rfile *f);
 bool risdotdir(const rfile *f);

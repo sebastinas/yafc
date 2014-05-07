@@ -16,27 +16,26 @@
 
 rdirectory *rdir_create(void)
 {
-	rdirectory *rdir;
+  rdirectory* rdir = xmalloc(sizeof(rdirectory));
+  rdir->files = list_new((listfunc)rfile_destroy);
+  rdir->timestamp = time(0);
 
-	rdir = (rdirectory *)xmalloc(sizeof(rdirectory));
-	rdir->files = list_new((listfunc)rfile_destroy);
-	rdir->timestamp = time(0);
-
-	return rdir;
+  return rdir;
 }
 
 void rdir_destroy(rdirectory *rdir)
 {
-	if(!rdir)
-		return;
-	list_free(rdir->files);
-	free(rdir->path);
-	free(rdir);
+  if (!rdir)
+    return;
+
+  list_free(rdir->files);
+  free(rdir->path);
+  free(rdir);
 }
 
 unsigned long int rdir_size(rdirectory *rdir)
 {
-	return rglob_size(rdir->files);
+  return rglob_size(rdir->files);
 }
 
 int rdir_parse(rdirectory *rdir, FILE *fp, const char *path, bool is_mlsd)
@@ -86,11 +85,25 @@ int rdir_parse(rdirectory *rdir, FILE *fp, const char *path, bool is_mlsd)
 
 rfile *rdir_get_file(rdirectory *rdir, const char *filename)
 {
-	listitem *li;
+  listitem* li = list_search(rdir->files, (listsearchfunc)rfile_search_filename,
+      filename);
+  if (li)
+    return (rfile*)li->data;
+  return NULL;
+}
 
-	li = list_search(rdir->files,
-					 (listsearchfunc)rfile_search_filename, filename);
-	if(li)
-		return (rfile *)li->data;
-	return 0;
+static int compare_files(const rfile* a, const rfile* b)
+{
+  if (a == b)
+    return 0;
+
+  return strcmp(a->path, b->path);
+}
+
+void rdir_sort(rdirectory* dir)
+{
+  if (!dir)
+    return;
+
+  list_sort(dir->files, compare_files, false);
 }

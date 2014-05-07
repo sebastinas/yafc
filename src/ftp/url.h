@@ -16,19 +16,19 @@
 #include "linklist.h"
 
 typedef struct url_t {
-	char *protocol;   /* "ssh", "ftp", ... */
-	char *hostname;   /* hostname to connect to */
-	char *alias;      /* other name for this url */
-	char *username;   /* username to login with */
-	char *password;   /* password to login with */
-	char *directory;  /* startup directory */
-	char *protlevel;  /* security protection level */
-	int port;         /* port in host byte order */
-	list *mech;       /* requested security mechanisms to try */
-	bool noproxy;     /* don't connect via the configured proxy */
-	int pasvmode;     /* true if passive mode is requested */
-	char *sftp_server; /* path to remote sftp_server program */
-	bool noupdate;    /* true if this bookmark should not be updated */
+  char *protocol;   /* "ssh", "ftp", ... */
+  char *hostname;   /* hostname to connect to */
+  char *alias;      /* other name for this url */
+  char *username;   /* username to login with */
+  char *password;   /* password to login with */
+  char *directory;  /* startup directory */
+  char *protlevel;  /* security protection level */
+  int port;         /* port in host byte order */
+  list *mech;       /* requested security mechanisms to try */
+  bool noproxy;     /* don't connect via the configured proxy */
+  int pasvmode;     /* true if passive mode is requested */
+  char *sftp_server; /* path to remote sftp_server program */
+  bool noupdate;    /* true if this bookmark should not be updated */
 } url_t;
 
 url_t *url_create(void);

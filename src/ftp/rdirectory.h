@@ -19,16 +19,16 @@
 
 typedef struct rdirectory
 {
-	char *path;        /* directory path */
-	list *files;       /* linked list of rfiles */
-	time_t timestamp;  /* time of creation */
+  char *path;        /* directory path */
+  list *files;       /* linked list of rfiles */
+  time_t timestamp;  /* time of creation */
 } rdirectory;
 
-rdirectory *rdir_create(void);
+rdirectory* rdir_create(void);
 void rdir_destroy(rdirectory *rdir);
 int rdir_parse(rdirectory *rdir, FILE *fp, const char *path, bool is_mlsd);
-rfile *rdir_get_file(rdirectory *rdir, const char *filename);
-unsigned long int rdir_size(rdirectory *rdir);
-
+rfile* rdir_get_file(rdirectory *rdir, const char *filename);
+unsigned long int rdir_size(rdirectory* rdir);
+void rdir_sort(rdirectory* rdir);
 
 #endif

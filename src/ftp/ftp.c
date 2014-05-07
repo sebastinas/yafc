@@ -1399,7 +1399,7 @@ rdirectory *ftp_read_directory(const char *path)
     bool is_mlsd = false;
 
 #ifdef HAVE_LIBSSH
-    if(ftp->session)
+    if (ftp->session)
         return ssh_read_directory(path);
 #endif
 
@@ -1470,13 +1470,15 @@ rdirectory *ftp_read_directory(const char *path)
     ftp_trace("added directory '%s' to cache\n", dir);
     list_additem(ftp->cache, rdir);
     free(dir);
+
+    rdir_sort(rdir);
     return rdir;
 
-  failed: /* forgive me father, for I have goto'ed */
+failed: /* forgive me father, for I have goto'ed */
     if (fp)
-	    fclose(fp);
+        fclose(fp);
     free(dir);
-    return 0;
+    return NULL;
 }
 
 rdirectory *ftp_get_directory(const char *path)

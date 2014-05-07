@@ -13,6 +13,8 @@
 #ifndef _linklist_h_included
 #define _linklist_h_included
 
+#include <stdbool.h>
+
 typedef int (*listfunc)(void *);
 typedef void *(*listclonefunc)(void *);
 
@@ -43,7 +45,7 @@ void list_removeitem(list *lp, listitem *lip);
 void list_additem(list *lp, void *data);
 int list_numitem(list *lp);
 listitem *list_search(list *lp, listsearchfunc cmpfunc, const void *arg);
-void list_sort(list *lp, listsortfunc cmp, int reverse);
+void list_sort(list *lp, listsortfunc cmp, bool reverse);
 list *list_clone(list *lp, listclonefunc clonefunc);
 int list_equal(list *a, list *b, listsortfunc cmpfunc);
 

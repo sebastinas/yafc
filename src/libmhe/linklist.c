@@ -117,7 +117,7 @@ static void list_swap(list *lp, listitem *a, listitem *b)
 }
 
 /* simple bubble-sort */
-void list_sort(list *lp, listsortfunc cmp, int reverse)
+void list_sort(list *lp, listsortfunc cmp, bool reverse)
 {
 	listitem *li, *last = 0;
 	bool swapped = true;
