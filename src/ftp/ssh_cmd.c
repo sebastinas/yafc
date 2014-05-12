@@ -623,11 +623,11 @@ static int do_scp_read(ssh_scp scp, const char* infile, FILE* fp,
   int rc = ssh_scp_pull_request(scp);
   if (rc != SSH_SCP_REQUEST_NEWFILE)
   {
-    ftp_err(_("Failed to start scp download: %s\n"),
-            ssh_get_error(ftp->session));
+    ftp_trace("Failed to start scp download: %s\n",
+              ssh_get_error(ftp->session));
     ssh_scp_close(scp);
     ssh_scp_free(scp);
-    return -1;
+    return -2;
   }
 
   size_t size = ssh_scp_request_get_size(scp);
@@ -698,8 +698,13 @@ static int do_read(const char* infile, FILE* fp, transfer_mode_t mode,
     {
       int rc = ssh_scp_init(scp);
       if (rc == SSH_OK)
-        return do_scp_read(scp, infile, fp, mode, hookf);
-      ssh_scp_free(scp);
+      {
+        rc = do_scp_read(scp, infile, fp, mode, hookf);
+        if (rc != -2)
+          return rc;
+      }
+      else
+        ssh_scp_free(scp);
     }
   }
 
