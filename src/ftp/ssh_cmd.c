@@ -832,7 +832,7 @@ static int do_scp_write(ssh_scp scp, const char* path, FILE* fp,
             ssh_get_error(ftp->session));
     ssh_scp_close(scp);
     ssh_scp_free(scp);
-    return -1;
+    return -2;
   }
 
   /* read file */
@@ -891,8 +891,13 @@ static int do_write(const char* path, FILE* fp, ftp_transfer_func hookf,
     {
       int rc = ssh_scp_init(scp);
       if (rc == SSH_OK)
-        return do_scp_write(scp, path, fp, hookf);
-      ssh_scp_free(scp);
+      {
+        rc = do_scp_write(scp, path, fp, hookf);
+        if (rc != -2)
+          return rc;
+      }
+      else
+        ssh_scp_free(scp);
     }
   }
 
