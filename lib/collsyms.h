@@ -20,7 +20,7 @@
    Foundation, 59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 
 #ifndef _COLLSYMS_H_
-#  define _COLLSYSMS_H_
+#  define _COLLSYMS_H_
 
 /* The upper-case letters, lower-case letters, and digits are omitted from
    this table.  The digits are not included in the table in the POSIX.2
