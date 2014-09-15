@@ -374,7 +374,7 @@ Socket* sock_create(void)
   sock->eof = ps_eof;
   sock->telnet_interrupt = ps_telnet_interrupt;
   sock->check_pending = ps_check_pending;
-  sock->clearerr = ps_clearerr;
+  sock->clear_error = ps_clearerr;
   sock->error = ps_error;
 
   return sock;

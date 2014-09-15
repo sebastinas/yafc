@@ -42,7 +42,7 @@ struct Socket_
 
   int (*check_pending)(Socket* sock, bool inout);
 
-  void (*clearerr)(Socket* sockp, bool inout);
+  void (*clear_error)(Socket* sockp, bool inout);
   int (*error)(Socket* sockp, bool input);
 };
 

@@ -191,14 +191,14 @@ int sock_telnet_interrupt(Socket *sockp)
 
 void sock_clearerr_in(Socket* sockp)
 {
-  if (sockp && sockp->clearerr)
-    sockp->clearerr(sockp, false);
+  if (sockp && sockp->clear_error)
+    sockp->clear_error(sockp, false);
 }
 
 void sock_clearerr_out(Socket* sockp)
 {
-  if (sockp && sockp->clearerr)
-    sockp->clearerr(sockp, true);
+  if (sockp && sockp->clear_error)
+    sockp->clear_error(sockp, true);
 }
 
 int sock_error_in(Socket* sockp)
