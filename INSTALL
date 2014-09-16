@@ -11,8 +11,11 @@ To build Yafc, just follow these steps:
   * run 'make'
 
   * run 'make install' or 'make install-strip'
-     the latter strips the symbol table from the executable,
-	 reducing its size.
+     the latter strips the symbol table from the executable, reducing its size.
+
+If Yafc is built from a git checkout and './configure' is not available, please
+make sure that glib, autoconf, automake and pkg-config are installed and run
+'./autogen.sh' to generate './configure' and friends.
 
 Yafc has been tested and compiled on the following platforms:
   * i386 Linux (Debian, Redhat, Suse)
