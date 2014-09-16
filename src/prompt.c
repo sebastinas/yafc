@@ -52,12 +52,35 @@ static int connection_number(void)
  *  example: %32w
  */
 
-char *expand_prompt(const char *fmt)
+static bool read_uint(const char** str, unsigned int* number) {
+  if (!str || !*str || !number) {
+    return false;
+  }
+
+  char* endptr = NULL;
+  errno = 0;
+
+  const unsigned long value = strtol(*str, &endptr, 0);
+  if ((errno == ERANGE && (value == ULONG_MAX || value == 0)) ||
+    (errno != 0 && value == 0))
+  {
+    *str = endptr;
+    return false;
+  }
+
+  if (*str != endptr)
+    *number = MIN(value, UINT_MAX);
+
+  *str = endptr;
+  return true;
+}
+
+char* expand_prompt(const char* fmt)
 {
   if (!fmt)
-    return 0;
+    return NULL;
 
-  char* prompt = xmalloc(strlen(fmt)+1);
+  char* prompt = xmalloc(strlen(fmt) + 1);
   char* cp = prompt;
 
   while (fmt && *fmt)
@@ -70,14 +93,9 @@ char *expand_prompt(const char *fmt)
       bool freeins = false;
       unsigned int maxlen = UINT_MAX;
 
-      if (isdigit((int)*fmt))
-      {
-        maxlen = (unsigned int) atoi(fmt);
-        while (isdigit((int) *fmt))
-          fmt++;
-      }
+      read_uint(&fmt, &maxlen);
 
-      switch(*fmt)
+      switch (*fmt)
       {
         case 'c':
         {
