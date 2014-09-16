@@ -18,15 +18,14 @@
 
 static int connection_number(void)
 {
-	int i = 1;
-	listitem *li;
+  int i = 1;
 
-	for(li=gvFtpList->first; li; li=li->next, i++) {
-		if(gvCurrentFtp == li)
-			return i;
-	}
-	/* should not reach here! */
-	return -1;
+  for (listitem* li = gvFtpList->first; li; li=li->next, i++) {
+    if (gvCurrentFtp == li)
+      return i;
+  }
+  /* should not reach here! */
+  return -1;
 }
 
 /*
@@ -55,161 +54,218 @@ static int connection_number(void)
 
 char *expand_prompt(const char *fmt)
 {
-	unsigned maxlen;
-	char *ins, *e;
-	bool freeins;
-	char *tmp;
+  if (!fmt)
+    return 0;
 
+  char* prompt = xmalloc(strlen(fmt)+1);
+  char* cp = prompt;
 
-	if(!fmt)
-		return 0;
+  while (fmt && *fmt)
+  {
+    if (*fmt == '%')
+    {
+      fmt++;
 
-	char* prompt = (char *)xmalloc(strlen(fmt)+1);
-	char* cp = prompt;
+      char* ins = NULL;
+      bool freeins = false;
+      unsigned int maxlen = UINT_MAX;
 
-	while(fmt && *fmt) {
-		if(*fmt == '%') {
-			fmt++;
-			ins = 0;
-			freeins = false;
-			maxlen = UINT_MAX;
-			if(isdigit((int)*fmt)) {
-				maxlen = (unsigned)atoi(fmt);
-				while(isdigit((int)*fmt))
-					fmt++;
-			}
-			switch(*fmt) {
-			  case 'c':
-				if (asprintf(&ins, "%u", list_numitem(gvFtpList)) == -1)
+      if (isdigit((int)*fmt))
+      {
+        maxlen = (unsigned int) atoi(fmt);
+        while (isdigit((int) *fmt))
+          fmt++;
+      }
+
+      switch(*fmt)
+      {
+        case 'c':
         {
-          fprintf(stderr, _("Failed to allocate memory.\n"));
-          free(prompt);
-          return NULL;
+          if (asprintf(&ins, "%u", list_numitem(gvFtpList)) == -1)
+          {
+            fprintf(stderr, _("Failed to allocate memory.\n"));
+            free(prompt);
+            return NULL;
+          }
+          freeins = true;
+          break;
         }
-				freeins = true;
-				break;
-			  case 'C':
-				if (asprintf(&ins, "%u", connection_number()) == -1)
-        {
-          fprintf(stderr, _("Failed to allocate memory.\n"));
-          free(prompt);
-          return NULL;
-        }
-				freeins = true;
-				break;
-			  case 'u': /* username */
-				ins = ftp_loggedin() ? ftp->url->username : "?";
-				break;
-			  case 'h': /* remote hostname (as passed to cmd_open()) */
-				ins = ftp_connected() ? ftp->url->hostname : "?";
-				break;
-			  case 'H': /* %h up to first '.' */
-				if(!ftp_connected()) {
-					ins = "?";
-					break;
-				}
-				e = strchr(ftp->url->hostname, '.');
-				if(e) {
-					ins = xstrndup(ftp->url->hostname, e - ftp->url->hostname);
-					freeins = true;
-				} else
-					ins = ftp->url->hostname;
-				break;
-			  case 'm':
-				/* remote machine name (as returned from gethostbynmame) */
-				ins = xstrdup(ftp_connected() ? host_getoname(ftp->host) : "?");
-        freeins = true;
-				break;
-			  case 'M': /* %m up to first '.' */
-				if(!ftp_connected()) {
-					ins = "?";
-					break;
-				}
-				e = strchr(host_getoname(ftp->host), '.');
-				if(e) {
-					ins = xstrndup(host_getoname(ftp->host),
-								   e - host_getoname(ftp->host));
-				} else
-					ins = xstrdup(host_getoname(ftp->host));
-        freeins = true;
-				break;
-			case 'n': /* remote ip number */
-				ins = xstrdup(ftp_connected() ? host_getoname(ftp->host) : "?");
-        freeins = true;
-				break;
-			case 'w': /* current remote directory */
-				if(!ftp_loggedin()) {
-					ins = "?";
-					break;
-				}
-				ins = shortpath(ftp->curdir, maxlen, 0);
-				freeins = true;
-				break;
-			case 'W': /* basename(%w) */
-				if(!ftp_loggedin()) {
-					ins = "?";
-					break;
-				}
-				ins = (char *)base_name_ptr(ftp->curdir);
-				break;
-			case '~': /* %w but homedir replaced with '~' */
-				if(!ftp_loggedin()) {
-					ins = "?";
-					break;
-				}
-				ins = shortpath(ftp->curdir, maxlen, ftp->homedir);
-				freeins = true;
-				break;
-			case 'l': /* current local directory */
-				tmp = getcwd(NULL, 0);
-				ins = shortpath(tmp, maxlen, 0);
-				freeins = true;
-				free(tmp);
-				break;
-			case 'L': /* basename(%l) */
-				tmp = getcwd(NULL, 0);
-				ins = (char *)base_name_ptr(tmp);
-				free(tmp);
-				break;
-			case '%': /* percent sign */
-				ins = "%";
-				break;
-			case '#': /* local user == root ? '#' : '$' */
-				ins = getuid() == 0 ? "#" : "$";
-				break;
-			case '{': /* begin non-printable character string */
-#ifdef HAVE_LIBREADLINE
-				ins = "\001"; /* RL_PROMPT_START_IGNORE */
-#endif
-				break;
-			case '}': /* end non-printable character string */
-#ifdef HAVE_LIBREADLINE
-				ins = "\002"; /* RL_PROMPT_END_IGNORE */
-#endif
-				break;
-			case 'e': /* escape (0x1B) */
-				ins = "\x1B";
-				break;
-			default: /* illegal format specifier */
-				break;
-			}
 
-			if(ins) {
+        case 'C':
+        {
+          if (asprintf(&ins, "%u", connection_number()) == -1)
+          {
+            fprintf(stderr, _("Failed to allocate memory.\n"));
+            free(prompt);
+            return NULL;
+          }
+          freeins = true;
+          break;
+        }
+
+        case 'u': /* username */
+        {
+          ins = ftp_loggedin() ? ftp->url->username : "?";
+          break;
+        }
+
+        case 'h': /* remote hostname (as passed to cmd_open()) */
+        {
+          ins = ftp_connected() ? ftp->url->hostname : "?";
+          break;
+        }
+
+        case 'H': /* %h up to first '.' */
+        {
+          if (!ftp_connected()) {
+            ins = "?";
+            break;
+          }
+
+          char* e = strchr(ftp->url->hostname, '.');
+          if (e)
+          {
+            ins = xstrndup(ftp->url->hostname, e - ftp->url->hostname);
+            freeins = true;
+          }
+          else
+            ins = ftp->url->hostname;
+          break;
+        }
+
+        case 'm': /* remote machine name (as returned from gethostbynmame) */
+        {
+          ins = xstrdup(ftp_connected() ? host_getoname(ftp->host) : "?");
+          freeins = true;
+          break;
+        }
+
+        case 'M': /* %m up to first '.' */
+        {
+          if (!ftp_connected()) {
+            ins = "?";
+            break;
+          }
+
+          char* e = strchr(host_getoname(ftp->host), '.');
+          if (e)
+            ins = xstrndup(host_getoname(ftp->host),
+                     e - host_getoname(ftp->host));
+          else
+            ins = xstrdup(host_getoname(ftp->host));
+          freeins = true;
+          break;
+        }
+
+        case 'n': /* remote ip number */
+        {
+          ins = xstrdup(ftp_connected() ? host_getoname(ftp->host) : "?");
+          freeins = true;
+          break;
+        }
+
+        case 'w': /* current remote directory */
+        {
+          if (!ftp_loggedin())
+            ins = "?";
+          else
+          {
+            ins = shortpath(ftp->curdir, maxlen, 0);
+            freeins = true;
+          }
+          break;
+        }
+
+        case 'W': /* basename(%w) */
+        {
+          if (!ftp_loggedin())
+            ins = "?";
+          else
+            ins = (char *)base_name_ptr(ftp->curdir);
+          break;
+        }
+
+        case '~': /* %w but homedir replaced with '~' */
+        {
+          if (!ftp_loggedin())
+            ins = "?";
+          else
+          {
+            ins = shortpath(ftp->curdir, maxlen, ftp->homedir);
+            freeins = true;
+          }
+          break;
+        }
+
+        case 'l': /* current local directory */
+        {
+          char* tmp = getcwd(NULL, 0);
+          ins = shortpath(tmp, maxlen, 0);
+          freeins = true;
+          free(tmp);
+          break;
+        }
+
+        case 'L': /* basename(%l) */
+        {
+          char* tmp = getcwd(NULL, 0);
+          ins = (char *)base_name_ptr(tmp);
+          free(tmp);
+          break;
+        }
+
+        case '%': /* percent sign */
+        {
+          ins = "%";
+          break;
+        }
+
+        case '#': /* local user == root ? '#' : '$' */
+        {
+          ins = getuid() == 0 ? "#" : "$";
+          break;
+        }
+
+#ifdef HAVE_LIBREADLINE
+        case '{': /* begin non-printable character string */
+        {
+          ins = "\001"; /* RL_PROMPT_START_IGNORE */
+          break;
+        }
+
+        case '}': /* end non-printable character string */
+        {
+          ins = "\002"; /* RL_PROMPT_END_IGNORE */
+          break;
+        }
+#endif
+
+        case 'e': /* escape (0x1B) */
+        {
+          ins = "\x1B";
+          break;
+        }
+      }
+
+      if (ins)
+      {
         const size_t len = strlen(prompt) + strlen(ins) + strlen(fmt+1) + 1;
-				char* tmp = xmalloc(len);
-				strlcpy(tmp, prompt, len);
-				strlcat(tmp, ins, len);
-				cp = tmp + strlen(prompt) + strlen(ins);
-				free(prompt);
-				prompt = tmp;
-				if(freeins)
-					free(ins);
-			}
-		} else
-			*cp++ = *fmt;
+        char* tmp = xmalloc(len);
+        strlcpy(tmp, prompt, len);
+        strlcat(tmp, ins, len);
+        cp = tmp + strlen(prompt) + strlen(ins);
+        free(prompt);
+        prompt = tmp;
+        if (freeins)
+          free(ins);
+      }
+    }
+    else
+      *cp++ = *fmt;
 
-		fmt++;
-	}
-	unquote_escapes(prompt);
-	return prompt;
+    fmt++;
+  }
+
+  unquote_escapes(prompt);
+  return prompt;
 }
