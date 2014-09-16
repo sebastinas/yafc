@@ -72,7 +72,7 @@ char *expand_prompt(const char *fmt)
 			fmt++;
 			ins = 0;
 			freeins = false;
-			maxlen = (unsigned)-1;
+			maxlen = UINT_MAX;
 			if(isdigit((int)*fmt)) {
 				maxlen = (unsigned)atoi(fmt);
 				while(isdigit((int)*fmt))
