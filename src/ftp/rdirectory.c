@@ -92,8 +92,11 @@ rfile *rdir_get_file(rdirectory *rdir, const char *filename)
   return NULL;
 }
 
-static int compare_files(const rfile* a, const rfile* b)
+static int compare_files(const void* A, const void* B)
 {
+  const rfile* a = A;
+  const rfile* b = B;
+
   if (a == b)
     return 0;
 
