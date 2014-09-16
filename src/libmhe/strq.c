@@ -78,6 +78,11 @@ const char *base_name_ptr(const char *path)
 	return path;
 }
 
+char* base_name_xptr(const char* path)
+{
+  return xstrdup(base_name_ptr(path));
+}
+
 char *base_dir_xptr(const char *path)
 {
 	char *e;

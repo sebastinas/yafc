@@ -209,7 +209,8 @@ char *expand_prompt(const char *fmt)
         case 'L': /* basename(%l) */
         {
           char* tmp = getcwd(NULL, 0);
-          ins = (char *)base_name_ptr(tmp);
+          ins = base_name_xptr(tmp);
+          freeins = true;
           free(tmp);
           break;
         }

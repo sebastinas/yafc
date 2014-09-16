@@ -24,6 +24,7 @@ void unquote_escapes(char *str);
 
 char *stripslash(char *p);
 const char *base_name_ptr(const char *s);
+char *base_name_xptr(const char* s);
 char *base_dir_xptr(const char *path);
 char *strip_blanks(char *str);
 void fix_unprintable(char *str);
