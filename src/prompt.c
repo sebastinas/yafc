@@ -200,18 +200,24 @@ char *expand_prompt(const char *fmt)
         case 'l': /* current local directory */
         {
           char* tmp = getcwd(NULL, 0);
-          ins = shortpath(tmp, maxlen, 0);
-          freeins = true;
-          free(tmp);
+          if (tmp)
+          {
+            ins = shortpath(tmp, maxlen, 0);
+            freeins = true;
+            free(tmp);
+          }
           break;
         }
 
         case 'L': /* basename(%l) */
         {
           char* tmp = getcwd(NULL, 0);
-          ins = base_name_xptr(tmp);
-          freeins = true;
-          free(tmp);
+          if (tmp)
+          {
+            ins = base_name_xptr(tmp);
+            freeins = true;
+            free(tmp);
+          }
           break;
         }
 
