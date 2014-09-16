@@ -30,10 +30,6 @@
 #define SSH_BUFSIZ 131072
 #endif
 
-#ifndef MIN
-#define MIN(a,b) (a) < (b) ? (a) : (b)
-#endif
-
 /* from libssh examples */
 static int verify_knownhost(ssh_session session)
 {

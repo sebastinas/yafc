@@ -217,4 +217,12 @@ typedef void (*sighandler_t)(int);
 #define test(a, b)   (((a) & (b)) == (b))
 #define STD_SHELL "/bin/sh"
 
+#ifndef MIN
+#define MIN(a, b) (a) < (b) ? (a) : (b)
+#endif
+
+#ifndef MAX
+#define MAX(a, b) (a) < (b) ? (b) : (a)
+#endif
+
 #endif
