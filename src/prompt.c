@@ -179,12 +179,12 @@ char *expand_prompt(const char *fmt)
 				break;
 			case '{': /* begin non-printable character string */
 #ifdef HAVE_LIBREADLINE
-				ins = "\001\001"; /* \001 + RL_PROMPT_START_IGNORE */
+				ins = "\001"; /* RL_PROMPT_START_IGNORE */
 #endif
 				break;
 			case '}': /* end non-printable character string */
 #ifdef HAVE_LIBREADLINE
-				ins = "\001\002"; /* \001 + RL_PROMPT_END_IGNORE */
+				ins = "\002"; /* RL_PROMPT_END_IGNORE */
 #endif
 				break;
 			case 'e': /* escape (0x1B) */
