@@ -20,9 +20,6 @@
 
 void cmd_help(int argc, char **argv)
 {
-	int i;
-	listitem *li;
-
 	maxargs_nohelp(1);
 
   if(argc==2) {
@@ -42,9 +39,9 @@ void cmd_help(int argc, char **argv)
   rl_point = rl_end = 0;
   rl_possible_completions(0, 0);
 #else
-  for(i=0; cmds[i].cmd; i++)
+  for(int i=0; cmds[i].cmd; i++)
     printf("%s\n", cmds[i].cmd);
-  for(li = gvAliases->first; li; li = li->next)
+  for(listitem* li = gvAliases->first; li; li = li->next)
     printf("%s\n", ((alias *)li->data)->name);
 #endif
 }
