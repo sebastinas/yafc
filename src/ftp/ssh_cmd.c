@@ -70,15 +70,16 @@ static int verify_knownhost(ssh_session session)
 
     case SSH_SERVER_NOT_KNOWN:
       hexa = ssh_get_hexa(hash, hlen);
-      fprintf(stderr, _("The server is unknown. Do you trust the host key?\n"));
-      fprintf(stderr, _("Public key hash: %s\n"), hexa);
+      fprintf(stderr, _("The server is unknown. Public key hash: %s\n"), hexa);
+      fprintf(stderr, _("Do you trust the host key? [yes/No]"));
+      fflush(stderr);
       free(hexa);
       if (fgets(buf, sizeof(buf), stdin) == NULL)
       {
         free(hash);
         return -1;
       }
-      if (strncasecmp(buf, "yes", 3) != 0)
+      if (strncasecmp(buf, _("yes"), 3) != 0)
       {
         free(hash);
         return -1;

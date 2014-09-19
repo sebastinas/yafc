@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: yafc\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=glib&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-04-04 20:39+0200\n"
-"PO-Revision-Date: 2014-04-04 20:40+0200\n"
+"POT-Creation-Date: 2014-09-19 21:29+0200\n"
+"PO-Revision-Date: 2014-09-19 21:30+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: de\n"
@@ -70,8 +70,8 @@ msgstr "unbekannt"
 
 #: ../lib/security.c:340 ../src/bookmark.c:117 ../src/bookmark.c:207
 #: ../src/bookmark.c:379 ../src/bookmark.c:490 ../src/commands.c:223
-#: ../src/ftp/ftp.c:775 ../src/ftp/ftp.c:818 ../src/ftp/ftp.c:1589
-#: ../src/ftp/ssh_cmd.c:528 ../src/fxp.c:180 ../src/fxp.c:190 ../src/fxp.c:452
+#: ../src/ftp/ftp.c:775 ../src/ftp/ftp.c:818 ../src/ftp/ftp.c:1591
+#: ../src/ftp/ssh_cmd.c:525 ../src/fxp.c:180 ../src/fxp.c:190 ../src/fxp.c:452
 #: ../src/fxp.c:461 ../src/get.c:197 ../src/get.c:220 ../src/get.c:539
 #: ../src/get.c:546 ../src/list.c:375 ../src/list.c:583 ../src/ltag.c:42
 #: ../src/ltag.c:77 ../src/main.c:172 ../src/main.c:213 ../src/main.c:230
@@ -79,7 +79,7 @@ msgstr "unbekannt"
 #: ../src/put.c:150 ../src/put.c:160 ../src/put.c:389 ../src/put.c:397
 #: ../src/rm.c:94 ../src/tag.c:48 ../src/tag.c:88 ../src/transfer.c:435
 #: ../src/utils.c:228 ../src/completion.c:213 ../src/input.c:342
-#: ../src/lglob.c:86 ../src/prompt.c:85 ../src/prompt.c:94
+#: ../src/lglob.c:86 ../src/prompt.c:104 ../src/prompt.c:116
 #, c-format
 msgid "Failed to allocate memory.\n"
 msgstr "Konnte Speicher nicht anfordern.\n"
@@ -297,6 +297,7 @@ msgid "%s: noupdate: %s\n"
 msgstr ""
 
 #: ../src/bookmark.c:571 ../src/bookmark.c:579 ../src/bookmark.c:593
+#: ../src/ftp/ssh_cmd.c:82
 msgid "yes"
 msgstr "ja"
 
@@ -781,21 +782,21 @@ msgstr ""
 msgid "Can't redirect output, exiting...\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:55
+#: ../src/ftp/ssh_cmd.c:51
 #, c-format
 msgid "Host key for server changed. It is now:\n"
 msgstr "Schlüssel des Servers hat sich geändert. Er ist nun:\n"
 
-#: ../src/ftp/ssh_cmd.c:56
+#: ../src/ftp/ssh_cmd.c:52
 msgid "Public key hash"
 msgstr "Prüfsumme des öffentlichen Schlüssels"
 
-#: ../src/ftp/ssh_cmd.c:57
+#: ../src/ftp/ssh_cmd.c:53
 #, c-format
 msgid "For security reasons, connection will be stopped.\n"
 msgstr "Verbindung wird aus Sicherheitsgründen gestoppt.\n"
 
-#: ../src/ftp/ssh_cmd.c:62
+#: ../src/ftp/ssh_cmd.c:58
 #, c-format
 msgid ""
 "The host key for this server was not found but another type of key exists.\n"
@@ -803,169 +804,164 @@ msgstr ""
 "Der Schlüssel des Servers konnte nicht gefunden worden, aber es existiert "
 "eine andere Art eines Schlüssels.\n"
 
-#: ../src/ftp/ssh_cmd.c:64
+#: ../src/ftp/ssh_cmd.c:60
 #, c-format
 msgid ""
 "An attacker might change the default server key to confuse your client into "
 "thinking the key does not exist\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:70
+#: ../src/ftp/ssh_cmd.c:66
 #, c-format
 msgid "Could not find known host file.\n"
 msgstr "Konnte Dateien mit bekannten Servern nicht finden.\n"
 
-#: ../src/ftp/ssh_cmd.c:71
+#: ../src/ftp/ssh_cmd.c:67
 #, c-format
 msgid ""
 "If you accept the host key here, the file will be automatically created.\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:77
+#: ../src/ftp/ssh_cmd.c:73
 #, c-format
-msgid "The server is unknown. Do you trust the host key?\n"
-msgstr "Der Server ist unbekannt. Vertrauen Sie dem Schlüssel des Servers?\n"
+msgid "The server is unknown. Public key hash: %s\n"
+msgstr "Der Server ist unbekannt. Prüfsumme des öffentlichen Schlüssels: %s\n"
 
-#: ../src/ftp/ssh_cmd.c:78
+#: ../src/ftp/ssh_cmd.c:74
 #, c-format
-msgid "Public key hash: %s\n"
-msgstr "Prüfsumme des öffentlichen Schlüssels: %s\n"
+msgid "Do you trust the host key? [yes/No]"
+msgstr "Vertrauen Sie dem Schlüssel des Servers? [ja/Nein]"
 
-#: ../src/ftp/ssh_cmd.c:92 ../src/ftp/ssh_cmd.c:99
+#: ../src/ftp/ssh_cmd.c:89 ../src/ftp/ssh_cmd.c:96
 #, c-format
 msgid "Error %s\n"
 msgstr "Fehler %s\n"
 
-#: ../src/ftp/ssh_cmd.c:237
+#: ../src/ftp/ssh_cmd.c:234
 #, c-format
 msgid "Failed to load SSH options from yafcrc config (ssh_options = '%s')\n"
 msgstr "Laden der SSH Option aus yafcrc fehlgeschlagen (ssh options ='%s')\n"
 
-#: ../src/ftp/ssh_cmd.c:256
+#: ../src/ftp/ssh_cmd.c:253
 #, c-format
 msgid "Failed to parse ssh config: %s\n"
 msgstr "Konnte ssh Konfiguration nicht verarbeiten: %s\n"
 
-#: ../src/ftp/ssh_cmd.c:270
+#: ../src/ftp/ssh_cmd.c:267
 #, c-format
 msgid "Couldn't initialise connection to server: %s\n"
 msgstr "Verbindung zu Server konnte nicht hergestellt werden: %s\n"
 
-#: ../src/ftp/ssh_cmd.c:289
+#: ../src/ftp/ssh_cmd.c:286
 #, c-format
 msgid "Authentication failed: %s\n"
 msgstr "Authentifizierung fehlgeschlagen: %s\n"
 
-#: ../src/ftp/ssh_cmd.c:298
+#: ../src/ftp/ssh_cmd.c:295
 msgid "Couldn't initialise connection to server\n"
 msgstr "Verbindung zu Server konnte nicht hergestellt werden\n"
 
-#: ../src/ftp/ssh_cmd.c:305 ../src/ftp/ssh_cmd.c:315
+#: ../src/ftp/ssh_cmd.c:302 ../src/ftp/ssh_cmd.c:312
 #, c-format
 msgid "Couldn't initialise ftp subsystem: %s\n"
 msgstr "FTP Subsystem konnte nicht initialisiert werden: %s\n"
 
-#: ../src/ftp/ssh_cmd.c:381
+#: ../src/ftp/ssh_cmd.c:380
 #, c-format
 msgid "Couldn't stat directory: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:386
+#: ../src/ftp/ssh_cmd.c:385
 #, c-format
 msgid "%s: not a directory\n"
 msgstr "%s: ist kein Verzeichnis\n"
 
-#: ../src/ftp/ssh_cmd.c:412 ../src/fxp.c:206 ../src/get.c:235 ../src/put.c:174
+#: ../src/ftp/ssh_cmd.c:411 ../src/fxp.c:206 ../src/get.c:235 ../src/put.c:174
 #, c-format
 msgid "Couldn't create directory: %s\n"
 msgstr "Konnte Verzeichnis nicht erstellen: %s\n"
 
-#: ../src/ftp/ssh_cmd.c:430
+#: ../src/ftp/ssh_cmd.c:429
 #, c-format
 msgid "Couldn't remove directory: %s\n"
 msgstr "Konnte Verzeichnis nicht löschen: %s\n"
 
-#: ../src/ftp/ssh_cmd.c:446
+#: ../src/ftp/ssh_cmd.c:445
 #, c-format
 msgid "Couldn't delete file: %s\n"
 msgstr "Konnte Datei nicht löschen: %s\n"
 
-#: ../src/ftp/ssh_cmd.c:465
+#: ../src/ftp/ssh_cmd.c:462
 #, c-format
 msgid "Couldn't chmod file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:550
+#: ../src/ftp/ssh_cmd.c:547
 #, c-format
 msgid "Couldn't list directory: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:575
+#: ../src/ftp/ssh_cmd.c:573
 #, c-format
 msgid "Couldn't rename file '%s' to '%s': %s\n"
 msgstr "Konnte Datei '%s' nicht in '%s' umbenennen: %s\n"
 
-#: ../src/ftp/ssh_cmd.c:602
+#: ../src/ftp/ssh_cmd.c:600
 msgid "ssh_list() not implemented yet\n"
 msgstr "ssh_list() ist noch nicht implementiert\n"
 
-#: ../src/ftp/ssh_cmd.c:625
-#, c-format
-msgid "Failed to start scp download: %s\n"
-msgstr ""
-
-#: ../src/ftp/ssh_cmd.c:649 ../src/ftp/ssh_cmd.c:756 ../src/ftp/ssh_cmd.c:847
-#: ../src/ftp/ssh_cmd.c:941
+#: ../src/ftp/ssh_cmd.c:647 ../src/ftp/ssh_cmd.c:759 ../src/ftp/ssh_cmd.c:850
+#: ../src/ftp/ssh_cmd.c:949
 #, c-format
 msgid "Error while writing to file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:670 ../src/ftp/ssh_cmd.c:776
+#: ../src/ftp/ssh_cmd.c:668 ../src/ftp/ssh_cmd.c:779
 #, c-format
 msgid "Error while reading from file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:677
+#: ../src/ftp/ssh_cmd.c:675
 #, c-format
 msgid "Unexpected request: %s %lu\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:719
+#: ../src/ftp/ssh_cmd.c:722
 #, c-format
 msgid "Cannot download a directory: %s\n"
 msgstr "Kann kein Verzeichnis herunterladen: %s\n"
 
-#: ../src/ftp/ssh_cmd.c:729
+#: ../src/ftp/ssh_cmd.c:732
 #, c-format
 msgid "Cannot open file for reading: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:737 ../src/ftp/ssh_cmd.c:921
+#: ../src/ftp/ssh_cmd.c:740 ../src/ftp/ssh_cmd.c:929
 #, c-format
 msgid "Failed to seek: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:817 ../src/ftp/ssh_cmd.c:904
+#: ../src/ftp/ssh_cmd.c:820 ../src/ftp/ssh_cmd.c:912
 #, c-format
 msgid "Couldn't fstat local file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:825
+#: ../src/ftp/ssh_cmd.c:828
 #, c-format
 msgid "Failed to start scp upload: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:868 ../src/ftp/ssh_cmd.c:961
+#: ../src/ftp/ssh_cmd.c:871 ../src/ftp/ssh_cmd.c:969
 #, c-format
 msgid "Failed to read from file: %s\n"
 msgstr "Konnte nicht aus Datei lesen: %s\n"
 
-#: ../src/ftp/ssh_cmd.c:913
+#: ../src/ftp/ssh_cmd.c:921
 #, c-format
 msgid "Cannot open file for writing: %s\n"
 msgstr "Konnte Datei nicht zum Schreiben öffnen: %s\n"
 
-#: ../src/ftp/ssh_cmd.c:982
+#: ../src/ftp/ssh_cmd.c:990
 msgid "Unique put with SSH not implemented yet\n"
 msgstr ""
 
@@ -1184,34 +1180,34 @@ msgstr ""
 msgid "you are not a member of group %s\n"
 msgstr ""
 
-#: ../src/help.c:36
+#: ../src/help.c:33
 #, c-format
 msgid ""
 "No such command '%s'!\n"
 "\n"
 msgstr ""
 
-#: ../src/help.c:40
+#: ../src/help.c:37
 #, c-format
 msgid "Available commands: (commands may be abbreviated)\n"
 msgstr ""
 
-#: ../src/help.c:58
+#: ../src/help.c:55
 #, c-format
 msgid "Compiled "
 msgstr "Kompliliert"
 
-#: ../src/help.c:60
+#: ../src/help.c:57
 #, c-format
 msgid "Using editline version %s.\n"
 msgstr "Verwende editline Version %s.\n"
 
-#: ../src/help.c:63
+#: ../src/help.c:60
 #, c-format
 msgid "Using Readline version %s.\n"
 msgstr "Verwende Readline Version %s.\n"
 
-#: ../src/help.c:67
+#: ../src/help.c:64
 #, c-format
 msgid "Using libssh version %d.%d.%d.\n"
 msgstr "Verwende libssh Version %d.%d.%d.\n"
