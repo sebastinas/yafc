@@ -319,6 +319,8 @@ int ssh_open_url(url_t* urlp)
 
   ftp->connected = true;
   ftp->loggedin = true;
+  // code does not make sense for sftp connection
+  ftp->code = ctComplete;
 
   free(ftp->homedir);
   ftp->homedir = ftp_getcurdir();
@@ -440,8 +442,6 @@ int ssh_unlink(const char *path)
   if (rc != SSH_OK && sftp_get_error(ftp->sftp_session) != SSH_FX_NO_SUCH_FILE)
   {
     ftp_err(_("Couldn't delete file: %s\n"), ssh_get_error(ftp->session));
-    ftp->code = ctError;
-    ftp->fullcode = 500;
     return -1;
   }
   else
