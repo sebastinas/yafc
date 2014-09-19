@@ -1897,3 +1897,16 @@ void ftp_get_feat(void)
 {
 /*  ftp_cmd("FEAT");*/
 }
+
+char* ftp_connected_user()
+{
+  if (!ftp_loggedin())
+    return NULL;
+
+#ifdef HAVE_LIBSSH
+  if (ftp->session)
+    return ssh_connected_user();
+
+  return ftp->url->username ? xstrdup(ftp->url->username) : NULL;
+#endif
+}

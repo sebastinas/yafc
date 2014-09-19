@@ -123,7 +123,14 @@ char* expand_prompt(const char* fmt)
 
         case 'u': /* username */
         {
-          ins = ftp_loggedin() ? ftp->url->username : "?";
+          char* user = ftp_connected_user();
+          if (user)
+          {
+            ins = user;
+            freeins = true;
+          }
+          else
+            ins = "?";
           break;
         }
 

@@ -240,6 +240,7 @@ int get_username(url_t *url, const char *guessed_username, bool isproxy);
 
 bool ftp_connected(void);
 bool ftp_loggedin(void);
+char* ftp_connected_user();
 
 rdirectory *ftp_get_directory(const char *path);
 rdirectory *ftp_read_directory(const char *path);

@@ -36,5 +36,6 @@ int ssh_do_receive(const char *infile, FILE *fp, transfer_mode_t mode,
     ftp_transfer_func hookf);
 int ssh_send(const char *path, FILE *fp, putmode_t how,
     transfer_mode_t mode, ftp_transfer_func hookf);
+char* ssh_connected_user();
 
 #endif

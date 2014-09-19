@@ -1006,3 +1006,18 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
   transfer_finished();
   return r;
 }
+
+char* ssh_connected_user()
+{
+  if (!ftp->session)
+    return NULL;
+
+  char* user = NULL;
+  if (ssh_options_get(ftp->session, SSH_OPTIONS_USER, &user) != SSH_OK)
+    return NULL;
+
+  char* ret = xstrdup(user);
+  ssh_string_free_char(user);
+
+  return ret;
+}
