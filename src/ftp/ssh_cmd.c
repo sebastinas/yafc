@@ -34,8 +34,6 @@
 static int verify_knownhost(ssh_session session)
 {
   unsigned char *hash = NULL;
-  char *hexa;
-  char buf[10];
 
   int state = ssh_is_server_known(session);
   int hlen = ssh_get_pubkey_hash(session, &hash);
@@ -69,21 +67,32 @@ static int verify_knownhost(ssh_session session)
       /* fallback to SSH_SERVER_NOT_KNOWN behavior */
 
     case SSH_SERVER_NOT_KNOWN:
-      hexa = ssh_get_hexa(hash, hlen);
+    {
+      char* hexa = ssh_get_hexa(hash, hlen);
       fprintf(stderr, _("The server is unknown. Public key hash: %s\n"), hexa);
-      fprintf(stderr, _("Do you trust the host key? [yes/No]"));
-      fflush(stderr);
       free(hexa);
+      fprintf(stderr, _("Do you trust the host key? [yes/No] "));
+      fflush(stderr);
+
+      char buf[64] = { '\0' };
       if (fgets(buf, sizeof(buf), stdin) == NULL)
       {
         free(hash);
         return -1;
       }
-      if (strncasecmp(buf, _("yes"), 3) != 0)
+
+      /* replace \n from fgets with \0 */
+      const size_t len = strlen(buf);
+      if (len > 0 && len == '\n') {
+        buf[len - 1] = '\0';
+      }
+
+      if (strcasecmp(buf, _("yes")) != 0)
       {
         free(hash);
         return -1;
       }
+
       if (ssh_write_knownhost(session) < 0)
       {
         fprintf(stderr, _("Error %s\n"), strerror(errno));
@@ -91,6 +100,7 @@ static int verify_knownhost(ssh_session session)
         return -1;
       }
       break;
+    }
 
     case SSH_SERVER_ERROR:
       fprintf(stderr, _("Error %s\n"), ssh_get_error(session));
