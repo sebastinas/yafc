@@ -83,7 +83,7 @@ static int verify_knownhost(ssh_session session)
 
       /* replace \n from fgets with \0 */
       const size_t len = strlen(buf);
-      if (len > 0 && len == '\n') {
+      if (len > 0 && buf[len - 1] == '\n') {
         buf[len - 1] = '\0';
       }
 
