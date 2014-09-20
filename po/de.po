@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: yafc\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=glib&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-09-20 02:00+0200\n"
-"PO-Revision-Date: 2014-09-19 21:30+0100\n"
+"POT-Creation-Date: 2014-09-20 20:19+0200\n"
+"PO-Revision-Date: 2014-09-20 20:20+0200\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: de\n"
@@ -828,9 +828,9 @@ msgid "The server is unknown. Public key hash: %s\n"
 msgstr "Der Server ist unbekannt. Prüfsumme des öffentlichen Schlüssels: %s\n"
 
 #: ../src/ftp/ssh_cmd.c:74
-#, fuzzy, c-format
+#, c-format
 msgid "Do you trust the host key? [yes/No] "
-msgstr "Vertrauen Sie dem Schlüssel des Servers? [ja/Nein]"
+msgstr "Vertrauen Sie dem Schlüssel des Servers? [ja/Nein] "
 
 #: ../src/ftp/ssh_cmd.c:98 ../src/ftp/ssh_cmd.c:106
 #, c-format
