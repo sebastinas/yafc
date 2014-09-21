@@ -87,7 +87,7 @@ static int verify_knownhost(ssh_session session)
         buf[len - 1] = '\0';
       }
 
-      if (strcasecmp(buf, _("yes")) != 0)
+      if (strcasecmp(buf, _("yes")) != 0 && strcasecmp(buf, "yes") != 0)
       {
         free(hash);
         return -1;
