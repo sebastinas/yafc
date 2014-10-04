@@ -112,7 +112,7 @@ AC_TYPE_MODE_T
 AC_CHECK_DECLS([strlcpy, strlcat],,
   [
    # check if we have libbsd
-   PKG_CHECK_MODULES([BSD], [libbsd-overlay],,
+   PKG_CHECK_MODULES([BSD], [libbsd],,
     [
      AC_CHECK_HEADERS(bsd/string.h,,
      [
