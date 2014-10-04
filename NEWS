@@ -3,7 +3,11 @@ New in git
 
 * Fix compilation with readline 6.2. Thanks to Robin Neatherway for the patch.
   (#38)
-* Fix typo in dfine. Thanks to Ryan Schmidt for the patch (#40)
+* Fix typo in define. Thanks to Ryan Schmidt for the patch. (#40)
+* Fix compilation on Ubuntu 12.04 due to broken libbsd-overlay. (#46)
+* Fix compilation on Cygwin. (#41)
+* Fix prompt if readline is enabled. (#42)
+* Fix some issues with the ssh backend. (#43, #44, #45)
 
 New in 1.3.4
 ------------
