@@ -1022,12 +1022,16 @@ char* ssh_connected_user()
   if (!ftp->session)
     return NULL;
 
+#if LIBSSH_VERSION_INT >= SSH_VERSION_INT(0, 6, 1)
   char* user = NULL;
   if (ssh_options_get(ftp->session, SSH_OPTIONS_USER, &user) != SSH_OK)
     return NULL;
 
   char* ret = xstrdup(user);
   ssh_string_free_char(user);
+#else
+  char* ret = xstrdup("[not available]");
+#endif
 
   return ret;
 }
