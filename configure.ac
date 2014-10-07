@@ -112,7 +112,8 @@ AC_TYPE_MODE_T
 AC_CHECK_DECLS([strlcpy, strlcat],,
   [
    # check if we have libbsd
-   PKG_CHECK_MODULES([BSD], [libbsd],,
+   PKG_CHECK_MODULES([BSD], [libbsd],
+    AC_DEFINE(HAVE_BSD_STRING_H, [], [Define to 1 if you have the <bsd/string.h> header file.]),
     [
      AC_CHECK_HEADERS(bsd/string.h,,
      [
