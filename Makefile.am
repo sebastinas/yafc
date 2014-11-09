@@ -70,7 +70,7 @@ yafc_SOURCES = src/main.c \
 							 src/ftp/host.c \
 							 src/ftp/rglob.c \
 							 src/ftp/rfile.c \
-               src/ftp/rdirectory.c \
+							 src/ftp/rdirectory.c \
 							 src/ftp/lscolors.c \
 							 src/ftp/url.c \
 							 src/ftp/cache.c \
