@@ -52,7 +52,6 @@ void cmd_version(int argc, char **argv)
 
 	printf(FULLVER "\n");
 
-	printf(_("Compiled " __TIME__ " " __DATE__ " (" HOSTTYPE ")\n"));
 #ifdef HAVE_LIBEDIT
   printf(_("Using editline version %s.\n"), rl_library_version);
 #else
