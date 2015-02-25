@@ -91,8 +91,8 @@ int b64_encode(const void* data, size_t size, char** str)
     return -1;
   }
 
-  strncpy(*str, tmp, len + 1);
-  (*str)[len ] = '\0';
+  memcpy(*str, tmp, len);
+  (*str)[len] = '\0';
 
   BIO_free_all(b64);
   return len;
