@@ -82,9 +82,11 @@ static void bookmark_save_one(FILE *fp, url_t *url)
       else
       {
         char *cq = NULL;
-        b64_encode(url->password, strlen(url->password), &cq);
-        fprintf(fp, " password [base64]%s", cq);
-        free(cq);
+        if (b64_encode(url->password, strlen(url->password), &cq) != -1)
+        {
+          fprintf(fp, " password [base64]%s", cq);
+          free(cq);
+        }
       }
     }
   }
