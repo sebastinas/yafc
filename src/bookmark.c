@@ -51,57 +51,70 @@ static char *xquote_chars(const char *str, const char *qchars)
 
 static void bookmark_save_one(FILE *fp, url_t *url)
 {
-	if(url == gvLocalUrl)
-		fprintf(fp, "local");
-	else if(url == gvDefaultUrl)
-		fprintf(fp, "default");
-	else {
-		fprintf(fp, "machine %s://%s",
-				url->protocol ? url->protocol : "ftp", url->hostname);
-		if(url->port != -1)
-			fprintf(fp, ":%d", url->port);
-		if(url->alias) {
-			char *a = xquote_chars(url->alias, "\'\"");
-			fprintf(fp, " alias '%s'", a);
-			free(a);
-		}
-	}
-	if(url_isanon(url) && url->password
-	   && strcmp(url->password, gvAnonPasswd) == 0)
-		fprintf(fp, "\n  anonymous");
-	else if(url->username) {
-		fprintf(fp, "\n  login %s", url->username);
-		if(url->password) {
-			if(url_isanon(url))
-				fprintf(fp, " password %s", url->password);
-			else {
-				char *cq;
-				b64_encode(url->password, strlen(url->password), &cq);
-				fprintf(fp, " password [base64]%s", cq);
-				free(cq);
-			}
-		}
-	}
+  if (url == gvLocalUrl)
+    fprintf(fp, "local");
+  else if (url == gvDefaultUrl)
+    fprintf(fp, "default");
+  else
+  {
+    fprintf(fp, "machine %s://%s",
+        url->protocol ? url->protocol : "ftp", url->hostname);
+    if (url->port != -1)
+      fprintf(fp, ":%d", url->port);
+    if (url->alias)
+    {
+      char *a = xquote_chars(url->alias, "\'\"");
+      fprintf(fp, " alias '%s'", a);
+      free(a);
+    }
+  }
 
-	if(url->directory)
-		fprintf(fp, " cwd '%s'", url->directory);
+  if (url_isanon(url) && url->password &&
+      strcmp(url->password, gvAnonPasswd) == 0)
+    fprintf(fp, "\n  anonymous");
+  else if (url->username)
+  {
+    fprintf(fp, "\n  login %s", url->username);
+    if (url->password)
+    {
+      if (url_isanon(url))
+        fprintf(fp, " password %s", url->password);
+      else
+      {
+        char *cq = NULL;
+        b64_encode(url->password, strlen(url->password), &cq);
+        fprintf(fp, " password [base64]%s", cq);
+        free(cq);
+      }
+    }
+  }
 
-	if(url->protlevel)
-		fprintf(fp, " prot %s", url->protlevel);
-	if(url->mech) {
-		char *mech_string = stringify_list(url->mech);
-		if(mech_string) {
-			fprintf(fp, " mech '%s'", mech_string);
-			free(mech_string);
-		}
-	}
-	if(url->pasvmode != -1)
-		fprintf(fp, " passive %s", url->pasvmode ? "true" : "false");
-	if(url->sftp_server)
-		fprintf(fp, " sftp %s", url->sftp_server);
-	if(url->noupdate)
-		fprintf(fp, " noupdate");
-	fprintf(fp, "\n\n");
+  if (url->directory)
+    fprintf(fp, " cwd '%s'", url->directory);
+
+  if (url->protlevel)
+    fprintf(fp, " prot %s", url->protlevel);
+
+  if (url->mech)
+  {
+    char *mech_string = stringify_list(url->mech);
+    if (mech_string)
+    {
+      fprintf(fp, " mech '%s'", mech_string);
+      free(mech_string);
+    }
+  }
+
+  if (url->pasvmode != -1)
+    fprintf(fp, " passive %s", url->pasvmode ? "true" : "false");
+
+  if (url->sftp_server)
+    fprintf(fp, " sftp %s", url->sftp_server);
+
+  if (url->noupdate)
+    fprintf(fp, " noupdate");
+
+  fprintf(fp, "\n\n");
 }
 
 static int bookmark_save(const char *other_bmfile)
