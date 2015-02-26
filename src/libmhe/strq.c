@@ -505,23 +505,23 @@ char *encode_rfc1738(const char *str, const char *xtra)
 	return xstr;
 }
 
-char *decode_rfc1738(const char *str)
+char* decode_rfc1738(const char *str)
 {
-  char *xstr, *xp;
-  char tmp[3];
+  if (!str)
+    return NULL;
 
-  if(!str)
-    return 0;
+  char* xp = xmalloc(strlen(str) + 1);
+  char* xstr = xp;
 
-  xp = xstr = (char *)xmalloc(strlen(str) + 1);
-
-  for(; *str; str++) {
-    if(*str == '%' && isxdigit((int)*(str+1)) && isxdigit((int)*(str+2))) {
-      tmp[0] = *++str;
-      tmp[1] = *++str;
-      tmp[2] = 0;
-      *xp++ = (char)strtoul(tmp, 0, 16);
-    } else
+  for(; *str; str++)
+  {
+    if (*str == '%' && isxdigit(str[1]) && isxdigit(str[2]))
+    {
+      const char tmp[3] = { str[1], str[2], '\0' };
+      *xp++ = (char)strtoul(tmp, NULL, 16);
+      str += 2;
+    }
+    else
       *xp++ = *str;
   }
 
