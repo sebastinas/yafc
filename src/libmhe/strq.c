@@ -507,25 +507,25 @@ char *encode_rfc1738(const char *str, const char *xtra)
 
 char *decode_rfc1738(const char *str)
 {
-	char *xstr, *xp;
-	char tmp[3];
+  char *xstr, *xp;
+  char tmp[3];
 
-	if(!str)
-		return 0;
+  if(!str)
+    return 0;
 
-	xp = xstr = (char *)xmalloc(strlen(str) + 1);
+  xp = xstr = (char *)xmalloc(strlen(str) + 1);
 
-	for(; *str; str++) {
-		if(*str == '%' && isxdigit((int)*(str+1)) && isxdigit((int)*(str+2))) {
-			tmp[0] = *++str;
-			tmp[1] = *++str;
-			tmp[2] = 0;
-			*xp++ = (char)strtoul(tmp, 0, 16);
-		} else
-			*xp++ = *str;
-	}
+  for(; *str; str++) {
+    if(*str == '%' && isxdigit((int)*(str+1)) && isxdigit((int)*(str+2))) {
+      tmp[0] = *++str;
+      tmp[1] = *++str;
+      tmp[2] = 0;
+      *xp++ = (char)strtoul(tmp, 0, 16);
+    } else
+      *xp++ = *str;
+  }
 
-	return xstr;
+  return xstr;
 }
 
 char *encode_url_directory(const char *str)
