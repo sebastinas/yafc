@@ -42,8 +42,8 @@ void* xrealloc(void* ptr, size_t size)
 
 char* xstrdup(const char *s)
 {
-	if (!s || !*s)
-		return NULL;
+  if (!s || !*s)
+    return NULL;
 
   const size_t len = strlen(s) + 1;
   char* r = xmalloc(len);
@@ -54,27 +54,20 @@ char* xstrdup(const char *s)
 char* xstrndup(const char *s, size_t n)
 {
   if (!s || !*s)
-		return NULL;
+    return NULL;
 
   char* r = xmalloc(n + 1);
   strlcpy(r, s, n + 1);
   return r;
 }
 
-char *xstrncpy(char *dest, const char *src, size_t n)
-{
-	strncpy(dest, src, n);
-	dest[n] = '\0';
-	return dest;
-}
-
 int xstrcmp(const char *a, const char *b)
 {
-	if(a && !b)
-		return 1;
-	if(!a && b)
-		return -1;
-	if(!a && !b)
-		return 0;
-	return strcmp(a, b);
+  if(a && !b)
+    return 1;
+  if(!a && b)
+    return -1;
+  if(!a && !b)
+    return 0;
+  return strcmp(a, b);
 }

@@ -19,7 +19,6 @@ void *xmalloc(size_t size);
 void *xrealloc(void *ptr, size_t size);
 char *xstrdup(const char *s);
 char *xstrndup(const char *s, size_t n);
-char *xstrncpy(char *dest, const char *src, size_t n);
 int xstrcmp(const char *a, const char *b);
 
 #endif
