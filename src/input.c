@@ -339,6 +339,7 @@ int ask(int opt, int def, const char *prompt, ...)
 	va_start(ap, prompt);
 	if (vasprintf(&e, prompt, ap) == -1)
   {
+    va_end(ap);
     fprintf(stderr, _("Failed to allocate memory.\n"));
     return -1;
   }
