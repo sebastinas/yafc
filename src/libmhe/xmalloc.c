@@ -33,8 +33,8 @@ void* xrealloc(void* ptr, size_t size)
 
   void* new_ptr = realloc(ptr, size);
   if (!new_ptr) {
-    free(ptr);
     fprintf(stderr, "\nxrealloc(%p, %zu): %s\n", ptr, size, strerror(errno));
+    free(ptr);
     exit(errno);
   }
   return new_ptr;
