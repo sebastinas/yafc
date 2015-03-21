@@ -533,7 +533,7 @@ void cmd_put(int argc, char **argv)
 			unquote(optarg);
 			ret = regcomp(&put_dir_rx_mask, optarg, REG_EXTENDED);
 			if(ret != 0) {
-				regerror(ret, &put_dir_rx_mask, put_rx_errbuf, 128);
+				regerror(ret, &put_dir_rx_mask, put_rx_errbuf, sizeof(put_rx_errbuf) - 1);
 				ftp_err(_("Regexp '%s' failed: %s\n"), optarg, put_rx_errbuf);
 				return;
 			} else
@@ -566,7 +566,7 @@ void cmd_put(int argc, char **argv)
 
 			ret = regcomp(&put_rx_mask, optarg, REG_EXTENDED);
 			if(ret != 0) {
-				regerror(ret, &put_rx_mask, put_rx_errbuf, 128);
+				regerror(ret, &put_rx_mask, put_rx_errbuf, sizeof(put_rx_errbuf) - 1);
 				ftp_err(_("Regexp '%s' failed: %s\n"), optarg, put_rx_errbuf);
 				return;
 			} else

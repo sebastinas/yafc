@@ -40,7 +40,6 @@ unsigned long int rdir_size(rdirectory *rdir)
 
 int rdir_parse(rdirectory *rdir, FILE *fp, const char *path, bool is_mlsd)
 {
-	char tmp[257];
 	rfile *f;
 	int r;
 	bool failed = false;
@@ -55,10 +54,11 @@ int rdir_parse(rdirectory *rdir, FILE *fp, const char *path, bool is_mlsd)
 	ftp_trace("*** start parsing directory listing of '%s' ***\n", path);
 
 	while(!feof(fp)) {
-		if(fgets(tmp, 256, fp) == 0)
+		char tmp[512];
+		if(fgets(tmp, sizeof(tmp), fp) == 0)
 			break;
 		strip_trailing_chars(tmp, "\r\n");
-		if(tmp[0] == 0)
+		if(!tmp[0])
 			break;
 		ftp_trace("%s\n", tmp);
 
