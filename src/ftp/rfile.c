@@ -16,52 +16,48 @@
 
 rfile *rfile_create(void)
 {
-    rfile *f;
-
-    f = (rfile *)xmalloc(sizeof(rfile));
-
-    return f;
+  return xmalloc(sizeof(rfile));
 }
 
 rfile *rfile_clone(const rfile *f)
 {
-    rfile *nf = rfile_create();
-    nf->perm = xstrdup(f->perm);
-    nf->owner = xstrdup(f->owner);
-    nf->group = xstrdup(f->group);
-    nf->color = xstrdup(f->color);
-    nf->date = xstrdup(f->date);
-    nf->link = xstrdup(f->link);
-    nf->path = xstrdup(f->path);
-    nf->size = f->size;
-    nf->nhl = f->nhl;
-    nf->mtime = f->mtime;
+  rfile *nf = rfile_create();
+  nf->perm = xstrdup(f->perm);
+  nf->owner = xstrdup(f->owner);
+  nf->group = xstrdup(f->group);
+  nf->color = xstrdup(f->color);
+  nf->date = xstrdup(f->date);
+  nf->link = xstrdup(f->link);
+  nf->path = xstrdup(f->path);
+  nf->size = f->size;
+  nf->nhl = f->nhl;
+  nf->mtime = f->mtime;
 
-    return nf;
+  return nf;
 }
 
 void rfile_clear(rfile *f)
 {
-    free(f->perm);
-    free(f->owner);
-    free(f->group);
-    free(f->color);
-    free(f->date);
-    free(f->link);
-    free(f->path);
-    f->perm = f->owner = f->group = f->color = 0;
-    f->date = f->link = f->path = 0;
-    f->nhl = 0;
-    f->size = 0L;
-    f->mtime = (time_t)0;
+  free(f->perm);
+  free(f->owner);
+  free(f->group);
+  free(f->color);
+  free(f->date);
+  free(f->link);
+  free(f->path);
+  f->perm = f->owner = f->group = f->color = NULL;
+  f->date = f->link = f->path = NULL;
+  f->nhl = 0;
+  f->size = 0L;
+  f->mtime = (time_t)0;
 }
 
 void rfile_destroy(rfile *f)
 {
-    if(!f)
-        return;
-    rfile_clear(f);
-    free(f);
+  if  (!f)
+    return;
+  rfile_clear(f);
+  free(f);
 }
 
 bool risdir(const rfile *f)
