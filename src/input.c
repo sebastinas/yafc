@@ -62,13 +62,12 @@ static char* vinput_read_string(const char* fmt, va_list ap)
 	char tmp[257];
 
 	vfprintf(stderr, fmt, ap);
-	if(fgets(tmp, 256, stdin) == 0)
+	if(fgets(tmp, sizeof(tmp), stdin) == 0)
 		return 0;
 	if(tmp[0] == '\n')
 		/* return an empty string, "" */
 		return xstrdup("");
-	tmp[256] = 0;
-	size_t l = strlen(tmp);
+	const size_t l = strlen(tmp);
 	/* strip carriage return */
 	if(tmp[l-1] == '\n')
 		tmp[l-1] = 0;
@@ -80,7 +79,7 @@ char* input_read_string(const char* fmt, ...)
 {
   va_list ap;
   va_start(ap, fmt);
-	char* ret = vinput_read_string(fmt, ap);
+  char* ret = vinput_read_string(fmt, ap);
   va_end(ap);
   return ret;
 }
