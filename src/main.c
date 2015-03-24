@@ -126,10 +126,12 @@ void init_yafc(void)
 	if(!gvLocalHomeDir)
 		gvLocalHomeDir = xstrdup(getenv("HOME"));
 
+  char* curdir = getcwd(NULL, 0);
 	gvWorkingDirectory = path_absolute(
 		gvWorkingDirectory ? gvWorkingDirectory : "~/.yafc",
-		get_local_curdir(),
+    curdir,
 		gvLocalHomeDir);
+  free(curdir);
 
 	gvAnonPasswd = xstrdup("anonymous@");
 
@@ -379,6 +381,8 @@ int main(int argc, char **argv, char **envp)
 		parse_rc(tmp, false);
 		free(tmp);
 	}
+  free(configfile);
+  configfile = NULL;
 
 	if(gvReadNetrc)
 		parse_rc("~/.netrc", false);

@@ -194,17 +194,6 @@ listitem *ftplist_search(const char *str)
 	return 0;
 }
 
-char *get_local_curdir(void)
-{
-	static char *buf = NULL;
-
-	if (buf != NULL)
-		free(buf);
-	buf = getcwd (NULL, 0);
-
-	return buf;
-}
-
 void invoke_shell(const char* fmt, ...)
 {
 	char *shell;

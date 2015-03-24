@@ -26,7 +26,6 @@ void print_xterm_title(void);
 void reset_xterm_title(void);
 char* get_mode_string(mode_t m);
 listitem *ftplist_search(const char *str);
-char *get_local_curdir(void);
 void invoke_shell(const char* fmt, ...) YAFC_PRINTF(1, 2);
 
 /* Create directory recursively */

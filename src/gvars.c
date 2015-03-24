@@ -237,6 +237,14 @@ void gvars_destroy(void)
   gvXtermTitle3 = NULL;
   free(gvXtermTitleTerms);
   gvXtermTitleTerms = NULL;
+  list_free(gvDefaultMechanism);
+  gvDefaultMechanism = NULL;
+  free(gvTransferXtermString);
+  gvTransferXtermString = NULL;
+  list_free(gvTransferFirstMasks);
+  gvTransferFirstMasks = NULL;
+  list_free(gvProxyExclude);
+  gvProxyExclude = NULL;
 
   if(gvLogfp)
     fclose(gvLogfp);
