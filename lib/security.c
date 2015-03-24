@@ -311,7 +311,10 @@ int sec_read_msg(char *s, int level)
 
 	len = (*ftp->mech->decode) (ftp->app_data, buf, len, level);
 	if (len < 0)
+  {
+    free(buf);
 		return -1;
+  }
 
 	buf[len] = '\0';
 
@@ -328,7 +331,7 @@ int sec_read_msg(char *s, int level)
 
 int sec_vfprintf(FILE * f, const char *fmt, va_list ap)
 {
-	char *buf;
+	char *buf = NULL;
 	void *enc;
 	int len;
 
@@ -345,10 +348,12 @@ int sec_vfprintf(FILE * f, const char *fmt, va_list ap)
 							  ftp->command_prot, &enc);
 	if (len < 0) {
 		printf(_("Failed to encode command.\n"));
+    free(buf);
 		return -1;
 	}
 	if (b64_encode(enc, len, &buf) < 0) {
 		printf(_("Out of memory base64-encoding.\n"));
+    free(buf);
 		return -1;
 	}
 	if (ftp->command_prot == prot_safe)

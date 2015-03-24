@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=glib&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-09-20 20:19+0200\n"
+"POT-Creation-Date: 2015-02-27 14:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,8 +66,8 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: ../lib/security.c:340 ../src/bookmark.c:117 ../src/bookmark.c:207
-#: ../src/bookmark.c:379 ../src/bookmark.c:490 ../src/commands.c:223
+#: ../lib/security.c:340 ../src/bookmark.c:132 ../src/bookmark.c:222
+#: ../src/bookmark.c:394 ../src/bookmark.c:505 ../src/commands.c:223
 #: ../src/ftp/ftp.c:775 ../src/ftp/ftp.c:818 ../src/ftp/ftp.c:1591
 #: ../src/ftp/ssh_cmd.c:535 ../src/fxp.c:180 ../src/fxp.c:190 ../src/fxp.c:452
 #: ../src/fxp.c:461 ../src/get.c:197 ../src/get.c:220 ../src/get.c:539
@@ -77,7 +77,8 @@ msgstr ""
 #: ../src/put.c:150 ../src/put.c:160 ../src/put.c:389 ../src/put.c:397
 #: ../src/rm.c:94 ../src/tag.c:48 ../src/tag.c:88 ../src/transfer.c:435
 #: ../src/utils.c:228 ../src/completion.c:213 ../src/input.c:342
-#: ../src/lglob.c:86 ../src/prompt.c:104 ../src/prompt.c:116
+#: ../src/lglob.c:86 ../src/prompt.c:160 ../src/prompt.c:182
+#: ../src/prompt.c:193 ../src/prompt.c:348 ../src/prompt.c:358
 #, c-format
 msgid "Failed to allocate memory.\n"
 msgstr ""
@@ -223,38 +224,38 @@ msgstr ""
 msgid "Undefine an alias."
 msgstr ""
 
-#: ../src/bookmark.c:256
+#: ../src/bookmark.c:271
 #, c-format
 msgid "a bookmark named '%s' already exists, overwrite?"
 msgstr ""
 
-#: ../src/bookmark.c:270
+#: ../src/bookmark.c:285
 msgid "Save password?"
 msgstr ""
 
-#: ../src/bookmark.c:276 ../src/bookmark.c:408
+#: ../src/bookmark.c:291 ../src/bookmark.c:423
 #, c-format
 msgid "created bookmark %s\n"
 msgstr ""
 
-#: ../src/bookmark.c:334
+#: ../src/bookmark.c:349
 msgid "Do you want to update the bookmark for this site?"
 msgstr ""
 
-#: ../src/bookmark.c:346
+#: ../src/bookmark.c:361
 msgid "Do you want to create a bookmark for this site?"
 msgstr ""
 
-#: ../src/bookmark.c:406
+#: ../src/bookmark.c:421
 #, c-format
 msgid "updated bookmark %s\n"
 msgstr ""
 
-#: ../src/bookmark.c:415
+#: ../src/bookmark.c:430
 msgid "Handle bookmarks."
 msgstr ""
 
-#: ../src/bookmark.c:416
+#: ../src/bookmark.c:431
 msgid ""
 "  -s, --save[=FILE]      save bookmarks to bookmarks FILE\n"
 "  -e, --edit             edit bookmarks file with your $EDITOR\n"
@@ -264,42 +265,42 @@ msgid ""
 "  -u, --noupdate         toggle noupdate flag\n"
 msgstr ""
 
-#: ../src/bookmark.c:476
+#: ../src/bookmark.c:491
 #, c-format
 msgid "bookmarks saved in %s\n"
 msgstr ""
 
-#: ../src/bookmark.c:478 ../src/bookmark.c:548 ../src/bookmark.c:600
+#: ../src/bookmark.c:493 ../src/bookmark.c:563 ../src/bookmark.c:615
 #, c-format
 msgid "bookmarks saved in %s/bookmarks\n"
 msgstr ""
 
-#: ../src/bookmark.c:496
+#: ../src/bookmark.c:511
 #, c-format
 msgid "bookmarks read from %s\n"
 msgstr ""
 
-#: ../src/bookmark.c:507
+#: ../src/bookmark.c:522
 #, c-format
 msgid "%u bookmarks present in memory\n"
 msgstr ""
 
-#: ../src/bookmark.c:539
+#: ../src/bookmark.c:554
 #, c-format
 msgid "deleted bookmark %s\n"
 msgstr ""
 
-#: ../src/bookmark.c:569 ../src/bookmark.c:577 ../src/bookmark.c:591
+#: ../src/bookmark.c:584 ../src/bookmark.c:592 ../src/bookmark.c:606
 #, c-format
 msgid "%s: noupdate: %s\n"
 msgstr ""
 
-#: ../src/bookmark.c:571 ../src/bookmark.c:579 ../src/bookmark.c:593
+#: ../src/bookmark.c:586 ../src/bookmark.c:594 ../src/bookmark.c:608
 #: ../src/ftp/ssh_cmd.c:90
 msgid "yes"
 msgstr ""
 
-#: ../src/bookmark.c:571 ../src/bookmark.c:579 ../src/bookmark.c:593
+#: ../src/bookmark.c:586 ../src/bookmark.c:594 ../src/bookmark.c:608
 msgid "no"
 msgstr ""
 
@@ -1188,22 +1189,17 @@ msgstr ""
 msgid "Available commands: (commands may be abbreviated)\n"
 msgstr ""
 
-#: ../src/help.c:55
-#, c-format
-msgid "Compiled "
-msgstr ""
-
-#: ../src/help.c:57
+#: ../src/help.c:56
 #, c-format
 msgid "Using editline version %s.\n"
 msgstr ""
 
-#: ../src/help.c:60
+#: ../src/help.c:59
 #, c-format
 msgid "Using Readline version %s.\n"
 msgstr ""
 
-#: ../src/help.c:64
+#: ../src/help.c:63
 #, c-format
 msgid "Using libssh version %d.%d.%d.\n"
 msgstr ""

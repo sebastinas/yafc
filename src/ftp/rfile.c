@@ -771,8 +771,6 @@ int rfile_parse(rfile *f, char *str, const char *dirpath, bool is_mlsd)
             r = rfile_parse_dos(f, tmp, dirpath);
         else if(ftp->LIST_type == ltEplf)
             r = rfile_parse_eplf(f, tmp, dirpath);
-/*      else if(ftp->LIST_type == ltMlsd)
-        r = rfile_parse_mlsd(f, tmp, dirpath);*/
 
         free(tmp);
 
@@ -788,9 +786,6 @@ int rfile_parse(rfile *f, char *str, const char *dirpath, bool is_mlsd)
             } else if(ftp->LIST_type == ltEplf) {
                 ftp->LIST_type = ltUnix;
                 ftp_trace("EPLF output parsing failed, trying UNIX\n");
-/*          } else if(ftp->LIST_type == ltMlsd) {
-                ftp->LIST_type = ltUnix;
-                ftp_trace("MLSD output parsing failed, trying UNIX\n");*/
             }
         } else
             return r;
