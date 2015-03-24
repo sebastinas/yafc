@@ -54,7 +54,7 @@ void rfile_clear(rfile *f)
 
 void rfile_destroy(rfile *f)
 {
-  if  (!f)
+  if (!f)
     return;
   rfile_clear(f);
   free(f);

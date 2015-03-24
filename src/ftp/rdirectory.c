@@ -72,6 +72,7 @@ int rdir_parse(rdirectory *rdir, FILE *fp, const char *path, bool is_mlsd)
 			list_additem(rdir->files, (void *)rfile_clone(f));
 		/* else r == 1, ie a 'total ###' line, which isn't an error */
 	}
+  rfile_destroy(f);
 	ftp_trace("*** end parsing directory listing ***\n");
 	if(failed) {
 		if(list_numitem(rdir->files) == 0) {

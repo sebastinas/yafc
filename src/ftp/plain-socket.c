@@ -79,6 +79,7 @@ static void ps_destroy(Socket* sockp)
   destroy_streams(sockp->data);
   if (sockp->data->handle != -1)
     close(sockp->data->handle);
+  free(sockp->data);
   free(sockp);
 }
 
