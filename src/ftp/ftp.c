@@ -1782,6 +1782,7 @@ time_t gmt_mktime(const struct tm *ts)
 time_t ftp_filetime(const char *filename)
 {
     struct tm ts;
+    rfile *f;
 
     if(!ftp_connected())
         return -1;
@@ -1790,6 +1791,10 @@ time_t ftp_filetime(const char *filename)
     if(ftp->session)
         return ssh_filetime(filename);
 #endif
+
+    f = ftp_cache_get_file(filename);
+    if (f)
+        return f->mtime;
 
     if(!ftp->has_mdtm_command)
         return -1;
