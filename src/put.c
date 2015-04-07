@@ -14,7 +14,6 @@
 #include "ftp.h"
 #include "shortpath.h"
 #include "gvars.h"
-#include "put.h"
 #include "strq.h"
 #include "transfer.h"
 #include "input.h"
@@ -25,6 +24,26 @@
 #ifdef HAVE_REGEX_H
 # include <regex.h>
 #endif
+
+#define PUT_INTERACTIVE 1
+#define PUT_APPEND 2
+#define PUT_PRESERVE 4
+#define PUT_PARENTS 8
+#define PUT_RECURSIVE 16
+#define PUT_VERBOSE 32
+#define PUT_FORCE 64
+#define PUT_FORCE_NEWER (1 << 18)
+#define PUT_OUTPUT_FILE 128  /* --output=FILE (else --output=DIR) */
+#define PUT_UNIQUE 256
+#define PUT_DELETE_AFTER 512
+#define PUT_SKIP_EXISTING 1024
+#define PUT_NOHUP 2048
+#define PUT_RESUME 4096
+#define PUT_NEWER 8192
+#define PUT_TAGGED 16384
+#define PUT_ASCII 32768
+#define PUT_BINARY 65536
+#define PUT_SKIP_EMPTY 131072
 
 static bool put_batch = false;
 static bool put_owbatch = false;
