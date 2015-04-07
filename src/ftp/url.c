@@ -13,9 +13,8 @@
 #include "syshdr.h"
 
 #include "url.h"
-#include "xmalloc.h"
 #include "strq.h"
-#include "base64.h"
+#include "../../lib/base64.h"
 
 void listify_string(const char *str, list *lp);
 

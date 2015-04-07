@@ -5,7 +5,7 @@ doc/version.texi
 doc/yafc.info
 .deps
 yafc
-yafcrc.h
+src/yafcrc.h
 contrib/*.spec
 src/*.o
 src/ftp/*.o

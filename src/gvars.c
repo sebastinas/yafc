@@ -11,8 +11,8 @@
  */
 
 #include "syshdr.h"
-#include "ftp.h"
-#include "linklist.h"
+#include "ftp/ftp.h"
+#include "libmhe/linklist.h"
 #include "stats.h"
 
 /* time (in seconds) before a cached directory times out, 0 == never */

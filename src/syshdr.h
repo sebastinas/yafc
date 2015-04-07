@@ -32,7 +32,7 @@
 #endif
 
 #ifdef HAVE_CONFIG_H
-# include "config.h"
+# include "../config.h"
 #endif
 
 #ifdef HAVE_SYS_TYPES_H
@@ -56,7 +56,7 @@
 #include <errno.h>
 #include <grp.h>
 
-#include "xmalloc.h"
+#include "libmhe/xmalloc.h"
 
 #include <sys/ioctl.h>
 
@@ -169,20 +169,20 @@ typedef CPPFunction rl_completion_func_t;
 #ifdef HAVE_FNMATCH_GNU
 #include <fnmatch.h>
 #else
-#include "fnmatch.h"  /* our own, in lib/ */
+#include "../lib/fnmatch.h"  /* our own, in lib/ */
 #endif
 
 #if defined(HAVE_GETOPT_LONG) && defined(HAVE_GETOPT_H)
 # include <getopt.h>
 #else
-# include "getopt.h"  /* our own, in lib/ */
+# include "../lib/getopt.h"  /* our own, in lib/ */
 #endif
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
 #ifdef HAVE_KERBEROS
 # define SECFTP
-# include "security.h"  /* our own, in lib/ */
+# include "../lib/security.h"  /* our own, in lib/ */
 # ifndef HAVE_DECL_STRLCPY
 size_t strlcpy (char *dst, const char *src, size_t dst_sz);
 # endif

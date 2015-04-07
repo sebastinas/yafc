@@ -135,22 +135,21 @@ DEFS = -DLOCALEDIR=\"${YAFC_LOCALEDIR}\" \
 			 -DSYSCONFDIR=\"@sysconfdir@\" \
 			 @DEFS@
 
-BUILT_SOURCES = yafcrc.h
+BUILT_SOURCES = src/yafcrc.h
 
 AM_CPPFLAGS = $(BSD_CFLAGS) \
 							$(SSH_CFLAGS) \
 							$(EDITLINE_CFLAGS) \
 							-I$(top_srcdir)/src \
-							-I$(top_srcdir)/lib \
 							-I$(top_srcdir)/src/ftp \
 							-I$(top_srcdir)/src/libmhe
 
-yafcrc.h: $(top_srcdir)/samples/yafcrc
-	echo "const char *default_yafcrc = \"\"" > yafcrc.h
+src/yafcrc.h: $(top_srcdir)/samples/yafcrc
+	echo "const char *default_yafcrc = \"\"" > src/yafcrc.h
 	sed \
 		-e 's/\\/\\\\/g' \
 		-e 's/"/\\\"/g' \
 		-e 's/^\(.*\)$$/\"\1\\n\"/' \
 		< $(top_srcdir)/samples/yafcrc \
-		>> yafcrc.h
-	echo ";" >> yafcrc.h
+		>> src/yafcrc.h
+	echo ";" >> src/yafcrc.h

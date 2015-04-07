@@ -14,7 +14,7 @@
 #include "ftp.h"
 #include "input.h"
 #include "gvars.h"
-#include "base64.h"
+#include "../../lib/base64.h"
 #include "commands.h"
 #include "shortpath.h"
 #include "strq.h"
