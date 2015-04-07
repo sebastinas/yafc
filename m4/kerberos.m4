@@ -41,7 +41,7 @@ AC_DEFUN([YAFC_KRB5_CHECK],
       else
         KRB5ROOT=${withval}
       fi
-      AC_PATH_PROG([KRB5CONFIG], [krb5-config],"no",[$KRB5ROOT/bin$PATH_SEPARATOR$PATH])
+      AC_PATH_PROGS([KRB5CONFIG], [krb5-config krb5-config.mit krb5-config.heimdal],"no",[$KRB5ROOT/bin$PATH_SEPARATOR$PATH])
       if test "x$KRB5CONFIG" = "xno" ; then
         yafc_found_krb5="no, not found"
       else
