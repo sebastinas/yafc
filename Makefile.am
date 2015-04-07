@@ -89,8 +89,6 @@ noinst_HEADERS = src/alias.h \
 								 src/gvars.h \
 								 src/help.h \
 								 src/input.h \
-								 src/get.h \
-								 src/put.h \
 								 src/lglob.h \
 								 src/set.h \
 								 src/stats.h \
