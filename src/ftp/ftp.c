@@ -1912,7 +1912,7 @@ char* ftp_connected_user()
 #ifdef HAVE_LIBSSH
   if (ftp->session)
     return ssh_connected_user();
+#endif
 
   return ftp->url->username ? xstrdup(ftp->url->username) : NULL;
-#endif
 }
