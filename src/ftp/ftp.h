@@ -264,7 +264,7 @@ int ftp_rename(const char *oldname, const char *newname);
 int ftp_cdup(void);
 int ftp_unlink(const char *path);
 int ftp_chmod(const char *path, const char *mode);
-time_t ftp_filetime(const char *filename);
+time_t ftp_filetime(const char *filename, bool force);
 unsigned long long ftp_filesize(const char *path);
 int ftp_idle(const char *idletime);
 int ftp_noop(void);

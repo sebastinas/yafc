@@ -51,6 +51,7 @@ static void print_put_syntax(void)
 			"                       enter only directories matching REGEXP pattern\n"
 			"  -e, --skip-empty     skip empty files\n"
 			"  -f, --force          overwrite existing destinations, never prompt\n"
+      "  -F, --force-newer    do not use cached information with --newer\n"
 			"  -H, --nohup          transfer files in background (nohup mode), quits yafc\n"
 			"  -i, --interactive    prompt before transferring each file\n"
 			"  -L, --logfile=FILE   specify other logfile used by --nohup\n"
@@ -202,7 +203,7 @@ static void putfile(const char *path, struct stat *sb,
 			return;
 		}
 		else if(test(opt, PUT_NEWER)) {
-			time_t ft = ftp_filetime(dest);
+			time_t ft = ftp_filetime(dest, test(opt, PUT_FORCE_NEWER));
 			if(ft != (time_t)-1 && ft >= sb->st_mtime) {
 				char* sp = shortpath(dest, 42, ftp->homedir);
 				printf(_("Remote file '%s' is newer than local, skipping...\n"), sp);
@@ -221,7 +222,7 @@ static void putfile(const char *path, struct stat *sb,
 				char *e;
 
 				f = ftp_get_file(dest);
-				ft = ftp_filetime(f->path);
+				ft = ftp_filetime(f->path, test(opt, PUT_FORCE_NEWER));
 				sb->st_mtime = gmt_mktime(fan);
 				e = xstrdup(ctime(&sb->st_mtime));
 				char* sp = shortpath(dest, 42, ftp->homedir);
@@ -459,6 +460,7 @@ void cmd_put(int argc, char **argv)
 #endif
 		{"skip-empty", no_argument, 0, 'e'},
 		{"force", no_argument, 0, 'f'},
+    {"force-newer", no_argument, 0, 'F'},
 		{"nohup", no_argument, 0, 'H'},
 		{"interactive", no_argument, 0, 'i'},
 		{"logfile", required_argument, 0, 'L'},
@@ -515,6 +517,9 @@ void cmd_put(int argc, char **argv)
 		case 'f':
 			opt |= PUT_FORCE;
 			break;
+    case 'F':
+      opt |= PUT_FORCE_NEWER;
+      break;
 		   case 'e':
 			  opt |= PUT_SKIP_EMPTY;
 			  put_skip_empty = true;

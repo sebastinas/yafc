@@ -801,7 +801,7 @@ void cmd_filetime(int argc, char **argv)
 	need_loggedin();
 
 	for(i=optind;i<argc;i++) {
-		time_t t = ftp_filetime(argv[i]);
+		time_t t = ftp_filetime(argv[i], true);
 		if(t != (time_t) -1)
 			printf("%s: %s", argv[i], ctime(&t));
 		else

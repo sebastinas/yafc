@@ -56,6 +56,7 @@ static void print_get_syntax(void)
       "      --dir-rx-mask=REGEXP\n"
       "                       enter only directories matching REGEXP pattern\n"
       "  -f, --force          overwrite existing destinations, never prompt\n"
+      "  -F, --force-newer    do not use cached information with --newer\n"
       "  -e, --skip-empty     skip empty files\n"
       "  -H, --nohup          transfer files in background (nohup mode), quits yafc\n"
       "  -i, --interactive    prompt before each transfer\n"
@@ -151,7 +152,7 @@ static void get_preserve_attribs(const rfile *fi, char *dest)
             perror(dest);
     }
     if(!risdir(fi)) {
-        t = ftp_filetime(fi->path);
+        t = ftp_filetime(fi->path, true);
         if(t != (time_t)-1) {
             struct utimbuf u;
             u.actime = t;
@@ -271,7 +272,7 @@ static int getfile(const rfile *fi, unsigned int opt,
             how = getAppend;
         else if(test(opt, GET_NEWER)) {
             struct tm *fan = gmtime(&sb.st_mtime);
-            time_t ft = ftp_filetime(fi->path);
+            time_t ft = ftp_filetime(fi->path, test(opt, GET_FORCE_NEWER));
             sb.st_mtime = gmt_mktime(fan);
 
             ftp_trace("get -n: remote file: %s", ctime(&ft));
@@ -291,7 +292,7 @@ static int getfile(const rfile *fi, unsigned int opt,
         } else if(!test(opt, GET_RESUME)) {
             if(!get_owbatch && !gvSighupReceived) {
                 struct tm *fan = gmtime(&sb.st_mtime);
-                time_t ft = ftp_filetime(fi->path);
+                time_t ft = ftp_filetime(fi->path, test(opt, GET_FORCE_NEWER));
                 int a;
                 char *e;
 
@@ -622,6 +623,7 @@ void cmd_get(int argc, char **argv)
         {"interactive", no_argument, 0, 'i'},
         {"skip-empty", no_argument, 0, 'e'},
         {"force", no_argument, 0, 'f'},
+        {"force-newer", no_argument, 0, 'F'},
         {"logfile", required_argument, 0, 'L'},
         {"mask", required_argument, 0, 'm'},
 #ifdef HAVE_REGEX
@@ -744,6 +746,9 @@ void cmd_get(int argc, char **argv)
             break;
           case 'f':
             opt |= GET_FORCE;
+            break;
+          case 'F':
+            opt |= GET_FORCE_NEWER;
             break;
         case 'm': /* --mask */
             free(get_glob_mask);

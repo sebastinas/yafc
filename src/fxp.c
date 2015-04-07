@@ -31,6 +31,7 @@
 #define FXP_RECURSIVE (1 << 4)
 #define FXP_VERBOSE (1 << 5)
 #define FXP_FORCE (1 << 6)
+#define FXP_FORCE_NEWER (1 << 19)
 #define FXP_NEWER (1 << 7)
 #define FXP_DELETE_AFTER (1 << 8)
 #define FXP_UNIQUE (1 << 9)
@@ -72,6 +73,7 @@ static void print_fxp_syntax(void)
 			"      --dir-rx-mask=REGEXP\n"
 			"                       enter only directories matching REGEXP pattern\n"
 			"  -f, --force          overwrite existing destinations, never prompt\n"
+      "  -F, --force-newer    do not use cached information with --newer\n"
 			"  -e, --skip-empty     skip empty files\n"
 			"  -H, --nohup          transfer files in background (nohup mode), quits yafc\n"
 			"  -i, --interactive    prompt before each transfer\n"
@@ -239,10 +241,10 @@ static int fxpfile(const rfile *fi, unsigned int opt,
 			time_t dst_ft;
 
 			ftp_use(thisftp);
-			src_ft = ftp_filetime(fi->path);
+			src_ft = ftp_filetime(fi->path, test(opt, FXP_FORCE_NEWER));
 			ftp_use(fxp_target);
 
-			dst_ft = ftp_filetime(dest);
+			dst_ft = ftp_filetime(dest, test(opt, FXP_FORCE_NEWER));
 
 			if(src_ft != (time_t)-1 && dst_ft != (time_t)-1 && dst_ft >= src_ft) {
 				char* sp = shortpath(dest, 42, ftp->homedir);
@@ -532,6 +534,7 @@ void cmd_fxp(int argc, char **argv)
 		{"dir-rx-mask", required_argument, 0, '4'},
 #endif
 		{"force", no_argument, 0, 'f'},
+    {"force-newer", no_argument, 0, 'F'},
 		{"nohup", no_argument, 0, 'H'},
 		{"interactive", no_argument, 0, 'i'},
 		{"logfile", required_argument, 0, 'L'},
@@ -599,6 +602,9 @@ void cmd_fxp(int argc, char **argv)
 			case 'f': /* --force */
 				opt |= FXP_FORCE;
 				break;
+      case 'F':
+        opt |= FXP_FORCE_NEWER;
+        break;
 			   case 'e': /* --skip-empty */
 				  opt |= FXP_SKIP_EMPTY;
 				  fxp_skip_empty = true;

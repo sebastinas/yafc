@@ -20,6 +20,7 @@
 #define GET_RECURSIVE (1 << 4)
 #define GET_VERBOSE (1 << 5)
 #define GET_FORCE (1 << 6)
+#define GET_FORCE_NEWER (1 << 22)
 #define GET_NO_DEREFERENCE (1 << 7)
 #define GET_NEWER (1 << 8)
 #define GET_DELETE_AFTER (1 << 9)
