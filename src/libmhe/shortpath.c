@@ -34,7 +34,6 @@ static char *_shortpath(char *path, size_t maxlen)
 		return xstrdup(path);
 
 	result = xmalloc(maxlen + 1);
-	result[0] = '\0';
 
 	first_slash = strchr(path, '/');
 	if (first_slash)
