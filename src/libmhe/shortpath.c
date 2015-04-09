@@ -39,7 +39,7 @@ static char *_shortpath(char *path, size_t maxlen)
 	if (first_slash)
 		start_len = first_slash - path + 1;
 
-	if (maxlen - start_len > 3)
+	if (maxlen > start_len + 3)
 		copy_from = strchr(path + len - (maxlen - start_len - 3), '/');
 
 	if (copy_from)
