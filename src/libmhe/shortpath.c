@@ -43,12 +43,12 @@ static char *_shortpath(char *path, size_t maxlen)
 		copy_from = strchr(path + len - (maxlen - start_len - 3), '/');
 
 	if (copy_from)
-		strncpy(result, path, start_len);
+		strlcpy(result, path, start_len);
 	else
 		copy_from = path + len - (maxlen - 3);
 
-	strcat(result, "...");
-	strcat(result, copy_from);
+	strlcat(result, "...", maxlen + 1);
+	strlcat(result, copy_from, maxlen + 1);
 
 	return result;
 }
