@@ -1,3 +1,12 @@
+New in git
+----------
+
+* Fix shortpath calculation. Thanks to Celelibi for the patch. (#48)
+* Fix %u in prompts if built without libssh. (#49)
+* Fix multiple memory leaks.
+* Use cached information if available on get/put --newer. Thanks to Celelibi for
+  the patch.
+
 New in 1.3.5
 ------------
 
