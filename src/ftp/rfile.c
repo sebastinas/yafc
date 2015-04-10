@@ -118,7 +118,7 @@ void rfile_fake(rfile *f, const char *path)
     free(f->group);
     f->group = xstrdup("group");
     free(f->link);
-    f->link = 0;
+    f->link = NULL;
     free(f->path);
     f->path = xstrdup(path);
     free(f->date);
@@ -303,15 +303,21 @@ static int rfile_parse_eplf(rfile *f, char *str, const char *dirpath)
 
     str++;
 
+    free(f->perm);
     f->perm = xstrdup("-rw-r--r--");
     f->size = 0L;
     f->mtime = 0;
-    f->link = 0;
+    free(f->link);
+    f->link = NULL;
     f->nhl = 0;
+    free(f->owner);
     f->owner = xstrdup("owner");
+    free(f->group);
     f->group = xstrdup("group");
+    free(f->date);
     f->date = xstrdup("Jan  0  1900");
-    f->path = 0;
+    free(f->path);
+    f->path = NULL;
 
     while((e = strqsep(&str, ',')) != 0) {
         switch(*e) {
@@ -344,10 +350,10 @@ static int rfile_parse_eplf(rfile *f, char *str, const char *dirpath)
  */
 static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 {
-    char *cf;
-    char *e;
-    char *m=0, *d=0, *y=0;
-    char *saved_field[5];
+    char *cf = NULL;
+    char *e = NULL;
+    char *m = NULL, *d = NULL, *y = NULL;
+    char *saved_field[5] = { NULL };
     bool time_parsed = false;
 
     /* real unix ls listing:
@@ -402,6 +408,7 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
      * ----------^
      * so we assume the permission string is exactly 10 characters
      */
+    free(f->perm);
     f->perm = xstrndup(cf, 10);
     cf += 10;
 
@@ -438,7 +445,9 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
         /* ls -l */
         f->nhl = atoi(saved_field[0]);
         free(saved_field[0]);
+        free(f->owner);
         f->owner = saved_field[1];
+        free(f->group);
         f->group = saved_field[2];
         f->size = strtoull(saved_field[3],NULL,10);
         free(saved_field[3]);
@@ -452,7 +461,9 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
         /* ls -lG */
         f->nhl = atoi(saved_field[0]);
         free(saved_field[0]);
+        free(f->owner);
         f->owner = saved_field[1];
+        free(f->group);
         f->group = xstrdup("group");
         f->size = strtoull(saved_field[2],NULL,10);
         free(saved_field[2]);
@@ -464,7 +475,9 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
     {
         free(saved_field[0]);
         f->nhl = 0;
-        f->owner = xstrdup("owner");;
+        free(f->owner);
+        f->owner = xstrdup("owner");
+        free(f->group);
         f->group = xstrdup("group");
         f->size = strtoull(saved_field[1],NULL,10);
         free(saved_field[1]);
@@ -479,7 +492,9 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 
             f->nhl = atoi(saved_field[0]);
             free(saved_field[0]);
+            free(f->owner);
             f->owner = saved_field[1];
+            free(f->group);
             f->group = saved_field[2];
             f->size = strtoull(saved_field[3],NULL,10);
             free(saved_field[3]);
@@ -506,6 +521,7 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
 
                 time(&now);
 
+                free(f->date);
                 bool success = true;
                 if(f->mtime != (time_t)-1 &&
                    (now > f->mtime + 6L * 30L * 24L * 60L * 60L  /* Old. */
@@ -534,6 +550,7 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
     }
 
     if(!time_parsed) {
+        free(f->date);
         if (asprintf(&f->date, "%s %2s %5s", m, d, y) == -1)
         {
           free(m);
@@ -556,10 +573,11 @@ static int rfile_parse_unix(rfile *f, char *str, const char *dirpath)
     e = strstr(cf, " -> ");
     if(e) {
         *e = 0;
+        free(f->link);
         f->link = xstrdup(e+4);
     }
 
-
+    free(f->path);
     if (asprintf(&f->path, "%s/%s", strcmp(dirpath, "/") ? dirpath : "", cf) == -1)
     {
       f->path = NULL;
@@ -612,6 +630,7 @@ static int rfile_parse_dos(rfile *f, char *str, const char *dirpath)
         time_t now;
         time(&now);
 
+        free(f->date);
         bool success = true;
         if(f->mtime != (time_t)-1 && (now > f->mtime + 6L * 30L * 24L * 60L * 60L  /* Old. */
                                       || now < f->mtime - 60L * 60L))   /* In the future. */
@@ -628,6 +647,7 @@ static int rfile_parse_dos(rfile *f, char *str, const char *dirpath)
         }
     }
 
+    free(f->perm);
     f->perm = xstrdup("-rw-r--r--");
 
     NEXT_FIELD;
@@ -639,13 +659,17 @@ static int rfile_parse_dos(rfile *f, char *str, const char *dirpath)
     }
 
     f->nhl = 1;
+    free(f->owner);
     f->owner = xstrdup("owner");
+    free(f->group);
     f->group = xstrdup("group");
-    f->link = 0;
+    free(f->link);
+    f->link = NULL;
 
     while(cf && *cf == ' ')
         ++cf;
 
+    free(f->path);
     if (asprintf(&f->path, "%s/%s", strcmp(dirpath, "/") ? dirpath : "", cf) == -1)
     {
       f->path = NULL;
@@ -670,6 +694,7 @@ static int rfile_parse_mlsd(rfile *f, char *str, const char *dirpath)
 
     e = strchr(str, ' ');
     if(e) {
+      free(f->path);
       if (asprintf(&f->path, "%s/%s",
                  strcmp(dirpath, "/") ? dirpath : "", base_name_ptr(e+1)) == -1)
       {
@@ -680,13 +705,18 @@ static int rfile_parse_mlsd(rfile *f, char *str, const char *dirpath)
     } else
         return -1;
 
-    f->perm = 0;
+    free(f->perm);
+    f->perm = NULL;
     f->size = 0L;
     f->mtime = 0;
-    f->link = 0;
+    free(f->link);
+    f->link = NULL;
     f->nhl = 0;
+    free(f->owner);
     f->owner = xstrdup("owner");
+    free(f->group);
     f->group = xstrdup("group");
+    free(f->date);
     f->date = xstrdup("Jan  0  1900");
 
     while((e = strqsep(&str, ';')) != 0) {

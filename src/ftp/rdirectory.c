@@ -45,7 +45,7 @@ int rdir_parse(rdirectory *rdir, FILE *fp, const char *path, bool is_mlsd)
 	bool failed = false;
 
 	free(rdir->path);
-	rdir->path = 0;
+	rdir->path = NULL;
 	list_clear(rdir->files);
 	rdir->timestamp = time(0);
 
