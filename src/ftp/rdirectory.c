@@ -40,7 +40,6 @@ unsigned long int rdir_size(rdirectory *rdir)
 
 int rdir_parse(rdirectory *rdir, FILE *fp, const char *path, bool is_mlsd)
 {
-	rfile *f;
 	int r;
 	bool failed = false;
 
@@ -49,7 +48,7 @@ int rdir_parse(rdirectory *rdir, FILE *fp, const char *path, bool is_mlsd)
 	list_clear(rdir->files);
 	rdir->timestamp = time(0);
 
-	f = rfile_create();
+	rfile* f = rfile_create();
 
 	ftp_trace("*** start parsing directory listing of '%s' ***\n", path);
 
@@ -69,7 +68,7 @@ int rdir_parse(rdirectory *rdir, FILE *fp, const char *path, bool is_mlsd)
 			list_clear(rdir->files);
 			failed = true;
 		} else if(r == 0)
-			list_additem(rdir->files, (void *)rfile_clone(f));
+			list_additem(rdir->files, rfile_clone(f));
 		/* else r == 1, ie a 'total ###' line, which isn't an error */
 	}
   rfile_destroy(f);

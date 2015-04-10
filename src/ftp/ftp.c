@@ -1463,6 +1463,7 @@ rdirectory *ftp_read_directory(const char *path)
     rdir = rdir_create();
     if(rdir_parse(rdir, fp, dir, is_mlsd) != 0) {
         rdir_destroy(rdir);
+        rdir = NULL;
         goto failed;
     }
 

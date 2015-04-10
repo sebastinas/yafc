@@ -448,10 +448,13 @@ AC_CACHE_VAL(ac_cv_ipv6,
        */
       int main()
       {
-              int fd;
-              struct sockaddr_in6 foo;
-              fd = socket(AF_INET6, SOCK_STREAM, 0);
-              return (fd >= 0 ? 0 : 1);
+        int fd;
+        int ret;
+        struct sockaddr_in6 foo;
+        fd = socket(AF_INET6, SOCK_STREAM, 0);
+        ret = (fd >= 0 ? 0 : 1);
+        close(fd);
+        return ret;
       }
     ]])],
     [ac_cv_ipv6=yes],
