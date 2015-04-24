@@ -697,7 +697,7 @@ void cmd_get(int argc, char **argv)
     get_skip_empty = false;
 
     optind = 0; /* force getopt() to re-initialize */
-    while((c=getopt_long(argc, argv, "abHc:dDeio:fL:tnpPvqrRsuT:m:M:",
+    while((c=getopt_long(argc, argv, "abHc:dDeio:fFL:tnpPvqrRsuT:m:M:",
                          longopts, 0)) != EOF)
     {
         switch(c) {

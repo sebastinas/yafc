@@ -589,7 +589,7 @@ void cmd_fxp(int argc, char **argv)
 	fxp_skip_empty = false;
 
 	optind = 0; /* force getopt() to re-initialize */
-	while((c=getopt_long(argc, argv, "aDefHiL:M:no:pPqrRstT:uvh",
+	while((c=getopt_long(argc, argv, "aDefFHiL:M:no:pPqrRstT:uvh",
 						 longopts, 0)) != EOF)
 		{
 			switch(c) {

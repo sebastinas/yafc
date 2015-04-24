@@ -25,25 +25,25 @@
 # include <regex.h>
 #endif
 
-#define PUT_INTERACTIVE 1
-#define PUT_APPEND 2
-#define PUT_PRESERVE 4
-#define PUT_PARENTS 8
-#define PUT_RECURSIVE 16
-#define PUT_VERBOSE 32
-#define PUT_FORCE 64
-#define PUT_FORCE_NEWER (1 << 18)
-#define PUT_OUTPUT_FILE 128  /* --output=FILE (else --output=DIR) */
-#define PUT_UNIQUE 256
-#define PUT_DELETE_AFTER 512
-#define PUT_SKIP_EXISTING 1024
-#define PUT_NOHUP 2048
-#define PUT_RESUME 4096
-#define PUT_NEWER 8192
-#define PUT_TAGGED 16384
-#define PUT_ASCII 32768
-#define PUT_BINARY 65536
-#define PUT_SKIP_EMPTY 131072
+#define PUT_INTERACTIVE (1 << 0)
+#define PUT_APPEND (1 << 1)
+#define PUT_PRESERVE (1 << 2)
+#define PUT_PARENTS (1 << 3)
+#define PUT_RECURSIVE (1 << 4)
+#define PUT_VERBOSE (1 << 5)
+#define PUT_FORCE (1 << 6)
+#define PUT_FORCE_NEWER (1 << 7)
+#define PUT_OUTPUT_FILE (1 << 8)  /* --output=FILE (else --output=DIR) */
+#define PUT_UNIQUE (1 << 9)
+#define PUT_DELETE_AFTER (1 << 10)
+#define PUT_SKIP_EXISTING (1 << 11)
+#define PUT_NOHUP (1 << 12)
+#define PUT_RESUME (1 << 13)
+#define PUT_NEWER (1 << 14)
+#define PUT_TAGGED (1 << 15)
+#define PUT_ASCII (1 << 16)
+#define PUT_BINARY (1 << 17)
+#define PUT_SKIP_EMPTY (1 << 18)
 
 static bool put_batch = false;
 static bool put_owbatch = false;
@@ -525,139 +525,139 @@ void cmd_put(int argc, char **argv)
 
 	put_skip_empty = false;
 
-	optind = 0; /* force getopt() to re-initialize */
-	while((c = getopt_long(argc, argv,
-						   "aDefHiL:no:pPqrRsStvum:M:", longopts, 0)) != EOF)
-	{
-		switch(c) {
-		case 'i':
-			opt |= PUT_INTERACTIVE;
-			break;
-		case 'f':
-			opt |= PUT_FORCE;
-			break;
+  optind = 0; /* force getopt() to re-initialize */
+  while((c = getopt_long(argc, argv,
+               "aDefFHiL:no:pPqrRsStvum:M:", longopts, 0)) != EOF)
+  {
+    switch(c) {
+    case 'i':
+      opt |= PUT_INTERACTIVE;
+      break;
+    case 'f':
+      opt |= PUT_FORCE;
+      break;
     case 'F':
       opt |= PUT_FORCE_NEWER;
       break;
-		   case 'e':
-			  opt |= PUT_SKIP_EMPTY;
-			  put_skip_empty = true;
-			  break;
-		case '3': /* --dir-mask=GLOB */
-			free(put_dir_glob_mask);
-			put_dir_glob_mask = xstrdup(optarg);
-			unquote(put_dir_glob_mask);
-			break;
+    case 'e':
+      opt |= PUT_SKIP_EMPTY;
+      put_skip_empty = true;
+      break;
+    case '3': /* --dir-mask=GLOB */
+      free(put_dir_glob_mask);
+      put_dir_glob_mask = xstrdup(optarg);
+      unquote(put_dir_glob_mask);
+      break;
 #ifdef HAVE_REGEX
-		case '4': /* --dir-rx-mask=REGEXP */
-			if(put_dir_rx_mask_set) {
-				regfree(&put_dir_rx_mask);
-				put_dir_rx_mask_set = false;
-			}
-			unquote(optarg);
-			ret = regcomp(&put_dir_rx_mask, optarg, REG_EXTENDED);
-			if(ret != 0) {
-				regerror(ret, &put_dir_rx_mask, put_rx_errbuf, sizeof(put_rx_errbuf) - 1);
-				ftp_err(_("Regexp '%s' failed: %s\n"), optarg, put_rx_errbuf);
-				return;
-			} else
-				put_dir_rx_mask_set = true;
-			break;
+    case '4': /* --dir-rx-mask=REGEXP */
+      if(put_dir_rx_mask_set) {
+        regfree(&put_dir_rx_mask);
+        put_dir_rx_mask_set = false;
+      }
+      unquote(optarg);
+      ret = regcomp(&put_dir_rx_mask, optarg, REG_EXTENDED);
+      if(ret != 0) {
+        regerror(ret, &put_dir_rx_mask, put_rx_errbuf, sizeof(put_rx_errbuf) - 1);
+        ftp_err(_("Regexp '%s' failed: %s\n"), optarg, put_rx_errbuf);
+        return;
+      } else
+        put_dir_rx_mask_set = true;
+      break;
 #endif
-		case 'o':
-			put_output = tilde_expand_home(optarg, ftp->homedir);
-			path_collapse(put_output);
-			stripslash(put_output);
-			break;
-		case 'H':
-			opt |= PUT_NOHUP;
-			break;
-		case 'L':
-			free(logfile);
-			logfile = xstrdup(optarg);
-			unquote(logfile);
-			break;
-		case 'm': /* --mask */
-			free(put_glob_mask);
-			put_glob_mask = xstrdup(optarg);
-			break;
+    case 'o':
+      put_output = tilde_expand_home(optarg, ftp->homedir);
+      path_collapse(put_output);
+      stripslash(put_output);
+      break;
+    case 'H':
+      opt |= PUT_NOHUP;
+      break;
+    case 'L':
+      free(logfile);
+      logfile = xstrdup(optarg);
+      unquote(logfile);
+      break;
+    case 'm': /* --mask */
+      free(put_glob_mask);
+      put_glob_mask = xstrdup(optarg);
+      break;
 #ifdef HAVE_REGEX
-		case 'M': /* --rx-mask */
-			if(put_rx_mask_set) {
-				regfree(&put_rx_mask);
-				put_rx_mask_set = false;
-			}
+    case 'M': /* --rx-mask */
+      if(put_rx_mask_set) {
+        regfree(&put_rx_mask);
+        put_rx_mask_set = false;
+      }
 
-			ret = regcomp(&put_rx_mask, optarg, REG_EXTENDED);
-			if(ret != 0) {
-				regerror(ret, &put_rx_mask, put_rx_errbuf, sizeof(put_rx_errbuf) - 1);
-				ftp_err(_("Regexp '%s' failed: %s\n"), optarg, put_rx_errbuf);
-				return;
-			} else
-				put_rx_mask_set = true;
-			break;
+      ret = regcomp(&put_rx_mask, optarg, REG_EXTENDED);
+      if(ret != 0) {
+        regerror(ret, &put_rx_mask, put_rx_errbuf, sizeof(put_rx_errbuf) - 1);
+        ftp_err(_("Regexp '%s' failed: %s\n"), optarg, put_rx_errbuf);
+        return;
+      } else
+        put_rx_mask_set = true;
+      break;
 #endif
-		  case 'n':
-			opt |= PUT_NEWER;
-			break;
-		  case 'v':
-			opt |= PUT_VERBOSE;
-			break;
-		  case 'q':
-			opt &= ~PUT_VERBOSE;
-			break;
-		  case 'a':
-			opt |= PUT_APPEND;
-			break;
-		  case 'D':
-			opt |= PUT_DELETE_AFTER;
-			break;
-		  case 'u':
-			opt |= PUT_UNIQUE;
-			if(!ftp->has_stou_command) {
-				fprintf(stderr, _("Remote doesn't support the STOU"
-								  " (store unique) command\n"));
-				return;
-			}
-			break;
-		  case 'r':
-			opt |= PUT_RECURSIVE;
-			break;
-		  case 's':
-			opt |= PUT_SKIP_EXISTING;
-			break;
-		  case 'S':
-			stat_thresh = optarg ? atoi(optarg) : 0;
-			break;
-		  case 'R':
-			opt |= PUT_RESUME;
-			break;
-		  case 't':
-			opt |= PUT_TAGGED;
-			break;
-		  case '1':
-			if(strncmp(optarg, "ascii", strlen(optarg)) == 0)
-				opt |= PUT_ASCII;
-			else if(strncmp(optarg, "binary", strlen(optarg)) == 0)
-				opt |= PUT_BINARY;
-			else {
-				printf(_("Invalid option argument --type=%s\n"), optarg);
-				return;
-			}
-			break;
-		  case 'p':
-			opt |= PUT_PRESERVE;
-			break;
-		  case 'P':
-			opt |= PUT_PARENTS;
-			break;
-		  case 'h':
-			print_put_syntax();;
-			return;
-		  case '?':
-			return;
-		}
-	}
+    case 'n':
+      opt |= PUT_NEWER;
+      break;
+    case 'v':
+      opt |= PUT_VERBOSE;
+      break;
+    case 'q':
+      opt &= ~PUT_VERBOSE;
+      break;
+    case 'a':
+      opt |= PUT_APPEND;
+      break;
+    case 'D':
+      opt |= PUT_DELETE_AFTER;
+      break;
+    case 'u':
+      opt |= PUT_UNIQUE;
+      if(!ftp->has_stou_command) {
+        fprintf(stderr, _("Remote doesn't support the STOU"
+                  " (store unique) command\n"));
+        return;
+      }
+      break;
+    case 'r':
+      opt |= PUT_RECURSIVE;
+      break;
+    case 's':
+      opt |= PUT_SKIP_EXISTING;
+      break;
+    case 'S':
+      stat_thresh = optarg ? atoi(optarg) : 0;
+      break;
+    case 'R':
+      opt |= PUT_RESUME;
+      break;
+    case 't':
+      opt |= PUT_TAGGED;
+      break;
+    case '1':
+      if(strncmp(optarg, "ascii", strlen(optarg)) == 0)
+        opt |= PUT_ASCII;
+      else if(strncmp(optarg, "binary", strlen(optarg)) == 0)
+        opt |= PUT_BINARY;
+      else {
+        printf(_("Invalid option argument --type=%s\n"), optarg);
+        return;
+      }
+      break;
+    case 'p':
+      opt |= PUT_PRESERVE;
+      break;
+    case 'P':
+      opt |= PUT_PARENTS;
+      break;
+    case 'h':
+      print_put_syntax();
+      return;
+    case '?':
+      return;
+    }
+  }
 	if(optind>=argc && !test(opt, PUT_TAGGED)) {
 /*		fprintf(stderr, _("missing argument, try 'put --help'"*/
 /*						  " for more information\n"));*/
