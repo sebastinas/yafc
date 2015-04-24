@@ -36,7 +36,7 @@ void args_clear(args_t *args)
 
 	args_del(args, 0, args->argc);
 	free(args->argv);
-	args->argv = 0;
+	args->argv = NULL;
 	args->argc = 0;
 }
 
