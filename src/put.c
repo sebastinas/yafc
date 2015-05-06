@@ -223,6 +223,8 @@ static void putfile(const char *path, struct stat *sb,
 		}
 		else if(test(opt, PUT_NEWER)) {
 			time_t ft = ftp_filetime(dest, test(opt, PUT_FORCE_NEWER));
+      ftp_trace("put -n: remote file: %s", ctime(&ft));
+      ftp_trace("put -n: local file: %s\n", ctime(&sb->st_mtime));
 			if(ft != (time_t)-1 && ft >= sb->st_mtime) {
 				char* sp = shortpath(dest, 42, ftp->homedir);
 				printf(_("Remote file '%s' is newer than local, skipping...\n"), sp);
