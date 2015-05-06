@@ -115,7 +115,7 @@ void ftp_destroy(Ftp *ftp)
 
     list_free(ftp->dirs_to_flush);
     list_free(ftp->cache);
-    ftp->cache = ftp->dirs_to_flush = 0;
+    ftp->cache = ftp->dirs_to_flush = NULL;
     host_destroy(ftp->host);
     sock_destroy(ftp->data);
     sock_destroy(ftp->ctrl);
@@ -1809,7 +1809,7 @@ time_t ftp_filetime(const char *filename, bool force)
         return (time_t)-1;
     }
     if (ftp->fullcode != 213)
-        return (time_t)1;
+        return (time_t)-1;
     /* time is Universal Coordinated Time */
     sscanf(ftp->reply, "%*s %04d%02d%02d%02d%02d%02d", &ts.tm_year,
            &ts.tm_mon, &ts.tm_mday, &ts.tm_hour, &ts.tm_min, &ts.tm_sec);
