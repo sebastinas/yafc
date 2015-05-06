@@ -65,7 +65,7 @@ static int cache_search(rdirectory *rdir, const char *arg)
  */
 void ftp_cache_flush(void)
 {
-  for (listitem* li = ftp->cache->first; li; li = li->next) {
+  for (listitem* li = ftp->dirs_to_flush->first; li; li = li->next) {
     char* dir = li->data;
     listitem* e = list_search(ftp->cache, (listsearchfunc)cache_search, dir);
     if (e) {
