@@ -17,14 +17,12 @@
 
 static listitem *new_item(void)
 {
-	return (listitem *)xmalloc(sizeof(listitem));
+	return xmalloc(sizeof(listitem));
 }
 
 list *list_new(listfunc freefunc)
 {
-	list *lp;
-
-	lp = (list *)xmalloc(sizeof(list));
+	list* lp = xmalloc(sizeof(list));
 	lp->freefunc = freefunc;
 	return lp;
 }
