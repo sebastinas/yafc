@@ -37,8 +37,11 @@ void ftp_cache_flush_mark(const char *path)
   stripslash(p);
 
   if(list_search(ftp->dirs_to_flush, (listsearchfunc)strcmp, p) != 0)
+  {
+    free(p);
     /* already in the flush list */
     return;
+  }
 
   list_additem(ftp->dirs_to_flush, p);
   ftp_trace("marked directory '%s' for flush\n", p);
