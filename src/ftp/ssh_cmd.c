@@ -605,7 +605,11 @@ time_t ssh_filetime(const char *filename)
 {
   sftp_attributes attrib = sftp_stat(ftp->sftp_session, filename);
   if (!attrib)
+  {
+    ftp_trace("Couldn't stat file '%s': %s\n", filename,
+              ssh_get_error(ftp->session));
     return -1;
+  }
 
   time_t res = attrib->mtime; /* mtime 64? */
   sftp_attributes_free(attrib);
