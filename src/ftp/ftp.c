@@ -52,8 +52,8 @@ Ftp *ftp_create(void)
 #endif
     ftp->LIST_type = ltUnknown;
 #ifdef HAVE_LIBSSH
-		ftp->session = NULL;
-		ftp->sftp_session = NULL;
+    ftp->session = NULL;
+    ftp->sftp_session = NULL;
 #endif
 
     return ftp;
@@ -204,11 +204,8 @@ void ftp_reset_vars(void)
     ftp->has_site_idle_command = true;
     ftp->has_mlsd_command = true;
 
-    list_free(ftp->dirs_to_flush);
-    ftp->dirs_to_flush = list_new((listfunc)free);
-
-    list_free(ftp->cache);
-    ftp->cache = list_new((listfunc)rdir_destroy);
+    list_clear(ftp->dirs_to_flush);
+    list_clear(ftp->cache);
 
     /* don't assume server is in ascii mode initially even if RFC says so */
     ftp->prev_type = '?';

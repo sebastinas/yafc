@@ -21,7 +21,7 @@ void ftp_cache_list_contents(void)
 {
   ftp_cache_flush();
 
-  printf("Directory cache contents: (%u items)\n",
+  printf("Directory cache contents: (%zu items)\n",
        list_numitem(ftp->cache));
 
   for (listitem* li = ftp->cache->first; li; li = li->next)
@@ -68,14 +68,16 @@ static int cache_search(rdirectory *rdir, const char *arg)
  */
 void ftp_cache_flush(void)
 {
-  for (listitem* li = ftp->dirs_to_flush->first; li; li = li->next) {
+  for (listitem* li = ftp->dirs_to_flush->first; li; li = li->next)
+  {
     char* dir = li->data;
     listitem* e = list_search(ftp->cache, (listsearchfunc)cache_search, dir);
-    if (e) {
+    if (e)
+    {
       ftp_trace("flushed directory '%s'\n", dir);
-
       list_delitem(ftp->cache, e);
-    } else
+    }
+    else
       ftp_trace("error flushing directory '%s' (not cached)\n", dir);
   }
 

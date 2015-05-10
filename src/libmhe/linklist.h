@@ -14,6 +14,7 @@
 #define _linklist_h_included
 
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef int (*listfunc)(void *);
 typedef void *(*listclonefunc)(void *);
@@ -26,15 +27,16 @@ typedef int (*listsearchfunc)(const void *item, const void *arg);
 
 typedef struct listitem listitem;
 struct listitem {
-	void *data;
-	listitem *next, *prev;
+  void *data;
+  listitem *next, *prev;
 };
 
 typedef struct list list;
 struct list {
-	listitem *first, *last;
-	listfunc freefunc;
-	int numitem;
+  listitem* first;
+  listitem* last;
+  listfunc freefunc;
+  size_t numitem;
 };
 
 list *list_new(listfunc freefunc);
@@ -43,7 +45,7 @@ void list_clear(list *lp);
 void list_delitem(list *lp, listitem *lip);
 void list_removeitem(list *lp, listitem *lip);
 void list_additem(list *lp, void *data);
-int list_numitem(list *lp);
+size_t list_numitem(list *lp);
 listitem *list_search(list *lp, listsearchfunc cmpfunc, const void *arg);
 void list_sort(list *lp, listsortfunc cmp, bool reverse);
 list *list_clone(list *lp, listclonefunc clonefunc);
