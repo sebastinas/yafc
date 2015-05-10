@@ -73,7 +73,6 @@ void ftp_cache_flush(void)
     listitem* e = list_search(ftp->cache, (listsearchfunc)cache_search, dir);
     if (e) {
       ftp_trace("flushed directory '%s'\n", dir);
-      rdir_destroy(e->data);
 
       list_delitem(ftp->cache, e);
     } else
