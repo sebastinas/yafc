@@ -33,11 +33,18 @@
 /* from libssh examples */
 static int verify_knownhost(ssh_session session)
 {
-  unsigned char *hash = NULL;
-
   int state = ssh_is_server_known(session);
-  int hlen = ssh_get_pubkey_hash(session, &hash);
-  if (hlen < 0)
+
+  ssh_key pubkey;
+  int rc = ssh_get_publickey(session, &pubkey);
+  if (rc < 0)
+    return -1;
+
+  unsigned char *hash = NULL;
+  size_t hlen = 0;
+  rc = ssh_get_publickey_hash(pubkey, SSH_PUBLICKEY_HASH_SHA1, &hash, &hlen);
+  ssh_key_free(pubkey);
+  if (rc < 0)
     return -1;
 
   switch (state)
@@ -49,7 +56,7 @@ static int verify_knownhost(ssh_session session)
       fprintf(stderr, _("Host key for server changed. It is now:\n"));
       ssh_print_hexa(_("Public key hash"), hash, hlen);
       fprintf(stderr, _("For security reasons, connection will be stopped.\n"));
-      free(hash);
+      ssh_clean_pubkey_hash(&hash);
       return -1;
 
     case SSH_SERVER_FOUND_OTHER:
@@ -57,7 +64,7 @@ static int verify_knownhost(ssh_session session)
         "another type of key exists.\n"));
       fprintf(stderr, _("An attacker might change the default server key to "
         "confuse your client into thinking the key does not exist\n"));
-      free(hash);
+      ssh_clean_pubkey_hash(&hash);
       return -1;
 
     case SSH_SERVER_FILE_NOT_FOUND:
@@ -77,7 +84,7 @@ static int verify_knownhost(ssh_session session)
       char buf[64] = { '\0' };
       if (fgets(buf, sizeof(buf), stdin) == NULL)
       {
-        free(hash);
+        ssh_clean_pubkey_hash(&hash);
         return -1;
       }
 
@@ -89,14 +96,14 @@ static int verify_knownhost(ssh_session session)
 
       if (strcasecmp(buf, _("yes")) != 0 && strcasecmp(buf, "yes") != 0)
       {
-        free(hash);
+        ssh_clean_pubkey_hash(&hash);
         return -1;
       }
 
       if (ssh_write_knownhost(session) < 0)
       {
         fprintf(stderr, _("Error %s\n"), strerror(errno));
-        free(hash);
+        ssh_clean_pubkey_hash(&hash);
         return -1;
       }
       break;
@@ -104,11 +111,11 @@ static int verify_knownhost(ssh_session session)
 
     case SSH_SERVER_ERROR:
       fprintf(stderr, _("Error %s\n"), ssh_get_error(session));
-      free(hash);
+      ssh_clean_pubkey_hash(&hash);
       return -1;
   }
 
-  free(hash);
+  ssh_clean_pubkey_hash(&hash);
   return 0;
 }
 

@@ -315,22 +315,12 @@ fi
 AC_ARG_WITH([ssh],
   AS_HELP_STRING([--with-ssh], [Build with SSH support]))
 if test "x$with_ssh" != "xno"; then
-  PKG_CHECK_MODULES([SSH], [libssh],
+  PKG_CHECK_MODULES([SSH], [libssh >= 0.6.0],
     [
       AC_DEFINE(HAVE_LIBSSH, [], [Define if you have libssh installed.])
       yafc_got_ssh="yes"
     ],
-    [
-      AC_CHECK_HEADERS([libssh/libssh.h],
-      [
-        AC_DEFINE(HAVE_LIBSSH, [], [Define if you have libssh installed.])
-        LIBS="$LIBS -lssh"
-        yafc_got_ssh="yes"
-      ],
-      [
-        yafc_got_ssh="no, not found"
-      ])
-    ])
+    [])
 else
   yafc_got_ssh="no, disabled"
 fi
