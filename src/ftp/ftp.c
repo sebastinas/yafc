@@ -1365,8 +1365,6 @@ int ftp_help(const char *arg)
 
 unsigned long long ftp_filesize(const char *path)
 {
-    unsigned long long ret;
-
 #ifdef HAVE_LIBSSH
     if(ftp->session)
         return ssh_filesize(path);
@@ -1383,6 +1381,7 @@ unsigned long long ftp_filesize(const char *path)
         return -1;
     }
     if(ftp->code == ctComplete) {
+        unsigned long long ret;
         sscanf(ftp->reply, "%*s %llu", &ret);
         return ret;
     }
