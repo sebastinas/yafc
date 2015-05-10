@@ -451,7 +451,7 @@ AC_CACHE_VAL(ac_cv_ipv6,
 AC_MSG_RESULT($ac_cv_ipv6)
 if test "x$ac_cv_ipv6" = "xyes" ; then
   AC_DEFINE([HAVE_IPV6],[],
-            [Define is IPv6 support is available.])
+            [Define if IPv6 support is available.])
 fi
 
 # finish
