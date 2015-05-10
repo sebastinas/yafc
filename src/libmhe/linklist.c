@@ -24,6 +24,7 @@ list *list_new(listfunc freefunc)
 {
 	list* lp = xmalloc(sizeof(list));
 	lp->freefunc = freefunc;
+  lp->first = NULL;
 	return lp;
 }
 

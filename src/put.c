@@ -199,9 +199,8 @@ static void putfile(const char *path, struct stat *sb,
 	dir_created = (r == 1);
 
 	if(!dir_created && !test(opt, PUT_UNIQUE) && !test(opt, PUT_FORCE)) {
-		rfile *f;
-		f = ftp_get_file(dest);
-		file_exists = (f != 0);
+		rfile* f = ftp_get_file(dest);
+		file_exists = (f != NULL);
 		if(f && risdir(f)) {
 			/* can't overwrite a directory */
 			printf(_("%s: is a directory\n"), dest);
