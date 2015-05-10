@@ -1110,9 +1110,9 @@ bool ftp_loggedin(void)
 bool ftp_connected(void)
 {
 #ifdef HAVE_LIBSSH
-	return (ftp->connected && (sock_connected(ftp->ctrl) || ftp->session));
+  return ftp->connected && (sock_connected(ftp->ctrl) || ftp->session);
 #else
-	return (ftp->connected && sock_connected(ftp->ctrl));
+  return ftp->connected && sock_connected(ftp->ctrl);
 #endif
 }
 
