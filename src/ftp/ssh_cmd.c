@@ -2,7 +2,7 @@
  * ssh_cmd.c -- sftp support via libssh.
  *
  * Yet Another FTP Client
- * Copyright (C) 2012, Sebastian Ramacher <sebastian+dev@ramacher.at>
+ * Copyright (C) 2012,2015 Sebastian Ramacher <sebastian+dev@ramacher.at>
  * Copyright (C) 1998-2001, Martin Hedenfalk <mhe@stacken.kth.se>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -90,9 +90,8 @@ static int verify_knownhost(ssh_session session)
 
       /* replace \n from fgets with \0 */
       const size_t len = strlen(buf);
-      if (len > 0 && buf[len - 1] == '\n') {
+      if (len > 0 && buf[len - 1] == '\n')
         buf[len - 1] = '\0';
-      }
 
       if (strcasecmp(buf, _("yes")) != 0 && strcasecmp(buf, "yes") != 0)
       {
@@ -200,7 +199,8 @@ static int authenticate_kbdint(ssh_session session)
 static int test_several_auth_methods(ssh_session session, url_t* urlp)
 {
   int rc = ssh_userauth_none(session, NULL);
-  /* if (rc != SSH_AUTH_SUCCESS) {
+  /* if (rc != SSH_AUTH_SUCCESS)
+     {
       return rc;
   } */
 
@@ -242,12 +242,14 @@ int ssh_open_url(url_t* urlp)
   }
 
   /* If we have ssh options from yafcrc, load them */
-  if (gvSSHOptions) {
+  if (gvSSHOptions)
+  {
     args_t *args = args_create();
     args_init(args, 0, NULL);
     args_push_back(args, gvSSHOptions);
     int argc = 0;
-    if (ssh_options_getopt(ftp->session, &argc, args->argv) != SSH_OK) {
+    if (ssh_options_getopt(ftp->session, &argc, args->argv) != SSH_OK)
+    {
       ftp_err(_("Failed to load SSH options from yafcrc config (ssh_options = '%s')\n"), gvSSHOptions);
       ssh_free(ftp->session);
       ftp->session = NULL;
@@ -308,7 +310,8 @@ int ssh_open_url(url_t* urlp)
   }
 
   ftp->ssh_version = ssh_get_version(ftp->session);
-  if (!ftp->ssh_version) {
+  if (!ftp->ssh_version)
+  {
     ftp_err(_("Couldn't initialise connection to server\n"));
     return -1;
   }
@@ -385,7 +388,8 @@ int ssh_chdir(const char *path)
 
   stripslash(p);
   isdir = (ftp_cache_get_directory(p) != 0);
-  if(!isdir) {
+  if(!isdir)
+  {
     rfile *rf = ftp_cache_get_file(p);
     isdir = (rf && risdir(rf));
   }
@@ -398,7 +402,8 @@ int ssh_chdir(const char *path)
       free(p);
       return -1;
     }
-    if (!S_ISDIR(attrib->permissions)) {
+    if (!S_ISDIR(attrib->permissions))
+    {
       ftp_err(_("%s: not a directory\n"), p);
       sftp_attributes_free(attrib);
       free(p);
@@ -502,7 +507,10 @@ uint64_t ssh_filesize(const char *path)
 {
   sftp_attributes attrib = sftp_stat(ftp->sftp_session, path);
   if (!attrib)
+  {
+    ftp_trace("Couldn't stat file '%s': %s\n", path, ssh_get_error(ftp->session));
     return 0;
+  }
 
   uint64_t res = attrib->size;
   sftp_attributes_free(attrib);
@@ -1007,7 +1015,8 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
 
   ftp->ti.transfer_is_put = true;
 
-  if(how == putUnique) {
+  if (how == putUnique)
+  {
     ftp_err(_("Unique put with SSH not implemented yet\n"));
     return -1;
   }
@@ -1016,7 +1025,8 @@ int ssh_send(const char *path, FILE *fp, putmode_t how,
   stripslash(p);
   ftp_cache_flush_mark_for(p);
 
-  if(how == putAppend) {
+  if (how == putAppend)
+  {
     ftp_set_tmp_verbosity(vbNone);
     offset = ftp_filesize(p);
   }
