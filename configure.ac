@@ -200,8 +200,6 @@ fi
 AM_CONDITIONAL(HAVE_LIBEDIT, [test "x$yafc_got_editline" = "xyes"])
 
 # misc functions
-AC_SEARCH_LIBS([strerror],[cposix])
-
 AC_SEARCH_LIBS([inet_ntop, getaddrinfo, gai_strerror], resolv nsl,,
                [AC_MSG_ERROR([inet_ntop, getaddrinfo, or gai_strerror is missing])])
 
