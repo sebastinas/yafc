@@ -338,7 +338,7 @@ int main(int argc, char **argv, char **envp)
 			override_verbose = true;
 			break;
 		case 'V':
-			printf(PACKAGE " " VERSION " (" HOSTTYPE ")\n");
+			printf(PACKAGE " " VERSION "\n");
 			return 0;
 		case 'w':
 			wait_time = atoi(optarg);

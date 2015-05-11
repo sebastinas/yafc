@@ -20,11 +20,7 @@ AC_CONFIG_HEADERS([config.h])
 
 CDPATH=""
 
-AC_CANONICAL_HOST
-AC_DEFINE_UNQUOTED(HOSTTYPE, "${host_cpu}-${host_vendor}-${host_os}", [the hosttype])
-
 AC_PROG_INSTALL
-
 
 # gettext et al
 use_nls="no, not found"
@@ -212,6 +208,17 @@ AC_CHECK_DECLS([strcasecmp],,
                 #include <strings.h>
                 #endif
                ])
+AC_CHECK_DECLS([getgrnam],,
+               [AC_MSG_ERROR([getgrnam is not available.])],
+               [
+                #ifdef HAVE_SYS_TYPES_H
+                #include <sys/types.h>
+                #endif
+                #ifdef HAVE_GRP_H
+                #include <grp.h>
+                #endif
+               ])
+
 
 # kerberos
 YAFC_KERBEROS
