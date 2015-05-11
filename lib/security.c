@@ -151,7 +151,7 @@ static int sec_get_data(int fd, struct buffer *buf, int level)
 
 static size_t buffer_read(struct buffer *buf, void *data, size_t len)
 {
-	len = min(len, buf->size - buf->index);
+	len = MIN(len, buf->size - buf->index);
 	memcpy(data, (char *)buf->data + buf->index, len);
 	buf->index += len;
 	return len;

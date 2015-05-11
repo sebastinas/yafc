@@ -47,24 +47,19 @@
 #include <string.h>
 #include <stdlib.h>
 
-
 #include <ctype.h>
 #include <signal.h>
 #include <stdarg.h>
 #include <setjmp.h>
 
 #include <errno.h>
-#include <grp.h>
 
 #include "libmhe/xmalloc.h"
 
 #include <sys/ioctl.h>
 
-#if defined HAVE_DECL_ASPRINTF && !HAVE_DECL_ASPRINTF
-int asprintf(char **strp, const char *format, ...) YAFC_PRINTF(2, 3);
-#endif
-#if defined HAVE_DECL_VASPRINTF && !HAVE_DECL_VASPRINTF
-int vasprintf(char **strp, const char *format, va_list ap);
+#ifdef HAVE_GRP_H
+# include <grp.h>
 #endif
 
 #ifdef HAVE_UNISTD_H
@@ -181,7 +176,12 @@ typedef CPPFunction rl_completion_func_t;
 # include "../lib/getopt.h"  /* our own, in lib/ */
 #endif
 
-#define min(a, b) ((a) < (b) ? (a) : (b))
+#if defined HAVE_DECL_ASPRINTF && !HAVE_DECL_ASPRINTF
+int asprintf(char **strp, const char *format, ...) YAFC_PRINTF(2, 3);
+#endif
+#if defined HAVE_DECL_VASPRINTF && !HAVE_DECL_VASPRINTF
+int vasprintf(char **strp, const char *format, va_list ap);
+#endif
 
 #ifdef HAVE_KERBEROS
 # define SECFTP

@@ -91,11 +91,11 @@ AC_CHECK_HEADERS(unistd.h \
                  netinet/in_systm.h \
                  arpa/inet.h \
                  sys/ioctl.h \
-                 memory.h \
                  setjmp.h \
                  errno.h \
                  strcasecmp.h \
-                 fcntl.h
+                 fcntl.h \
+                 grp.h
 )
 
 
@@ -136,7 +136,7 @@ if test "$ac_cv_func_fnmatch_gnu" = "yes"; then
             [Define if you have a fnmatch supporting GNU extensions])
 fi
 
-AC_CHECK_FUNCS(strcoll memcpy sigsetjmp)
+AC_CHECK_FUNCS(sigsetjmp)
 AC_CHECK_FUNCS(vasprintf, [], [AC_LIBOBJ([vasprintf])])
 AC_CHECK_DECLS([asprintf, vasprintf])
 
