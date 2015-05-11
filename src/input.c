@@ -24,8 +24,6 @@
 #elif defined(HAVE_OPENSSL_UI_COMPAT_H)
 #include <openssl/ui_compat.h>
 #else /* des_read_pw_string and UI_UTIL_read_pw_string are not available */
-#include <fcntl.h>
-#include <sys/ioctl.h>
 #include <termios.h>
 #if !defined(HAVE_DECL_IUCLC) || !HAVE_DECL_IUCLC
 #define IUCLC 0

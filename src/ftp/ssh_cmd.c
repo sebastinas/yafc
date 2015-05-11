@@ -17,12 +17,6 @@
 #include "gvars.h"
 #include "libmhe/args.h"
 #include "rfile.h"
-#ifdef HAVE_SYS_STAT_H
-#include <sys/stat.h>
-#endif
-#ifdef HAVE_FCNTL_H
-#include <fcntl.h>
-#endif
 
 #if defined(BUFSIZ) && BUFSIZ >= 131072
 #define SSH_BUFSIZ BUFSIZ

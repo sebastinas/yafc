@@ -111,6 +111,9 @@ int vasprintf(char **strp, const char *format, va_list ap);
 #ifdef HAVE_SYS_STAT_H
 # include <sys/stat.h>
 #endif
+#ifdef HAVE_FCNTL_H
+# include <fcntl.h>
+#endif
 
 /* networking headers */
 #ifdef HAVE_SYS_SOCKET_H
