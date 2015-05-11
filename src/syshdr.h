@@ -76,7 +76,7 @@ int vasprintf(char **strp, const char *format, va_list ap);
 #endif
 
 #ifdef HAVE_BSD_STRING_H
-#include <bsd/string.h>
+# include <bsd/string.h>
 #endif
 
 #ifdef HAVE_UNAME
@@ -161,8 +161,8 @@ extern int read_history ();
 #endif /* HAVE_READLINE_HISTORY */
 
 #ifdef HAVE_LIBEDIT
-#include <editline/readline.h>
-#define HAVE_LIBREADLINE
+# include <editline/readline.h>
+# define HAVE_LIBREADLINE
 #endif
 
 #if defined(HAVE_LIBEDIT) || (defined(HAVE_LIBREADLINE) && RL_READLINE_VERSION < 0x0602)
@@ -170,9 +170,9 @@ typedef CPPFunction rl_completion_func_t;
 #endif
 
 #ifdef HAVE_FNMATCH_GNU
-#include <fnmatch.h>
+# include <fnmatch.h>
 #else
-#include "../lib/fnmatch.h"  /* our own, in lib/ */
+# include "../lib/fnmatch.h"  /* our own, in lib/ */
 #endif
 
 #if defined(HAVE_GETOPT_LONG) && defined(HAVE_GETOPT_H)
@@ -186,9 +186,6 @@ typedef CPPFunction rl_completion_func_t;
 #ifdef HAVE_KERBEROS
 # define SECFTP
 # include "../lib/security.h"  /* our own, in lib/ */
-# ifndef HAVE_DECL_STRLCPY
-size_t strlcpy (char *dst, const char *src, size_t dst_sz);
-# endif
 #endif
 
 /* NLS stuff (Native Language Support) */
@@ -221,11 +218,11 @@ typedef void (*sighandler_t)(int);
 #define STD_SHELL "/bin/sh"
 
 #ifndef MIN
-#define MIN(a, b) (a) < (b) ? (a) : (b)
+# define MIN(a, b) (a) < (b) ? (a) : (b)
 #endif
 
 #ifndef MAX
-#define MAX(a, b) (a) < (b) ? (b) : (a)
+# define MAX(a, b) (a) < (b) ? (b) : (a)
 #endif
 
 #endif
