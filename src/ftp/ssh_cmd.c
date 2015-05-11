@@ -33,7 +33,7 @@
 /* from libssh examples */
 static int verify_knownhost(ssh_session session)
 {
-  int state = ssh_is_server_known(session);
+  const int state = ssh_is_server_known(session);
 
   ssh_key pubkey;
   int rc = ssh_get_publickey(session, &pubkey);
@@ -49,9 +49,6 @@ static int verify_knownhost(ssh_session session)
 
   switch (state)
   {
-    case SSH_SERVER_KNOWN_OK:
-      break; /* ok */
-
     case SSH_SERVER_KNOWN_CHANGED:
       fprintf(stderr, _("Host key for server changed. It is now:\n"));
       ssh_print_hexa(_("Public key hash"), hash, hlen);
@@ -503,14 +500,17 @@ int ssh_help(const char *arg)
   return 0;
 }
 
-uint64_t ssh_filesize(const char *path)
+uint64_t ssh_filesize(const char* path)
 {
-  sftp_attributes attrib = sftp_stat(ftp->sftp_session, path);
+  char* p = ftp_path_absolute(path);
+  sftp_attributes attrib = sftp_stat(ftp->sftp_session, p);
   if (!attrib)
   {
-    ftp_trace("Couldn't stat file '%s': %s\n", path, ssh_get_error(ftp->session));
+    ftp_trace("Couldn't stat file '%s': %s\n", p, ssh_get_error(ftp->session));
+    free(p);
     return 0;
   }
+  free(p);
 
   uint64_t res = attrib->size;
   sftp_attributes_free(attrib);
@@ -609,15 +609,18 @@ int ssh_rename(const char *oldname, const char *newname)
   return 0;
 }
 
-time_t ssh_filetime(const char *filename)
+time_t ssh_filetime(const char* filename)
 {
-  sftp_attributes attrib = sftp_stat(ftp->sftp_session, filename);
+  char* path = ftp_path_absolute(filename);
+  sftp_attributes attrib = sftp_stat(ftp->sftp_session, path);
   if (!attrib)
   {
-    ftp_trace("Couldn't stat file '%s': %s\n", filename,
+    ftp_trace("Couldn't stat file '%s': %s\n", path,
               ssh_get_error(ftp->session));
+    free(path);
     return -1;
   }
+  free(path);
 
   time_t res = attrib->mtime; /* mtime 64? */
   sftp_attributes_free(attrib);
