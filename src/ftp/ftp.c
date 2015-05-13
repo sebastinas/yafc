@@ -1778,40 +1778,40 @@ time_t gmt_mktime(const struct tm *ts)
 */
 time_t ftp_filetime(const char *filename, bool force)
 {
-    if (!ftp_connected())
-        return -1;
+  if (!ftp_connected())
+    return (time_t)-1;
+
+  if (!force)
+  {
+    rfile* f = ftp_cache_get_file(filename);
+    if (f && f->mtime != (time_t)-1)
+      return f->mtime;
+  }
 
 #ifdef HAVE_LIBSSH
-    if (ftp->session)
-        return ssh_filetime(filename);
+  if (ftp->session)
+    return ssh_filetime(filename);
 #endif
 
-    if (!force)
-    {
-        rfile* f = ftp_cache_get_file(filename);
-        if (f && f->mtime != (time_t)-1)
-            return f->mtime;
-    }
+  if (!ftp->has_mdtm_command)
+    return (time_t)-1;
 
-    if (!ftp->has_mdtm_command)
-        return (time_t)-1;
-
-    struct tm ts;
-    memset(&ts, 0, sizeof(ts));
-    ftp_set_tmp_verbosity(vbNone);
-    ftp_cmd("MDTM %s", filename);
-    if (ftp->fullcode == 202) {
-        ftp->has_mdtm_command = false;
-        return (time_t)-1;
-    }
-    if (ftp->fullcode != 213)
-        return (time_t)-1;
-    /* time is Universal Coordinated Time */
-    sscanf(ftp->reply, "%*s %04d%02d%02d%02d%02d%02d", &ts.tm_year,
-           &ts.tm_mon, &ts.tm_mday, &ts.tm_hour, &ts.tm_min, &ts.tm_sec);
-    ts.tm_year -= 1900;
-    ts.tm_mon--;
-    return gmt_mktime(&ts);
+  struct tm ts;
+  memset(&ts, 0, sizeof(ts));
+  ftp_set_tmp_verbosity(vbNone);
+  ftp_cmd("MDTM %s", filename);
+  if (ftp->fullcode == 202) {
+    ftp->has_mdtm_command = false;
+    return (time_t)-1;
+  }
+  if (ftp->fullcode != 213)
+    return (time_t)-1;
+  /* time is Universal Coordinated Time */
+  sscanf(ftp->reply, "%*s %04d%02d%02d%02d%02d%02d", &ts.tm_year,
+         &ts.tm_mon, &ts.tm_mday, &ts.tm_hour, &ts.tm_min, &ts.tm_sec);
+  ts.tm_year -= 1900;
+  ts.tm_mon--;
+  return gmt_mktime(&ts);
 }
 
 int ftp_maybe_isdir(rfile *fp)
