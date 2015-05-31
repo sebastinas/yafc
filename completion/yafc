@@ -2,13 +2,18 @@
 
 _yafc()
 {
-    local cur
+    local cur sed_flags
 
     COMPREPLY=()
     cur=`_get_cword`
+    sed_flags=-nre
+
+    if [ "$( uname )" = "Darwin" ]; then
+      sed_flags=-nEe
+    fi
 
     if [ $COMP_CWORD -eq 1 ] && [ -f ~/.yafc/bookmarks ]; then
-        COMPREPLY=( $( compgen -W '$( sed -nre "/machine/ s/.* alias '\''([^'\'']*)'\''/\1/ p" \
+        COMPREPLY=( $( compgen -W '$( sed $sed_flags "/machine/ s/.* alias '\''([^'\'']*)'\''/\1/ p" \
             ~/.yafc/bookmarks )' -- "$cur" ) )
     fi
 
