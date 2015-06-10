@@ -468,7 +468,7 @@ int ssh_unlink(const char *path)
  */
 int ssh_chmod(const char *path, const char *mode)
 {
-  mode_t perm = strtoul(mode, 0, 9);
+  mode_t perm = strtoul(mode, 0, 8);
   int rc = sftp_chmod(ftp->sftp_session, path, perm);
   if (rc != SSH_OK)
   {
