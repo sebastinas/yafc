@@ -39,10 +39,11 @@
 #define ALARM_USEC 500000
 
 typedef enum {
-	putNormal,
-	putAppend,
-	putUnique,
-	putResume
+  putNormal,
+  putAppend,
+  putUnique,
+  putTryUnique,
+  putResume
 } putmode_t;
 
 typedef enum {

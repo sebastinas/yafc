@@ -44,6 +44,7 @@
 #define PUT_ASCII (1 << 16)
 #define PUT_BINARY (1 << 17)
 #define PUT_SKIP_EMPTY (1 << 18)
+#define PUT_TRY_UNIQUE (1 << 19)
 
 static bool put_batch = false;
 static bool put_owbatch = false;
@@ -278,6 +279,8 @@ static void putfile(const char *path, struct stat *sb,
 		how = putResume;
 	if(test(opt, PUT_UNIQUE))
 		how = putUnique;
+  if(test(opt, PUT_TRY_UNIQUE))
+    how = putTryUnique;
 
 	r = do_the_put(path, dest, how, opt);
 	free(dest);
@@ -347,8 +350,8 @@ static void putfiles(list *gl, unsigned opt, const char *output)
 			return;
 
 		if(gvSighupReceived) {
-			if(!test(opt, PUT_RESUME))
-				opt |= PUT_UNIQUE;
+			if(!test(opt, PUT_RESUME) && ftp->has_stou_command)
+				opt |= PUT_TRY_UNIQUE;
 			opt |= PUT_FORCE;
 		}
 
@@ -729,8 +732,8 @@ void cmd_put(int argc, char **argv)
 		if(pid == 0) { /* child process */
 			transfer_begin_nohup(argc, argv);
 
-			if(!test(opt, PUT_FORCE) && !test(opt, PUT_RESUME))
-				opt |= PUT_UNIQUE;
+			if(!test(opt, PUT_FORCE) && !test(opt, PUT_RESUME) && ftp->has_stou_command)
+				opt |= PUT_TRY_UNIQUE;
 			opt |= PUT_FORCE;
 
 			putfiles(gl, opt, put_output);

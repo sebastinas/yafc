@@ -823,6 +823,9 @@ static int ftp_send(const char *path, FILE *fp, putmode_t how,
 	if(how == putUnique && !ftp->has_stou_command)
 		return -1;
 
+  if (how == putTryUnique && !ftp->has_stou_command)
+    how = putNormal;
+
 	reset_transfer_info();
 	ftp->ti.transfer_is_put = true;
 
@@ -840,21 +843,29 @@ static int ftp_send(const char *path, FILE *fp, putmode_t how,
 		ftp->ti.restart_size = rp;
 	}
 
-	ftp_set_tmp_verbosity(vbError);
-	switch(how) {
-	  case putUnique:
-		ftp_cmd("STOU %s", path);
-		if(ftp->fullcode == 502)
-			ftp->has_stou_command = false;
-		break;
-	  case putAppend:
-		ftp_cmd("APPE %s", path);
-		break;
-	  case putNormal:
-	  default:
-		ftp_cmd("STOR %s", path);
-		break;
-	}
+  ftp_set_tmp_verbosity(vbError);
+  switch (how) {
+  case putAppend:
+    ftp_cmd("APPE %s", path);
+    break;
+
+  case putTryUnique:
+  case putUnique:
+    ftp_cmd("STOU %s", path);
+    if (ftp->fullcode == 502) {
+      ftp->has_stou_command = false;
+      if (how == putTryUnique)
+        how = putNormal;
+      else
+        break;
+    }
+    else
+      break;
+
+  default:
+    ftp_cmd("STOR %s", path);
+    break;
+  }
 
 	if(ftp->code != ctPrelim)
 		return -1;
