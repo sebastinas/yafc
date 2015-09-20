@@ -852,7 +852,7 @@ static int ftp_send(const char *path, FILE *fp, putmode_t how,
   case putTryUnique:
   case putUnique:
     ftp_cmd("STOU %s", path);
-    if (ftp->fullcode == 502) {
+    if (ftp->fullcode == 502 || ftp->fullcode == 504) {
       ftp->has_stou_command = false;
       if (how == putTryUnique)
         how = putNormal;
