@@ -112,15 +112,41 @@ static int print_filename(rfile *fi, unsigned opt, bool doclr)
 	return len;
 }
 
+static size_t max_date_len(list *gl)
+{
+	listitem *li;
+	rfile *fi;
+	size_t max = 0;
+
+	for(li=gl->first; li; li=li->next) {
+		if (gvInterrupted)
+			return max;
+
+		fi = (rfile*)li->data;
+
+		size_t cl = mbstowcs(NULL, fi->date, 0);
+		if (cl == (size_t)-1)
+			continue;
+		if (cl > max)
+			max = cl;
+	}
+
+	return max;
+}
+
 static void ls_long(list *gl, unsigned opt, bool doclr)
 {
 	listitem *li;
 	rfile *fi;
+	size_t max_col_len;
 
 	if(test(opt, LS_HUMAN_READABLE))
 		printf(_("total %s\n"), human_size(rglob_size(gl)));
 	else
 		printf(_("total %llu\n"), rglob_size(gl));
+
+	// Maximum length of a date string, as visible to user.
+	max_col_len = max_date_len(gl);
 
 	for(li=gl->first; li; li=li->next) {
 
@@ -128,14 +154,21 @@ static void ls_long(list *gl, unsigned opt, bool doclr)
 			break;
 
 		fi = (rfile *)li->data;
+
 		printf("%s %3u %-8s ", fi->perm, fi->nhl, fi->owner);
 		if(!test(opt, LS_NO_GROUP))
 			printf("%-8s ", fi->group);
 
+		size_t bl = strlen(fi->date);
+		size_t cl = mbstowcs(NULL, fi->date, 0);
+		if ((size_t)-1 == cl)
+			cl = bl;
+		int justify = (int)(bl + max_col_len - cl);
+
 		if(test(opt, LS_HUMAN_READABLE))
-			printf("%8s %s ", human_size(fi->size), fi->date);
+			printf("%8s %*s ", human_size(fi->size), justify, fi->date);
 		else
-			printf("%8llu %s ", fi->size, fi->date);
+			printf("%8llu %*s ", fi->size, justify, fi->date);
 
 		if(rislink(fi) && fi->link) {
 			char *fipath = base_dir_xptr(fi->path);
