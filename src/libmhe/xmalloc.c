@@ -32,7 +32,8 @@ void* xrealloc(void* ptr, size_t size)
     return xmalloc(size);
 
   void* new_ptr = realloc(ptr, size);
-  if (!new_ptr) {
+  // If size is zero, realloc() is equivalent to free().
+  if (!new_ptr && size != 0) {
     fprintf(stderr, "\nxrealloc(%p, %zu): %s\n", ptr, size, strerror(errno));
     free(ptr);
     exit(errno);
