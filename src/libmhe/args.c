@@ -133,8 +133,13 @@ static args_t *split_args(const char *str)
 	while(c && (e = strqsep(&c, ' ')) != 0)
 		args->argv[args->argc++] = xstrdup(e);
 
+	if(args->argc == 0) {
+		args_clear(args);
+		goto clean;
+	}
 	args->argv = xrealloc(args->argv, args->argc * sizeof(char *));
 
+clean:
 	free(orgc);
 	return args;
 }
