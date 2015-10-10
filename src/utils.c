@@ -162,6 +162,8 @@ char* get_mode_string(mode_t m)
 
 static int switch_search(const Ftp *f, const char *name)
 {
+	if(!f->url)
+		return 1;
 	if(f->url->alias) {
 		if(strcmp(f->url->alias, name) == 0)
 			return 0;
