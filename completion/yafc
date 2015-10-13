@@ -2,19 +2,38 @@
 
 _yafc()
 {
-    local cur sed_flags
+    local cur prev sed_flags opts aliases len_wo_first_and_last word _alias
 
     COMPREPLY=()
     cur=`_get_cword`
     sed_flags=-nre
+    opts="-a --anon -d --debug -D --dump-rc -m --mechanism= -n --norc -p \
+        --noproxy -q --quiet -r --rcfile= -t --trace= -u --noauto -U \
+        --noalias -v --verbose -w --wait= -W --workdir= -V --version -h --help"
+
+    if [[ ${cur} == -* ]]; then
+        COMPREPLY=( $( compgen -W "$opts" -- "$cur" ) )
+        [[ $COMPREPLY == *= ]] && compopt -o nospace
+        return 0
+    fi
 
     if [ "$( uname )" = "Darwin" ]; then
       sed_flags=-nEe
     fi
 
-    if [ $COMP_CWORD -eq 1 ] && [ -f ~/.yafc/bookmarks ]; then
-        COMPREPLY=( $( compgen -W '$( sed $sed_flags "/machine/ s/.* alias '\''([^'\'']*)'\''/\1/ p" \
-            ~/.yafc/bookmarks )' -- "$cur" ) )
+    if [ -f ~/.yafc/bookmarks ]; then
+        aliases=( $( sed $sed_flags \
+            '/machine/ s/.* alias '\''([^'\'']*)'\''/\1/ p' \
+            ~/.yafc/bookmarks ) )
+        len_wo_first_and_last=$(( ${#COMP_WORDS[@]} - 2 ))
+        # If alias is already one of the arguments, don't complete the current
+        # word to one.
+        for word in "${COMP_WORDS[@]:1:$len_wo_first_and_last}"; do
+            for _alias in "${aliases[@]}"; do
+                [[ $_alias == $word ]] && return 0
+            done
+        done
+        COMPREPLY=( $( compgen -W "${aliases[*]}" -- "$cur" ) )
     fi
 
     return 0
