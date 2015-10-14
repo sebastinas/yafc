@@ -1038,7 +1038,44 @@ documentation missing...
 @c -----------------------------------------------------
 @node set
 @subsection @code{set}
-documentation missing...
+
+Show and set variables.
+
+Usage:
+@example
+set [variable] [value]
+@end example
+
+A value can be a boolean (@samp{1}, @samp{0}, @samp{on}, @samp{off}, @samp{true},
+@samp{false}, @samp{yes}, @samp{no}) or a string, depending on the variable.
+
+Variables:
+
+@table @code
+
+@item anonpass [string]
+@xref{keyword anon_password}.
+
+@item autologin [boolean]
+@xref{keyword autologin}.
+
+@item debug [boolean]
+@xref{keyword debug}.
+
+@item passive_mode [boolean]
+@xref{keyword use_passive_mode}.
+
+@item type [string]
+String must be @samp{binary} or @samp{ascii}. @xref{keyword default_type}.
+
+@item verbose [boolean]
+@xref{keyword verbose}.
+
+@end table
+
+@code{set} shows the values of all the variables. @code{set variable} shows the value of
+the variable. @code{set variable value} sets the value of the variable. A variable can be
+a substring of the variable name, as long as it is unambiguous.
 
 @c -----------------------------------------------------
 @node shell
