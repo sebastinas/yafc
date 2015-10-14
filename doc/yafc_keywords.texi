@@ -11,12 +11,14 @@ These are the supported keywords:
 
 @table @code
 
+@anchor{keyword anon_password}
 @item anon_password
 type: string
 
 This is the password used for anonymous logins. It should be your email
 address.
 
+@anchor{keyword autologin}
 @item autologin
 type: boolean
 
@@ -42,6 +44,7 @@ type: boolean
 Read additional autologin entries from @file{~/.netrc}.
 @ref{Bookmarks}.
 
+@anchor{keyword use_passive_mode}
 @item use_passive_mode
 type: boolean
 
@@ -66,11 +69,13 @@ type: integer
 Time (in seconds) before a cached directory times out and needs to be
 reread. Set to 0 (zero) to disable the timeout.
 
+@anchor{keyword verbose}
 @item verbose
 type: boolean
 
 Show all replies received from remote host.
 
+@anchor{keyword debug}
 @item debug
 type: boolean
 
@@ -140,6 +145,7 @@ type: boolean
 If set to @code{true}, Yafc won't say anything about automatically created
 bookmarks.
 
+@anchor{keyword default_type}
 @item default_type
 type: string
 
