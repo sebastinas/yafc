@@ -653,7 +653,7 @@ void cmd_status(int argc, char **argv)
 		sec_status();
 #endif
 	if(list_numitem(gvFtpList) > 1 || ftp_connected())
-		printf(_("There are totally %u connections open\n"),
+		printf(_("There are totally %zu connections open\n"),
 			   list_numitem(gvFtpList));
 }
 

@@ -168,7 +168,7 @@ static void show_taglist_info(void)
 		return;
 	}
 	tlsize = rglob_size(ftp->taglist);
-	printf(_("%lu bytes (%s) in %u files tagged\n"),
+	printf(_("%lu bytes (%s) in %zu files tagged\n"),
 		   tlsize, human_size(tlsize), list_numitem(ftp->taglist));
 	printf(_("%llu directories tagged\n"), rglob_numdirs(ftp->taglist));
 }

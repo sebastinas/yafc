@@ -519,7 +519,7 @@ void cmd_bookmark(int argc, char **argv)
 	if(action == BM_LIST) {
 		listitem *li;
 
-		printf(_("%u bookmarks present in memory\n"),
+		printf(_("%zu bookmarks present in memory\n"),
 			   list_numitem(gvBookmarks));
 		for(li = gvBookmarks->first; li; li=li->next) {
 			url_t *u = (url_t *)li->data;

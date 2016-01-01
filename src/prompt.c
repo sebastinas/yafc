@@ -177,7 +177,7 @@ char* expand_prompt(const char* fmt)
       {
         case 'c':
         {
-          if (asprintf(&ins, "%u", list_numitem(gvFtpList)) == -1)
+          if (asprintf(&ins, "%zu", list_numitem(gvFtpList)) == -1)
           {
             fprintf(stderr, _("Failed to allocate memory.\n"));
             sb_free(sb);
