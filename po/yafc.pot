@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=glib&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-02-27 14:40+0100\n"
+"POT-Creation-Date: 2016-01-01 17:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,115 +66,115 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: ../lib/security.c:340 ../src/bookmark.c:132 ../src/bookmark.c:222
+#: ../lib/security.c:343 ../src/bookmark.c:132 ../src/bookmark.c:222
 #: ../src/bookmark.c:394 ../src/bookmark.c:505 ../src/commands.c:223
-#: ../src/ftp/ftp.c:775 ../src/ftp/ftp.c:818 ../src/ftp/ftp.c:1591
-#: ../src/ftp/ssh_cmd.c:535 ../src/fxp.c:180 ../src/fxp.c:190 ../src/fxp.c:452
-#: ../src/fxp.c:461 ../src/get.c:197 ../src/get.c:220 ../src/get.c:539
-#: ../src/get.c:546 ../src/list.c:375 ../src/list.c:583 ../src/ltag.c:42
-#: ../src/ltag.c:77 ../src/main.c:172 ../src/main.c:213 ../src/main.c:230
-#: ../src/main.c:364 ../src/main.c:376 ../src/main.c:409 ../src/main.c:443
-#: ../src/put.c:150 ../src/put.c:160 ../src/put.c:389 ../src/put.c:397
+#: ../src/ftp/ftp.c:772 ../src/ftp/ftp.c:815 ../src/ftp/ftp.c:1588
+#: ../src/ftp/ssh_cmd.c:544 ../src/fxp.c:182 ../src/fxp.c:192 ../src/fxp.c:454
+#: ../src/fxp.c:463 ../src/get.c:221 ../src/get.c:244 ../src/get.c:563
+#: ../src/get.c:570 ../src/list.c:408 ../src/list.c:616 ../src/ltag.c:42
+#: ../src/ltag.c:77 ../src/main.c:174 ../src/main.c:215 ../src/main.c:232
+#: ../src/main.c:366 ../src/main.c:378 ../src/main.c:413 ../src/main.c:447
+#: ../src/put.c:171 ../src/put.c:181 ../src/put.c:413 ../src/put.c:421
 #: ../src/rm.c:94 ../src/tag.c:48 ../src/tag.c:88 ../src/transfer.c:435
-#: ../src/utils.c:228 ../src/completion.c:213 ../src/input.c:342
+#: ../src/utils.c:219 ../src/completion.c:213 ../src/input.c:340
 #: ../src/lglob.c:86 ../src/prompt.c:160 ../src/prompt.c:182
 #: ../src/prompt.c:193 ../src/prompt.c:348 ../src/prompt.c:358
 #, c-format
 msgid "Failed to allocate memory.\n"
 msgstr ""
 
-#: ../lib/security.c:347
+#: ../lib/security.c:350
 #, c-format
 msgid "Failed to encode command.\n"
 msgstr ""
 
-#: ../lib/security.c:351
+#: ../lib/security.c:355
 #, c-format
 msgid "Out of memory base64-encoding.\n"
 msgstr ""
 
-#: ../lib/security.c:380
+#: ../lib/security.c:385
 #, c-format
 msgid "Using %s for authentication.\n"
 msgstr ""
 
-#: ../lib/security.c:381
+#: ../lib/security.c:386
 #, c-format
 msgid "Using %s command channel.\n"
 msgstr ""
 
-#: ../lib/security.c:383
+#: ../lib/security.c:388
 #, c-format
 msgid "Using %s data channel.\n"
 msgstr ""
 
-#: ../lib/security.c:385
+#: ../lib/security.c:390
 #, c-format
 msgid "Protection buffer size: %lu.\n"
 msgstr ""
 
-#: ../lib/security.c:388
+#: ../lib/security.c:393
 #, c-format
 msgid "Not using any security mechanism.\n"
 msgstr ""
 
-#: ../lib/security.c:400
+#: ../lib/security.c:405
 msgid "No security data exchange has taken place.\n"
 msgstr ""
 
-#: ../lib/security.c:407
+#: ../lib/security.c:412
 msgid "Failed to set protection buffer size.\n"
 msgstr ""
 
-#: ../lib/security.c:420
+#: ../lib/security.c:425
 msgid "Failed to set protection level.\n"
 msgstr ""
 
-#: ../lib/security.c:452
+#: ../lib/security.c:457
 msgid "No security data exchange has taken place\n"
-msgstr ""
-
-#: ../lib/security.c:458
-#, c-format
-msgid "Unrecognized protection level %s\n"
 msgstr ""
 
 #: ../lib/security.c:463
 #, c-format
+msgid "Unrecognized protection level %s\n"
+msgstr ""
+
+#: ../lib/security.c:468
+#, c-format
 msgid "%s does not implement %s protection\n"
 msgstr ""
 
-#: ../lib/security.c:476
+#: ../lib/security.c:481
 #, c-format
 msgid "Syntax error, try %s --help for more information\n"
 msgstr ""
 
-#: ../lib/security.c:536
+#: ../lib/security.c:541
 #, c-format
 msgid "realloc %zu failed"
 msgstr ""
 
-#: ../lib/security.c:542
+#: ../lib/security.c:547
 #, c-format
 msgid "Skipping %s...\n"
 msgstr ""
 
-#: ../lib/security.c:545
+#: ../lib/security.c:550
 #, c-format
 msgid "Trying %s...\n"
 msgstr ""
 
-#: ../lib/security.c:549
+#: ../lib/security.c:554
 #, c-format
 msgid "%s is not supported by the server.\n"
 msgstr ""
 
-#: ../lib/security.c:551
+#: ../lib/security.c:556
 #, c-format
 msgid "%s rejected as security mechanism.\n"
 msgstr ""
 
-#: ../lib/security.c:553
+#: ../lib/security.c:558
 #, c-format
 msgid "The server doesn't support the FTP security extensions.\n"
 msgstr ""
@@ -282,7 +282,7 @@ msgstr ""
 
 #: ../src/bookmark.c:522
 #, c-format
-msgid "%u bookmarks present in memory\n"
+msgid "%zu bookmarks present in memory\n"
 msgstr ""
 
 #: ../src/bookmark.c:554
@@ -296,7 +296,7 @@ msgid "%s: noupdate: %s\n"
 msgstr ""
 
 #: ../src/bookmark.c:586 ../src/bookmark.c:594 ../src/bookmark.c:608
-#: ../src/ftp/ssh_cmd.c:90
+#: ../src/ftp/ssh_cmd.c:87
 msgid "yes"
 msgstr ""
 
@@ -375,7 +375,7 @@ msgstr ""
 msgid "Simple file list."
 msgstr ""
 
-#: ../src/commands.c:383 ../src/fxp.c:702 ../src/get.c:807 ../src/put.c:620
+#: ../src/commands.c:383 ../src/fxp.c:708 ../src/get.c:835 ../src/put.c:648
 #, c-format
 msgid "Invalid option argument --type=%s\n"
 msgstr ""
@@ -388,7 +388,7 @@ msgstr ""
 msgid "  -t, --type=TYPE    set transfer TYPE to ascii or binary\n"
 msgstr ""
 
-#: ../src/commands.c:406 ../src/fxp.c:752 ../src/get.c:844 ../src/ltag.c:231
+#: ../src/commands.c:406 ../src/fxp.c:758 ../src/get.c:872 ../src/ltag.c:231
 #: ../src/tag.c:264
 #, c-format
 msgid "%s: no matches found\n"
@@ -466,7 +466,7 @@ msgstr ""
 
 #: ../src/commands.c:656
 #, c-format
-msgid "There are totally %u connections open\n"
+msgid "There are totally %zu connections open\n"
 msgstr ""
 
 #: ../src/commands.c:686
@@ -524,145 +524,145 @@ msgid ""
 "Without argument, switch to the next active connection\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:284
+#: ../src/ftp/ftp.c:281
 #, c-format
 msgid "Connection timeout after %u seconds\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:293
+#: ../src/ftp/ftp.c:290
 #, c-format
 msgid "Looking up %s... "
 msgstr ""
 
-#: ../src/ftp/ftp.c:343
+#: ../src/ftp/ftp.c:340
 #, c-format
 msgid ""
 "Sorry, don't know how to handle your '%s' protocol\n"
 "trying 'ftp' instead...\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:350
+#: ../src/ftp/ftp.c:347
 #, c-format
 msgid "Connecting to proxy %s at port %d...\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:353
+#: ../src/ftp/ftp.c:350
 #, c-format
 msgid "Connecting to %s at port %d...\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:359
+#: ../src/ftp/ftp.c:356
 msgid "Unable to create socket.\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:372
+#: ../src/ftp/ftp.c:369
 #, c-format
 msgid "Connected to %s ([%s]:%d).\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:441 ../src/ftp/ftp.c:667
+#: ../src/ftp/ftp.c:438 ../src/ftp/ftp.c:664
 msgid "No control connection\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:461
+#: ../src/ftp/ftp.c:458
 msgid "Server has closed control connection\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:507
+#: ../src/ftp/ftp.c:504
 msgid "Reply too long (truncated)\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:579
+#: ../src/ftp/ftp.c:576
 #, c-format
 msgid "Tired of waiting for reply, timeout after %u seconds\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:684
+#: ../src/ftp/ftp.c:681
 msgid "error writing command"
 msgstr ""
 
 #. server is closing control connection!
-#: ../src/ftp/ftp.c:705
+#: ../src/ftp/ftp.c:702
 msgid "Server closed control connection\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:708
+#: ../src/ftp/ftp.c:705
 msgid "Reconnect failed\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:710
+#: ../src/ftp/ftp.c:707
 msgid "Automatic reconnect...\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:770
+#: ../src/ftp/ftp.c:767
 msgid "Proxy login: "
 msgstr ""
 
-#: ../src/ftp/ftp.c:773
+#: ../src/ftp/ftp.c:770
 #, c-format
 msgid "login (%s): "
 msgstr ""
 
-#: ../src/ftp/ftp.c:781
+#: ../src/ftp/ftp.c:778
 msgid "login (anonymous): "
 msgstr ""
 
-#: ../src/ftp/ftp.c:791 ../src/ftp/ftp.c:839
+#: ../src/ftp/ftp.c:788 ../src/ftp/ftp.c:836
 #, c-format
 msgid "You loose\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:816
+#: ../src/ftp/ftp.c:813
 #, c-format
 msgid "password (%s): "
 msgstr ""
 
-#: ../src/ftp/ftp.c:823 ../src/ftp/ftp.c:835
+#: ../src/ftp/ftp.c:820 ../src/ftp/ftp.c:832
 msgid "password: "
 msgstr ""
 
-#: ../src/ftp/ftp.c:834
+#: ../src/ftp/ftp.c:831
 msgid "Proxy password: "
 msgstr ""
 
-#: ../src/ftp/ftp.c:936
+#: ../src/ftp/ftp.c:933
 #, c-format
 msgid "Invalid protection level '%s'\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:951
+#: ../src/ftp/ftp.c:948
 #, c-format
 msgid "unknown mechanism '%s'\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:955
+#: ../src/ftp/ftp.c:952
 #, c-format
 msgid "Yafc was not compiled with support for %s\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:970
+#: ../src/ftp/ftp.c:967
 msgid "Authentication successful.\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:972 ../src/login.c:54 ../src/login.c:287
+#: ../src/ftp/ftp.c:969 ../src/login.c:54 ../src/login.c:287
 msgid "*** Using plaintext username and password ***\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:978
+#: ../src/ftp/ftp.c:975
 #, c-format
 msgid "logging in anonymously...\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:1087
+#: ../src/ftp/ftp.c:1084
 #, c-format
 msgid "Data protection is %s\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:1306
+#: ../src/ftp/ftp.c:1303
 msgid "Server doesn't support SITE CHMOD\n"
 msgstr ""
 
-#: ../src/ftp/ftp.c:1324
+#: ../src/ftp/ftp.c:1321
 msgid "Server doesn't support SITE IDLE\n"
 msgstr ""
 
@@ -713,37 +713,37 @@ msgstr ""
 msgid "transfer initialization failed"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:747 ../src/ftp/ftpsend.c:882
+#: ../src/ftp/ftpsend.c:747 ../src/ftp/ftpsend.c:893
 msgid "data connection not accepted\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:926
+#: ../src/ftp/ftpsend.c:937
 msgid "FxP between same hosts\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:971 ../src/ftp/ftpsend.c:1180
+#: ../src/ftp/ftpsend.c:982 ../src/ftp/ftpsend.c:1191
 #, c-format
 msgid "unable to get remote filesize of '%s', unable to resume\n"
 msgstr ""
 
 #. can't overwrite a directory
-#: ../src/ftp/ftpsend.c:1060 ../src/ftp/ftpsend.c:1155 ../src/fxp.c:220
-#: ../src/put.c:187
+#: ../src/ftp/ftpsend.c:1071 ../src/ftp/ftpsend.c:1166 ../src/fxp.c:222
+#: ../src/put.c:207
 #, c-format
 msgid "%s: is a directory\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:1064
+#: ../src/ftp/ftpsend.c:1075
 #, c-format
 msgid "%s: permission denied\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:1088
+#: ../src/ftp/ftpsend.c:1099
 #, c-format
 msgid "Unable to stat file '%s': %s\n"
 msgstr ""
 
-#: ../src/ftp/ftpsend.c:1117 ../src/ftp/ftpsend.c:1192
+#: ../src/ftp/ftpsend.c:1128 ../src/ftp/ftpsend.c:1203
 #, c-format
 msgid "%s: %s, transfer cancelled\n"
 msgstr ""
@@ -781,55 +781,55 @@ msgstr ""
 msgid "Can't redirect output, exiting...\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:49
+#: ../src/ftp/ssh_cmd.c:47
 #, c-format
 msgid "Host key for server changed. It is now:\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:50
+#: ../src/ftp/ssh_cmd.c:48
 msgid "Public key hash"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:51
+#: ../src/ftp/ssh_cmd.c:49
 #, c-format
 msgid "For security reasons, connection will be stopped.\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:56
+#: ../src/ftp/ssh_cmd.c:54
 #, c-format
 msgid ""
 "The host key for this server was not found but another type of key exists.\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:58
+#: ../src/ftp/ssh_cmd.c:56
 #, c-format
 msgid ""
 "An attacker might change the default server key to confuse your client into "
 "thinking the key does not exist\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:64
+#: ../src/ftp/ssh_cmd.c:62
 #, c-format
 msgid "Could not find known host file.\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:65
+#: ../src/ftp/ssh_cmd.c:63
 #, c-format
 msgid ""
 "If you accept the host key here, the file will be automatically created.\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:72
+#: ../src/ftp/ssh_cmd.c:70
 #, c-format
 msgid "The server is unknown. Public key hash: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:74
+#: ../src/ftp/ssh_cmd.c:72
 #, c-format
 msgid "Do you trust the host key? [yes/No] "
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:98 ../src/ftp/ssh_cmd.c:106
+#: ../src/ftp/ssh_cmd.c:95 ../src/ftp/ssh_cmd.c:103
 #, c-format
 msgid "Error %s\n"
 msgstr ""
@@ -854,119 +854,119 @@ msgstr ""
 msgid "Authentication failed: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:305
+#: ../src/ftp/ssh_cmd.c:306
 msgid "Couldn't initialise connection to server\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:312 ../src/ftp/ssh_cmd.c:322
+#: ../src/ftp/ssh_cmd.c:313 ../src/ftp/ssh_cmd.c:323
 #, c-format
 msgid "Couldn't initialise ftp subsystem: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:390
+#: ../src/ftp/ssh_cmd.c:392
 #, c-format
 msgid "Couldn't stat directory: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:395
+#: ../src/ftp/ssh_cmd.c:398
 #, c-format
 msgid "%s: not a directory\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:421 ../src/fxp.c:206 ../src/get.c:235 ../src/put.c:174
+#: ../src/ftp/ssh_cmd.c:424 ../src/fxp.c:208 ../src/get.c:259 ../src/put.c:195
 #, c-format
 msgid "Couldn't create directory: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:439
+#: ../src/ftp/ssh_cmd.c:442
 #, c-format
 msgid "Couldn't remove directory: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:455
+#: ../src/ftp/ssh_cmd.c:458
 #, c-format
 msgid "Couldn't delete file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:472
+#: ../src/ftp/ssh_cmd.c:475
 #, c-format
 msgid "Couldn't chmod file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:557
+#: ../src/ftp/ssh_cmd.c:566
 #, c-format
 msgid "Couldn't list directory: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:583
+#: ../src/ftp/ssh_cmd.c:592
 #, c-format
 msgid "Couldn't rename file '%s' to '%s': %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:610
+#: ../src/ftp/ssh_cmd.c:626
 msgid "ssh_list() not implemented yet\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:657 ../src/ftp/ssh_cmd.c:769 ../src/ftp/ssh_cmd.c:860
-#: ../src/ftp/ssh_cmd.c:959
+#: ../src/ftp/ssh_cmd.c:673 ../src/ftp/ssh_cmd.c:785 ../src/ftp/ssh_cmd.c:876
+#: ../src/ftp/ssh_cmd.c:975
 #, c-format
 msgid "Error while writing to file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:678 ../src/ftp/ssh_cmd.c:789
+#: ../src/ftp/ssh_cmd.c:694 ../src/ftp/ssh_cmd.c:805
 #, c-format
 msgid "Error while reading from file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:685
+#: ../src/ftp/ssh_cmd.c:701
 #, c-format
 msgid "Unexpected request: %s %lu\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:732
+#: ../src/ftp/ssh_cmd.c:748
 #, c-format
 msgid "Cannot download a directory: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:742
+#: ../src/ftp/ssh_cmd.c:758
 #, c-format
 msgid "Cannot open file for reading: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:750 ../src/ftp/ssh_cmd.c:939
+#: ../src/ftp/ssh_cmd.c:766 ../src/ftp/ssh_cmd.c:955
 #, c-format
 msgid "Failed to seek: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:830 ../src/ftp/ssh_cmd.c:922
+#: ../src/ftp/ssh_cmd.c:846 ../src/ftp/ssh_cmd.c:938
 #, c-format
 msgid "Couldn't fstat local file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:838
+#: ../src/ftp/ssh_cmd.c:854
 #, c-format
 msgid "Failed to start scp upload: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:881 ../src/ftp/ssh_cmd.c:979
+#: ../src/ftp/ssh_cmd.c:897 ../src/ftp/ssh_cmd.c:995
 #, c-format
 msgid "Failed to read from file: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:931
+#: ../src/ftp/ssh_cmd.c:947
 #, c-format
 msgid "Cannot open file for writing: %s\n"
 msgstr ""
 
-#: ../src/ftp/ssh_cmd.c:1000
+#: ../src/ftp/ssh_cmd.c:1017
 msgid "Unique put with SSH not implemented yet\n"
 msgstr ""
 
-#: ../src/fxp.c:68
+#: ../src/fxp.c:69
 msgid "Transfers files between two remote servers."
 msgstr ""
 
-#: ../src/fxp.c:69
+#: ../src/fxp.c:70
 msgid ""
 "  -a, --append         append if destination exists\n"
 "  -D, --delete-after   delete source file after successful transfer\n"
@@ -974,6 +974,7 @@ msgid ""
 "      --dir-rx-mask=REGEXP\n"
 "                       enter only directories matching REGEXP pattern\n"
 "  -f, --force          overwrite existing destinations, never prompt\n"
+"  -F, --force-newer    do not use cached information with --newer\n"
 "  -e, --skip-empty     skip empty files\n"
 "  -H, --nohup          transfer files in background (nohup mode), quits "
 "yafc\n"
@@ -998,102 +999,102 @@ msgid ""
 "  -v, --verbose        explain what is being done\n"
 msgstr ""
 
-#: ../src/fxp.c:144 ../src/put.c:115
+#: ../src/fxp.c:146 ../src/put.c:136
 #, c-format
 msgid "sent %s\n"
 msgstr ""
 
-#: ../src/fxp.c:146 ../src/put.c:117
+#: ../src/fxp.c:148 ../src/put.c:138
 #, c-format
 msgid "failed to send %s: %s\n"
 msgstr ""
 
-#: ../src/fxp.c:231 ../src/put.c:198
+#: ../src/fxp.c:233 ../src/put.c:218
 #, c-format
 msgid "Remote file '%s' exists, skipping...\n"
 msgstr ""
 
-#: ../src/fxp.c:249 ../src/put.c:208
+#: ../src/fxp.c:251 ../src/put.c:230
 #, c-format
 msgid "Remote file '%s' is newer than local, skipping...\n"
 msgstr ""
 
-#: ../src/fxp.c:261
+#: ../src/fxp.c:263
 #, c-format
 msgid "File '%s' exists, overwrite?"
 msgstr ""
 
-#: ../src/fxp.c:311 ../src/get.c:370
+#: ../src/fxp.c:313 ../src/get.c:394
 #, c-format
 msgid "Delete remote file '%s'?"
 msgstr ""
 
-#: ../src/fxp.c:329 ../src/get.c:385 ../src/put.c:296
+#: ../src/fxp.c:331 ../src/get.c:409 ../src/put.c:320
 #, c-format
 msgid "%s: deleted\n"
 msgstr ""
 
-#: ../src/fxp.c:331 ../src/get.c:387 ../src/put.c:298
+#: ../src/fxp.c:333 ../src/get.c:411 ../src/put.c:322
 #, c-format
 msgid "error deleting '%s': %s\n"
 msgstr ""
 
-#: ../src/fxp.c:374 ../src/get.c:449
+#: ../src/fxp.c:376 ../src/get.c:473
 #, c-format
 msgid "Get '%s'?"
 msgstr ""
 
-#: ../src/fxp.c:413 ../src/get.c:495
+#: ../src/fxp.c:415 ../src/get.c:519
 #, c-format
 msgid "%s: circular link -- skipping\n"
 msgstr ""
 
-#: ../src/fxp.c:480 ../src/get.c:563 ../src/put.c:410
+#: ../src/fxp.c:482 ../src/get.c:587 ../src/put.c:434
 #, c-format
 msgid "%s: omitting directory\n"
 msgstr ""
 
-#: ../src/fxp.c:489 ../src/get.c:572 ../src/put.c:417
+#: ../src/fxp.c:491 ../src/get.c:596 ../src/put.c:441
 #, c-format
 msgid "%s: not a regular file\n"
 msgstr ""
 
-#: ../src/fxp.c:504 ../src/get.c:587 ../src/put.c:428
+#: ../src/fxp.c:506 ../src/get.c:611 ../src/put.c:452
 msgid "Continue transfer?"
 msgstr ""
 
 #. else a == ASKYES
-#: ../src/fxp.c:510 ../src/get.c:593 ../src/put.c:434
+#: ../src/fxp.c:512 ../src/get.c:617 ../src/put.c:458
 #, c-format
 msgid "Excellent!!!\n"
 msgstr ""
 
-#: ../src/fxp.c:621 ../src/fxp.c:655 ../src/get.c:736 ../src/get.c:763
-#: ../src/put.c:537 ../src/put.c:570
+#: ../src/fxp.c:627 ../src/fxp.c:661 ../src/get.c:761 ../src/get.c:791
+#: ../src/put.c:565 ../src/put.c:598
 #, c-format
 msgid "Regexp '%s' failed: %s\n"
 msgstr ""
 
-#: ../src/fxp.c:667
+#: ../src/fxp.c:673
 #, c-format
 msgid "FxP target not set, use --target=NAME (as first option)\n"
 msgstr ""
 
-#: ../src/fxp.c:736
+#: ../src/fxp.c:742
 #, c-format
 msgid "No target specified, try '%s --help' for more information\n"
 msgstr ""
 
-#: ../src/fxp.c:762 ../src/get.c:854 ../src/put.c:666 ../src/rm.c:188
+#: ../src/fxp.c:768 ../src/get.c:882 ../src/put.c:694 ../src/rm.c:188
 #, c-format
 msgid "no tagged files\n"
 msgstr ""
 
-#: ../src/get.c:47
+#: ../src/get.c:70
 msgid "Receives files from remote."
 msgstr ""
 
-#: ../src/get.c:48
+#: ../src/get.c:71
 msgid ""
 "  -a, --append         append if destination exists\n"
 "  -c, --chmod=PERM     change mode of transferred files to PERM;\n"
@@ -1107,6 +1108,7 @@ msgid ""
 "      --dir-rx-mask=REGEXP\n"
 "                       enter only directories matching REGEXP pattern\n"
 "  -f, --force          overwrite existing destinations, never prompt\n"
+"  -F, --force-newer    do not use cached information with --newer\n"
 "  -e, --skip-empty     skip empty files\n"
 "  -H, --nohup          transfer files in background (nohup mode), quits "
 "yafc\n"
@@ -1130,49 +1132,49 @@ msgid ""
 "  -v, --verbose        explain what is being done\n"
 msgstr ""
 
-#: ../src/get.c:129
+#: ../src/get.c:153
 #, c-format
 msgid "received %s\n"
 msgstr ""
 
-#: ../src/get.c:131
+#: ../src/get.c:155
 #, c-format
 msgid "failed to receive %s: %s\n"
 msgstr ""
 
-#: ../src/get.c:261
+#: ../src/get.c:285
 #, c-format
 msgid "Local file '%s' exists, skipping...\n"
 msgstr ""
 
-#: ../src/get.c:284
+#: ../src/get.c:308
 #, c-format
 msgid "Local file '%s' is newer than remote, skipping...\n"
 msgstr ""
 
-#: ../src/get.c:303
+#: ../src/get.c:327
 #, c-format
 msgid ""
 "Local file '%s' exists\n"
 "Local: %lld bytes, %sRemote: %lld bytes, %sOverwrite?"
 msgstr ""
 
-#: ../src/get.c:340
+#: ../src/get.c:364
 #, c-format
 msgid "symlinking '%s' to '%s'\n"
 msgstr ""
 
-#: ../src/get.c:685
+#: ../src/get.c:710
 #, c-format
 msgid "Invalid mode for --chmod: %s\n"
 msgstr ""
 
-#: ../src/get.c:693
+#: ../src/get.c:718
 #, c-format
 msgid "%s is not a valid group name\n"
 msgstr ""
 
-#: ../src/get.c:704
+#: ../src/get.c:729
 #, c-format
 msgid "you are not a member of group %s\n"
 msgstr ""
@@ -1238,17 +1240,17 @@ msgid ""
 "  -1                       list one file per line\n"
 msgstr ""
 
-#: ../src/list.c:121
+#: ../src/list.c:144
 #, c-format
 msgid "total %s\n"
 msgstr ""
 
-#: ../src/list.c:123
+#: ../src/list.c:146
 #, c-format
 msgid "total %llu\n"
 msgstr ""
 
-#: ../src/list.c:596
+#: ../src/list.c:629
 #, c-format
 msgid "total 0\n"
 msgstr ""
@@ -1502,43 +1504,43 @@ msgid ""
 msgstr ""
 
 #. printf(_("This seems to be the first time you run Yafc...\n"));
-#: ../src/main.c:202
+#: ../src/main.c:204
 #, c-format
 msgid "creating working directory %s: "
 msgstr ""
 
-#: ../src/main.c:209 ../src/main.c:224 ../src/main.c:241
+#: ../src/main.c:211 ../src/main.c:226 ../src/main.c:243
 #, c-format
 msgid "done\n"
 msgstr ""
 
-#: ../src/main.c:216 ../src/main.c:233
+#: ../src/main.c:218 ../src/main.c:235
 #, c-format
 msgid "creating directory %s: "
 msgstr ""
 
-#: ../src/main.c:387
+#: ../src/main.c:391
 #, c-format
 msgid ""
 "No proxy host defined!\n"
 "\n"
 msgstr ""
 
-#: ../src/main.c:397
+#: ../src/main.c:401
 #, c-format
 msgid "Invalid value for --wait: %d\n"
 msgstr ""
 
-#: ../src/main.c:413
+#: ../src/main.c:417
 #, c-format
 msgid "Couldn't open tracefile '%s': %s\n"
 msgstr ""
 
-#: ../src/put.c:46
+#: ../src/put.c:66
 msgid "Send files to remote."
 msgstr ""
 
-#: ../src/put.c:47
+#: ../src/put.c:67
 msgid ""
 "  -a, --append         append if destination file exists\n"
 "  -D, --delete-after   delete local file after successful transfer\n"
@@ -1547,6 +1549,7 @@ msgid ""
 "                       enter only directories matching REGEXP pattern\n"
 "  -e, --skip-empty     skip empty files\n"
 "  -f, --force          overwrite existing destinations, never prompt\n"
+"  -F, --force-newer    do not use cached information with --newer\n"
 "  -H, --nohup          transfer files in background (nohup mode), quits "
 "yafc\n"
 "  -i, --interactive    prompt before transferring each file\n"
@@ -1568,24 +1571,24 @@ msgid ""
 "  -u, --unique         store in unique filename (if server supports STOU)\n"
 msgstr ""
 
-#: ../src/put.c:230
+#: ../src/put.c:252
 #, c-format
 msgid ""
 "Remote file '%s' exists\n"
 "Local: %lld bytes, %sRemote: %lld bytes, %sOverwrite?"
 msgstr ""
 
-#: ../src/put.c:282
+#: ../src/put.c:306
 #, c-format
 msgid "Delete local file '%s'?"
 msgstr ""
 
-#: ../src/put.c:346
+#: ../src/put.c:370
 #, c-format
 msgid "Put '%s'?"
 msgstr ""
 
-#: ../src/put.c:594
+#: ../src/put.c:622
 #, c-format
 msgid "Remote doesn't support the STOU (store unique) command\n"
 msgstr ""
@@ -1853,7 +1856,7 @@ msgstr ""
 
 #: ../src/tag.c:171
 #, c-format
-msgid "%lu bytes (%s) in %u files tagged\n"
+msgid "%lu bytes (%s) in %zu files tagged\n"
 msgstr ""
 
 #: ../src/tag.c:173
@@ -1948,17 +1951,17 @@ msgstr ""
 msgid "Unable to send mail (using %s)\n"
 msgstr ""
 
-#: ../src/utils.c:179
+#: ../src/utils.c:181
 #, c-format
 msgid "invalid connection number: '%d'\n"
 msgstr ""
 
-#: ../src/utils.c:192
+#: ../src/utils.c:194
 #, c-format
 msgid "no such connection open: '%s'\n"
 msgstr ""
 
-#: ../src/utils.c:235
+#: ../src/utils.c:226
 #, c-format
 msgid "Executing '%s', use 'exit' to exit from shell...\n"
 msgstr ""
