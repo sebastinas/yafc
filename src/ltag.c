@@ -146,7 +146,7 @@ static void show_ltaglist_info(void)
 		fprintf(stderr, _("nothing tagged -- use 'ltag' to tag files\n"));
 		return;
 	}
-	printf(_("%u files tagged\n"), num);
+	printf(_("%d files tagged\n"), num);
 }
 
 void cmd_ltag(int argc, char **argv)

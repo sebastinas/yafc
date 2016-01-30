@@ -1389,7 +1389,6 @@ rdirectory *ftp_read_directory(const char *path)
 {
     FILE *fp = 0;
     rdirectory *rdir;
-    bool is_curdir = false;
     bool _failed = false;
     char *dir;
     bool is_mlsd = false;
@@ -1402,7 +1401,7 @@ rdirectory *ftp_read_directory(const char *path)
     dir = ftp_path_absolute(path);
     stripslash(dir);
 
-    is_curdir = (strcmp(dir, ftp->curdir) == 0);
+    bool is_curdir = (strcmp(dir, ftp->curdir) == 0);
 
     if((fp = tmpfile()) == NULL) {	/* can't create a tmpfile */
         ftp_err("Unable to create temp file: %s\n", strerror(errno));

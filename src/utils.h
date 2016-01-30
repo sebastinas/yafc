@@ -20,7 +20,7 @@
 void listify_string(const char *str, list *lp);
 char *stringify_list(list *lp);
 char *make_unique_filename(const char *path);
-char *human_size(long long int size);
+char *human_size(unsigned long long int size);
 char *human_time(unsigned int secs);
 void print_xterm_title(void);
 void reset_xterm_title(void);

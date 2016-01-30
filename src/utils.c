@@ -76,7 +76,7 @@ char* make_unique_filename(const char* path)
 	return f;
 }
 
-char *human_size(long long int size)
+char *human_size(unsigned long long int size)
 {
 	static char buf[17];
 

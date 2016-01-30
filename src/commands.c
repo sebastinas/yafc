@@ -286,8 +286,10 @@ cmd_t *find_func(const char *cmd, bool print_error)
 	if(c && !a)
 		return c;
 
+  /* from here on: a is always non-NULL */
+
 	/* found both alias and command */
-	if(a && c) {
+	if(c) {
 		if(strlen(a->name) == strlen(cmd))
 			/* skip exact command, run exact alias */
 			c = 0;

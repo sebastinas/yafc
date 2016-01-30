@@ -371,14 +371,12 @@ int ssh_chdir(const char *path)
     return -1;
   }
 
-  bool isdir = false;
-
   /* First check if this file is cached and is a directory, else we
    * need to stat the file to see if it really is a directory
    */
 
   stripslash(p);
-  isdir = (ftp_cache_get_directory(p) != 0);
+  bool isdir = (ftp_cache_get_directory(p) != 0);
   if(!isdir)
   {
     rfile *rf = ftp_cache_get_file(p);
