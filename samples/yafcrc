@@ -180,7 +180,7 @@ alias show_trace "!$PAGER $HOME/.yafc/trace/trace.$PPID"
 alias xcd "cd %*; lcd %*"
 
 # Diff a local file against a remote file
-alias xdiff "get -qf %1 -o /tmp/yafc-diff; shell diff -u /tmp/yafc-diff %1; lrm /tmp/yafc-diff"
+alias xdiff "get -qf %1 -o /tmp/yafc-diff; shell diff -u /tmp/yafc-diff %1; shell rm /tmp/yafc-diff"
 
 # ftp prompts
 #
