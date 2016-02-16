@@ -176,6 +176,12 @@ alias zpage "cat --type=binary %* | zcat | $PAGER"
 alias bzpage "cat --type=binary %* | bzcat | $PAGER"
 alias show_trace "!$PAGER $HOME/.yafc/trace/trace.$PPID"
 
+# Change both local and remote directory at the same time
+alias xcd "cd %*; lcd %*"
+
+# Diff a local file against a remote file
+alias xdiff "get -qf %1 -o /tmp/yafc-diff; shell diff -u /tmp/yafc-diff %1; lrm /tmp/yafc-diff"
+
 # ftp prompts
 #
 # special codes:
