@@ -785,7 +785,7 @@ int get_username(url_t *url, const char *guessed_username, bool isproxy)
 
         if(!e) {
             if(guessed_username == 0) {
-                fprintf(stderr, _("You loose\n"));
+                fprintf(stderr, _("You lose\n"));
                 ftp->loggedin = false;
                 return -1;
             }
@@ -833,7 +833,7 @@ int get_password(url_t *url, const char *anonpass, bool isproxy)
         }
 
         if(!e) {
-            fprintf(stderr, _("You loose\n"));
+            fprintf(stderr, _("You lose\n"));
             return -1;
         }
         url_setpassword(url, e);
