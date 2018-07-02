@@ -24,7 +24,3 @@ FEATURES
 * proxy support
 * variable substitution for shell commands
 * ignore masks for uploads
-
-
-For more information, visit:
-  http://www.yafc-ftp.com
