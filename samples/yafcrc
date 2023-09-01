@@ -86,7 +86,7 @@ auto_bookmark_silent no
 # see also 'ascii_transfer_mask' below
 default_type binary # ...or ascii
 
-# default security machanisms to use, separated with colon
+# default security mechanisms to use, separated with colon
 # valid arguments are krb4, krb5 and none
 #default_mechanism "krb4:krb5:none"
 #default_mechanism krb4
